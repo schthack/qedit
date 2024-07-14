@@ -1,0 +1,62 @@
+Note: This probably isn't everything, I got tired of the stupid se1 sounds after hearing the blighted footsteps in water sound effect 20 billion times. There may be other effects buried in there. As for se2, it's unknown if there's any more than those 2 sound effects that can be played with it.
+
+play_se1 list
+
+0 cursor move
+1 nothing?
+2 pick up item
+3 menu open?
+4 nothing?
+5 chat bubble open
+6 invalid selection bzzz
+7 "usual" symbol chat se
+8 yahoo symbol chat
+9 angry symbol chat
+A sad symbol chat
+B uneasyness symbol chat
+C surprise symbol chat
+D confusion symbol chat
+E help me symbol chat
+F nothing?
+10 moving the star on loading screen
+11 using item (mate)
+12 dodalee ding noise made by switches in cmode (like stage 1)
+13 dodaladaluh noise made by the "kill the flame garment" game in cmode stage 2
+14 boom like a drum
+15 activated pillar noise
+16 cancel menu (go back)
+17 you've got mail!
+18 nothing?
+19 walking in water (forest)
+1A nothing?
+1B footstep (cave?)
+1C footstep (somewhere? lol)
+1D nothing?
+1E walking in water again
+1F soggy floor footstep (cave 2)
+20 walking in water (more forest i think)
+21 nothing?
+22 footstep again...
+23 nothing?
+24 more blighted water footsteps...
+25 nothing?
+26 AGAIN with the stupid water footsteps...
+27 nothing?
+28 footstep crap
+29 ditto
+2A nothing?
+2B more footstep crap
+2C nothing?
+2D
+2E
+2F
+30
+31
+
+play_se2 list
+
+0 quest end
+1 quest begin
+2 crash
+3 crash
+4 nothing

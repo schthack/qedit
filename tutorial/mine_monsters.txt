@@ -1,0 +1,239 @@
+	Gillchic
+Skin	128
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Dubchic
+Skin	128
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Garanz
+Skin	129
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Sinow Beat
+Skin	130
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Sinow Gold
+Skin	130
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	1065353218
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Invisible Sinow
+Skin	130
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	1
+Unknow	1065353218
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Canadine
+Skin	131
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Zonding Canadine
+Skin	131
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Appear order	0
+Appear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	1
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Canadine Circle
+Skin	132
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Dubchic Switch
+Skin	133
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0

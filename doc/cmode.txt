@@ -1,0 +1,74 @@
+I don't know if schthack was still interested in updating qedit for handling random cmode spawns (dat tables 4 and 5). But if so, feel free to pass along this if he was interested.
+
+Handling of table 4 in Qedit looks correct. Vanilla BB client does not allow mixing of table 2 with tables 4 and 5 for a single floor. This is somewhat patchable for BB I think. 
+
+For table 5, rand05A.cfg should look like this:
+#
+flt: Param1
+flt: Param2
+flt: Param3
+flt: Param4
+flt: Param5
+32b: Param6
+32b: Config #
+16b: child_count
+16b: child_count
+
+
+Where param1-6 are the params from the monster data (what you see in "Edit Data" window).
+The child_count field appears to be repeated for some reason. Honestly not sure why, it could be a min and max child count. Haven't tested.
+
+And rand05B.cfg should look like this 
+#
+8b: Monster Type
+8b: Config ID
+16b: Ratio
+
+
+Where the Monster Type  field is an index into this array in the client
+                            
+ ep1cm_uid_to_monster_skin                       XREF[1]:     unknown_ep1cm_spawn_generator_fo
+        00980760 44 00 00        ddw[42]
+                 00 43 00 
+                 00 00 41 
+           00980760 [0]                     44h,          43h,          41h,          42h
+           00980770 [4]                     40h,          60h,          61h,          62h
+           00980780 [8]                     63h,          64h,          65h,          80h
+           00980790 [12]                    81h,          82h,          83h,          84h
+           009807a0 [16]                    85h,          A0h,          A1h,          A2h
+           009807b0 [20]                    A3h,          A4h,          A5h,          A6h
+           009807c0 [24]                    A7h,          A8h,          D4h,          D5h
+           009807d0 [28]                    D6h,          D7h,          D8h,          D9h
+           009807e0 [32]                    DAh,          DBh,          DCh,          DDh
+           009807f0 [36]                    DEh,          DFh,          E0h,          E0h
+           00980800 [40]                    E1h,           0h
+
+
+
+So Monster Type == 0 gives you 44h = skin 68. Monster Type 1 gives you skin 67, etc. Yes, this includes EP2 monsters too(E1h is Ill Gill). It does not include EP4 in BB. I think this should be put in a cfg because this is easily patchable to include EP4.
+
+The form for rand05B.cfg in Qedit is displaying fields from rand05A.cfg, and it's also displaying from... somewhere else? Not sure.
+
+I haven't tested yet, but I see no reason why this won't work in EP2 CM, and it's easily patchable to include EP4 CM. Will do a POC next week maybe through hex editing just for a couple rooms in some EP2 area. Done enough PSO dev stuff recently.
+
+The wavesetting field for the EP1 CM map events is 
+8b: min enemies
+8b: max enemies
+8b: max waves
+8b: always zero?
+
+For BB, the client has to be patched for any of this random spawn stuff to work in NM. I assume it's the same for V3. Fortunately for BB's case, the patch doesn't seem that complicated.
+
+
+In case scht wants to debug the BB client for anything related to this,
+
+0x80e008 - start of the main function generating map events and monsters for a floor for dat tables 4 and 5
+0x80e930 - start of function to get spawn points for a map event
+0x80e774 - start of function to apply a table 5 config to a monster init structure
+0x80e884 - start of function to put spawn point data into a monster init structure
+0x980760 - table of the weird index -> monster skin for cmode
+0xaafe94 to 0xaafec4 - Various globals used by that main function
+
+
+All virtual addresses
+but shouldn't need to look at any of that, I think

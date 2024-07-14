@@ -1,0 +1,263 @@
+	Demenian
+Skin	166
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+	
+	La Demenian
+Skin	166
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+	
+	So Demenian
+Skin	166
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	2
+Flag 2	0
+	
+	Dark Belra
+Skin	165
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+	
+	Chaos Sorcerer
+Skin	161
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+	
+	Dark Gunner Trigger
+Skin	163
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+	
+	Dark Gunner
+Skin	162
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+	
+	Chaos Bringer
+Skin	164
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+	
+	Claw
+Skin	168
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+	
+	Bulclaw
+Skin	167
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+	
+	Delsaber
+Skin	160
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0

@@ -1,0 +1,269 @@
+*Creating Weapons and Using Random Percentages*
+
+Creating weapons in the quest format is nearly identical to creating weapons on PSO DC using a CodeBreaker. In order to understand this, it's important to first look at the end of the item mod code for PSOv2
+
+Here are the last 8 lines of the pso ver.2 mod code.
+
+1B04DB53 - (Stays the same)
+
+00000000 - Mod line 1
+
+1B14DB53 - (Stays the same)
+
+00000000 - Mod line 2
+
+1B24Db53 - (Stays the same)
+
+00000000 - Mod line 3
+
+1B34DB53 - (Stays the same)
+
+00000000 - Mod line 4
+
+So here is the 4 lines u need to mod.
+
+00000000 - % = Photon % modifier = (line 1)
+
+%%**%%** - * = Phonton area mofifier = (line 2)
+
+%%**@@@@ - @ = Misc. abilities = (line 3)
+
+GG?????? - G = Grinder amount = (line 4)
+
+Here are The (%) percent modifier digits.
+
+05 = 5%
+
+0A = 10%
+
+0F = 15%
+
+14 = 20%
+
+19 = 25%
+
+1E = 30%
+
+23 = 35%
+
+28 = 40%
+
+2D = 45%
+
+32 = 50%
+
+38 = 55%
+
+3C = 60%
+
+3F = 157% (banned)
+
+Here are the (*) photon area mod digits.
+
+01 = Native
+
+02 = A beast
+
+03 = Machine
+
+04 = Dark
+
+05 = Hit
+
+Here are the (@) misc. mod digits.
+
+FD00 = Black weapons (note u need god equip to use)
+
+0080 = Special weapon (untekked)
+
+Here are the (G) grind mod digits.
+
+00 = +0
+
+63 = +99
+
+FF = +255 (banned)
+
+So, using the alternating lines of 0's you can define the parameters for a weapon. For example, using
+
+00000000
+3C013C02
+3C030000
+00??????
+
+Would create a weapon with 60% on Native, A. Beast, and Machine.
+
+The quest format works in the same way, except in reversed order.
+
+The first part of creating a weapon is using leti to create registers to hold these lines of code as first set to all 0's, then you can fill in the code being used. So first you need to set an NPC to talk about and give you the weapon, like so:
+
+320: disp_msg 00000068, 'Do you want a weapon? I hope<cr>so.'
+close_msg1
+disp_list R193, 'NOYES'
+jmp_eq23 R193, 00000000, 710
+
+This code has an NPC talk and ask you if you want a weapon. If you select NO from the list, which is a value of 00000000, then it jumps to function 710 which has the NPC say "Fine then. No weapon for you." Now after this code you have
+
+call 700
+
+Function 700 is generally used to create an item in memory. 700 runs like so:
+
+700: leti R200, 00000000
+leti R201, 00000000
+leti R202, 00000000
+leti R203, 00000000
+leti R204, 00000000
+leti R205, 00000000
+leti R206, 00000000
+leti R207, 00000000
+leti R208, 00000000
+leti R209, 00000000
+leti R210, 00000000
+leti R211, 00000000
+
+Only the last 2 digits of each register are used, so if you add them all up you will get the 24 digits that are modded for weapons in the item mod code. Now we have a blank weapon created in memory, so let's first look at which register controls which part of the item mod code.
+
+Remember that the code runs backwards, so since the item mod code runs like this:
+
+00000000
+
+%%**%%**
+
+%%**@@@@
+
+GG??????
+
+The first line isn't used, so we only have 3 lines of 8 digits, which also equals 24 digits of modding.
+
+So then, we have
+
+R200: last two ?? (?? is the digits for the item you want to create)
+R201: preceding ??
+R202: first two ??
+R203: GG (grinder amount)
+R204: last two @@ (misc abilities such as ?SPECIAL WEAPON status or CHARGE special)
+R205: first two @@
+R206: ** area for the last %
+R207: %% amount of % for last area
+R208: ** area for second % of weapon
+R209: %% amount of % for second area
+R210: ** area for first %
+R211: %% amount for first %
+
+So now let's get into the random % creation. Function 320 continues with
+
+call 730
+
+Function 730 is the function for random %s. Many letis are used in this, so let's start function 730.
+
+730: leti R100, 00000001
+leti R101, 00000003
+get_random R100, R102
+let R210, R102
+
+This first chunk of the random percent creator works in this way:
+
+R100 and R101 are two values that are different. R100 represents the lowest value, and R101 represents the highest value +1. So in this we have that the lowest value is 1, and the highest is 3. Remember since R101 is value +1, we need to subtract 1 from this so we are actually working with 2.
+
+get_random R100, R102
+
+This says to take R100 and R101, and randomly pick one of the values, and then assign that value to R102. In this case, it'll either pick a value of 01 or a value of 02 and then assign that value to R102.
+
+let R210, R102
+
+Means set R210 as the value of R102. Looking up, we see that R210 is the area for the first % of your weapon. This value is randomly being generated as either 01 or 02, meaning it will randomly pick to make a Native weapon (01) or an A.Beast weapon (02).
+
+Now we continue the code.
+
+leti R100, 00000000
+leti R101, 00000005
+get_random R100, R102
+muli R102, 00000005
+let R211, R102
+
+Once again, R100 and R101 are the minimum value and maximum value +1. This time we are saying to create a minimum value of 0 and a maximum value of 4. (5-1=4)
+
+get_random R100, R102
+
+This again picks one of the values from 0-4 and sets it as R102.
+
+muli R102, 00000005
+
+This multiplies the value by 5. Since all weapons in PSO have a % that counts by fives, this ensures that the % is a value divisible by 5. If get_random picked a value of 0 and multiplied it by 5, it would still be 0. If it picked 1, we would get 5, if it picked 2, we would get 10, if it picked 3, we would get 15, and if it picked 4, we would get 20 from this. Then:
+
+let R211, R102
+
+This sets R211 to the value of R102. If we look, R211 is the % amount for the first area. Thus, since in the previous step the area was randomly decided to be either Forest or Caves, we can get a percentage of from 0-20% on this area. Now the first random % is done, let's look at the second one.
+
+leti R100, 00000003
+leti R101, 00000005
+get_random R100, R102
+let R208, R102
+
+This time, we are setting a minimum value of 3 and a maximum value of 4. We pick either one randomly and set it to R208. R208 is the area for the second % of a weapon. In this case we will get either 03 (Mines) or 04 (Ruins) for the area. Next we have another % creation to assign for this area:
+
+leti R100, 00000000
+leti R101, 00000009
+get_random R100, R102
+muli R102, 00000005
+let R209, R102
+
+This time we are setting the minimum value to 0 and the max value to 8. We pick one of these values, then multiply it by 5 again. Then, we set R209 to this value. R209 is the % amount for the second area. In this case since the second area is either Mines or Ruins and these areas are harder, we opened up the range of %s wider, so we can get anywhere from 0% to 40%. (8x5=40).
+
+Now we look at the final % of the weapon
+
+leti R206, 00000005
+leti R100, 00000000
+leti R101, 0000000C
+get_random R100, R102
+muli R102, 00000005
+let R207, R102
+
+In this case, we don't use a randomizer for R206. R206 is the area for the final % of a weapon. Since weapons can only have 3 percentages, it is easiest to do it in this fashion. We use the first random % to pick either Forest or Caves, and then the second % randomizer to pick either Mines or Ruins. Then we make the last % randomizer always pick Hit. If we tried to randomize it in a different way, we would at times pick the same areas to put %s on, which would create hidden % weapons. To avoid this, we use this method of picking either Forest or Cave for area 1, Mines or Ruins for area 2, and then always using Hit for area 3. Thus,  we simply use leti R206, 00000005 to set the final % area to 05, since 05 is Hit %. Then we u se a randomizer for the value of the hit %.
+
+In this case, we chose a minimum value of 0, and a maximum value of 11. Then we multiply this value by 5, which will give us anywhere from 0-55% for our Hit %age. Then we use
+
+let R207, R102
+
+to set the final % value.
+
+Finally we end the random % generator with
+
+ret
+
+Now we have all the percentages created, so we leave function 730 and go back to function 320. The lines after the
+
+call 730
+
+that we have been working on go as follows:
+
+leti R200, 00000000
+leti R201, 00000030
+leti R202, 00000000
+leti R203, 00000000
+leti R204, 00000000
+leti R205, 00000000
+item_create2 R200, R211
+jmp_eq23 R211, FFFFFFFF, 715
+play_se2 00000001
+ret
+
+leti R200-R202 defines the item you want to actually make. Remembering that the order is backwards, we find in this case we are making
+
+003000
+
+Which is a DOUBLE CANNON. Then we have R203 set as 0, which is the Grinder amount. Since you don't want to pre-grind a quest weapon, the grind is set to 0. R204 and R205 are the special abilities of the weapon (@ digits). Since Double Cannon is a unique weapon and has its own special attack, we leave these digits as 0 as well. Then we have
+
+item_create2 R200, R211
+
+Which will actually create the item which is defined in R200 through R211.
+
+jmp_eq23 R211, FFFFFFFF, 715
+
+This is an important command to not leave out, this command says if the player's inventory is full (FFFFFFFF) then go to function 715. This function just has the NPC say that your inventory is full and you can't have an item.
+
+Then you play a sound effect, and use
+
+ret
+
+to finish the item creation process. :)

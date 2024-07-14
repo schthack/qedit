@@ -1,0 +1,167 @@
+	Damage Trap
+Skin	10
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	100
+unknow	0
+Unknow	20
+Unknow	0
+
+	Poison Trap
+Skin	11
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	0
+unknow	0
+Unknow	20
+Unknow	0
+
+	Heal Trap
+Skin	12
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	800
+unknow	0
+Unknow	50
+Unknow	0
+
+	Large Damage Trap
+Skin	13
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	200
+unknow	0
+Unknow	50
+Unknow	0
+
+	Confuse Trap
+Skin	11
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	1
+unknow	18
+Unknow	20
+Unknow	0
+
+	Paralysis Trap
+Skin	11
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	1
+unknow	16
+Unknow	20
+Unknow	0
+
+	Slow Trap
+Skin	11
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	1
+unknow	17
+Unknow	20
+Unknow	0
+
+	Freeze Trap
+Skin	10
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	100
+unknow	2
+Unknow	20
+Unknow	0

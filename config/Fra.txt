@@ -1,0 +1,297 @@
+Quête
+Propriété
+Manuscrit
+Outils
+Nouveau
+Épisode 1
+Épisode 2
+Épisode 4
+Ouvrir
+Enregistrer
+Language
+Quité
+Titre
+Information
+Description
+Configuration
+Voire le manuscrit
+Exporter
+Importer
+Gestionaire de fichier quête
+Verification de compatibilité
+Liste d'objets (quête BB seulement)
+Visualisation 3D
+Configuration de la 3D
+À propos...
+Verifié les mise à jours...
+Aide!!
+Carte :
+Zone :
+Exporter les donées de la zone
+Importer les donées de la zone
+Voire les évènements de la zone
+Données des monstres aléatoire
+Monstre :
+Objet :
+Carte visuel
+Afficher l'ID de la zone
+Agrandis.
+Placer dans la pièce ID :
+Ajouter un monstre
+Ajouter un objet
+Effacer
+Modifier
+Déplacer
+Annuler
+Une copie fantôme a été trouver pour cette quête.<cr>Voulez-vous restaurer celle-ci?
+Nettoyage des modèles précédent...
+Création des modèles des monstres...
+Création des modèles des objets...
+Chargement de la carte...
+Impossible de charger la carte, plus de mémoire disponible.
+Une erreur c'est produite pendant laffichage des monstres sur la carte.
+Une erreur c'est produite pendant laffichage des objets sur la carte.
+Zone
+Enregistrer le projet en cours avant de quité?
+Enregistrer le projet en cours avant d'en ouvrir un autre?
+Une erreur c'est produite pendant la décompression de la quête.
+Non utiliser
+Modèle de groupe inconnu (
+) à la position
+Une erreur c'est produite lors de la lecture des données de la quête.
+Une erreur c'est produite lors de la lecture des données du manuscrit.
+Une erreur c'est produite lors de la mise en text du manuscrit.
+ (Format DreamCast ASCII)
+ (Format PC Unicode)
+ - Épisode 1
+ - Épisode 2
+ - Épisode 4
+ - Manuscrit mode 2
+Personage inconnu
+PNJ inconnu
+Une erreur c'est produite pendant laffichage des sections.
+Une erreur c'est produite pendant laffichage de la carte.
+Impossible de créer le fichier
+Superficie
+Taille X
+Taille Y
+Taille Z
+Enregistrer le projet en cours avant d'en créer un autre?
+Initialisation du mode 3D...
+Impossible d'initialiser le controle DirectX.
+ entrées)
+Tout
+Vague #
+Groupe #
+La function première (label 0) est non défini
+" à la ligne
+ à la ligne
+La conversion automatique pourrais ne pas fonctionner "
+L'épisode sélectionner n'est pas supporté "
+Commande non supporté "
+Cette quête contien une image encodé dans le fichier, soyez sure que le format convien a la version de PSO utiliser.
+Le format des paramètres ne peut être changer sur cette version "
+Une libellé non défini est utiliser
+Une marque de commande teste est manquante a la ligne
+Libellé non défini
+ utilisé par le PNJ #
+ dans la zone
+ Monstre/PNJ
+ ne fonctionne pas sur cette version, entrée #
+Le PNJ modèle 51 est configurer avec un modèle qui ne fonctionne pas, ce qui fera planter PSO. entrée #
+ ne devrais pas être autorisé dans cette zone, entrée #
+Objet
+Zone
+ à plus de 400 objets, ceci pourais ocasionner certain problème ou même planter PSO.
+ à plus de 400 ennemis, ceci pourais ocasionner certain problème ou même planter PSO.
+Bloque de donnée non utiliser :
+Aucun fichier manuscrit trouver.
+Aucun fichier de donnée de quête trouver.
+Les fichier PVR ne sont pas autorisé pour ce format.
+Disposition de la carte
+Chargement des informations de la mise à jours....
+Fermer
+Distance d'attaque
+Distance de l'attention
+Charger un modèle
+OK
+Annuler
+Stat d'ennemi
+Verification de compatibilité
+Version :
+Edition
+Position en Y
+Valeur de base en Y pour la zone:
+Données des offences de l'ennemi
+Données des mouvements de l'ennemi
+Données de la résistance de l'ennemi
+Valeur à virgule flotante incorecte a l'entrée #
+Table de virgule flotante
+Information sur la quête
+Information :
+Fonction
+Donnée/Text
+Registre
+Commande
+Non utiliser
+Donnée PNJ
+Code
+Donnée d'image
+Donnée text
+Donnée physique d'ennemi
+Données de résistance d'ennemi
+Données d'offences d'ennemi
+Données de mouvements d'ennemi
+Donnée de virgule flotante
+Manuscrit
+Ligne
+Haut
+Bas
+Modifier
+Ajouter
+Effacer
+Changer la police
+Importer
+Exporter
+Rechercher
+Donnée
+Changer la libellé
+Copier
+Couper
+Coller
+Effacer
+Modifier le PNJ
+Changer l'image
+Enregistere l'image
+Modifier les données physique d'ennemi
+Modifier les données de résistance d'ennemi
+Modifier les données d'offences d'ennemi
+Modifier les données de mouvements d'ennemi
+Modifier les donnée de virgule flotante
+Effacer la section de donnée
+En tant que code
+En tant que donnée HEX
+En tant que donnée text
+Impossible de créer le fichier
+Ce fichier n'est pas un fichier unicode valide.
+Text non trouvé.
+Cette libellé n'est pas identifié comme étant des données PNJ,<cr>Voulez-vous quand même l'éditer?
+La libellé sélectionner n'est pas encore défini par une commande,<cr>il est importent de le faire avant de sauvegarder la quête.
+L'image sélectionner doit être compressé pour être utiliser,<cr>voulez-vous que l'editeur le fasse pour vous?
+Le fichier a été ajouter avec succèt.<cr>Taille d'origine :
+<cr>Taille après compression:
+Le fichier a été ajouter avec succèt.<cr>Taille du fichier :
+Cette libellé n'est pas identifié comme étant des données phisique d'ennemi,<cr>Voulez-vous quand même l'éditer?
+Cette libellé n'est pas identifié comme étant des données de deffence d'ennemi,<cr>Voulez-vous quand même l'éditer?
+Cette libellé n'est pas identifié comme étant des données d'offence d'ennemi,<cr>Voulez-vous quand même l'éditer?
+Cette libellé n'est pas identifié comme étant des données de mouvement d'ennemi,<cr>Voulez-vous quand même l'éditer?
+Changer le format de la libellé va annuler tout changement non sauvegarder,<cr>Voulez-vous quand même continuer?
+Erreur de mise en texte du manuscrit!
+Cette libellé n'est pas identifié comme étant des valeurs a virgule flotante,<cr>Voulez-vous quand même l'éditer?
+Configuration général
+Langue :
+Numero de quête :
+Titre de la quête
+Titre :
+Section id
+PNJ: Aucun
+PNJ
+Peau
+Tête
+Non utiliser
+Visage
+Cheveux
+Habits
+Section id
+Création de PNJ
+Nom de commande invalide
+Le numéro de libellé doit être entre 0 et 65535
+La libellé n'est pas un nombre entier valide.
+Champ vide.
+La valeur est invalide.
+La value doit être entre 0 et FFFFFFFF.
+L'identifiant de registre doit être entre 0 et 255.
+La valeur pour T_BYTE est invalide.
+La valeur pour T_BYTE doit être entre 0 et FF.
+La valeur pour T_WORD est invalide.
+La valeur pour T_WORD doit être entre 0 et FFFF.
+La valeur pour T_PFLAG est invalide.
+La valeur pour T_PFLAG doit être entre 0 et FFFF.
+La valeur pour T_FUNC/T_DATA doit être entre 0 et 65535.
+L'identifiant de registre doit être entre 0 et 255.
+Le nombre d'identifiant de saut est diferent.
+L'identifiant de registre doit être entre 0 et 255.
+La value doit être entre 0 et FFFFFFFF.
+Cette libellé est déja utiliser et identifier en tant que
+<cr>Veuillez choisire un autre libellé.
+Désolé, PSOBB ep4 n'est pas suporté puisque Sega à aparamment désactiver/troubler cette fonctionalité.<cr>Ils en est de même pour l'épisode 1 et 2 sous PsoBB.
+Le champ est vide, vous devez définire une libellé dabord.
+Vous ne pouvez modifier cette libellé pour le moment,<cr>puisqu'elle n'est pas encore créer ou es defini comme étant du code.<cr>Appuyer sur inserrer pour ajouter la libellé et créer le PNJ.
+Le champ est vide, vous devez définire une libellé dabord.
+Vous ne pouvez modifier cette libellé pour le moment,<cr>puisqu'elle n'est pas encore créer ou es defini comme étant du code.<cr>Appuyer sur inserrer pour ajouter la libellé et créer les données phisique d'ennemi.
+Le champ est vide, vous devez définire une libellé dabord.
+Vous ne pouvez modifier cette libellé pour le moment,<cr>puisqu'elle n'est pas encore créer ou es defini comme étant du code.<cr>Appuyer sur inserrer pour ajouter la libellé et créer les données de résistance d'ennemi.
+Vous ne pouvez modifier cette libellé pour le moment,<cr>puisqu'elle n'est pas encore créer ou es defini comme étant du code.<cr>Appuyer sur inserrer pour ajouter la libellé et créer les données de mouvement d'ennemi.
+Vous ne pouvez modifier cette libellé pour le moment,<cr>puisqu'elle n'est pas encore créer ou es defini comme étant du code.<cr>Appuyer sur inserrer pour ajouter la libellé et créer les données d'offence d'ennemi.
+Vous ne pouvez modifier cette libellé pour le moment,<cr>puisqu'elle n'est pas encore créer ou es defini comme étant du code.<cr>Appuyer sur inserrer pour ajouter la libellé et créer les données d'image.
+Vous ne pouvez modifier cette libellé pour le moment,<cr>puisqu'elle n'est pas encore créer ou es defini comme étant du code.<cr>Appuyer sur inserrer pour ajouter la libellé et créer les données des valeurs à virgule flotante.
+Ajout de commande
+Commande :
+libellé
+Inserrer
+Ajouter un objet
+Selectioner un objet à ajouter :
+Ajouter
+Ajouter un monstre
+Selectioner le monstre à ajouter :
+Ajouter à la vague :
+Erreur lors de la construction des évènements<cr>
+Évènement de la zone
+Évènement:
+Verifier et enregistrer
+Description
+Description complette:
+ Octèes)
+êtes-vous sure de vouloire enlever ce fichier?
+Gestionnaire de fichier quête.
+Fichier:
+Enregistrer la quête
+Visualisation 3D
+Modèlisation 3D
+Monstre aléatoire
+Disposition
+Selection des ennemis
+Pièce:
+Point d'apparition
+Definition d'ennemis
+Table de configuration
+À propos
+PSO Quest Editor par Schthack
+Suporte pso DC, PC, GC, BB
+Credit:<cr><cr>Codeur:<cr>Schthack<cr><cr>Premier fichier ASM:<cr>Myria<cr>Clara<cr><cr>Mise à jours ASM:<cr>Lee 			(plus de 50% total)<cr>Aleron Ives<cr>Gatten<cr>Schthack<cr><cr>Format des fichiers quête:<cr>Schthack<cr>Lee			(Donnée chalenge)<cr><cr>Format des cartes 3D:<cr>Schthack<cr><cr>Format des modeles 3D:<cr>Kryslin<cr><cr>Recherche des modeles:<cr>Lee<cr>Schthack<cr>Firefox<cr><cr>Un merci bien special à:<cr>AleronIves<cr>Lee<cr>Firefox276<cr>Pour leur suggestions et pour<cr>avoire été de parfait sujet de teste<cr>
+Gestionaire de la liste d'article
+Configuration 3D
+Taille de la fenaitre:
+Omission d'image :
+Distance :
+Enregistrer
+Anticrénelage
+afficher le ciel
+Charger un modele
+Base de donnée :
+Monstre :
+Dificulté :
+Sélectionner le monstre
+Aucune mise à jours disponible.
+Mise à jours
+Complèté.
+Quelque mise à jours seront effectif après avoire redémarer l'application.
+Le projet en cours n'est pas enregistrer et l'application doit être redémarrer,<cr>voulez-vous continuer?
+Impossible de receuillir les informations de mise à jours.
+Impossible de télécharger le fichier.
+<cr>Gardé QEdit a jours<cr>pour avoire les dernières<cr>fonctionalité et<cr>correctifs.<cr>
+Mêtre à jour
+Exporter le texte pour une traduction
+Importer le texte d'une traduction
+Filtre de zone
+Filtré pour:

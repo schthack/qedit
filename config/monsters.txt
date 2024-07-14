@@ -1,0 +1,3407 @@
+	Booma
+Skin	68
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Gobooma
+Skin	68
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	GigoBooma
+Skin	68
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	2
+Flag 2	0
+
+	Savage Wolf
+Skin	67
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Barbarous Wolf
+Skin	67
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	1
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Monest
+Skin	66
+Unknow	0
+Unknow	65535
+Unknow	2
+Unknow	7589
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	5
+Unknow	30
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Rag Rappy
+Skin	65
+Unknow	0
+Unknow	0
+Unknow	1
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep4 - Sand Rappy
+Skin	65
+Unknow	0
+Unknow	0
+Unknow	1
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Hildebear
+Skin	64
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Gillchic
+Skin	128
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Dubchic
+Skin	128
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Garanz
+Skin	129
+Unknow	0
+Unknow	0
+Unknow	6
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Sinow Blue
+Skin	130
+Unknow	0
+Unknow	65535
+Unknow	6
+Unknow	6431
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Sinow Gold
+Skin	130
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	1
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Invisible Sinow
+Skin	130
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	1
+Unknow	1
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Canadine
+Skin	131
+Unknow	0
+Unknow	0
+Unknow	6
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Zonding Canadine
+Skin	131
+Unknow	0
+Unknow	0
+Unknow	6
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	1
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Canane
+Skin	132
+Unknow	0
+Unknow	0
+Unknow	6
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Dubchic Switch
+Skin	133
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Poison Lily
+Skin	97
+Unknow	0
+Unknow	65535
+Unknow	5
+Unknow	6100
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Del Lily ( CCA )
+Skin	97
+Unknow	0
+Unknow	65535
+Unknow	5
+Unknow	6100
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Pofuilly Slime
+Skin	100
+Unknow	0
+Unknow	0
+Unknow	5
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65534
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Pal Shark
+Skin	99
+Unknow	0
+Unknow	65535
+Unknow	5
+Unknow	65535
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65535
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Guil Shark
+Skin	99
+Unknow	0
+Unknow	65535
+Unknow	5
+Unknow	6167
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65535
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	2
+Flag 2	0
+
+	Nano Dragon
+Skin	98
+Unknow	0
+Unknow	65535
+Unknow	5
+Unknow	6184
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65535
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Evil Shark
+Skin	99
+Unknow	0
+Unknow	65535
+Unknow	5
+Unknow	65535
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65535
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Pan Arms
+Skin	101
+Unknow	0
+Unknow	0
+Unknow	5
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65531
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Claw
+Skin	168
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Dimenian
+Skin	166
+Unknow	0
+Unknow	0
+Unknow	8
+Unknow	65535
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65533
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Dark Belre
+Skin	165
+Unknow	0
+Unknow	65535
+Unknow	8
+Unknow	7220
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Delsaber
+Skin	160
+Unknow	0
+Unknow	0
+Unknow	8
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	7
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Chaos Sorcerer
+Skin	161
+Unknow	0
+Unknow	0
+Unknow	8
+Unknow	65535
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Bulclaw
+Skin	167
+Unknow	0
+Unknow	2454
+Unknow	8
+Unknow	6730
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Dark Gunner
+Skin	162
+Unknow	0
+Unknow	2006
+Unknow	9
+Unknow	6136
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	1
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Chaos Bringer
+Skin	164
+Unknow	0
+Unknow	2249
+Unknow	9
+Unknow	6403
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	La Dimenian
+Skin	166
+Unknow	0
+Unknow	0
+Unknow	8
+Unknow	65535
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65533
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	So Dimenian
+Skin	166
+Unknow	0
+Unknow	0
+Unknow	8
+Unknow	65535
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65533
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	2
+Flag 2	0
+
+	grass
+Skin	96
+Unknow	0
+Unknow	65535
+Unknow	4
+Unknow	6149
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65534
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Dragon
+Skin	192
+Unknow	0
+Unknow	65535
+Unknow	4
+Unknow	6149
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65534
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	De Rol Le
+Skin	193
+Unknow	0
+Unknow	65535
+Unknow	4
+Unknow	6149
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65534
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Vol Opt part A
+Skin	194
+Unknow	0
+Unknow	65535
+Unknow	4
+Unknow	6149
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65534
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Vol Opt
+Skin	197
+Unknow	0
+Unknow	65535
+Unknow	4
+Unknow	6149
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65534
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Dark Falz
+Skin	200
+Unknow	0
+Unknow	65535
+Unknow	4
+Unknow	6149
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	65534
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Epsilon ( CCA )
+Skin	224
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Gee
+Skin	217
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Gi Gue
+Skin	218
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Recon Box (10)
+Skin	223
+Unknow	0
+Unknow	655360
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Recon Box (5)
+Skin	223
+Unknow	0
+Unknow	327680
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Gibbles
+Skin	216
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Morfos
+Skin	222
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Ill Gill
+Skin	225
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Mericarol
+Skin	214
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Merikle
+Skin	214
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Ep2 - Mericus
+Skin	214
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	2
+Flag 2	0
+
+	Ep2 - Merillias
+Skin	213
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Meriltas
+Skin	213
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Ep2 - Sinow Beril
+Skin	212
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Sinow Spigell
+Skin	212
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Ep2 - Ul Gibon
+Skin	215
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Zol Gibbon
+Skin	215
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Ep2 - dolmdarl
+Skin	221
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Dolmolm
+Skin	221
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Ep2 - delbiter
+Skin	220
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - deldepth
+Skin	219
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Sinow Zoa (seabed)
+Skin	224
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Sinow Zele (seabed)
+Skin	224
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Ep2 - Gal
+Skin	192
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Olga
+Skin	202
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Barba Ray
+Skin	203
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 - Gol Dragon
+Skin	204
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep4 - Boota
+Skin	277
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep4 - Ze Boota
+Skin	277
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Ep4 - Ba Boota
+Skin	277
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	2
+Flag 2	0
+
+	Ep4 - Sat Lizard
+Skin	273
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep4 - Yowie
+Skin	273
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	1
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep4 - Dorphon
+Skin	278
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep4 - Astark
+Skin	272
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep4 - Girt
+Skin	275
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep4 - Merissa A
+Skin	274
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep4 - Goran
+Skin	279
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep4 - Goran Detonator
+Skin	279
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	2
+Flag 2	0
+
+	Ep4 - Pyro Goran
+Skin	279
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Ep4 - Zu
+Skin	276
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Npc 01
+Skin	1
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 02
+Skin	2
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 03
+Skin	3
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 04
+Skin	4
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 05
+Skin	5
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 06
+Skin	6
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 07
+Skin	7
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 08
+Skin	8
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 09
+Skin	9
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 0A
+Skin	10
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 0B
+Skin	11
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 0C
+Skin	12
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 0D
+Skin	13
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 0E
+Skin	14
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 19 Military
+Skin	25
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 1A Military
+Skin	26
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Principal Tyrel
+Skin	27
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Tekker
+Skin	28
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Bank lady
+Skin	29
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 1E Scientist
+Skin	30
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Nurse
+Skin	31
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Irene
+Skin	32
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Broomop
+Skin	33
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 22 Hunter
+Skin	34
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 24 Ranger
+Skin	36
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 25 Cast
+Skin	37
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 26 Caseal
+Skin	38
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 27 FOmarl
+Skin	39
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 28 FOnewm
+Skin	40
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 29 FOnewearl
+Skin	41
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 2B HUnewearl
+Skin	43
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 2C Cast
+Skin	44
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 2D RAmar
+Skin	45
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 30 FOmarl
+Skin	48
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Hopkins
+Skin	49
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	NPC 32 FOnewearl
+Skin	50
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC D0
+Skin	208
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 Directrice
+Skin	209
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC D2 Millitary
+Skin	210
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC D3
+Skin	211
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC F0 Military
+Skin	240
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC F1
+Skin	241
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC F2
+Skin	242
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 Schthack
+Skin	243
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 Leo
+Skin	244
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 Pagini
+Skin	245
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC F6
+Skin	246
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 Nol
+Skin	247
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 Elly
+Skin	248
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC F9
+Skin	249
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC FA
+Skin	250
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC FB
+Skin	251
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC FC Military
+Skin	252
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC FD
+Skin	253
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 Bank lady
+Skin	254
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Ep2 NPC FF
+Skin	255
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Momoka
+Skin	256
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Saint Million
+Skin	281
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Shambertin
+Skin	281
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	1
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0

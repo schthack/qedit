@@ -1,0 +1,191 @@
+	Booma
+Skin	68
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Gobooma
+Skin	68
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	GigoBooma
+Skin	68
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	2
+Flag 2	0
+
+	Savage Wolf
+Skin	67
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Barbarous Wolf 
+Skin	67
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	1
+Flag 2	0
+
+	Monest
+Skin	66
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Rag Rappy
+Skin	65
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0
+
+	Hildebear 
+Skin	64
+Unknow	0
+Unknow	0
+Unknow	0
+Unknow	0
+Map Section	0
+Apear order	0
+Apear order	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Direction	0
+Unknow	0
+Unknow	0
+Movement Data	0
+Unknow	0
+Unknow	0
+Char ID	0
+Action	0
+Flag 1	0
+Flag 2	0

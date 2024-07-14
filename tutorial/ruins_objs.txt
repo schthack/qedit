@@ -1,0 +1,986 @@
+	AAA
+Skin	0
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Yellow Box
+Skin	353
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Blue Box
+Skin	354
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Ruins 1 Door
+Skin	324
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	0
+Unknow	0
+Action	-1
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Ruins 2 Door
+Skin	326
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	0
+Unknow	0
+Action	-1
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Ruins 3 Door
+Skin	325
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	0
+Unknow	0
+Action	-1
+unknow	0
+Unknow	0
+Unknow	0
+	
+	2-Button Door
+Skin	331
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	-1
+Unknow	0
+	
+	4-Button Door
+Skin	330
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	-1
+Unknow	0
+	
+	Button
+Skin	323
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Button (Pops up)
+Skin	323
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	-1
+Unknow	0
+Unknow	0
+	
+	Laser Fence (Red)
+Skin	335
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Laser Fence (Blue)
+Skin	335
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	1
+Unknow	0
+Unknow	0
+	
+	Laser Fence (Green)
+Skin	335
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	2
+Unknow	0
+Unknow	0
+	
+	Laser Fence (Purple)
+Skin	335
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	3
+Unknow	0
+Unknow	0
+	
+	Fence Switch (Red)
+Skin	333
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Fence Switch (Blue)
+Skin	333
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	1
+Unknow	0
+Unknow	0
+	
+	Fence Switch (Green)
+Skin	333
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	2
+Unknow	0
+Unknow	0
+	
+	Fence Switch (Purple)
+Skin	333
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	3
+Unknow	0
+Unknow	0
+	
+	Crystal
+Skin	341
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	V.Small Rock
+Skin	345
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Small Rock 1
+Skin	346
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Large Rock 1
+Skin	347
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Small Rock 2
+Skin	348
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Giant Rock
+Skin	349
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Large Rock 2
+Skin	350
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Darkness
+Skin	24
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	180
+Unknow	1
+Unknow	0
+Action	17
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Poison
+Skin	352
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	180
+Unknow	1
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Jar Trap
+Skin	339
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	-25
+Unknow	100
+Unknow	15
+Action	200
+unknow	0
+Unknow	60
+Unknow	0
+	
+	Popup Trap (Foie)
+Skin	359
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	100
+Unknow	0
+Unknow	30
+Action	0
+unknow	-1
+Unknow	0
+Unknow	0
+	
+	Popup Trap (Zonde)
+Skin	359
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	100
+Unknow	0
+Unknow	30
+Action	0
+unknow	-1
+Unknow	1
+Unknow	0
+	
+	Popup Trap (Gibarta)
+Skin	359
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	100
+Unknow	0
+Unknow	30
+Action	0
+unknow	-1
+Unknow	2
+Unknow	0
+	
+	Popup Trap (Megid)
+Skin	359
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	100
+Unknow	0
+Unknow	30
+Action	0
+unknow	-1
+Unknow	3
+Unknow	0
+	
+	Popup Trap (Gifoie)
+Skin	359
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	100
+Unknow	0
+Unknow	30
+Action	0
+unknow	-1
+Unknow	4
+Unknow	0
+	
+	Zit
+Skin	338
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Area Warp
+Skin	320
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Warp
+Skin	321
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+	
+	Heal Ring
+Skin	19
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Push Switch
+Skin	322
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Damage Trap
+Skin	10
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	100
+unknow	0
+Unknow	20
+Unknow	0
+
+	Poison Trap
+Skin	11
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	0
+unknow	0
+Unknow	20
+Unknow	0
+
+	Heal Trap
+Skin	12
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	800
+unknow	0
+Unknow	50
+Unknow	0
+
+	Large Damage Trap
+Skin	13
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	200
+unknow	0
+Unknow	50
+Unknow	0
+
+	Confuse Trap
+Skin	11
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	1
+unknow	18
+Unknow	20
+Unknow	0
+
+	Paralysis Trap
+Skin	11
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	1
+unknow	16
+Unknow	20
+Unknow	0
+
+	Slow Trap
+Skin	11
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	1
+unknow	17
+Unknow	20
+Unknow	0
+
+	Freeze Trap
+Skin	10
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	0
+Unknow	-1
+Action	100
+unknow	2
+Unknow	20
+Unknow	0
+
+	Spawn Point
+Skin	8
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	20
+Unknow	0
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0

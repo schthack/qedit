@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{C6B4EE56-EE27-4051-BAAF-29335BDBC32C}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Qedit.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Qedit">
+        <MSBuild Projects="Qedit.dproj"/>
+    </Target>
+    <Target Name="Qedit:Clean">
+        <MSBuild Projects="Qedit.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Qedit:Make">
+        <MSBuild Projects="Qedit.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Qedit"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Qedit:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Qedit:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

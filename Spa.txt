@@ -1,0 +1,297 @@
+Mision
+Propiedades
+Escritura
+Herramientas
+Nuevo
+Episodo 1
+Episodo 2
+Episodo 4
+Cargar
+Guardar
+Idioma
+Quitar
+Titulo
+Información
+Descripción
+Ajustes
+Mostrar escritura
+Exportar
+Importar
+Gestor de archivos de misiones
+Checar compatibilidad
+Lista de items (Solo misiones de BB)
+Vista 3D
+Configuración 3D
+Acerca de...
+Buscar actualizaciones...
+Ayuda!
+Mapa :
+Area :
+Exportar pista de datos
+Importar pista de datos
+Visualizar mapa de eventos
+Datos aleatorios de monstruo
+Monstruo :
+Objetos :
+Mapa visual
+Mostrar el sitio de la ID
+Zoom
+Lugar del sitio de la ID :
+Agregar monstruo
+Agregar objeto
+Borrar
+Editar datos
+Mover
+Deshacer
+Un previo archivo de sombra se ha encontrado para esta Misión.<cr>¿Quieres restauralo?
+Limpiando los modelos anteriores...
+Generando modelos de monstruos...
+Generando modelos de objetos...
+Cargando mapa...
+No se pudo cargar el mapa D; no hay suficiente memoria.
+Error al hacer monstruos en el mapa.
+Error al hacer objetos en el mapa.
+Area
+¿Guardar el proyecto actual antes de salir?
+¿Guardar el proyecto actual antes de abrir uno nuevo?
+Error al desempaquetar la misión.
+Sin uso
+Tipo de grupo desconocido(
+) Desplazamiento
+Error al leer los datos de la misión.
+Error al leer los datos binarios.
+Error al desmontar la escritura de la misión.
+ (Formato DreamCast ASCII)
+ (Formato unicode de PC)
+ - Episodio 1
+ - Episodio 2
+ - Episodio 4
+ - Modo de escritura 2
+Piel desconocida
+NPC desconocido
+Error al reproducir el mapa del area
+Error al reproducir el mapa.
+Error al crear el archivo
+Intervalo
+Escala X
+Escala Y
+Escala Z
+¿Guardar el proyecto actual antes de crear uno nuevo?
+Creando dispositivo 3D...
+No se pudo crear la superficie DirectX.
+ Entradas)
+Todo
+onda #
+Grupo #
+Función principal (etiqueta 0) no está definido
+" en linea
+ en linea
+Auto conversión puede fallar "
+Episodio seleccionado no soportado "
+Opcode no soportado "
+Esta Misión está utilizando una codificación de imagen, asegúrese de que el formato de la imagen coincide con la versión guardada.
+Parámetro de intercambio no permitido en esta versión "
+Etiqueta utilizada indefinida.
+Falta marcar el texto en la línea de comandos
+Etiqueta indefinida
+ Utilizado en NPC #
+ En el piso
+ Monstruo/NPC
+ No funciona en esta versión, entrada #
+NPC 51 seleccionado tiene una mala piel y PSO se cerrara, entrada #
+ No se debe permitir este piso, entrada #
+Objeto
+Piso
+ Tiene más de 400 objetos, esto puede fallar o provocar errores al azar.
+ tiene más de 400 enemigos,esto podría fallar o provocar errores al azar.
+Tira de datos no utilizados:
+No se encuentra el archivo binario.
+No se encuentra el archivo de datos.
+ el archivo PVR no se permite en esta versión..
+layout del mapa.
+Obteniendo información de las actualizaciones....
+Cerrar
+Rango de ataque
+Rango de repeler
+Cargar plantilla
+OK
+Cancelar
+Estado del enemigo
+Checar compatibilidad
+Version :
+Editar
+Posisión Y
+Base Y valor de la zona:
+Datos de ataque del enemigo
+Editar movimientos del enemigo
+Resistencia del enemigo
+Valor de flotador incorrecto a la entrada #
+Editor de datos del flotador
+Información de datos
+Informatción :
+Función
+Datos/Str
+Registrar
+Opcode
+Sin uso
+Datos de NPC
+Codigo
+Datos de imagen
+Cadena de datos
+Datos fisicos del enemigo
+Datos de resistencia del enemigo
+Datos de ataque del enemigo
+Datosde movimiento del enemigo
+Datos del flotador
+Escritura
+Linea
+Arriba
+Abajo
+Editar
+Agregar
+Borrar
+Cambiar fuente
+Importar
+Exportar
+Buscar
+Datos
+Cambiar etiqueta de bandera
+Copiar
+Cortar
+pegar
+Borrar
+Editar NPC
+Cambiar imagen
+Guardar image
+Editar datos fisicos del enemigo
+Editar datos de resistencia del enemigo
+Editar datos de ataque del enemigo
+Editar Enemy movement data
+Editar datos del flotador
+Borrar plato
+como codigo 
+Como datos Hex
+Como datos Str
+No se pudo crear el archivo
+Este no es un archivo valido unicode.
+Texto no encontrado.
+Esta etiqueta no es citada como un NPC de datos,<cr>¿Aún quieres editarlo?
+La etiqueta seleccionado actualmente es indefinida,<cr>Es importante definirla antes de guardar / reabrir la misión.
+La imagen seleccionada debe ser comprimida antes de ser añadida.<cr>¿Quieres que el editor lo haga ahora?
+Archivo añadido correctamente.<cr>Tamaño del archivo original :
+<cr>Tamaño después de la compresión:
+Archivo añadido correctamente.<cr>Tamaaño del archivo :
+Esta etiqueta no es citada como datos físicos de un enemigo,<cr>¿Aún quieres editarlo?
+Esta etiqueta no es citada como datos de resistencia de un enemigo,<cr>¿Aún quieres editarlo?
+Esta etiqueta no es citada como datos de ataque de un enemigo,<cr>¿Aún quieres editarlo?
+Esta etiqueta no es citada como datos de movimiento de un enemigo,<cr>¿Aún quieres editarlo??
+Cambiar el tipo de etiqueta cancelará las modificaciones no guardadas,<cr>¿quieres continuar?
+ Error de desmontaje de escritura!
+Esta etiqueta no es citada como una Flotador de datos,<cr> ¿Aún quieres editarlo?
+Configuración común
+Idioma :
+Misión Numero :
+Titulo de la misión
+Titulo :
+Sección id
+Ningún NPC 
+NPC
+Piel
+Cabeza
+Sin uso
+Cara
+Cabello
+Vestimenta
+Sección id
+Constructor de NPC
+Nombre invalido de opcode 
+La etiqueta del número debe estar entre 0 y 65535
+Etiqueta no válida
+Campo vacío.
+Valor Invalido.
+El valor debe estar entre 0 y FFFFFFFF.
+El valor para el registro debe estar entre 0 y 255.
+El valor para T_BYTE es invalido.
+El valor para T_BYTE debe estar entre 0 y FF.
+El valor para T_WORD es invalido.
+El valor para T_WORD debe estar entre 0 y FFFF.
+El valor para T_PFLAG es invalido.
+El valor para T_PFLAG debe estar entre 0 y FFFF.
+El valor para T_FUNC/T_DATA debe estar entre 0 y 65535.
+El valor para el registro debe estar entre 0 y 255.
+El número de switchs es diferente.
+El valor para el registro debe estar entre 0 y 255.
+El valor debe estar entre 0 y FFFFFFFF.
+Esta etiqueta ya esta en uso y que se define como
+<cr>Porfavor selecciona otra etiqueta.
+Lo sentimos PsoBB EP4 no es soportado desde que Sega aparentemente desactivo esta función.<cr> Lo mismo ocurre en BB ep1 y 2.
+El campo está vacío es necesario configurar una etiqueta antes.
+No puedes editar esta etiqueta aún, Está indefinida o no hay datos<cr>Pulsa insertar para añadir este opcode y crear el NPC.
+El campo está vacío es necesario configurar una etiqueta antes.
+No pedes editar esta etiqueta aún, Está indefinida o no hay datos.<cr>Pulsa insertar para añadir este opcode y crear los datos fisicos del enemigo.
+El campo está vacío es necesario configurar una etiqueta antes.
+No pedes editar esta etiqueta aún, Está indefinida o no hay datos.<cr>Pulsa insertar para añadir este opcode y crear los datos de resistencia del enemigo.
+No pedes editar esta etiqueta aún, Está indefinida o no hay datos.<cr>Pulsa insertar para añadir este opcode y crear los datos de moviento del enemigo.
+No pedes editar esta etiqueta aún, Está indefinida o no hay datos.<cr>Pulsa insertar para añadir este opcode y crear los datos de ataque del enemigo.
+No pedes editar esta etiqueta aún, Está indefinida o no hay datos.<cr>Pulsa insertar para añadir este opcode y crear los datos de imagen.
+No pedes editar esta etiqueta aún, Está indefinida o no hay datos.<cr>Pulsa insertar para añadir este opcode y crear los flotadores.
+Agregar comando
+Opcode :
+Etiqueta
+Insertar
+Agregar objetos
+Selecciona un objeto para añadir :
+Agregar
+Agregar monstruo
+Selecciona el monstruo para añadir :
+Ajustar ola :
+Error al crear el evento<cr>
+Mapa de evento
+Evento:
+Comprobar y Guardar
+Descripción
+Descripción larga:
+ Bytes)
+¿Estás seguro de que deseas eliminar este archivo?
+Gestor de archivos de misiones
+Archivos:
+Guardar mision
+Vista en 3D 
+Procesamiento de 3D
+Monstruos aleatorios
+Posición del monstruo
+Configuración del enemigo
+Salas:
+Engendrar punto
+Ajustes del monstruo
+Configurar recursos
+Acerca
+PSO Editor de misiones por Schthack
+Soporta pso DC, PC, GC, BB
+Creditos:<cr><cr>Coder:<cr>Schthack<cr><cr>Pirmer archivo ASM:<cr>Myria<cr>Clara<cr><cr>Actualización de ASM:<cr>Lee 			(sobre el 50% del asm)<cr>Aleron Ives<cr>Gatten<cr>Schthack<cr><cr>formato de archivo de misión:<cr>Schthack<cr>Lee			(datos de challenge mode)<cr><cr>Estructura de los mapas en 3D:<cr>Schthack<cr><cr>Estructura del modelo en 3D:<cr>Kryslin<cr><cr>Investigacion del modelo de los objetos y monstruos:<cr>Lee<cr>Schthack<cr>Firefox<cr><cr>Agradecimientos especiales a:<cr>AleronIves<cr>Lee<cr>Firefox276<cr>por su buena sugerencia<cr>guinea pigs<cr>
+Gestor de lista de items
+Ajustes 3D
+Tamaño de pantalla:
+Frame skip :
+Distancia :
+Guardar
+Usar anti-alising
+Usar Skydome
+Cargar plantilla
+Base de datos :
+Monstruo :
+Dificultad :
+Seleccionar monstruo
+No hay actualizaciones disponibles.
+Actualizar
+Terminado.
+Algunas actualizaciones tendran efecto al reiniciar la aplicación.
+El proyecto actual no esta guardado y la aplicación necesita reiniciar<cr>¿quieres continuar?
+Se produjo un error al actualizar los datos
+Error al obtener el archivo.
+<cr>Manten QEdit Actualizado<cr>Para asegurar su funcionalidad y<cr>obtener todas las mejoras<cr>que se trabajan<cr>
+en las actualizaciones.
+Exportar texto para traducción
+Importar texto desde traducción
+filtro de plata
+ordenar por:

@@ -1,0 +1,297 @@
+Quest
+Properties
+Script
+Tools
+New
+Episode 1
+Episode 2
+Episode 4
+Load
+Save
+Language
+Quit
+Title
+Information
+Description
+Settings
+View script
+Export
+Import
+Quest files manager
+Compatibility check
+Items list (BB quest only)
+3D View
+3D Setup
+About...
+Check for updates...
+Help!!
+Map :
+Area :
+Export floor data
+Import floor data
+View map event
+Random monster data
+Monsters :
+Objects :
+Visual map
+Show room ID
+Zoom
+Room ID placement :
+Add monster
+Add object
+Delete
+Edit data
+Move
+Undo
+A previous shadow file has been found for this quest.<cr>Do you want to restore it?
+Clearing previous models...
+Generating monsters models...
+Generating objects models...
+Loading map...
+Couldn't load map D; not enought memory.
+Error while rendering monsters on map.
+Error while rendering objects on map.
+Area
+Save curent project before quiting?
+Save curent project before opening a new one?
+Error while unpacking the quest.
+Not used
+Unknown group type(
+) at offset
+Error while reading quest data.
+Error while reading Binary data.
+Error while disassembling the quest script.
+ (DreamCast ASCII Format)
+ (PC Unicode Format)
+ - Episode 1
+ - Episode 2
+ - Episode 4
+ - Script Mode 2
+Unknown skin
+Unknown NPC
+Error rendering map area.
+Error rendering map.
+Error creating the file
+Range
+Scale X
+Scale Y
+Scale Z
+Save curent project before creating a new one?
+Creating 3D device...
+Couldnt create DirectX surface.
+ entrys)
+All
+Wave #
+Group #
+Main function (label 0) is undefined
+" at line
+ at line
+Auto convertion might fail "
+Selected episode not suported "
+Opcode not suported "
+This quest is using an encoded image, make sure the image format matchs the version you're saving to.
+Parameter swap not allowed on this version "
+Undefined label used
+Missing text command mark at line
+Undefined label
+ used in NPC #
+ on floor
+ Monster/NPC
+ doesn't work on this version, entry #
+NPC skin 51 has a bad skin selected and will crash PSO, entry #
+ shouldn't be allowed on this floor, entry #
+Object
+Floor
+ You have over 400 objects, this could crash or cause random bugs.
+ You have over 400 enemys, this could crash or cause random bugs.
+Unused chuck of data :
+No Binary file found.
+No Dataset file found.
+PVR file not allowed on this version.
+Map layout
+Getting update information....
+Close
+Attack range
+Engage range
+Load template
+OK
+Cancel
+Enemy stat
+Compatibility check
+Version :
+Edit
+Y position
+Base Y value of the zone:
+Enemy Attack data
+Enemy movement edit
+Enemy resistance
+Wrong float value at entry #
+Float data editor
+Quest Information
+Information :
+Function
+Data/Str
+Register
+Opcode
+Unused
+NPC data
+Code
+Image data
+String data
+Enemy physical data
+Enemy Resist data
+Enemy attack data
+Enemy movement data
+Float data
+Script
+Line
+Up
+Down
+Edit
+Add
+Delete
+Change font
+Import
+Export
+Search
+Data
+Change Label flag
+Copy
+Cut
+Past
+Delete
+NPC Edit
+Change image
+Save image
+Edit Enemy physical data
+Edit Enemy resistance data
+Edit Enemy attack data
+Edit Enemy movement data
+Edit Float data
+Delete chuck
+As code
+As Hex data
+As Str data
+Couldn't create file
+This isn't a valid unicode file.
+Text not found.
+This label is not referenced as a NPC Data,<cr>Do you still want to edit it?
+The selected label is curently undefined,<cr>It's important you define it before saving/reopening the quest.
+The image selected should be compressed before being added.<cr>Do you want the editor to do it now?
+File added succefully.<cr>Size of the original file :
+<cr>Size after compression:
+File added succefully.<cr>Size of the file :
+This label is not referenced as a Enemy physical Data,<cr>Do you still want to edit it?
+This label is not referenced as a Enemy resistance Data,<cr>Do you still want to edit it?
+This label is not referenced as a Enemy Attack Data,<cr>Do you still want to edit it?
+This label is not referenced as a Enemy Movement Data,<cr>Do you still want to edit it?
+Changing the type of a label will cancel any unsaved changes,<cr>do you want to continue?
+Script Disassembly Error!
+This label is not referenced as a Float Data,<cr>Do you still want to edit it?
+Common setting
+Language :
+Quest Number :
+Quest title
+Title :
+Section id
+NPC None
+NPC
+Skin
+Head
+Unused
+Face
+Hair
+Costume
+Section id
+NPC Builder
+Invalid opcode name
+Label number must be between 0 and 65535
+Label isnt a valid integer
+Field is empty.
+Value is invalid.
+Value must be between 0 and FFFFFFFF.
+Value for Register must be between 0 and 255.
+Value for T_BYTE is invalid.
+Value for T_BYTE must be between 0 and FF.
+Value for T_WORD is invalid.
+Value for T_WORD must be between 0 and FFFF.
+Value for T_PFLAG is invalid.
+Value for T_PFLAG must be between 0 and FFFF.
+Value for T_FUNC/T_DATA must be between 0 and 65535.
+Value for Register must be between 0 and 255.
+Number of switchs is diferent.
+Value for Register must be between 0 and 255.
+Value must be between 0 and FFFFFFFF.
+This label is already used and defined as
+<cr>Please select an other label.
+Sorry PsoBB ep4 is not suported since Sega aparently disabled/bugged this feature.<cr>Same goes for BB ep1 and 2.
+The field is empty you need to set a label before.
+You cant edit this label yet, since its curently undefined or isnt data.<cr>Press insert to add this opcode and set up the NPC.
+The field is empty you need to set a label before.
+You can't edit this label yet, since its curently undefined or isn't data.<cr>Press insert to add this opcode and set up the enemy physical data.
+The field is empty you need to set a label before.
+You can't edit this label yet, since its curently undefined or isn't data.<cr>Press insert to add this opcode and set up the enemy resist data.
+You can't edit this label yet, since its curently undefined or isn't data.<cr>Press insert to add this opcode and set up the enemy movement data.
+You can't edit this label yet, since its curently undefined or isn't data.<cr>Press insert to add this opcode and set up the enemy attack data.
+You can't edit this label yet, since its curently undefined or isn't data.<cr>Press insert to add this opcode and set up the image data.
+You can't edit this label yet, since its curently undefined or isn't data.<cr>Press insert to add this opcode and set up the floats.
+Add command
+Opcode :
+Label
+Insert
+Add Objects
+Select an object to add :
+Add
+Add Monster
+Select the monster to add :
+Set to wave :
+Failed to build the event<cr>
+Map event
+Event:
+Test and save
+Description
+Long description:
+ Bytes)
+Are you sure that you want to remove that file?
+Quest files manager
+Files:
+Save to quest
+3D View
+3D Procesing
+Monster randomness
+Monster position
+Enemy configuration
+Rooms:
+Spawn point
+Monsters setting
+Config pool
+About
+PSO Quest Editor by Schthack
+Suport pso DC, PC, GC, BB
+Credit:<cr><cr>Coder:<cr>Schthack<cr><cr>First ASM file:<cr>Myria<cr>Clara<cr><cr>ASM Update:<cr>Lee 			(over 50% of the asm)<cr>Aleron Ives<cr>Gatten<cr>Schthack<cr><cr>Quest file format:<cr>Schthack<cr>Lee			(chalenge mode data)<cr><cr>3D Maps structure:<cr>Schthack<cr><cr>3D model structure:<cr>Kryslin<cr><cr>Object and Monster model research:<cr>Lee<cr>Schthack<cr>Firefox<cr><cr>Special thanks to:<cr>AleronIves<cr>Lee<cr>Firefox276<cr>for theire suggestion and being very good<cr>guinea pigs<cr>
+Items list manager
+3D Settings
+Screen size:
+Frame skip :
+Distance :
+Save
+Use anti-alising
+Use Skydome
+Load template
+Database :
+Monster :
+Dificulty :
+Select the monster
+There is no updates available.
+Update
+Done.
+Some updates will only take effect after restarting the application.
+The curent project isn't saved and the application need to be restarted,<cr>do you want to continue?
+There was an error retriving update data.
+Error getting file.
+<cr>Keep QEdit up to date to<cr>ensure it's functionality and<cr>get all the improvements<cr>being worked on.<cr>
+Updates
+Export text for translation
+Import text from translation
+Floor filter
+Sort for:

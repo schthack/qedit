@@ -1,0 +1,254 @@
+First you need an NPC for the player to talk to in order to exchange an item. Something like this would work just fine:
+
+
+800: 	disp_msg 0000006E, 'Give me a LAVIS BLADE and I'll make you a DOUBLE CANNON!'
+	close_msg1
+	disp_list R193, 'Make me my weapon!	No thanks!'
+	jmp_eq23 R193, 00000000, 802
+	disp_msg 0000006E, 'No? Well, that's a shame."
+	close_msg
+	ret
+
+Basically what this does is when you speak to the NPC, they'll give you a list of options to choose from, in this case
+the options being: "Make me my weapon!" or "No thanks!". With the code above, should the player select "Make me my weapon!",
+which happens to be 00000000, Function 802 will be executed. If "No thanks" is selected, it shall just continue on with the
+rest of the code in Function 800.
+
+Now lets move on to Function 802:
+
+802:	leti R200, 00000000
+	leti R201, 00000038
+	leti R202, 00000000
+	item_delete R200, R203
+	call 807
+	jmp_eq23 R203, FFFFFFFF, 803
+	addi R248, 00000001
+	jmp_lt R248, 00000001, 802
+	jmp 805
+	ret
+
+Knowledge of weapon/item creation will be needed. Now lets break this down:
+
+802:	leti R200, 00000000
+	leti R201, 00000038
+	leti R202, 00000000
+	item_delete R200, R203
+
+leti R200-R202 defines the item you need to exchange for the other. In this case, the item to be exchanged
+is a LAVIS BLADE. item_delete R200, R203 then uses the values given in leti R200-R202 to see what item it is and then
+deletes that item in the player's inventory.
+
+Then there's this line of code:
+
+call 807
+
+What this is doing is calling forth Function 807 to work along with 802. So lets take a look at Function 807:
+
+807: 	leti R249, 00000000
+808: 	wait_vsync
+	addi R249, 00000001
+	jmp_??_3f R249, 00000002, 808
+	ret
+
+What exactly Function 807 or 808 does, I really don't know. All I do know is that without them, the item exchange won't work
+properly. Also be sure that there is no "ret" at the end of Function 807, otherwise it won't continue on to Function 808.
+This part of the code should not be altered.
+
+Now that we've taken a look at Functions 807 and 808, lets return to rest of Function 801:
+
+	jmp_eq23 R203, FFFFFFFF, 803
+
+I'm not sure how this one works either, but from what I gather, should the player not have the required item or proper amount
+the check will result in a fail which will then execute Function 803. I'll get into what 803 does in a moment. For now, lets
+continue on with the remainder of the code in Function 801:
+
+	addi R248, 00000001
+	jmp_lt R248, 00000001, 802
+
+From what I've gathered, "addi R248, 00000001" increases R248 each time and works in conjunction with the next
+command "jmp_lt R248, 00000001, 802". The "jmp_lt R248, 00000001, 802" is what determines how many of that certain item you
+need in order to perform the exchange. In this example, the player only needs 1 LAVIS BLADE. The jmp_lt R248 will also 
+cause the entire function to be repeated until R248 is equivalent to the value listed for it (in this case 00000001). Once 
+it is, the remainder of the code will be executed:
+
+	jmp 805
+	ret
+
+Once all of the other code has ran and if the check as successful (meaning the player has the item(s) needed), then it'll 
+jump to Function 805 and end 802.
+
+Before we go onward to what 805 is, lets take a look at Function 803, which is what will be executed when the check fails:
+
+803:	jmp_lt R248, 00000001, 801
+	subi R248, 00000001
+	leti R200, 00000000
+	leti R201, 00000038
+	leti R202, 00000000
+	item_create1 R200, R203
+	call 807
+	jmp 803
+	ret
+
+Now lets break this up:
+
+803:	jmp_lt R248, 00000001, 801
+
+What this does, is should R248 be equivalent to 1, Function 801 will be executed:
+
+801: 	disp_msg 0000006E, 'You don't have the required item!'
+	close_msg1
+	ret
+
+As you can see, 801 is pretty much where the NPC tells the player that they don't have the item(s) needed. Now to continue
+onward with the remainder of 803:
+
+	subi R248, 00000001
+
+The value in R248 is reduced by 1. Then you have:
+
+	leti R200, 00000000
+	leti R201, 00000038
+	leti R202, 00000000
+	item_create1 R200, R203
+	
+This is pretty much just creating a weapon/item. leti R200-R202 determine the hex values for the weapon/item and then
+item_create 1 R200, R203 creates the item and places it into the player's inventory. After this you got:
+
+	call 807
+	jmp 803
+	ret
+
+807 is called forth once more. As mentioned earlier, I haven't a clue as to what it does, but it is needed. Then there's
+"jmp 803" which starts Function 803 all over again, subtracting 1 from R248 and remaking the weapon/item that was
+originally deleted in Function 802 (that way the player doesn't lose their item). Once R248 is equal to the value listed in
+"jmp_lt R248, 00000001, 801", it'll execute the code in Function 801, which is where the NPC tells them they don't have the
+item or the amount needed to do the trade. The last piece of code in 803 is naturally "ret", thus ending that function.
+
+The next part of the item exchange is Function 805. This function is the one that is executed when the check in 802 is
+successful. Here's what it should look like:
+
+805:	call 730
+	call 705
+	leti R200, 00000000
+	leti R201, 00000030
+	leti R202, 00000000
+	leti R203, 00000000
+	leti R204, 00000000
+	leti R205, 00000000
+	item_create2 R200, R211
+	call 807
+	jmp_eq23 R211, FFFFFFFF, 1
+	disp_msg 0000006E, 'Here's your weapon!'
+	close_msg1
+	play_se2 00000001
+	disp_new_msg 'You got a DOUBLE CANNON!'
+	close_msg2
+	ret
+
+Now there are a couple ways you can go about with the beginning of this function. The approach above will give the item 
+you'll receive from the transfer (a DOUBLE CANNON for this one) random %s. For more information on this, look over the Weapon
+Creation and Random %s information that was written by Aleron Ives. 
+
+Now lets explain how this all works:
+
+805:	call 730
+	call 705
+	leti R200, 00000000
+	leti R201, 00000030
+	leti R202, 00000000
+	leti R203, 00000000
+	leti R204, 00000000
+	leti R205, 00000000
+	item_create2 R200, R211
+
+This is where the DOUBLE CANNON is created. If you've read the information Ives has written, then it should all be rather
+obvious as to how it works. call 730 and call 705 gives the basic defaults for the weapon and random %s.
+The values given for leti R200-R205 are the hex values for the weapon being created. item_create2 R200, R211 then creates the
+weapon. Then there's:
+
+	call 807
+	jmp_eq23 R211, FFFFFFFF, 1
+
+Still no clue what 807 does. "jmp_eq23 R211, FFFFFFFF, 1" will run should the player's inventory be full, hence preventing
+any crashes/FSOD from occuring...but this shouldn't be a problem being that they lose an item (or items) before Function 805
+is even executed during Function 802. But just to be safe, you should keep this piece of code in. Then you have the remainder
+of the code:
+
+	disp_msg 0000006E, 'Here's your weapon!'
+	close_msg1
+	play_se2 00000001
+	disp_new_msg 'You got a DOUBLE CANNON!'
+	close_msg2
+	ret
+
+The game tells the player they received their item, you get the love sound effect, and then the NPC starts talking again. 
+The function is then completed with "ret". 
+
+
+Here is what the code, as a whole, would look like:
+
+
+800: 	disp_msg 0000006E, 'Give me a LAVIS BLADE and I'll make you a DOUBLE CANNON!'
+	close_msg1
+	disp_list R193, 'Make me my weapon!	No thanks!'
+	jmp_eq23 R193, 00000000, 802
+	disp_msg 0000006E, 'No? Well, that's a shame."
+	close_msg
+	ret
+801: 	disp_msg 0000006E, 'You don't have the required item!'
+	close_msg1
+	ret
+802:	leti R200, 00000000
+	leti R201, 00000038
+	leti R202, 00000000
+	item_delete R200, R203
+	call 807
+	jmp_eq23 R203, FFFFFFFF, 803
+	addi R248, 00000001
+	jmp_lt R248, 00000001, 802
+	jmp 805
+	ret
+803:	jmp_lt R248, 00000001, 801
+	subi R248, 00000001
+	leti R200, 00000000
+	leti R201, 00000038
+	leti R202, 00000000
+	item_create1 R200, R203
+	call 807
+	jmp 803
+	ret
+805:	call 730
+	call 705
+	leti R200, 00000000
+	leti R201, 00000030
+	leti R202, 00000000
+	leti R203, 00000000
+	leti R204, 00000000
+	leti R205, 00000000
+	item_create2 R200, R211
+	call 807
+	jmp_eq23 R211, FFFFFFFF, 1
+	disp_msg 0000006E, 'Here's your weapon!'
+	close_msg1
+	play_se2 00000001
+	disp_new_msg 'You got a DOUBLE CANNON!'
+	close_msg2
+	ret
+807: 	leti R249, 00000000
+808: 	wait_vsync
+	addi R249, 00000001
+	jmp_??_3f R249, 00000002, 808
+	ret
+
+
+And there you have it! An explaination (or at least somewhat of an explaination) as to how to make it so that a player can
+exchange an item(s) for another.
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,62 @@
+To put a death counter in your quest, you need to add the following code:
+
+501:	wait_vsync
+	jmp_eq23 R52, 00000001, 501
+	unknownF88A R251, R115
+	jmp_eq23 R115, 00000009, 502
+	jmp 501
+502:	leti R52, 00000001
+	let R111, R110
+	addi R111, 00000001
+	sync_register 0000006E, 0000006F
+	jmp 501
+511:	wait_vsync
+	jmp_eq23 R52, 00000000, 511
+	unknownF88A R251, R116
+	jmp_eq23 R116, 00000009, 511
+	leti R52, 00000000
+	jmp 511
+
+In this code, R251 is the register where you put
+
+get_player_slot? R251
+
+R110 is the death counter, this is where the number of deaths will go. R111 is used to modify the current death count when someone dies, so if you are going to make quest prizes dependent on player deaths, reference the value of R110 for the death count. The other registers are registers that are unused so far in the quest. To make this code work, you must add a set_floor_handler for every area with monsters or a way for you to die (most likely every area except Pioneer 2) and in the function that set_floor_handler calls you must put
+
+new_thread 501
+new_thread 511
+
+That will start the looping process on both of these function sets. As far as I can see, the 501 and 502 branch is used to see if you have died, the 511 function is used to keep things in check for when you are dead. unknownF88A seems to be some sort of
+
+get_status_of_player? R251
+
+in that since R251 holds your current slot, and this command somehow detects your status and puts that status into R115. Should your status be 9 (dead) then go to function 502, which copies the current value of R110 into R111, adds 1 to R111 (one extra death) and then the sync_register is actually a sync_let so to speak, it says
+
+let R110, R111
+
+for all players, so everyone gets the updated death count. Now function 511 seems to be some sort of check function, because without it the death counter does not work correctly. My guess is that once you are dead, this function activates. You'll notice both functions mess with R52, it seems to be sort of a back and forth thing, once you are dead, as long as you remain dead functions 501 and 502 would continually be adding 1 to the death count over and over until you stop being dead (get revived or go to Pioneer 2.) This second function prevents that loop from occuring by changing the value of R52 so function 502 only runs once each time you die. At least, that's my theory.
+
+Now, I'm not totally sure how this unknownF88A works really, because if it is simply a way to get a player status, you would think that each status would have a value such as the way Anti levels work in GC:
+
+0=normal
+1=poison
+2=shock
+3=paralyzed
+4=confused
+5=slow
+6=frozen
+7=jellen
+8=zalure
+9=dead
+
+Although this seems reasonable, it doesn't seem to be totally right. I tried changing the lines which read
+
+jmp_eq23 R115, 00000009, 502
+jmp_eq23 R116, 00000009, 511
+
+to read
+
+jmp_eq23 R115, 00000001, 502
+jmp_eq23 R116, 00000001, 502
+
+If my theory had been correct, this would have counted the number of times I got poisoned, right? Well, getting poisoned did cause R110 to change, but not in a 1 to 1 ratio for how many times I got poisoned. I think I got like R110 +2 for every time I got poisoned, but as long as poison was sapping my HP R110 kept going up, or something like that. R110 also would change when I got paralyzed, so this clearly needs further research. Hopefully my rambling here will help someone figure out this unknown and name it. If we could get this to work, it might let us make quests where you can only get frozen a certain number of times by Crimson Assassin or something like that, who knows. Anyway, all that works as of now is counting deaths.

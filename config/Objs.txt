@@ -1,0 +1,6257 @@
+	Player Set 1
+Skin	0
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Player Set 2
+Skin	0
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Player Set 3
+Skin	0
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	2
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Player Set 4
+Skin	0
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	3
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Particle
+Skin	1
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Teleporter
+Skin	2
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Warp
+Skin	3
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Light Collision
+Skin	4
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Item
+Skin	5
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Env Sound
+Skin	6
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Fog Collision
+Skin	7
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Event Collision
+Skin	8
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Chara Collision
+Skin	9
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Elemental Trap
+Skin	10
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Status Trap
+Skin	11
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Heal Trap
+Skin	12
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Large Elemental Trap
+Skin	13
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Obj Room ID
+Skin	14
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Sensor
+Skin	15
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (16)
+Skin	16
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lensflare
+Skin	17
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Script Collision
+Skin	18
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Heal Ring
+Skin	19
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Map Collision
+Skin	20
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Script Collision A
+Skin	21
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Item Light
+Skin	22
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Radar Collision
+Skin	23
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Fog Collision SW
+Skin	24
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Boss Teleporter
+Skin	25
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Image Board
+Skin	26
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Area Warp (Ep1) (excluding warp sound)
+Skin	27
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Epilogue
+Skin	28
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (29)
+Skin	29
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (30)
+Skin	30
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (31)
+Skin	31
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Box Detect Object
+Skin	32
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Symbol Chat Object
+Skin	33
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Touch plate Object
+Skin	34
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Targetable Object
+Skin	35
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Effect object
+Skin	36
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Count Down Object
+Skin	37
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (38)
+Skin	38
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (39)
+Skin	39
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (40)
+Skin	40
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (41)
+Skin	41
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Menu activation
+Skin	64
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Telepipe Location
+Skin	65
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	BGM Collision
+Skin	66
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Main Ragol Teleporter
+Skin	67
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lobby Teleporter
+Skin	68
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Principal warp
+Skin	69
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Principal warp B
+Skin	69
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	1
+Unknow	0
+
+	Shop Door
+Skin	70
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Hunter's Guild Door
+Skin	71
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Teleporter Door
+Skin	72
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Medical Center Door
+Skin	73
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Elevator
+Skin	74
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Easter Egg
+Skin	75
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Valentines Heart
+Skin	76
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Christmas Tree
+Skin	77
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Christmas Wreath
+Skin	78
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Halloween Pumpkin
+Skin	79
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	21st Century
+Skin	80
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Dr Robotnic
+Skin	81
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Sonic
+Skin	81
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	1
+unknow	0
+Unknow	0
+Unknow	0
+
+	Knux
+Skin	81
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	2
+unknow	0
+Unknow	0
+Unknow	0
+
+	Tails
+Skin	81
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	3
+unknow	0
+Unknow	0
+Unknow	0
+
+	Welcome Board
+Skin	82
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Firework
+Skin	83
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lobby Screen Door
+Skin	84
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Main Ragol Teleporter (Battle in next area?)
+Skin	85
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lab Teleporter Door
+Skin	86
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Pioneer 2 Invisible Touchplate
+Skin	87
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Forest Door
+Skin	128
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Forest Switch
+Skin	129
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Laser Fence
+Skin	130
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Laser Square Fence
+Skin	131
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Forest Laser Fence Switch
+Skin	132
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Light rays
+Skin	133
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Blue Butterfly
+Skin	134
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Crashed Probe
+Skin	135
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	0
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Probe
+Skin	135
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Random Type Box 1
+Skin	136
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Forest Weather Station
+Skin	137
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Battery
+Skin	138
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Forest Console 1
+Skin	139
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Forest Console 2
+Skin	139
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	1
+Unknow	0
+Unknow	0
+
+	Black Sliding Door
+Skin	140
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Rico Message Pod
+Skin	141
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Energy Barrier
+Skin	142
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Forest Rising Bridge
+Skin	143
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Switch (none door)
+Skin	144
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Enemy Box (Grey)
+Skin	145
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Fixed Type Box
+Skin	146
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Enemy Box (Brown)
+Skin	147
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Empty Type Box
+Skin	149
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Laser Fense Ex
+Skin	150
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Laser Square Fence Ex
+Skin	151
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Floor Panel 1
+Skin	192
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 4 Button door
+Skin	193
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves Normal door
+Skin	194
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves Smashing Pillar
+Skin	195
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves Sign 1
+Skin	196
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves Sign 2
+Skin	197
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves Sign 3
+Skin	198
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Hexagal Tank
+Skin	199
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Brown Platform
+Skin	200
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Warning Light Object
+Skin	201
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Rainbow
+Skin	203
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Floating Jelifish
+Skin	204
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Floating Dragonfly
+Skin	205
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves Switch Door
+Skin	206
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Robot Recharge Station
+Skin	207
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves Cake Shop
+Skin	208
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 1 Small Red Rock 
+Skin	209
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 1 Medium Red Rock
+Skin	210
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 1 Large Red Rock 
+Skin	211
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 2 Small Rock 1
+Skin	212
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 2 Medium Rock 1
+Skin	213
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 2 Large Rock 1
+Skin	214
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 2 Small Rock 2
+Skin	215
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 2 Medium Rock 2
+Skin	216
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 2 Large Rock 2
+Skin	217
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 3 Small Rock
+Skin	218
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 3 Medium Rock
+Skin	219
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Caves 3 Large Rock
+Skin	220
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Floor Panel 2
+Skin	222
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Destructable Rock (Caves 1)
+Skin	223
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Destructable Rock (Caves 2)
+Skin	224
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Destructable Rock (Caves 3)
+Skin	225
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Mines Door
+Skin	256
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Floor Panel 3
+Skin	257
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Mines Switch Door
+Skin	258
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Large Cryo-Tube 
+Skin	259
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Computer (like calus)
+Skin	260
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Green Screen opening and closing 
+Skin	261
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Floating Robot
+Skin	262
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Floating Blue Light
+Skin	263
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Self Destructing Object 1
+Skin	264
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Self Destructing Object 2
+Skin	265
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Self Destructing Object 3
+Skin	266
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Spark Machine
+Skin	267
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Mines Large Flashing Crate
+Skin	268
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Seal
+Skin	304
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Teleporter
+Skin	320
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Warp (Site to site)
+Skin	321
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Switch
+Skin	322
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Floor Panel 4
+Skin	323
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins 1 Door
+Skin	324
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins 3 Door
+Skin	325
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins 2 Door
+Skin	326
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins 1-1 Button Door
+Skin	327
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins 2-1 Button Door
+Skin	328
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins 3-1 Button Door
+Skin	329
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins 4-Button Door
+Skin	330
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins 2-Button Door
+Skin	331
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Sensor
+Skin	332
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Fence Switch
+Skin	333
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Laser Fence 4x2
+Skin	334
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Laser Fence 6x2
+Skin	335
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Laser Fence 4x4
+Skin	336
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Laser Fence 6x4
+Skin	337
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins poison Blob
+Skin	338
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Pilar Trap
+Skin	339
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Popup Trap (No Tech)
+Skin	340
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Crystal
+Skin	341
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Monument
+Skin	342
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Rock 1
+Skin	345
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Rock 2
+Skin	346
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Rock 3
+Skin	347
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Rock 4
+Skin	348
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Rock 5
+Skin	349
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Rock 6
+Skin	350
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ruins Rock 7
+Skin	351
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Poison
+Skin	352
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Fixed Box Type (Ruins)
+Skin	353
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Random Box Type (Ruins)
+Skin	354
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Enemy Type Box (Yellow)
+Skin	355
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Enemy Type Box (Blue)
+Skin	356
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Empty Type Box (Blue)
+Skin	357
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Destructable Rock
+Skin	358
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Popup Traps (techs)
+Skin	359
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Flying White Bird
+Skin	368
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Tower
+Skin	369
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Floating Rocks
+Skin	370
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Floating Soul
+Skin	371
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Butterfly
+Skin	372
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lobby Game menu
+Skin	384
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lobby Warp Object
+Skin	385
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lobby 1 Event Object (Default Tree)
+Skin	386
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (387)
+Skin	387
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (388)
+Skin	388
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (389)
+Skin	389
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lobby Event Object (Static Pumpkin)
+Skin	390
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lobby Event Object (3 Christmas Windows)
+Skin	391
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lobby Event Object (Red and White Curtain)
+Skin	392
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (393)
+Skin	393
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (394)
+Skin	394
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lobby Fish Tank
+Skin	395
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lobby Event Object (Butterflies)
+Skin	396
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (400)
+Skin	400
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	"grey wall (low, squares) "
+Skin	401
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Spaceship Door
+Skin	402
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	"grey wall (high, horizontal lines) "
+Skin	403
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Temple Normal Door
+Skin	416
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	"breakable wall wall, but unbreakable "
+Skin	417
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Broken cilinder and rubble 
+Skin	418
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	3 broken wall pieces on floor 
+Skin	419
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	high brick cilinder
+Skin	420
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	lying cilinder 
+Skin	421
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	brick cone with flat top 
+Skin	422
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	breakable temple wall 
+Skin	423
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Temple Map Detect
+Skin	424
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	small brown brick rising bridge 
+Skin	425
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	long rising bridge (with pink high edges)
+Skin	426
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	4 switch temple door
+Skin	427
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	4 button spaceship door
+Skin	448
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	item box cca 
+Skin	512
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Teleporter (Ep 2)
+Skin	513
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	CCA Door
+Skin	514
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Special Box CCA
+Skin	515
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Big CCA Door
+Skin	516
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Big CCA Door Switch
+Skin	517
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Little Rock
+Skin	518
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Little 3 Stone Wall 
+Skin	519
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Medium 3 stone wall
+Skin	520
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Spider Plant
+Skin	521
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (522)
+Skin	522
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (523)
+Skin	523
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (524)
+Skin	524
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (525)
+Skin	525
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Short Saw
+Skin	527
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Long Saw
+Skin	527
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Laser Detect
+Skin	528
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	0
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Large Laser Detect
+Skin	528
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (529)
+Skin	529
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (530)
+Skin	530
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Seagull
+Skin	531
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Fish
+Skin	544
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Seabed Door (with blue edges) 
+Skin	545
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	"Seabed Door (always open, non-triggerable)"
+Skin	546
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Little Cryotube 
+Skin	547
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Contaner 
+Skin	547
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	1
+unknow	0
+Unknow	0
+Unknow	0
+
+	Wide Glass Wall (breakable) 
+Skin	548
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Blue floating robot
+Skin	549
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Red floating robot
+Skin	550
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Dolphin
+Skin	551
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Capture Trap
+Skin	552
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	VR link
+Skin	553
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (576)
+Skin	576
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Warp in Barba Ray Room
+Skin	640
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (672)
+Skin	672
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Gee Nest
+Skin	688
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lab Computer Console
+Skin	689
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lab Computer Console (Green Screen)
+Skin	690
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Chair, Yelllow Pillow
+Skin	691
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	orange wall with hole in middle 
+Skin	692
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	grey wall with hole in middle
+Skin	693
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	long table 
+Skin	694
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	GBA Station
+Skin	695
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Talk (link to support)
+Skin	696
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	insta-warp 
+Skin	697
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lab Invisible Object
+Skin	698
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lab Glass window Door
+Skin	699
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (700)
+Skin	700
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Lab Celing Warp
+Skin	701
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Ep4 Light Source
+Skin	768
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Long cacti
+Skin	769
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Round cacti
+Skin	769
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	1
+unknow	0
+Unknow	0
+Unknow	0
+
+	Set of cacti
+Skin	769
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	2
+unknow	0
+Unknow	0
+Unknow	0
+
+	Big Brown Rock Medium 1
+Skin	770
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Brown Rock Medium 2
+Skin	770
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	1
+unknow	0
+Unknow	0
+Unknow	0
+
+	Brown Rock small
+Skin	770
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	2
+unknow	0
+Unknow	0
+Unknow	0
+
+	Breakable Brown Rock
+Skin	771
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (832)
+Skin	832
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (833)
+Skin	833
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Poison Plant
+Skin	896
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (897)
+Skin	897
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (898)
+Skin	898
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Oozing Desert Plant
+Skin	899
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (901)
+Skin	901
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	big black rocks (Wilds/Crater)
+Skin	902
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Medium black rocks (Wilds/Crater)
+Skin	902
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	1
+unknow	0
+Unknow	0
+Unknow	0
+
+	small black rocks (Wilds/Crater)
+Skin	902
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	2
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (903)
+Skin	903
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (904)
+Skin	904
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (905)
+Skin	905
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (906)
+Skin	906
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Falling Rock
+Skin	907
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Desert Plant (has collision)
+Skin	908
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Desert Fixed Type Box (Breakable Crystals)
+Skin	909
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (910)
+Skin	910
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Bee Hive 1
+Skin	911
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Bee Hive 2
+Skin	911
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	1
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (912)
+Skin	912
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Heat
+Skin	913
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Top of saint million egg
+Skin	960
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0
+
+	Unknown Item (961)
+Skin	961
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	1
+Unknow	1
+Action	0
+unknow	0
+Unknow	0
+Unknow	0

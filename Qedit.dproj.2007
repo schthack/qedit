@@ -1,0 +1,170 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{DD31A0F2-5D1D-4495-BF7F-607A4724E098}</ProjectGuid>
+			<MainSource>Qedit.dpr</MainSource>
+			<Config Condition="'$(Config)'==''">Débogage</Config>
+			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
+			<Cfg_1>true</Cfg_1>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Débogage' or '$(Cfg_2)'!=''">
+			<Cfg_2>true</Cfg_2>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_ImageBase>00400000</DCC_ImageBase>
+			<DCC_UsePackage>vcl;rtl;dbrtl;adortl;vcldb;vclx;bdertl;vcldbx;ibxpress;dsnap;cds;bdecds;qrpt;teeui;teedb;tee;dss;teeqr;visualclx;visualdbclx;dsnapcrba;dsnapcon;VclSmp;vclshlctrls;inetdb;inet;nmfast;vclie;dbexpress;dbxcds;indy;dclOffice2k;DelphiX_for6;vclFlexCompressd6;xmlrtl;inetdbbde;inetdbxpress;webdsnap;websnap;TAMovie</DCC_UsePackage>
+			<DCC_DependencyCheckOutputName>Qedit.exe</DCC_DependencyCheckOutputName>
+			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;$(DCC_UnitAlias)</DCC_UnitAlias>
+			<DCC_Platform>x86</DCC_Platform>
+			<DCC_SymbolReferenceInfo>1</DCC_SymbolReferenceInfo>
+			<DCC_N>true</DCC_N>
+			<DCC_S>false</DCC_S>
+			<DCC_K>false</DCC_K>
+			<DCC_E>false</DCC_E>
+			<DCC_F>false</DCC_F>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1)'!=''">
+			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+			<DCC_DebugInformation>false</DCC_DebugInformation>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+		</PropertyGroup>
+		<ItemGroup>
+			<DelphiCompile Include="Qedit.dpr">
+				<MainSource>MainSource</MainSource>
+			</DelphiCompile>
+			<DCCReference Include="main.pas">
+				<Form>Form1</Form>
+			</DCCReference>
+			<DCCReference Include="FTitle.pas">
+				<Form>Form2</Form>
+			</DCCReference>
+			<DCCReference Include="FInfo.pas">
+				<Form>Form3</Form>
+			</DCCReference>
+			<DCCReference Include="FScrypt.pas">
+				<Form>Form4</Form>
+			</DCCReference>
+			<DCCReference Include="Unit1.pas"/>
+			<DCCReference Include="TCom.pas">
+				<Form>Form5</Form>
+			</DCCReference>
+			<DCCReference Include="FSetting.pas">
+				<Form>Form6</Form>
+			</DCCReference>
+			<DCCReference Include="FEdit.pas">
+				<Form>Form7</Form>
+			</DCCReference>
+			<DCCReference Include="Unit8.pas">
+				<Form>Form8</Form>
+			</DCCReference>
+			<DCCReference Include="Unit9.pas">
+				<Form>Form9</Form>
+			</DCCReference>
+			<DCCReference Include="Unit10.pas">
+				<Form>Form10</Form>
+			</DCCReference>
+			<DCCReference Include="Unit11.pas">
+				<Form>Form11</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Utilitaire\pika package\PikaPackage.pas"/>
+			<DCCReference Include="Unit12.pas">
+				<Form>Form12</Form>
+			</DCCReference>
+			<DCCReference Include="Unit13.pas">
+				<Form>Form13</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\3d engin\D3DEngin.pas"/>
+			<DCCReference Include="Unit14.pas">
+				<Form>Form14</Form>
+			</DCCReference>
+			<DCCReference Include="Unit15.pas">
+				<Form>Form15</Form>
+			</DCCReference>
+			<DCCReference Include="Unit16.pas">
+				<Form>Form16</Form>
+			</DCCReference>
+			<DCCReference Include="Unit17.pas">
+				<Form>Form17</Form>
+			</DCCReference>
+			<DCCReference Include="Unit18.pas">
+				<Form>Form18</Form>
+			</DCCReference>
+			<DCCReference Include="Unit19.pas">
+				<Form>Form19</Form>
+			</DCCReference>
+			<DCCReference Include="NPCBuild.pas">
+				<Form>Form20</Form>
+			</DCCReference>
+			<BuildConfiguration Include="Base">
+				<Key>Base</Key>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Débogage">
+				<Key>Cfg_2</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Release">
+				<Key>Cfg_1</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+		</ItemGroup>
+		<Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+		<ProjectExtensions>
+			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
+			<Borland.ProjectType>VCLApplication</Borland.ProjectType>
+			<BorlandProject>
+				<Delphi.Personality>
+					<Source>
+						<Source Name="MainSource">Qedit.dpr</Source>
+					</Source>
+					<Parameters>
+						<Parameters Name="UseLauncher">False</Parameters>
+						<Parameters Name="LoadAllSymbols">True</Parameters>
+						<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+					</Parameters>
+					<Language>
+						<Language Name="RootDir">..\Projects\pso server\quest editor\</Language>
+					</Language>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Build">0</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">3084</VersionInfo>
+						<VersionInfo Name="CodePage">1252</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription"/>
+						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+				</Delphi.Personality>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+	</Project>
