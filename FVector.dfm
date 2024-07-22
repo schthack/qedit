@@ -22,7 +22,6 @@ object Form32: TForm32
     Align = alTop
     ColCount = 6
     FixedCols = 0
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goFixedRowDefAlign]
     TabOrder = 0
     OnKeyPress = StringGrid1KeyPress
     OnSelectCell = StringGrid1SelectCell
@@ -34,6 +33,12 @@ object Form32: TForm32
       100
       102
       115)
+    RowHeights = (
+      24
+      24
+      24
+      24
+      24)
   end
   object Button1: TButton
     Left = 8

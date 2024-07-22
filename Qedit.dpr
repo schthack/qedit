@@ -43,7 +43,8 @@ uses
   Vcl.Styles,
   FMonsDet in 'FMonsDet.pas' {Form31},
   FVector in 'FVector.pas' {Form32},
-  FSymbolChat in 'FSymbolChat.pas' {Form33};
+  FSymbolChat in 'FSymbolChat.pas' {Form33},
+  FAsmModeSel in 'FAsmModeSel.pas' {Form34};
 
 {$R *.res}
 
@@ -89,6 +90,7 @@ begin
   Application.CreateForm(TForm31, Form31);
   Application.CreateForm(TForm32, Form32);
   Application.CreateForm(TForm33, Form33);
+  Application.CreateForm(TForm34, Form34);
   Application.Run;
   end;
 end.

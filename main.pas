@@ -483,7 +483,7 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   Unit10, Unit11, PikaPackage, Unit12, Unit13, Unit14, Unit15, Unit16,
   Unit17, Unit18, Unit19, FCompat, MyConst, Unit29, crc32, EnemyStat,
   FEnemyAttack, FEnemyMov, FEnemyResist, FFloatEdit, NPCBuild, Unit22,
-  FFFilter, FMonsDet, Unit23, FSymbolChat;
+  FFFilter, FMonsDet, Unit23, FSymbolChat, FAsmModeSel;
 
 {$R *.dfm}
 
@@ -2327,6 +2327,11 @@ begin
         language := 0;
       if pos('.qst.cn', fn) > 0 then
         language := 0;
+
+      if OpenDialog1.FilterIndex = 2 then begin
+        // detect asm mode
+        form34.showmodal;
+      end;
       QuestDisam(@AsmData, AsmRef, seg[1] - seg[0], (seg[2] - seg[1]) div 4);
     except
       MessageDlg(GetLanguageString(63), mtInformation, [mbOk], 0);
@@ -4654,13 +4659,15 @@ begin
         if pos('.pvr', lowercase(qstfile[x].name)) > 0 then
         begin
           // copy data only
+          qtmp[x] := allocmem(qstfile[x].size * 2);
           F1 := qstfile[x].size;
-          move(qstfile[x].data[0], di[0], F1);
+          move(qstfile[x].data[0], qtmp[x], F1);
         end
         else
         begin
           // compress
-          F1 := pikacompress(qstfile[x].data, di, qstfile[x].size);
+          qtmp[x] := allocmem(qstfile[x].size * 2);
+          F1 := pikacompress(qstfile[x].data, qtmp[x], qstfile[x].size);
         end;
         f := filecreate(fn);
         if f < 0 then
@@ -4668,8 +4675,9 @@ begin
           showmessage(GetLanguageString(74) + #13#10 + fn);
           exit;
         end;
-        filewrite(f, di[0], F1);
+        filewrite(f, qtmp[x][0], F1);
         fileclose(f);
+        freemem(qtmp[x]);
       end;
 
     end
