@@ -3,7 +3,7 @@ object FPlacementOptions: TFPlacementOptions
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Placement Options'
-  ClientHeight = 445
+  ClientHeight = 450
   ClientWidth = 217
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
