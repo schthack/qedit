@@ -7997,7 +7997,7 @@ procedure TForm1.Hidemainwindow1Click(Sender: TObject);
 begin
    if (have3d) and (form13.BorderStyle = bsNone) and (not form13.Focused) then
     Form1.WindowState := wsMinimized
-   else if (have3d) and (form13.BorderStyle = bsNone) and (not form1.Focused) then
+   else if (have3d) and (form13.BorderStyle = bsNone) and (form13.Focused) then
    begin
     Form1.WindowState := wsNormal;
     Form1.BringToFront;
