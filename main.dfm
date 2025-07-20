@@ -672,7 +672,7 @@ object Form1: TForm1
       end
       object Hidemainwindow1: TMenuItem
         Caption = 'Hide main window'
-        ShortCut = 77
+        ShortCut = 16472
         OnClick = Hidemainwindow1Click
       end
     end
