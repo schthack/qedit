@@ -464,7 +464,6 @@ procedure ShowIndicator();
 procedure HideIndicator();
 procedure AdjustDistanceX(target: integer);
 procedure AdjustDistanceY(target: integer);
-procedure AdjustDistanceZ(target: integer);
 
 var
   Form1: TForm1;
@@ -1015,7 +1014,7 @@ begin
   s := inttohex(crc32ofstring(FullQuestFile), 8);
   unDumpQuest(path + 'temp\_' + s);
 
-  tmp2 := 'Quest Editor V 1.0b Public - ' + Title;
+  tmp2 := 'Quest Editor V 1.0c Public - ' + Title;
 
   Form1.Caption := unitochar(tmp2, 1000);
   curepi := GetEpisode;
@@ -2086,7 +2085,7 @@ begin
       if (OpenDialog1.FilterIndex = 6) then
       begin
         unDumpQuest(fn);
-        tmp2 := 'Quest Editor V 1.0b Public - ' + Title;
+        tmp2 := 'Quest Editor V 1.0c Public - ' + Title;
 
         Form1.Caption := unitochar(tmp2, 1000);
         curepi := GetEpisode;
@@ -2465,7 +2464,7 @@ begin
     CheckListBox1.ItemIndex := 0;
     CheckListBox1Click(Form1);
     // Form1.Caption:='Quest Editor V 1.6d - '+Title;
-    tmp2 := 'Quest Editor V 1.0b Public - ' + Title;
+    tmp2 := 'Quest Editor V 1.0c Public - ' + Title;
     { if isdc then Form1.Caption:=Form1.Caption+' (DreamCast ASCII Format)'
       else Form1.Caption:=Form1.Caption+' (PC Unicode Format)';
       if curepi = 0 then  Form1.Caption:=Form1.Caption+' - Episode 1';
@@ -2957,146 +2956,6 @@ begin
   end;
 end;
 
-procedure AdjustDistanceZ(target: integer);
-var
-  i,closest: integer;
-  selectionZ,targetZ: single;
-  diff,diffmin: double;
-begin
-  if FPlacementOptions.chkSnapDistance.Checked then
-  begin
-    diff := 0;
-    diffmin := Double.MaxValue;
-    closest := -1;
-
-    if sType = 1 then
-    begin
-      selectionZ := Floor[sfloor].Monster[selected].Pos_Z;
-      targetZ := Floor[sfloor].Monster[target].Pos_Z;
-
-      if selectionZ < targetZ then
-      begin
-          // First find the next closest from the target in the opposite direction
-          for i := 0 to Floor[sfloor].MonsterCount - 1 do
-          begin
-            if (Floor[sfloor].Monster[i].map_section = Floor[sfloor].Monster[target].map_section) and
-              ((Floor[sfloor].Monster[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Monster[i].Pos_Z > targetZ)
-              and (round(Floor[sfloor].Monster[i].Pos_X) = round(Floor[sfloor].Monster[target].Pos_X))
-              and (round(Floor[sfloor].Monster[i].Pos_Y) = round(Floor[sfloor].Monster[target].Pos_Y))
-              and (round(Floor[sfloor].Monster[selected].Pos_X) = round(Floor[sfloor].Monster[target].Pos_X))
-              and (round(Floor[sfloor].Monster[selected].Pos_Y) = round(Floor[sfloor].Monster[target].Pos_Y))
-              and (i <> target) and (i <> selected) then
-              begin
-                diff := abs(targetZ - Floor[sfloor].Monster[i].Pos_Z);
-                if diff < diffmin then
-                begin
-                  diffmin := diff;
-                  closest := i;
-                end;
-              end;
-          end;
-          // Find the difference
-          if closest <> -1 then
-            diff := abs(targetZ - Floor[sfloor].Monster[closest].Pos_Z);
-         // Offset the selection by the difference
-         if diff <> 0 then
-          Floor[sfloor].Monster[selected].Pos_Z := targetZ - diff;
-      end
-      else if selectionZ > targetZ then
-      begin
-          // First find the next closest from the target in the opposite direction
-          for i := 0 to Floor[sfloor].MonsterCount - 1 do
-          begin
-            if (Floor[sfloor].Monster[i].map_section = Floor[sfloor].Monster[target].map_section) and
-              ((Floor[sfloor].Monster[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Monster[i].Pos_Z < targetZ)
-              and (round(Floor[sfloor].Monster[i].Pos_X) = round(Floor[sfloor].Monster[target].Pos_X))
-              and (round(Floor[sfloor].Monster[i].Pos_Y) = round(Floor[sfloor].Monster[target].Pos_Y))
-              and (round(Floor[sfloor].Monster[selected].Pos_X) = round(Floor[sfloor].Monster[target].Pos_X))
-              and (round(Floor[sfloor].Monster[selected].Pos_Y) = round(Floor[sfloor].Monster[target].Pos_Y))
-              and (i <> target) and (i <> selected) then
-              begin
-                diff := abs(targetZ - Floor[sfloor].Monster[i].Pos_Z);
-                if diff < diffmin then
-                begin
-                  diffmin := diff;
-                  closest := i;
-                end;
-              end;
-          end;
-          // Find the difference
-          if closest <> -1 then
-            diff := abs(targetZ - Floor[sfloor].Monster[closest].Pos_Z);
-         // Offset the selection by the difference
-         if diff <> 0 then
-          Floor[sfloor].Monster[selected].Pos_Z := targetZ + diff;
-      end
-    end;
-
-    if sType = 2 then
-    begin
-      selectionZ := Floor[sfloor].obj[selected].Pos_Z;
-      targetZ := Floor[sfloor].obj[target].Pos_Z;
-
-      if selectionZ < targetZ then
-      begin
-          // First find the next closest from the target in the opposite direction
-          for i := 0 to Floor[sfloor].ObjCount - 1 do
-          begin
-            if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
-              ((Floor[sfloor].Obj[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Obj[i].Pos_Z > targetZ)
-              and (round(Floor[sfloor].Obj[i].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
-              and (round(Floor[sfloor].Obj[i].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
-              and (round(Floor[sfloor].Obj[selected].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
-              and (round(Floor[sfloor].Obj[selected].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
-              and (i <> target) and (i <> selected) then
-              begin
-                diff := abs(targetZ - Floor[sfloor].Obj[i].Pos_Z);
-                if diff < diffmin then
-                begin
-                  diffmin := diff;
-                  closest := i;
-                end;
-              end;
-          end;
-          // Find the difference
-          if closest <> -1 then
-            diff := abs(targetZ - Floor[sfloor].Obj[closest].Pos_Z);
-         // Offset the selection by the difference
-         if diff <> 0 then
-          Floor[sfloor].Obj[selected].Pos_Z := targetZ - diff;
-      end
-      else if selectionZ > targetZ then
-      begin
-          // First find the next closest from the target in the opposite direction
-          for i := 0 to Floor[sfloor].ObjCount - 1 do
-          begin
-            if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
-              ((Floor[sfloor].Obj[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Obj[i].Pos_Z < targetZ)
-              and (round(Floor[sfloor].Obj[i].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
-              and (round(Floor[sfloor].Obj[i].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
-              and (round(Floor[sfloor].Obj[selected].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
-              and (round(Floor[sfloor].Obj[selected].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
-              and (i <> target) and (i <> selected) then
-              begin
-                diff := abs(targetZ - Floor[sfloor].Obj[i].Pos_Z);
-                if diff < diffmin then
-                begin
-                  diffmin := diff;
-                  closest := i;
-                end;
-              end;
-          end;
-          // Find the difference
-          if closest <> -1 then
-            diff := abs(targetZ - Floor[sfloor].Obj[closest].Pos_Z);
-         // Offset the selection by the difference
-         if diff <> 0 then
-          Floor[sfloor].Obj[selected].Pos_Z := targetZ + diff;
-      end
-    end;
-  end;
-end;
-
 procedure TForm1.CheckListBox1Click(Sender: TObject);
 var
   x: integer;
@@ -3344,7 +3203,10 @@ end;
 
 procedure TForm1.Delete1Click(Sender: TObject);
 begin
-  Button3Click(nil);
+  if not form4.edit1.Focused then
+    Button3Click(nil)
+  else if form4.edit1.Focused then
+    form4.edit1.Clear;
 end;
 
 procedure TForm1.Description1Click(Sender: TObject);
@@ -3358,6 +3220,11 @@ var
   Reg: TRegistry;
 begin
   smDisableIndicator.Checked := not smDisableIndicator.Checked;
+  if smDisableIndicator.Checked then
+  begin
+    lblStatus.Visible := false;
+    lblModifiers.Visible := false;
+  end;
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;
@@ -3947,8 +3814,10 @@ end;
 
 procedure TForm1.Copymonster1Click(Sender: TObject);
 begin
-  if Copylastmonster1.Enabled then
-    Copylastmonster1Click(nil);
+  if Copylastmonster1.Enabled and not form4.edit1.Focused then
+    Copylastmonster1Click(nil)
+  else if form4.edit1.Focused then
+    form4.edit1.CopyToClipboard;
 end;
 
 procedure TForm1.ViewScrypt1Click(Sender: TObject);
@@ -6056,12 +5925,10 @@ begin
         inc(Floor[sfloor].MonsterCount);
         if have3d then
         begin
-          Form1.Listbox1.Items.Strings[MoveSel]:='#'+inttostr(MoveSel)+' - ' + GenerateMonsterName(Floor[sfloor].Monster[MoveSel],MoveSel,2); // Refresh monster name
           setlength(MyMonst, Floor[sfloor].MonsterCount);
           MyMonstCount := Floor[sfloor].MonsterCount;
           MyMonst[Floor[sfloor].MonsterCount - 1] := t3ditem.Create(myscreen);
-        end
-        else Form1.Listbox1.Items.Strings[MoveSel]:='#'+inttostr(MoveSel)+' - ' + GenerateMonsterName(Floor[sfloor].Monster[MoveSel],MoveSel,0);
+        end;
         for x := 0 to sizeof(TMonster) - 1 do
           pansichar(@Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1])[x] :=
             pansichar(@Floor[sfloor].Monster[MoveSel])[x];
@@ -6077,7 +5944,6 @@ begin
           MyObjCount := Floor[sfloor].ObjCount;
           MyObj[Floor[sfloor].ObjCount - 1] := nil;
         end;
-        Form1.ListBox2.Items.Strings[MoveSel]:='#'+inttostr(MoveSel)+' - ' + GetObjName(Floor[sfloor].Obj[MoveSel].skin); // Refresh object name
         for x := 0 to sizeof(TObj) - 1 do
           pansichar(@Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1])[x] := pansichar(@Floor[sfloor].Obj[MoveSel])[x];
         ShowIndicator();
@@ -6364,15 +6230,15 @@ begin
       begin
         ShowIndicator();
         MoveSel := Floor[sfloor].MonsterCount - 1;
-        ListBox1.Items.Add('#' + inttostr(MoveSel) + ' - ' + GenerateMonsterName(Floor[sfloor].Monster[Selected],
-          Selected, 0));
+        ListBox1.Items.Add('#' + inttostr(MoveSel) + ' - ' + GenerateMonsterName(Floor[sfloor].Monster[MoveSel],
+          MoveSel, 0));
         Selected := MoveSel;
       end;
       if MoveType = 2 then
       begin
         ShowIndicator();
         MoveSel := Floor[sfloor].ObjCount - 1;
-        ListBox2.Items.Add('#' + inttostr(MoveSel) + ' - ' + GetObjName(Floor[sfloor].Obj[Selected].Skin));
+        ListBox2.Items.Add('#' + inttostr(MoveSel) + ' - ' + GetObjName(Floor[sfloor].Obj[MoveSel].Skin));
         Selected := MoveSel;
 
       end;
@@ -7995,7 +7861,9 @@ end;
 
 procedure TForm1.Hidemainwindow1Click(Sender: TObject);
 begin
-   if (have3d) and (form13.BorderStyle = bsNone) and (not form13.Focused) then
+   if Form4.edit1.Focused then
+    Form4.edit1.CutToClipboard
+   else if (have3d) and (form13.BorderStyle = bsNone) and (not form13.Focused) then
     Form1.WindowState := wsMinimized
    else if (have3d) and (form13.BorderStyle = bsNone) and (form13.Focused) then
    begin
