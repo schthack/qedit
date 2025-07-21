@@ -7880,7 +7880,7 @@ end;
 procedure TForm1.FormMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if Button = mbRight then
+  if (Button = mbRight) and (mdown = 0) then
     PopupMenu3.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
 end;
 
