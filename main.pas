@@ -2964,7 +2964,6 @@ procedure CalculateWarpOffsets(rotation: dword);
 var
   angle: single;
 begin
-  rotation := rotation;
   rotation := rotation mod 65536;
   warpx := -10;
   warpz := -10;
