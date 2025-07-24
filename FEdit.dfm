@@ -108,4 +108,14 @@ object Form7: TForm7
     TabOrder = 3
     OnMouseUp = chkAutoAxisMouseUp
   end
+  object btnToggleData: TButton
+    Left = 12
+    Top = 371
+    Width = 75
+    Height = 25
+    Caption = 'Show data'
+    TabOrder = 4
+    Visible = False
+    OnClick = btnToggleDataClick
+  end
 end

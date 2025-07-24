@@ -464,6 +464,7 @@ procedure ShowIndicator();
 procedure HideIndicator();
 procedure AdjustDistanceX(target: integer);
 procedure AdjustDistanceY(target: integer);
+procedure CalculateWarpOffsets(rotation: dword);
 
 var
   Form1: TForm1;
@@ -553,6 +554,7 @@ var
   anchorenabled: Boolean = false;
   disableindicator: Boolean = false;
   fullscreen: Boolean = false;
+  showdata: Boolean = false;
   OffsetX: single = 0.0;
   OffsetY: single = 0.0;
   OffsetZ: single = 0.0;
@@ -560,6 +562,7 @@ var
   DefaultX: single = 0.0;
   DefaultY: single = 0.0;
   DefaultZ: single = 0.0;
+  warpx, warpz: single;
 
 implementation
 
@@ -1851,8 +1854,9 @@ begin
           then
           begin
             BBRelBmp.Canvas.Pen.Color := ClBlue;
-            i := round((mpx / Zoom) + (Floor[sfloor].Obj[x].unknow8 / Zoom) + mmx);
-            z := round((mpy / Zoom) + (Floor[sfloor].Obj[x].Unknow10 / Zoom) + mmy);
+            CalculateWarpOffsets(Floor[sfloor].Obj[x].unknow6 + rev[Floor[sfloor].Obj[x].map_section]);
+            i := round((mpx / Zoom) + ((Floor[sfloor].Obj[x].unknow8 + warpx) / Zoom) + mmx);
+            z := round((mpy / Zoom) + ((Floor[sfloor].Obj[x].Unknow10 + warpz) / Zoom) + mmy);
             BBRelBmp.Canvas.PenPos := point(i - 10, z);
             BBRelBmp.Canvas.lineto(i + 10, z);
             BBRelBmp.Canvas.PenPos := point(i, z - 10);
@@ -2953,6 +2957,25 @@ begin
           Floor[sfloor].Obj[selectionidx].Pos_Y := targetY + diff;
       end
     end;
+  end;
+end;
+
+procedure CalculateWarpOffsets(rotation: dword);
+var
+  angle: single;
+begin
+  rotation := rotation;
+  rotation := rotation mod 65536;
+  warpx := -10;
+  warpz := -10;
+
+  if rotation <> 0 then
+  begin
+    angle := abs(65536 / rotation);
+    angle := 360 / angle;
+    angle := angle * Pi / 180;
+    warpx := -(10 * sin(angle) + 10 * cos(angle));
+    warpz := -(10 * cos(angle) - 10 * sin(angle));
   end;
 end;
 
@@ -4194,14 +4217,30 @@ begin
           ObjTemplate[x].data.Unknow5 := strtoint(s);
         if ma = 11 then
           ObjTemplate[x].data.unknow6 := strtoint(s);
+
+        // Calculate the in-game values for warp objects based on their rotation
+        CalculateWarpOffsets(ObjTemplate[x].data.unknow6 + rev[ObjTemplate[x].data.map_section]);
+
         if ma = 12 then
           ObjTemplate[x].data.unknow7 := strtoint(s);
+
         if ma = 13 then
-          ObjTemplate[x].data.unknow8 := strtoint(s);
+        begin
+          if ((ObjTemplate[x].data.Skin = 3) or (ObjTemplate[x].data.Skin = 321) or (ObjTemplate[x].data.Skin = 697)) and not showdata then
+            ObjTemplate[x].data.unknow8 := strtoint(s) - warpx
+          else
+            ObjTemplate[x].data.unknow8 := strtoint(s);
+        end;
         if ma = 14 then
           ObjTemplate[x].data.unknow9 := strtoint(s);
         if ma = 15 then
-          ObjTemplate[x].data.Unknow10 := strtoint(s);
+        begin
+          if ((ObjTemplate[x].data.Skin = 3) or (ObjTemplate[x].data.Skin = 321) or (ObjTemplate[x].data.Skin = 697)) and not showdata then
+            ObjTemplate[x].data.unknow10 := strtoint(s) - warpz
+          else
+            ObjTemplate[x].data.unknow10 := strtoint(s);
+        end;
+
         if ma = 16 then
           ObjTemplate[x].data.obj_id := strtoint(s);
         if ma = 17 then
@@ -4418,6 +4457,8 @@ begin
           disableindicator := Reg.ReadBool('DisableIndicator');
         if Reg.ValueExists('Fullscreen3D') then
           fullscreen := Reg.ReadBool('Fullscreen3D');
+        if Reg.ValueExists('ShowData') then
+          showdata := Reg.ReadBool('ShowData');
         Reg.CloseKey;
       end;
       Reg.Free;
@@ -4549,6 +4590,12 @@ begin
     FPlacementOptions.chkDistancelimit.Checked := anchorenabled;
     smDisableIndicator.Checked := disableindicator;
     form17.chkFullscreen.Checked := fullscreen;
+
+    if showdata then
+      form7.btnToggleData.Caption := 'Hide data'
+    else
+      form7.btnToggleData.Caption := 'Show data';
+
     FPlacementOptions.seDistanceLimit.Value := distancelimit;
     FPlacementOptions.nbOffsetX.Value := OffsetX;
     FPlacementOptions.nbOffsetY.Value := OffsetY;
@@ -5908,6 +5955,7 @@ end;
 procedure TForm1.Image2Click(Sender: TObject);
 var
   x, d, pz, i, z, y, j, l, closest: integer;
+  lastwarpx, lastwarpz: single;
   px, py, px2, py2, di, pz2, diff, diffmin: double;
 begin
   if MoveSel > -1 then
@@ -6208,6 +6256,19 @@ begin
         Floor[sfloor].Obj[MoveSel].Pos_X := FPlacementOptions.nbDefaultX.Value;
         Floor[sfloor].Obj[MoveSel].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
         Floor[sfloor].Obj[MoveSel].Pos_Z := FPlacementOptions.nbDefaultY.Value;
+      end;
+
+      // Calculate warp offsets when moving to a new section
+      if ((Floor[sfloor].Obj[MoveSel].Skin = 3) or (Floor[sfloor].Obj[MoveSel].Skin = 321) or (Floor[sfloor].Obj[MoveSel].Skin = 697))
+      and not showdata then
+      begin
+        lastwarpx := Floor[sfloor].Obj[MoveSel].unknow8 + warpx;
+        lastwarpz := Floor[sfloor].Obj[MoveSel].unknow10 + warpz;
+
+        CalculateWarpOffsets(Floor[sfloor].Obj[MoveSel].unknow6 + rev[Floor[sfloor].Obj[MoveSel].map_section]);
+
+        Floor[sfloor].Obj[MoveSel].unknow8 := lastwarpx - warpx;
+        Floor[sfloor].Obj[MoveSel].unknow10 := lastwarpz - warpz;
       end;
 
       if have3d then
@@ -7767,7 +7828,7 @@ begin
   for x := 0 to 63 do
     for i := 0 to 13 do
       form19.StringGrid1.Cells[i, x + 1] := inttohex(BBData[(x * 14) + i + 36], 8);
-  form19.Show;
+  form19.ShowModal;
 end;
 
 {
