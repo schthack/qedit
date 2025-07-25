@@ -199,7 +199,10 @@ begin
                 MessageDlg(getlanguagestring(212), mtInformation,[mbOk], 0);
                 exit;
            end;
-           s:=inttohex(y,8);
+           if showdecimal then
+            s:=format('%.8d',[y])
+           else
+            s:=inttohex(y,8);
 
            end else begin
            if s[1] = 'R' then s:=copy(s,2,length(s)-1);
@@ -225,7 +228,10 @@ begin
                 MessageDlg(getlanguagestring(215), mtInformation,[mbOk], 0);
                 exit;
            end;
-           s:=inttohex(y,2);
+           if showdecimal then
+            s:=format('%.2d',[y])
+           else
+            s:=inttohex(y,2);
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_WORD) then begin
            y:=hextoint(s);
@@ -237,7 +243,10 @@ begin
                 MessageDlg(getlanguagestring(217), mtInformation,[mbOk], 0);
                 exit;
            end;
-           s:=inttohex(y,4);
+           if showdecimal then
+            s:=format('%.4d',[y])
+           else
+            s:=inttohex(y,4);
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_PFLAG) then begin
            y:=hextoint(s);
@@ -249,7 +258,10 @@ begin
                 MessageDlg(getlanguagestring(219), mtInformation,[mbOk], 0);
                 exit;
            end;
-           s:=inttohex(y,4);
+           if showdecimal then
+            s:=format('%.4d',[y])
+           else
+            s:=inttohex(y,4);
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_FUNC) or
             (AsmCode[ComboBox1.ItemIndex].arg[x] = T_DATA) or
@@ -358,7 +370,10 @@ begin
                 MessageDlg(getlanguagestring(224), mtInformation,[mbOk], 0);
                 exit;
            end;
-           s:=inttohex(dword(y),8);
+           if showdecimal then
+            s:=format('%.8d',[dword(y)])
+           else
+            s:=inttohex(dword(y),8);
            end;
         end;
 

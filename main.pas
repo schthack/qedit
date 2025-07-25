@@ -555,6 +555,7 @@ var
   disableindicator: Boolean = false;
   fullscreen: Boolean = false;
   showdata: Boolean = false;
+  showdecimal: Boolean = false;
   OffsetX: single = 0.0;
   OffsetY: single = 0.0;
   OffsetZ: single = 0.0;
@@ -4458,6 +4459,8 @@ begin
           fullscreen := Reg.ReadBool('Fullscreen3D');
         if Reg.ValueExists('ShowData') then
           showdata := Reg.ReadBool('ShowData');
+        if Reg.ValueExists('ShowDecimal') then
+          ShowDecimal := Reg.ReadBool('ShowDecimal');
         Reg.CloseKey;
       end;
       Reg.Free;
@@ -4594,6 +4597,17 @@ begin
       form7.btnToggleData.Caption := 'Hide data'
     else
       form7.btnToggleData.Caption := 'Show data';
+
+    if showdecimal then
+    begin
+      form4.Decimal1.Checked := true;
+      form4.Hex1.Checked := false;
+    end
+    else
+    begin
+      form4.Hex1.Checked := true;
+      form4.Decimal1.Checked := false;
+    end;
 
     FPlacementOptions.seDistanceLimit.Value := distancelimit;
     FPlacementOptions.nbOffsetX.Value := OffsetX;

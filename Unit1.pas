@@ -577,7 +577,12 @@ begin
                     end;
                   end
                   else
-                    s := s + MakeUni(inttohex(Stack[stackb].value, 8));
+                  begin
+                    if showdecimal then
+                      s := s + MakeUni(format('%.8d',[Stack[stackb].value]))
+                    else
+                      s := s + MakeUni(inttohex(Stack[stackb].value, 8));
+                  end;
                   lr := Stack[stackb].value and 255;
                   StackP := 0;
                   inc(stackb);
@@ -745,13 +750,19 @@ begin
               begin
                 if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                 begin
-                  s := s + MakeUni(inttohex(Stack[stackb].value, 2));
+                    if showdecimal then
+                      s := s + MakeUni(format('%.2d',[Stack[stackb].value]))
+                    else
+                      s := s + MakeUni(inttohex(Stack[stackb].value, 2));
                   StackP := 0;
                   inc(stackb);
                 end
                 else
                 begin
-                  s := s + MakeUni(inttohex(byte(code[x]), 2));
+                  if showdecimal then
+                    s := s + MakeUni(format('%.2d',[byte(code[x])]))
+                  else
+                    s := s + MakeUni(inttohex(byte(code[x]), 2));
                   inc(x);
                 end;
               end
@@ -759,13 +770,19 @@ begin
               begin
                 if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                 begin
-                  s := s + MakeUni(inttohex(Stack[stackb].value, 4));
+                  if showdecimal then
+                    s := s + MakeUni(format('%.4d',[Stack[stackb].value]))
+                  else
+                    s := s + MakeUni(inttohex(Stack[stackb].value, 4));
                   StackP := 0;
                   inc(stackb);
                 end
                 else
                 begin
-                  s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
+                  if showdecimal then
+                    s := s + MakeUni(format('%.4d',[byte(code[x]) + (byte(code[x + 1]) * 256)]))
+                  else
+                    s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
                   if AsmCode[y].fnc = $F951 then
                   begin // .name='BB_Map_Designate' then begin
                     // map info
@@ -824,13 +841,19 @@ begin
                 begin
                   if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                   begin
-                    s := s + MakeUni(inttohex(Stack[stackb].value, 4));
+                    if showdecimal then
+                      s := s + MakeUni(format('%.4d',[Stack[stackb].value]))
+                    else
+                      s := s + MakeUni(inttohex(Stack[stackb].value, 4));
                     StackP := 0;
                     inc(stackb);
                   end
                   else
                   begin
-                    s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
+                    if showdecimal then
+                      s := s + MakeUni(format('%.4d',[byte(code[x]) + (byte(code[x + 1]) * 256)]))
+                    else
+                      s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
                     x := x + 2;
                   end;
                 end
@@ -884,7 +907,12 @@ begin
                       end;
                     end
                     else
-                      s := s + MakeUni(inttohex(Stack[stackb].value, 8));
+                    begin
+                      if showdecimal then
+                        s := s + MakeUni(format('%.8d',[Stack[stackb].value]))
+                      else
+                        s := s + MakeUni(inttohex(Stack[stackb].value, 8));
+                    end;
                     if AsmCode[y].fnc = $9 then
                     begin // .name='leti' then begin
                       regis[lr] := Stack[stackb].value;
@@ -898,7 +926,11 @@ begin
                   end
                   else
                   begin
-                    s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
+                    if showdecimal then
+                      s := s + MakeUni(format('%.8d',[byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
+                      (byte(code[x + 3]) * $1000000)]))
+                    else
+                      s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
                       (byte(code[x + 3]) * $1000000), 8));
                     if AsmCode[y].fnc = $9 then
                     begin // name='leti' then begin
@@ -1010,14 +1042,21 @@ begin
                 begin
                   if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                   begin
-                    s := s + MakeUni(inttohex(Stack[stackb].value, 8));
+                    if showdecimal then
+                      s := s + MakeUni(format('%.8d',[Stack[stackb].value]))
+                    else
+                      s := s + MakeUni(inttohex(Stack[stackb].value, 8));
                     StackP := 0;
                     inc(stackb);
                   end
                   else
                   begin
-                    s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
-                      (byte(code[x + 3]) * $1000000), 8));
+                    if showdecimal then
+                      s := s + MakeUni(format('%.8d',[byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
+                        (byte(code[x + 3]) * $1000000)]))
+                    else
+                      s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
+                        (byte(code[x + 3]) * $1000000), 8));
                     x := x + 4;
                   end;
                 end;
@@ -1329,7 +1368,10 @@ begin
               begin
                 code[p] := #$49;
                 inc(p);
-                dw := hextoint(b);
+                if showdecimal then
+                  dw := strtoint(b)
+                else
+                  dw := hextoint(b);
                 move(dw, code[p], 4);
                 inc(p, 4);
               end;
@@ -1353,17 +1395,30 @@ begin
             begin
               code[p] := #$4a;
               inc(p);
-              code[p] := ansichar(hextoint(b));
+              if showdecimal then
+                code[p] := ansichar(strtoint(b))
+              else
+                code[p] := ansichar(hextoint(b));
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_WORD) or (AsmCode[z].arg[i] = T_PFLAG) then
             begin
               code[p] := #$4b;
               inc(p);
-              code[p] := ansichar(hextoint(b));
-              inc(p);
-              code[p] := ansichar(hextoint(b) div 256);
-              inc(p);
+              if showdecimal then
+              begin
+                code[p] := ansichar(strtoint(b));
+                inc(p);
+                code[p] := ansichar(strtoint(b) div 256);
+                inc(p);
+              end
+              else
+              begin
+                code[p] := ansichar(hextoint(b));
+                inc(p);
+                code[p] := ansichar(hextoint(b) div 256);
+                inc(p);
+              end;
             end
             else if (AsmCode[z].arg[i] = T_DATA) then
             begin
@@ -1487,7 +1542,10 @@ begin
               begin
                 code[p] := #$49;
                 inc(p);
-                dw := hextoint(b);
+                if showdecimal then
+                  dw := strtoint(b)
+                else
+                  dw := hextoint(b);
                 move(dw, code[p], 4);
                 inc(p, 4);
               end;
@@ -1547,14 +1605,26 @@ begin
             end
             else if (AsmCode[z].arg[i] = T_BYTE) then
             begin
-              code[p] := ansichar(hextoint(b));
+              if showdecimal then
+                code[p] := ansichar(strtoint(b))
+              else
+                code[p] := ansichar(hextoint(b));
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_WORD) or (AsmCode[z].arg[i] = T_PFLAG) then
             begin
-              code[p] := ansichar(hextoint(b));
-              inc(p);
-              code[p] := ansichar(hextoint(b) div 256);
+              if showdecimal then
+              begin
+                code[p] := ansichar(strtoint(b));
+                inc(p);
+                code[p] := ansichar(strtoint(b) div 256);
+              end
+              else
+              begin
+                code[p] := ansichar(hextoint(b));
+                inc(p);
+                code[p] := ansichar(hextoint(b) div 256);
+              end;
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_DATA) or (AsmCode[z].arg[i] = T_STRDATA) then
@@ -1692,14 +1762,28 @@ begin
             end
             else
             begin
-              code[p] := ansichar(hextoint(b));
-              inc(p);
-              code[p] := ansichar(hextoint(b) div 256);
-              inc(p);
-              code[p] := ansichar(hextoint(b) div $10000);
-              inc(p);
-              code[p] := ansichar(hextoint(b) div $1000000);
-              inc(p);
+              if showdecimal then
+              begin
+                code[p] := ansichar(strtoint(b));
+                inc(p);
+                code[p] := ansichar(strtoint(b) div 256);
+                inc(p);
+                code[p] := ansichar(strtoint(b) div $10000);
+                inc(p);
+                code[p] := ansichar(strtoint(b) div $1000000);
+                inc(p);
+              end
+              else
+              begin
+                code[p] := ansichar(hextoint(b));
+                inc(p);
+                code[p] := ansichar(hextoint(b) div 256);
+                inc(p);
+                code[p] := ansichar(hextoint(b) div $10000);
+                inc(p);
+                code[p] := ansichar(hextoint(b) div $1000000);
+                inc(p);
+              end;
             end;
             inc(i);
           end;

@@ -57,6 +57,9 @@ type
     EditVectordata1: TMenuItem;
     Editsymbolechat1: TMenuItem;
     Addsymbolechat1: TMenuItem;
+    Changedataformat1: TMenuItem;
+    Decimal1: TMenuItem;
+    Hex1: TMenuItem;
     procedure Button4Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -98,6 +101,8 @@ type
     procedure EditVectordata1Click(Sender: TObject);
     procedure Editsymbolechat1Click(Sender: TObject);
     procedure Addsymbolechat1Click(Sender: TObject);
+    procedure Decimal1Click(Sender: TObject);
+    procedure Hex1Click(Sender: TObject);
 
 
   private
@@ -609,7 +614,16 @@ begin
         form5.UnicodeStringGrid1.Cells[1,x]:=s;
         inc(x);
         end;
-        lastmode:=0;
+        if showdecimal then
+        begin
+          form5.TabControl1.TabIndex := 1;
+          lastmode:=1
+        end
+        else
+        begin
+          form5.TabControl1.TabIndex := 0;
+          lastmode:=0;
+        end;
         form5.TabControl1Change(form5);
         Form5.ShowModal;
     end;
@@ -1147,6 +1161,38 @@ begin
     if listbox1.itemindex > -1 then begin
         CopyedData:=listbox1.Items.Strings[listbox1.itemindex];
         listbox1.Items.Delete(listbox1.itemindex);
+    end;
+end;
+
+procedure TForm4.Decimal1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+    if not Decimal1.Checked then
+    begin
+      if MessageDlg('Changing the display format will cancel any unsaved changes, continue?',
+        mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      begin
+        showdecimal := true;
+        Decimal1.Checked := true;
+        Hex1.Checked := false;
+        Reg := TRegistry.Create;
+        try
+          Reg.RootKey := HKEY_CURRENT_USER;
+        if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+        begin
+          Reg.WriteBool('ShowDecimal', true);
+          Reg.CloseKey;
+        end;
+        finally
+          Reg.Free;
+        end;
+        try
+          QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+        except
+          Showmessage('Error reloading quest data.');
+        end;
+      end;
     end;
 end;
 
@@ -1951,6 +1997,38 @@ end;
 procedure TForm4.FormCreate(Sender: TObject);
 begin
    // listbox1:=TMyNewUnicode.create;
+end;
+
+procedure TForm4.Hex1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+    if not Hex1.Checked then
+    begin
+      if MessageDlg('Changing the display format will cancel any unsaved changes, continue?',
+        mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      begin
+        showdecimal := false;
+        Decimal1.Checked := false;
+        Hex1.Checked := true;
+        Reg := TRegistry.Create;
+        try
+          Reg.RootKey := HKEY_CURRENT_USER;
+        if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+        begin
+          Reg.WriteBool('ShowDecimal', false);
+          Reg.CloseKey;
+        end;
+        finally
+          Reg.Free;
+        end;
+      end;
+      try
+        QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+      except
+        Showmessage('Error reloading quest data.');
+      end;
+    end;
 end;
 
 end.
