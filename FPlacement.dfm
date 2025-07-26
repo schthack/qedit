@@ -64,7 +64,7 @@ object FPlacementOptions: TFPlacementOptions
     Caption = 'Section:'
   end
   object Label8: TLabel
-    Left = 34
+    Left = 30
     Top = 324
     Width = 106
     Height = 13
@@ -180,7 +180,7 @@ object FPlacementOptions: TFPlacementOptions
     OnClick = btnResetClick
   end
   object chkSnapRotate: TCheckBox
-    Left = 24
+    Left = 21
     Top = 355
     Width = 98
     Height = 17
@@ -188,7 +188,7 @@ object FPlacementOptions: TFPlacementOptions
     TabOrder = 8
   end
   object chkSnapDistance: TCheckBox
-    Left = 113
+    Left = 110
     Top = 355
     Width = 98
     Height = 17
@@ -207,7 +207,7 @@ object FPlacementOptions: TFPlacementOptions
     Value = 0
   end
   object chkDistancelimit: TCheckBox
-    Left = 35
+    Left = 31
     Top = 295
     Width = 111
     Height = 17
