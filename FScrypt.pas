@@ -615,15 +615,9 @@ begin
         inc(x);
         end;
         if showdecimal then
-        begin
-          form5.TabControl1.TabIndex := 1;
           lastmode:=1
-        end
         else
-        begin
-          form5.TabControl1.TabIndex := 0;
           lastmode:=0;
-        end;
         form5.TabControl1Change(form5);
         Form5.ShowModal;
     end;
@@ -1167,11 +1161,14 @@ end;
 procedure TForm4.Decimal1Click(Sender: TObject);
 var
   Reg: TRegistry;
+  choice: integer;
 begin
     if not Decimal1.Checked then
     begin
-      if MessageDlg('Changing the display format will cancel any unsaved changes, continue?',
-        mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      if isedited then
+        choice := MessageDlg('Changing the display format will cancel any unsaved changes, continue?',
+          mtConfirmation, [mbYes, mbNo], 0);
+      if (choice = mrYes) or (not isedited) then
       begin
         showdecimal := true;
         Decimal1.Checked := true;
@@ -2002,11 +1999,14 @@ end;
 procedure TForm4.Hex1Click(Sender: TObject);
 var
   Reg: TRegistry;
+  choice: integer;
 begin
     if not Hex1.Checked then
     begin
-      if MessageDlg('Changing the display format will cancel any unsaved changes, continue?',
-        mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      if isedited then
+        choice := MessageDlg('Changing the display format will cancel any unsaved changes, continue?',
+          mtConfirmation, [mbYes, mbNo], 0);
+      if (choice = mrYes) or (not isedited) then
       begin
         showdecimal := false;
         Decimal1.Checked := false;

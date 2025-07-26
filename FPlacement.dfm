@@ -3,7 +3,7 @@ object FPlacementOptions: TFPlacementOptions
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Placement Options'
-  ClientHeight = 450
+  ClientHeight = 458
   ClientWidth = 217
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -64,8 +64,8 @@ object FPlacementOptions: TFPlacementOptions
     Caption = 'Section:'
   end
   object Label8: TLabel
-    Left = 27
-    Top = 319
+    Left = 30
+    Top = 324
     Width = 106
     Height = 13
     Caption = 'Snap tolerance (units):'
@@ -88,7 +88,7 @@ object FPlacementOptions: TFPlacementOptions
   end
   object btnSave: TButton
     Left = 72
-    Top = 376
+    Top = 385
     Width = 75
     Height = 25
     Caption = 'Save'
@@ -107,8 +107,8 @@ object FPlacementOptions: TFPlacementOptions
     Value = 0
   end
   object seSnapTolerance: TSpinEdit
-    Left = 148
-    Top = 316
+    Left = 144
+    Top = 321
     Width = 41
     Height = 22
     MaxValue = 0
@@ -172,7 +172,7 @@ object FPlacementOptions: TFPlacementOptions
   end
   object btnReset: TButton
     Left = 72
-    Top = 407
+    Top = 416
     Width = 75
     Height = 25
     Caption = 'Defaults'
@@ -180,24 +180,24 @@ object FPlacementOptions: TFPlacementOptions
     OnClick = btnResetClick
   end
   object chkSnapRotate: TCheckBox
-    Left = 23
-    Top = 289
+    Left = 21
+    Top = 355
     Width = 98
     Height = 17
     Caption = 'Snap rotation'
     TabOrder = 8
   end
   object chkSnapDistance: TCheckBox
-    Left = 112
-    Top = 289
+    Left = 110
+    Top = 355
     Width = 98
     Height = 17
     Caption = 'Snap distance'
     TabOrder = 9
   end
   object seDistanceLimit: TSpinEdit
-    Left = 148
-    Top = 344
+    Left = 144
+    Top = 293
     Width = 41
     Height = 22
     Enabled = False
@@ -207,8 +207,8 @@ object FPlacementOptions: TFPlacementOptions
     Value = 0
   end
   object chkDistancelimit: TCheckBox
-    Left = 29
-    Top = 346
+    Left = 31
+    Top = 295
     Width = 111
     Height = 17
     Caption = 'Anchor limit (units):'
