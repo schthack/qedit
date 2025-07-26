@@ -584,7 +584,7 @@ object Form4: TForm4
       end
     end
     object Changedataformat1: TMenuItem
-      Caption = 'Argument format'
+      Caption = 'Set argument format'
       object Decimal1: TMenuItem
         Caption = 'Decimal'
         OnClick = Decimal1Click

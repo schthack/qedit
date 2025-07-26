@@ -1189,6 +1189,7 @@ begin
         Decimal1.Checked := true;
         Hex1.Checked := false;
         Reg := TRegistry.Create;
+        choice := listbox1.ItemIndex;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -1201,6 +1202,7 @@ begin
         end;
         try
           QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+          listbox1.ItemIndex := choice;
         except
           Showmessage('Error reloading quest data.');
         end;
@@ -2027,6 +2029,7 @@ begin
         Decimal1.Checked := false;
         Hex1.Checked := true;
         Reg := TRegistry.Create;
+        choice := listbox1.ItemIndex;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -2040,6 +2043,7 @@ begin
       end;
       try
         QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+        listbox1.ItemIndex := choice;
       except
         Showmessage('Error reloading quest data.');
       end;
