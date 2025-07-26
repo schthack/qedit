@@ -1627,24 +1627,28 @@ begin
 end;
 
 procedure TForm4.Ascode1Click(Sender: TObject);
-var x,i:integer;
+var x,i,choice:integer;
 begin
-    if MessageDlg(getlanguagestring(188),
-    mtConfirmation, [mbYes, mbNo], 0) = mrYes then  begin
-
-    x:=tmenuitem(sender).Tag;
-    if x = 0 then begin
-        for i:=0 to 1000 do if datablock[i]=section1.Tag then datablock[i]:=-1;
-    end else begin
-        for i:=0 to 1000 do if (datablock[i]=section1.Tag) or (datablock[i]=-1) then break;
-        datablock[i]:=section1.Tag;
-        datablockt[i]:=x;
-    end;
-    try
-    QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
-    except
-        Showmessage(getlanguagestring(189));
-    end;
+    if isedited then
+      choice := MessageDlg(getlanguagestring(188),
+        mtConfirmation, [mbYes, mbNo], 0);
+    if (choice = mrYes) or (not isedited) then
+    begin
+      choice := listbox1.ItemIndex;
+      x:=tmenuitem(sender).Tag;
+      if x = 0 then begin
+          for i:=0 to 1000 do if datablock[i]=section1.Tag then datablock[i]:=-1;
+      end else begin
+          for i:=0 to 1000 do if (datablock[i]=section1.Tag) or (datablock[i]=-1) then break;
+          datablock[i]:=section1.Tag;
+          datablockt[i]:=x;
+      end;
+      try
+      QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+      listbox1.ItemIndex := choice;
+      except
+          Showmessage(getlanguagestring(189));
+      end;
     end;
 end;
 
