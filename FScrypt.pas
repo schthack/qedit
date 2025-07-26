@@ -565,7 +565,16 @@ procedure TForm4.Button3Click(Sender: TObject);
 begin
     form5.Tag:=0;
     form5.Edit5.Text:='';
-    lastmode:=0;
+    if showdecimal then
+    begin
+      lastmode:=1;
+      form5.TabControl1.TabIndex := 1;
+    end
+    else
+    begin
+      lastmode:=0;
+      form5.TabControl1.TabIndex := 0;
+    end;
     form5.TabControl1Change(form5);
     Form5.ShowModal;
 end;
@@ -615,9 +624,15 @@ begin
         inc(x);
         end;
         if showdecimal then
-          lastmode:=1
+        begin
+          lastmode:=1;
+          form5.TabControl1.TabIndex := 1;
+        end
         else
+        begin
           lastmode:=0;
+          form5.TabControl1.TabIndex := 0;
+        end;
         form5.TabControl1Change(form5);
         Form5.ShowModal;
     end;
