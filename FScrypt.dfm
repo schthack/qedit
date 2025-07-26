@@ -566,17 +566,6 @@ object Form4: TForm4
         OnClick = Addsymbolechat1Click
       end
     end
-    object Changedataformat1: TMenuItem
-      Caption = 'Format'
-      object Decimal1: TMenuItem
-        Caption = 'Decimal'
-        OnClick = Decimal1Click
-      end
-      object Hex1: TMenuItem
-        Caption = 'Hex'
-        OnClick = Hex1Click
-      end
-    end
     object Section1: TMenuItem
       Caption = 'Change Label flag'
       object Ascode1: TMenuItem
@@ -592,6 +581,17 @@ object Form4: TForm4
         Tag = 19
         Caption = 'As Str data'
         OnClick = Ascode1Click
+      end
+    end
+    object Changedataformat1: TMenuItem
+      Caption = 'Argument format'
+      object Decimal1: TMenuItem
+        Caption = 'Decimal'
+        OnClick = Decimal1Click
+      end
+      object Hex1: TMenuItem
+        Caption = 'Hex'
+        OnClick = Hex1Click
       end
     end
     object N1: TMenuItem
