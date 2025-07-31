@@ -11,7 +11,8 @@ object fmGoto: TfmGoto
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  Position = poOwnerFormCenter
+  Position = poDesigned
+  OnShow = FormShow
   TextHeight = 13
   object btnOK: TButton
     Left = 37

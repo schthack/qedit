@@ -75,6 +75,16 @@ object fmScriptTE: TfmScriptTE
     Top = 24
     object File1: TMenuItem
       Caption = 'File'
+      object Openfromfile1: TMenuItem
+        Caption = 'Import from file'
+        ShortCut = 16463
+        OnClick = Openfromfile1Click
+      end
+      object Savetofile1: TMenuItem
+        Caption = 'Export to file'
+        ShortCut = 16467
+        OnClick = Savetofile1Click
+      end
       object Exit1: TMenuItem
         Caption = 'Exit'
         OnClick = Exit1Click
@@ -145,7 +155,18 @@ object fmScriptTE: TfmScriptTE
   end
   object Timer1: TTimer
     OnTimer = Timer1Timer
-    Left = 80
-    Top = 24
+    Left = 24
+    Top = 192
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 'Pso quest Asm|*.pasm'
+    Left = 24
+    Top = 80
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = '*.pasm'
+    Filter = 'Pso quest Asm|*.pasm'
+    Left = 24
+    Top = 136
   end
 end

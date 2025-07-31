@@ -18,6 +18,7 @@ type
     chkSelection: TCheckBox;
     procedure btnOKClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -48,6 +49,13 @@ begin
   end;
 
  fmReplace.Close;
+end;
+
+procedure TfmReplace.FormShow(Sender: TObject);
+begin
+    // Center form based on the text editor position
+    fmReplace.Left := fmScriptTE.Left + (fmScriptTE.Width - fmReplace.Width) div 2;
+    fmReplace.Top := fmScriptTE.Top + (fmScriptTE.Height - fmReplace.Height) div 2;
 end;
 
 end.

@@ -13,6 +13,7 @@ type
     Button1: TButton;
     procedure btnOKClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
 
   private
     { Private declarations }
@@ -30,23 +31,47 @@ uses FScriptTE;
 {$R *.dfm}
 
 procedure TfmGoto.btnOKClick(Sender: TObject);
+var
+  i: integer;
+  labelfound: Boolean;
 begin
-  fmScriptTE.TextEdit.MoveCaretToBeginning;
-  with fmScriptTE.TextEdit.Search do
+  labelfound := false;
+
+  with fmScriptTE.TextEdit do
   begin
-    SearchText := SpinEdit1.Text + ':    ';
-    SetOption(TTextEditorSearchOption.soBeepIfStringNotFound, false);
-    Execute;
-    SetOption(TTextEditorSearchOption.soBeepIfStringNotFound, true);
-    fmScriptTE.TextEdit.Search.ClearItems;
-    fmScriptTE.TextEdit.search.SearchText := '';
+    for i := 0 to Lines.Count do
+    begin
+      if Lines[i].StartsWith(SpinEdit1.Text + ':') then
+      begin
+        labelfound := true;
+        if i = Lines.Count then
+          GoToLine(i)
+        else
+        begin
+          GoToLine(i + 1);
+          TopLine := i + 1;
+        end;
+        // Move caret to end of line
+        CaretIndex := CaretIndex + Length(Lines[i]) - 1;
+      end;
+    end;
   end;
-  fmGoto.Close;
+
+  if not labelfound then
+    MessageDlg('Label not found', mtInformation,[mbOk], 0)
+  else fmGoto.Close;
 end;
 
 procedure TfmGoto.Button1Click(Sender: TObject);
 begin
   fmGoto.Close;
+end;
+
+procedure TfmGoto.FormShow(Sender: TObject);
+begin
+    // Center form based on the text editor position
+    fmGoto.Left := fmScriptTE.Left + (fmScriptTE.Width - fmGoto.Width) div 2;
+    fmGoto.Top := fmScriptTE.Top + (fmScriptTE.Height - fmGoto.Height) div 2;
 end;
 
 end.

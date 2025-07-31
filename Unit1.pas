@@ -1192,6 +1192,7 @@ begin
   if fmScriptTE.Visible then
   begin
     Form4.Listbox1.Clear;
+    UpdateTextRefs();
     for i := 0 to fmScriptTE.TextEdit.LineNumbersCount do
     begin
     if fmScriptTE.TextEdit.Lines[i] <> '' then

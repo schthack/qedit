@@ -14,6 +14,7 @@ type
     btnClose: TButton;
     procedure btnOKClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -44,6 +45,13 @@ begin
     ClearItems;
     SearchText := '';
   end;
+end;
+
+procedure TfmFind.FormShow(Sender: TObject);
+begin
+  // Center form based on the text editor position
+  fmFind.Left := fmScriptTE.Left + (fmScriptTE.Width - fmFind.Width) div 2;
+  fmFind.Top := fmScriptTE.Top + (fmScriptTE.Height - fmFind.Height) div 2;
 end;
 
 end.

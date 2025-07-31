@@ -36,6 +36,10 @@ type
     Z300: TMenuItem;
     N1: TMenuItem;
     Timer1: TTimer;
+    Openfromfile1: TMenuItem;
+    Savetofile1: TMenuItem;
+    OpenDialog1: TOpenDialog;
+    SaveDialog1: TSaveDialog;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -60,12 +64,16 @@ type
     procedure TextEditChange(Sender: TObject);
     procedure TextEditClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure Openfromfile1Click(Sender: TObject);
+    procedure Savetofile1Click(Sender: TObject);
 
   private
     { Private declarations }
   public
     { Public declarations }
   end;
+
+procedure UpdateTextRefs();
 
 var
   fmScriptTE: TfmScriptTE;
@@ -75,6 +83,35 @@ implementation
 uses main, unit1, FScrypt, FFind, FReplace, FGoto, TextEditor.CompletionProposal.Snippets;
 
 {$R *.dfm}
+
+procedure UpdateTextRefs();
+var
+  i,x,y, labelnum: integer;
+  reftype,currentline,labelstr: widestring;
+begin
+  // Clear and update all label flag data references
+  for i := 0 to 1000 do datablock[i]:=-1;
+  for i := 0 to fmScriptTE.TextEdit.Lines.Count do
+  begin
+    currentline := fmScriptTE.TextEdit.Lines[i];
+    if currentline <> '' then
+    begin
+      x := pos(':',fmScriptTE.TextEdit.Lines[i]);
+      labelstr := copy(currentline, 0, x-1);
+      currentline := copy(currentline, x+1, length(currentline));
+      currentline := TrimLeft(currentline);
+      reftype := copy(currentline, 0, 4);
+      if TryStrToInt(labelstr, labelnum) then
+      begin
+        if reftype = 'STR:' then
+          AddStrRef(labelnum)
+        else if reftype = 'HEX:' then
+          AddDataRef(labelnum)
+        else AddLabel(labelnum);
+      end;
+    end;
+  end;
+end;
 
 procedure TfmScriptTE.Copy1Click(Sender: TObject);
 begin
@@ -118,6 +155,8 @@ begin
   form4.listbox1.Clear;
   Form1.ViewScrypt1.Enabled := true;
 
+  UpdateTextRefs();
+
   for i := 0 to TextEdit.LineNumbersCount do
   begin
     if TextEdit.Lines[i] <> '' then
@@ -140,14 +179,15 @@ begin
     JSONOpcodeList := '';
     JSONRegisterList := '';
     try
-      for i := 0 to Length(asmcode) do
+      for i := 0 to Length(asmcode) - 1 do
       begin
         if asmcode[i].name <> '' then
         begin
           JSONOpcodeList := JSONOpcodeList + '"' + asmcode[i].name + '"';
           JSONOpcodeList := JSONOpcodeList + ',' + sLineBreak;
         end;
-      end; except
+      end;
+      except MessageDlg('Could not generate JSON asm list', mtInformation, [mbOk], 0);
     end;
 
     SetLength(JSONOpcodeList,length(JSONOpcodeList)-3);
@@ -159,7 +199,8 @@ begin
         JSONRegisterList := JSONRegisterList + '"' + 'R' + inttostr(i) + '"';
       if i < 255 then
         JSONRegisterList := JSONRegisterList + ',' + sLineBreak;
-      end; except
+      end;
+      except MessageDlg('Could not generate JSON register list', mtInformation, [mbOk], 0);
     end;
 
     JSONStrings := TStringList.Create;
@@ -286,6 +327,15 @@ begin
   form4.Hex1Click(nil);
 end;
 
+procedure TfmScriptTE.Openfromfile1Click(Sender: TObject);
+begin
+  if opendialog1.Execute then
+  begin
+    Textedit.LoadFromFile(opendialog1.FileName);
+    isedited:=true;
+  end;
+end;
+
 procedure TfmScriptTE.Paste1Click(Sender: TObject);
 begin
   TextEdit.PasteFromClipboard;
@@ -296,35 +346,18 @@ begin
   fmReplace.ShowModal;
 end;
 
+procedure TfmScriptTE.Savetofile1Click(Sender: TObject);
+begin
+  if savedialog1.Execute then
+  begin
+    Textedit.SaveToFile(savedialog1.FileName);
+    isedited:=true;
+  end;
+end;
+
 procedure TfmScriptTE.TextEditChange(Sender: TObject);
-var
-  i,x,y, labelnum: integer;
-  reftype,currentline,labelstr: widestring;
 begin
   isEdited := true;
-
-  // Clear and update label flag data references
-  for i := 0 to 1000 do datablock[i]:=-1;
-  for i := 0 to TextEdit.Lines.Count do
-  begin
-    currentline := TextEdit.Lines[i];
-    if currentline <> '' then
-    begin
-      x := pos(':',TextEdit.Lines[i]);
-      labelstr := copy(currentline, 0, x-1);
-      currentline := copy(currentline, x+1,length(currentline));
-      currentline := TrimLeft(currentline);
-      reftype := copy(currentline, 0, 4);
-      if TryStrToInt(labelstr,labelnum) then
-      begin
-        if reftype = 'STR:' then
-          AddStrRef(labelnum)
-        else if reftype = 'HEX:' then
-          AddDataRef(labelnum)
-        else AddLabel(labelnum);
-      end;
-    end;
-  end;
 end;
 
 procedure TfmScriptTE.TextEditClick(Sender: TObject);
