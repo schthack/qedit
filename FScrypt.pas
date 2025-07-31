@@ -2041,7 +2041,8 @@ end;
 
 procedure TForm4.FormShow(Sender: TObject);
 begin
-  fmScriptTE.Hide;
+  if fmScriptTE.Visible then
+    fmScriptTE.Close;
 end;
 
 procedure TForm4.Hex1Click(Sender: TObject);
