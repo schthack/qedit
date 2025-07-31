@@ -12,6 +12,7 @@ object Form4: TForm4
   Font.Style = []
   Position = poMainFormCenter
   OnCreate = FormCreate
+  OnShow = FormShow
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 185
@@ -122,7 +123,7 @@ object Form4: TForm4
       end
       object Button7: TButton
         Left = 9
-        Top = 379
+        Top = 351
         Width = 75
         Height = 25
         Anchors = [akRight, akBottom]
@@ -149,6 +150,15 @@ object Form4: TForm4
         Caption = 'Import'
         TabOrder = 7
         OnClick = Button9Click
+      end
+      object btnEditText: TButton
+        Left = 9
+        Top = 379
+        Width = 75
+        Height = 25
+        Caption = 'Edit text'
+        TabOrder = 8
+        OnClick = btnEditTextClick
       end
     end
     object ListBox1: TListBox
@@ -585,13 +595,13 @@ object Form4: TForm4
     end
     object Changedataformat1: TMenuItem
       Caption = 'Set argument format'
-      object Decimal1: TMenuItem
-        Caption = 'Decimal'
-        OnClick = Decimal1Click
-      end
       object Hex1: TMenuItem
         Caption = 'Hex'
         OnClick = Hex1Click
+      end
+      object Decimal1: TMenuItem
+        Caption = 'Decimal'
+        OnClick = Decimal1Click
       end
     end
     object N1: TMenuItem

@@ -60,6 +60,7 @@ type
     Changedataformat1: TMenuItem;
     Decimal1: TMenuItem;
     Hex1: TMenuItem;
+    btnEditText: TButton;
     procedure Button4Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -103,6 +104,8 @@ type
     procedure Addsymbolechat1Click(Sender: TObject);
     procedure Decimal1Click(Sender: TObject);
     procedure Hex1Click(Sender: TObject);
+    procedure btnEditTextClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
 
 
   private
@@ -135,7 +138,7 @@ var
 implementation
 
 uses TCom, main, Unit1, NPCBuild, PikaPackage, EnemyStat, Unit22,
-  FEnemyResist, FEnemyAttack, FEnemyMov, FFloatEdit, FVector, FSymbolChat;
+  FEnemyResist, FEnemyAttack, FEnemyMov, FFloatEdit, FVector, FSymbolChat, FScriptTE;
 
 {$R *.dfm}
 
@@ -430,9 +433,12 @@ begin
 end;
 
 Procedure AddLabel(l:integer);
-var x:integer;
+var x,i:integer;
     s:ansistring;
 begin
+    for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
+        datablock[i] := l;
+        datablockT[i] := T_NONE;
     s:='F_'+inttostr(l);
     {for x:=0 to TrFnc.Count -1 do
         if TrFnc.Item[x].Text = s then break; }
@@ -449,8 +455,11 @@ begin
 end;
 
 Procedure AddDataRef(l:integer);
-var x:integer;
+var x,i:integer;
 begin
+    for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
+      datablock[i] := l;
+      datablockT[i] := T_DATA;
     {for x:=0 to TrData.Count -1 do
         if TrData.Item[x].Text = 'D_'+inttostr(l) then break;   }
     x:=tsdata.IndexOf('D_'+inttostr(l));
@@ -466,8 +475,11 @@ begin
 end;
 
 Procedure AddStrRef(l:integer);
-var x:integer;
+var x,i:integer;
 begin
+    for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
+      datablock[i] := l;
+      datablockT[i] := T_STRDATA;
     {for x:=0 to TrData.Count -1 do
         if TrData.Item[x].Text = 'S_'+inttostr(l) then break;  }
     x:=tsdata.IndexOf('S_'+inttostr(l));
@@ -616,7 +628,8 @@ begin
                 delete(b,1,length(s)+4);
             end else begin
                 y:=pos(WideString(', '),b);
-                if y = 0 then y:=length(b)+1;
+                if (y = 0) or (AsmCode[form5.ComboBox1.ItemIndex].name = 'STR:') then
+                  y:=length(b)+1;
                 s:=copy(b,1,y-1);
                 delete(b,1,length(s)+2);
             end;
@@ -1176,7 +1189,7 @@ end;
 procedure TForm4.Decimal1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice: integer;
+  choice, lastcaret: integer;
 begin
     if not Decimal1.Checked then
     begin
@@ -1187,9 +1200,12 @@ begin
       begin
         showdecimal := true;
         Decimal1.Checked := true;
+        fmScriptTE.Decimal1.Checked := true;
         Hex1.Checked := false;
+        fmScriptTE.Hex1.Checked := false;
         Reg := TRegistry.Create;
         choice := listbox1.ItemIndex;
+        lastcaret := fmScriptTE.TextEdit.CaretIndex;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -1203,6 +1219,7 @@ begin
         try
           QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
           listbox1.ItemIndex := choice;
+          fmScriptTE.TextEdit.CaretIndex := lastcaret;
         except
           Showmessage('Error reloading quest data.');
         end;
@@ -1652,6 +1669,11 @@ begin
     end;
 end;
 
+procedure TForm4.btnEditTextClick(Sender: TObject);
+begin
+  fmScriptTE.Show;
+end;
+
 procedure TForm4.TreeView1Compare(Sender: TObject; Node1, Node2: TTreeNode;
   Data: Integer; var Compare: Integer);
 var
@@ -2017,10 +2039,15 @@ begin
    // listbox1:=TMyNewUnicode.create;
 end;
 
+procedure TForm4.FormShow(Sender: TObject);
+begin
+  fmScriptTE.Hide;
+end;
+
 procedure TForm4.Hex1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice: integer;
+  choice, lastcaret: integer;
 begin
     if not Hex1.Checked then
     begin
@@ -2031,9 +2058,12 @@ begin
       begin
         showdecimal := false;
         Decimal1.Checked := false;
+        fmScriptTE.Decimal1.Checked := false;
         Hex1.Checked := true;
+        fmScriptTE.Hex1.Checked := true;
         Reg := TRegistry.Create;
         choice := listbox1.ItemIndex;
+        lastcaret := fmScriptTE.TextEdit.CaretIndex;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -2048,6 +2078,7 @@ begin
       try
         QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
         listbox1.ItemIndex := choice;
+        fmScriptTE.TextEdit.CaretIndex := lastcaret;
       except
         Showmessage('Error reloading quest data.');
       end;

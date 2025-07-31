@@ -56,7 +56,7 @@ var
 
 implementation
 
-uses main, Unit1, MyConst, FPlacement;
+uses main, Unit1, MyConst, FSnap;
 
 {$R *.dfm}
 
@@ -323,8 +323,8 @@ begin
             rayOrigin.z := rayOrigin.z + rayDir.z;
             inc(c);
         end;
-        snapvalue := FPlacementOptions.seSnapTolerance.Value;
-        distancelimit := FPlacementOptions.seDistanceLimit.Value;
+        snapvalue := FSnapOptions.seSnapTolerance.Value;
+        distancelimit := FSnapOptions.seDistanceLimit.Value;
 
         diffmin := Double.MaxValue;
         closest := -1;
@@ -341,7 +341,7 @@ begin
             floor[sfloor].Monster[selected].Pos_X:=px3;
             floor[sfloor].Monster[selected].Pos_Y:=py3;
 
-            if (Form1.smSnap.Checked) or (Keys[Ord('S')]) then
+            if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
             begin
               // 3D X axis snap for monsters
               for j := 0 to Floor[sfloor].MonsterCount - 1 do
@@ -356,13 +356,13 @@ begin
                       begin
                         // Save closest snap target
                         diff := abs(Floor[sfloor].Monster[selected].Pos_Y - Floor[sfloor].Monster[j].Pos_Y);
-                        if ((diff <= distancelimit) and (FPlacementOptions.chkDistancelimit.Checked))
-                        or (not FPlacementOptions.chkDistancelimit.Checked) then
+                        if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                        or (not FSnapOptions.chkDistancelimit.Checked) then
                         begin
                           floor[sfloor].Monster[selected].Pos_X := floor[sfloor].Monster[j].Pos_X;
                           mymonst[selected].PositionX := mymonst[j].PositionX;
                           // Match monster's rotations if enabled
-                          if (FPlacementOptions.chkSnapRotate.Checked) then
+                          if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Monster[selected].Direction := floor[sfloor].Monster[j].Direction;
                           if (diff < diffmin) and (j <> selected) then
                           begin
@@ -394,12 +394,12 @@ begin
                       begin
                         // Save closest snap target
                         diff := abs(Floor[sfloor].Monster[selected].Pos_X - Floor[sfloor].Monster[j].Pos_X);
-                        if ((diff <= distancelimit) and (FPlacementOptions.chkDistancelimit.Checked))
-                        or (not FPlacementOptions.chkDistancelimit.Checked) then
+                        if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                        or (not FSnapOptions.chkDistancelimit.Checked) then
                         begin
                           floor[sfloor].Monster[selected].Pos_Y := floor[sfloor].Monster[j].Pos_Y;
                           mymonst[selected].PositionZ := mymonst[j].PositionZ;
-                          if (FPlacementOptions.chkSnapRotate.Checked) then
+                          if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Monster[selected].Direction := floor[sfloor].Monster[j].Direction;
                           if (diff < diffmin) and (j <> selected) then
                           begin
@@ -433,7 +433,7 @@ begin
             floor[sfloor].Obj[selected].Pos_X:=px3;
             floor[sfloor].Obj[selected].Pos_Y:=py3;
 
-            if (Form1.smSnap.Checked) or (Keys[Ord('S')]) then
+            if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
             begin
               // 3D X axis snap for objects
               for j := 0 to Floor[sfloor].ObjCount - 1 do
@@ -448,13 +448,13 @@ begin
                       begin
                         // Save closest snap target
                         diff := abs(Floor[sfloor].Obj[selected].Pos_Y - Floor[sfloor].Obj[j].Pos_Y);
-                        if ((diff <= distancelimit) and (FPlacementOptions.chkDistancelimit.Checked))
-                        or (not FPlacementOptions.chkDistancelimit.Checked) then
+                        if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                        or (not FSnapOptions.chkDistancelimit.Checked) then
                         begin
                           floor[sfloor].Obj[selected].Pos_X := floor[sfloor].Obj[j].Pos_X;
                           myobj[selected].PositionX := myobj[j].PositionX;
                           // Match object's rotations if enabled
-                          if (FPlacementOptions.chkSnapRotate.Checked) then
+                          if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                           if (diff < diffmin) and (j <> selected) then
                           begin
@@ -487,12 +487,12 @@ begin
                       begin
                         // Save closest snap target
                         diff := abs(Floor[sfloor].Obj[selected].Pos_X - Floor[sfloor].Obj[j].Pos_X);
-                        if ((diff <= distancelimit) and (FPlacementOptions.chkDistancelimit.Checked))
-                        or (not FPlacementOptions.chkDistancelimit.Checked) then
+                        if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                        or (not FSnapOptions.chkDistancelimit.Checked) then
                         begin
                           floor[sfloor].Obj[selected].Pos_Y := floor[sfloor].Obj[j].Pos_Y;
                           myobj[selected].PositionZ := myobj[j].PositionZ;
-                          if (FPlacementOptions.chkSnapRotate.Checked) then
+                          if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                           if (diff < diffmin) and (j <> selected) then
                           begin

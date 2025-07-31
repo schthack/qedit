@@ -303,7 +303,7 @@ function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
 
 implementation
 
-uses FScrypt, D3DEngin, ComCtrls, Classes, MyConst;
+uses FScrypt, FScriptTE, D3DEngin, ComCtrls, Classes, MyConst;
 
 function MakeUni(s: ansistring): ansistring;
 var
@@ -1107,7 +1107,13 @@ begin
               s := s + code[x + (y * 2)] + code[x + (y * 2) + 1]
             else
               break;
-        inc(x, dlength);
+        if isdc then
+        begin
+          i := length(s) - 24;
+          inc(x, i div 2);
+        end
+        else
+          inc(x, y * 2 + 2);
         while pos(#10#0, s) > 0 do
         begin
           y := pos(#10#0, s);
@@ -1116,6 +1122,17 @@ begin
         end;
         s := s + #0#0;
         form4.ListBox1.Items.Add(pwidechar(@s[1]));
+
+        // Clean up remaining nops
+        if form4.listbox1.items.count >= 3 then
+        begin
+          i := form4.listbox1.items.count - 2;
+          while form4.listbox1.items[i].contains('        nop') do
+          begin
+            form4.listbox1.items.delete(i);
+            dec(i);
+          end;
+        end;
       end
       else
       begin
@@ -1151,17 +1168,42 @@ begin
   Tsopc.CustomSort(Comparestr);
   TsFnc.CustomSort(CompareLabel);
   TsData.CustomSort(CompareLabel);
+
+  // Insert script lines into text editor if visible
+  if fmScriptTE.Visible then
+  begin
+    fmScriptTE.TextEdit.Lines.Clear;
+    for i := 0 to Form4.ListBox1.items.count - 1 do
+      fmScriptTE.TextEdit.InsertText(Form4.ListBox1.items[i] + sLineBreak);
+    fmScriptTE.TextEdit.MoveCaretToBeginning;
+  end;
 end;
 
 Function QuestBuild(code: pansichar): dword;
 var
   b, cmd, o: widestring;
   s, v: widestring;
-  x, p, y, z, i, j, g, d, ll, kkk, oldval, um: integer;
+  x, p, y, z, i, j, g, d, ll, kkk, oldval, um, lastsection: integer;
   m: single;
   a: ansistring;
   dw: dword;
 begin
+  // Copy text editor lines if visible
+  if fmScriptTE.Visible then
+  begin
+    Form4.Listbox1.Clear;
+    for i := 0 to fmScriptTE.TextEdit.LineNumbersCount do
+    begin
+    if fmScriptTE.TextEdit.Lines[i] <> '' then
+      begin
+        s := fmScriptTE.TextEdit.Lines[i];
+        // Replace tabs with spaces when adding back to listbox
+        s := StringReplace(s, #9, '  ', [rfReplaceAll]);
+        form4.ListBox1.items.add(s);
+      end;
+    end;
+  end;
+  lastsection := -1;
   p := 0;
   for x := 0 to form4.ListBox1.Items.Count - 1 do
   begin
@@ -1179,6 +1221,8 @@ begin
           raise exception.Create('Duplicated label: ' + inttostr(kkk));
         end;
         asmref[kkk] := p;
+        if kkk <> -1 then
+          lastsection := kkk;
         ll := 1;
       end;
       delete(s, 1, 8);
@@ -1191,6 +1235,22 @@ begin
       end
       else if cmd = 'STR:' then
       begin
+        if kkk = -1 then
+        begin
+          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
+          'String data declared without a label', mtInformation, [mbOk], 0);
+          form4.Show;
+          form4.ListBox1.ItemIndex := x;
+        end;
+        for i := 0 to 1000 do
+          if datablock[i] = lastsection then break;
+        if (datablockT[i] <> T_STRDATA) and (lastsection <> -1) then
+        begin
+          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
+          'String data declared in a code or Hex section', mtInformation, [mbOk], 0);
+          form4.Show;
+          form4.ListBox1.ItemIndex := x;
+        end;
         while (p div 4) * 4 <> p do
         begin
           code[p] := #0;
@@ -1230,6 +1290,15 @@ begin
       end
       else if cmd = 'HEX:' then
       begin
+        for i := 0 to 1000 do
+          if datablock[i] = lastsection then break;
+        if (datablockT[i] <> T_DATA) and (lastsection <> -1) then
+        begin
+          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
+          'Hex data declared in a code or String section', mtInformation, [mbOk], 0);
+          form4.Show;
+          form4.ListBox1.ItemIndex := x;
+        end;
         if ll = 1 then
           while (p div 4) * 4 <> p do
           begin

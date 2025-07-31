@@ -661,9 +661,14 @@ object Form1: TForm1
         OnClick = Undo1Click
       end
       object Options1: TMenuItem
-        Caption = 'Options'
+        Caption = 'Placement Options'
         ShortCut = 113
         OnClick = Options1Click
+      end
+      object SnapOptions2: TMenuItem
+        Caption = 'Snap Options'
+        ShortCut = 114
+        OnClick = SnapOptions2Click
       end
       object Cancelplacement1: TMenuItem
         Caption = 'Cancel placement'
@@ -674,6 +679,11 @@ object Form1: TForm1
         Caption = 'Hide main window'
         ShortCut = 16472
         OnClick = Hidemainwindow1Click
+      end
+      object Showtexteditor1: TMenuItem
+        Caption = 'Show text editor'
+        ShortCut = 16453
+        OnClick = Showtexteditor1Click
       end
     end
   end
@@ -1573,14 +1583,18 @@ object Form1: TForm1
       Caption = 'Drag to move'
       OnClick = smDragClick
     end
-    object smSnap: TMenuItem
-      Caption = 'Snap alignment'
-      OnClick = smSnapClick
-    end
-    object smPlacement: TMenuItem
+    object Options2: TMenuItem
       Caption = 'Options'
-      ShortCut = 113
-      OnClick = smPlacementClick
+      object smPlacement: TMenuItem
+        Caption = 'Placement options'
+        ShortCut = 113
+        OnClick = smPlacementClick
+      end
+      object smSnapOptions: TMenuItem
+        Caption = 'Snap options'
+        ShortCut = 114
+        OnClick = smSnapOptionsClick
+      end
     end
   end
   object PopupMenu2: TPopupMenu

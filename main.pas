@@ -306,7 +306,6 @@ type
     N10: TMenuItem;
     N11: TMenuItem;
     smUndo: TMenuItem;
-    smSnap: TMenuItem;
     smPlacement: TMenuItem;
     N12: TMenuItem;
     smMove: TMenuItem;
@@ -328,6 +327,10 @@ type
     PopupMenu3: TPopupMenu;
     smDisableIndicator: TMenuItem;
     Hidemainwindow1: TMenuItem;
+    smSnapOptions: TMenuItem;
+    SnapOptions2: TMenuItem;
+    Options2: TMenuItem;
+    Showtexteditor1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -413,7 +416,6 @@ type
     procedure smDeleteClick(Sender: TObject);
     procedure smUndoClick(Sender: TObject);
     procedure smDragClick(Sender: TObject);
-    procedure smSnapClick(Sender: TObject);
     procedure smPlacementClick(Sender: TObject);
     procedure Hotkeys1Click(Sender: TObject);
     procedure smMoveClick(Sender: TObject);
@@ -436,6 +438,9 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure smDisableIndicatorClick(Sender: TObject);
     procedure Hidemainwindow1Click(Sender: TObject);
+    procedure smSnapOptionsClick(Sender: TObject);
+    procedure SnapOptions2Click(Sender: TObject);
+    procedure Showtexteditor1Click(Sender: TObject);
 
 
   private
@@ -546,6 +551,7 @@ var
   lsatsaveformat: integer = 4;
   snapvalue: integer = 10;
   distancelimit: integer = 30;
+  texteditzoom: integer = 0;
   dragenabled: Boolean = false;
   snapenabled: Boolean = false;
   autoaxis: Boolean = false;
@@ -571,7 +577,8 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   Unit10, Unit11, PikaPackage, Unit12, Unit13, Unit14, Unit15, Unit16,
   Unit17, Unit18, Unit19, FCompat, MyConst, Unit29, crc32, EnemyStat,
   FEnemyAttack, FEnemyMov, FEnemyResist, FFloatEdit, NPCBuild, Unit22,
-  FFFilter, FMonsDet, Unit23, FSymbolChat, FAsmModeSel, FPlacement, FHotkeys;
+  FFFilter, FMonsDet, Unit23, FSymbolChat, FAsmModeSel, FPlacement, FHotkeys,
+  FSnap, FScriptTE;
 
 {$R *.dfm}
 
@@ -2042,7 +2049,7 @@ end;
 
 procedure TForm1.Load1Click(Sender: TObject);
 var
-  x, y, f, F1, F2, tf, i: integer;
+  x, y, f, F1, F2, tf, i, labelseg: integer;
   h: TNPCGroupeHeader;
   seg: array [0 .. 3] of dword;
   txt: array [0 .. $137F] of byte;
@@ -2390,6 +2397,19 @@ begin
     try
       for x := 0 to 1000 do
         datablock[x] := -1;
+
+      // Load STR/HEX label data, if it exists
+      labelseg := seg[1] + (seg[2] - seg[1]);
+      x := 0;
+      while (labelseg + x + 4) < qstfile[f].size do
+      begin
+        for i := 0 to 1000 do if datablock[i]=-1 then break;
+        move(qstfile[f].data[labelseg + x], datablock[i], 4);
+        inc(x, 4);
+        move(qstfile[f].data[labelseg + x], datablockT[i], 1);
+        inc(x, 1);
+      end;
+
       if pos('_f.', fn) > 0 then
         language := 3;
       if pos('_e.', fn) > 0 then
@@ -2701,7 +2721,7 @@ var
   selectionX,targetX: single;
   diff,diffmin: double;
 begin
-  if FPlacementOptions.chkSnapDistance.Checked then
+  if FSnapOptions.chkSnapDistance.Checked then
   begin
     diff := 0;
     diffmin := Double.MaxValue;
@@ -2834,7 +2854,7 @@ var
   selectionY,targetY: single;
   diff,diffmin: double;
 begin
-  if FPlacementOptions.chkSnapDistance.Checked then
+  if FSnapOptions.chkSnapDistance.Checked then
   begin
     diff := 0;
     diffmin := Double.MaxValue;
@@ -3837,10 +3857,12 @@ end;
 
 procedure TForm1.Copymonster1Click(Sender: TObject);
 begin
-  if Copylastmonster1.Enabled and not form4.edit1.Focused then
+  if Copylastmonster1.Enabled and not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused then
     Copylastmonster1Click(nil)
   else if form4.edit1.Focused then
-    form4.edit1.CopyToClipboard;
+    form4.edit1.CopyToClipboard
+  else if fmScriptTE.TextEdit.Focused then
+    fmScriptTE.TextEdit.CopyToClipboard(false);
 end;
 
 procedure TForm1.ViewScrypt1Click(Sender: TObject);
@@ -4433,6 +4455,8 @@ begin
           snapvalue := Reg.ReadInteger('SnapValue');
         if Reg.ValueExists('DistanceLimit') then
           distancelimit := Reg.ReadInteger('DistanceLimit');
+        if Reg.ValueExists('TextEditZoom') then
+          texteditzoom := Reg.ReadInteger('TextEditZoom');
         if Reg.ValueExists('SnapRotate') then
           snaprotate := Reg.ReadBool('SnapRotate');
         if Reg.ValueExists('SnapDistance') then
@@ -4582,14 +4606,20 @@ begin
     if mylang = 2 then
       PikaGetFile(flp, 'spa.txt', path + 'config.ppk', 'Build By Schthack');
 
+    if snapenabled then
+      FSnapOptions.seDistanceLimit.Enabled := anchorenabled;
     smDrag.Checked := dragenabled;
-    smSnap.Checked := snapenabled;
+    FSnapOptions.chkDistancelimit.Checked := anchorenabled;
+    FSnapOptions.chkSnap.Checked := snapenabled;
+    FSnapOptions.chkSnapDistance.Enabled := snapenabled;
+    FSnapOptions.chkSnapRotate.Enabled := snapenabled;
+    FSnapOptions.chkDistancelimit.Enabled := snapenabled;
+    FSnapOptions.seSnapTolerance.Enabled := snapenabled;
     Form7.chkAutoAxis.Checked := autoaxis;
-    FPlacementOptions.seSnapTolerance.Value := snapvalue;
-    FPlacementOptions.chkSnapRotate.Checked := snaprotate;
-    FPlacementOptions.chkSnapDistance.Checked := snapdistance;
-    FPlacementOptions.seDistanceLimit.Enabled := anchorenabled;
-    FPlacementOptions.chkDistancelimit.Checked := anchorenabled;
+    FSnapOptions.seSnapTolerance.Value := snapvalue;
+    FSnapOptions.chkSnapRotate.Checked := snaprotate;
+    FSnapOptions.chkSnapDistance.Checked := snapdistance;
+
     smDisableIndicator.Checked := disableindicator;
     form17.chkFullscreen.Checked := fullscreen;
 
@@ -4602,14 +4632,18 @@ begin
     begin
       form4.Decimal1.Checked := true;
       form4.Hex1.Checked := false;
+      fmScriptTE.Decimal1.Checked := true;
+      fmScriptTE.Hex1.Checked := false;
     end
     else
     begin
       form4.Hex1.Checked := true;
       form4.Decimal1.Checked := false;
+      fmScriptTE.Hex1.Checked := true;
+      fmScriptTE.Decimal1.Checked := false;
     end;
 
-    FPlacementOptions.seDistanceLimit.Value := distancelimit;
+    FSnapOptions.seDistanceLimit.Value := distancelimit;
     FPlacementOptions.nbOffsetX.Value := OffsetX;
     FPlacementOptions.nbOffsetY.Value := OffsetY;
     FPlacementOptions.nbOffsetZ.Value := OffsetZ;
@@ -4617,6 +4651,16 @@ begin
     FPlacementOptions.nbDefaultX.Value := DefaultX;
     FPlacementOptions.nbDefaultY.Value := DefaultY;
     FPlacementOptions.nbDefaultZ.Value := DefaultZ;
+
+    if (texteditzoom = 1) then
+      fmScriptTE.Z125Click(nil)
+    else if (texteditzoom = 2) then
+      fmScriptTE.Z150Click(nil)
+    else if (texteditzoom = 3) then
+      fmScriptTE.Z200Click(nil)
+    else if (texteditzoom = 4) then
+      fmScriptTE.Z300Click(nil)
+    else fmScriptTE.Z100Click(nil);
 
     flp.Position := 0;
     LanguageString.LoadFromStream(flp);
@@ -4737,7 +4781,7 @@ end;
 
 procedure TForm1.Save1Click(Sender: TObject);
 var
-  x, y, f, o, j, F2, F1, s1, s2, z, bl, dl: integer;
+  x, y, f, o, j, i, F2, F1, s1, s2, z, bl, dl: integer;
   d: dword;
   txt: array [0 .. 1] of ansichar;
   h: TNPCGroupeHeader;
@@ -5067,6 +5111,18 @@ begin
     inc(F1, y);
     move(AsmRef[0], di[F1], x * 4);
     inc(F1, x * 4);
+
+    // Save STR/HEX label data
+    for i:= 0 to 1000 do
+    begin
+      if (datablock[i] <> -1) and ((datablockT[i] = T_STRDATA) or (datablockT[i] = T_DATA)) then
+      begin
+        move(datablock[i], di[F1], 4);
+        move(datablockT[i], di[F1 + 4], 1);
+        inc(F1, 5);
+        inc(F2, 5);
+      end;
+    end;
 
     bl := y + (x * 4);
 
@@ -5973,8 +6029,8 @@ var
 begin
   if MoveSel > -1 then
   begin
-    snapvalue := FPlacementOptions.seSnapTolerance.Value;
-    distancelimit := FPlacementOptions.seDistanceLimit.Value;
+    snapvalue := FSnapOptions.seSnapTolerance.Value;
+    distancelimit := FSnapOptions.seDistanceLimit.Value;
     HideIndicator();
     // find the nearest zone
     // extract the real px, py
@@ -6074,7 +6130,7 @@ begin
       Floor[sfloor].Monster[MoveSel].Pos_X := px;
       Floor[sfloor].Monster[MoveSel].Pos_Y := py;
 
-      if (smSnap.Checked) or (sdown) then // S key
+      if (FSnapOptions.chkSnap.Checked) or (sdown) then // S key
       begin
         // X axis snap for monsters
         for j := 0 to Floor[sfloor].MonsterCount - 1 do
@@ -6090,12 +6146,12 @@ begin
                 begin
                   // Save closest snap target
                   diff := abs(Floor[sfloor].Monster[MoveSel].Pos_Y - Floor[sfloor].Monster[j].Pos_Y);
-                  if ((diff <= distancelimit) and (FPlacementOptions.chkDistancelimit.Checked))
-                  or (not FPlacementOptions.chkDistancelimit.Checked) then
+                  if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                  or (not FSnapOptions.chkDistancelimit.Checked) then
                   begin
                     Floor[sfloor].Monster[MoveSel].Pos_X := Floor[sfloor].Monster[j].Pos_X;
                     // Match monster's rotations if enabled
-                    if FPlacementOptions.chkSnapRotate.Checked then
+                    if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Monster[MoveSel].Direction := Floor[sfloor].Monster[j].Direction;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
@@ -6127,11 +6183,11 @@ begin
                 begin
                   // Save closest snap target
                   diff := abs(Floor[sfloor].Monster[MoveSel].Pos_X - Floor[sfloor].Monster[j].Pos_X);
-                  if ((diff <= distancelimit) and (FPlacementOptions.chkDistancelimit.Checked))
-                  or (not FPlacementOptions.chkDistancelimit.Checked) then
+                  if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                  or (not FSnapOptions.chkDistancelimit.Checked) then
                   begin
                     Floor[sfloor].Monster[MoveSel].Pos_Y := Floor[sfloor].Monster[j].Pos_Y;
-                    if FPlacementOptions.chkSnapRotate.Checked then
+                    if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Monster[MoveSel].Direction := Floor[sfloor].Monster[j].Direction;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
@@ -6179,7 +6235,7 @@ begin
       Floor[sfloor].Obj[MoveSel].Pos_X := px;
       Floor[sfloor].Obj[MoveSel].Pos_Y := py;
 
-      if (smSnap.Checked) or (sdown) then // S key
+      if (FSnapOptions.chkSnap.Checked) or (sdown) then // S key
       begin
         // X axis snap for objects
         for j := 0 to Floor[sfloor].ObjCount - 1 do
@@ -6195,12 +6251,12 @@ begin
                 begin
                   // Save closest snap target
                   diff := abs(Floor[sfloor].Obj[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y);
-                  if ((diff <= distancelimit) and (FPlacementOptions.chkDistancelimit.Checked))
-                  or (not FPlacementOptions.chkDistancelimit.Checked) then
+                  if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                  or (not FSnapOptions.chkDistancelimit.Checked) then
                   begin
                     Floor[sfloor].Obj[MoveSel].Pos_X := Floor[sfloor].Obj[j].Pos_X;
                     // Match object's rotations if enabled
-                    if FPlacementOptions.chkSnapRotate.Checked then
+                    if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
@@ -6232,11 +6288,11 @@ begin
                 begin
                   // Save closest snap target
                   diff := abs(Floor[sfloor].Obj[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X);
-                  if ((diff <= distancelimit) and (FPlacementOptions.chkDistancelimit.Checked))
-                  or (not FPlacementOptions.chkDistancelimit.Checked) then
+                  if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                  or (not FSnapOptions.chkDistancelimit.Checked) then
                   begin
                     Floor[sfloor].Obj[MoveSel].Pos_Y := Floor[sfloor].Obj[j].Pos_Y;
-                    if FPlacementOptions.chkSnapRotate.Checked then
+                    if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
@@ -6712,6 +6768,11 @@ begin
   move(Floor[0], FloorUn[undocount], sizeof(TFloor) * 40);
   inc(undocount);
   // Form1.CheckListBox1Click(form1);
+end;
+
+procedure TForm1.Showtexteditor1Click(Sender: TObject);
+begin
+  fmScriptTE.Show;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -7590,10 +7651,6 @@ end;
 procedure TForm1.smPlacementClick(Sender: TObject);
 begin
   FPlacementOptions.showmodal();
-  // Update based on snap preferences
-  snapvalue := FPlacementOptions.seSnapTolerance.Value;
-  snaprotate := FPlacementOptions.chkSnapRotate.Checked;
-  snapdistance := FPlacementOptions.chkSnapDistance.Checked;
 end;
 
 procedure TForm1.smDeleteClick(Sender: TObject);
@@ -7629,27 +7686,23 @@ begin
   Button1Click(nil);
 end;
 
-procedure TForm1.smSnapClick(Sender: TObject);
-var
-  Reg: TRegistry;
-begin
-  smSnap.Checked := not smSnap.Checked;
-  Reg := TRegistry.Create;
-  try
-    Reg.RootKey := HKEY_CURRENT_USER;
-  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
-  begin
-    Reg.WriteBool('SnapEnabled', smSnap.Checked);
-    Reg.CloseKey;
-  end;
-  finally
-    Reg.Free;
-  end;
-end;
-
 procedure TForm1.smUndoClick(Sender: TObject);
 begin
   Button11Click(nil);
+end;
+
+procedure TForm1.smSnapOptionsClick(Sender: TObject);
+begin
+  FSnapOptions.Showmodal;
+  // Update based on snap preferences
+  snapvalue := FSnapOptions.seSnapTolerance.Value;
+  snaprotate := FSnapOptions.chkSnapRotate.Checked;
+  snapdistance := FSnapOptions.chkSnapDistance.Checked;
+end;
+
+procedure TForm1.SnapOptions2Click(Sender: TObject);
+begin
+  smSnapOptionsClick(nil);
 end;
 
 {
@@ -7937,6 +7990,8 @@ procedure TForm1.Hidemainwindow1Click(Sender: TObject);
 begin
    if Form4.edit1.Focused then
     Form4.edit1.CutToClipboard
+   else if fmScriptTE.TextEdit.Focused then
+    fmScriptTE.TextEdit.CutToClipboard
    else if (have3d) and (form13.BorderStyle = bsNone) and (not form13.Focused) then
     Form1.WindowState := wsMinimized
    else if (have3d) and (form13.BorderStyle = bsNone) and (form13.Focused) then
@@ -8645,7 +8700,10 @@ end;
 
 procedure TForm1.Undo1Click(Sender: TObject);
 begin
-  Button11Click(nil);
+  if not fmScriptTE.TextEdit.Focused then
+    Button11Click(nil)
+  else if fmScriptTE.TextEdit.Focused then
+    fmScriptTE.TextEdit.DoUndo;
 end;
 
 procedure TForm1.English1Click(Sender: TObject);
