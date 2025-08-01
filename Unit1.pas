@@ -1123,7 +1123,7 @@ begin
         s := s + #0#0;
         form4.ListBox1.Items.Add(pwidechar(@s[1]));
 
-        // Clean up remaining nops
+        // Clean up remaining leading nops
         if form4.listbox1.items.count >= 3 then
         begin
           i := form4.listbox1.items.count - 2;
@@ -1168,6 +1168,17 @@ begin
   Tsopc.CustomSort(Comparestr);
   TsFnc.CustomSort(CompareLabel);
   TsData.CustomSort(CompareLabel);
+
+  if isdc then
+  begin
+    // Clean up remaining trailing nops
+    i := form4.listbox1.items.count - 1;
+    while form4.listbox1.items[i].contains('        nop') do
+    begin
+      form4.listbox1.items.delete(i);
+      dec(i);
+    end;
+  end;
 
   // Insert script lines into text editor if visible
   if fmScriptTE.Visible then
