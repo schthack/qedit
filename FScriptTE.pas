@@ -78,6 +78,7 @@ procedure UpdateTextRefs();
 var
   fmScriptTE: TfmScriptTE;
   firstsetup: Boolean = true;
+  currentline: integer = 0;
 
 implementation
 
@@ -378,8 +379,73 @@ begin
 end;
 
 procedure TfmScriptTE.TextEditClick(Sender: TObject);
+  var
+  opcode, argstring: string;
+  spacepos, i, v: integer;
 begin
-  TextEdit.Hint := 'Line: ' + inttostr(TextEdit.TextPosition.Line);
+  argstring := '';
+  if sender <> Timer1 then
+    currentline := TextEdit.TextPosition.Line;
+  opcode := copy(TextEdit.Lines.TextLines[currentline], 9, length(TextEdit.Lines.TextLines[currentline]));
+  spacepos := pos(' ', opcode);
+  opcode := copy(opcode, 0, spacepos - 1);
+  for i := 0 to Length(asmcode) - 1 do
+  begin
+    if (opcode = asmcode[i].name) and (asmcode[i].name <> '') then
+    begin
+      // Create argument list
+      v := 0;
+      while asmcode[i].arg[v] <> T_NONE do
+      begin
+        if asmcode[i].arg[v] = T_REG then
+          argstring := argstring + 'T_REG'
+        else if asmcode[i].arg[v] = T_RREG then
+          argstring := argstring + 'T_RREG'
+        else if asmcode[i].arg[v] = T_BREG then
+          argstring := argstring + 'T_BREG'
+        else if asmcode[i].arg[v] = T_DREG then
+          argstring := argstring + 'T_DREG'
+        else if asmcode[i].arg[v] = T_SWITCH2B then
+          argstring := argstring + 'T_SWITCH2B'
+        else if asmcode[i].arg[v] = T_SWITCH then
+          argstring := argstring + 'T_SWITCH'
+        else if asmcode[i].arg[v] = T_SWITCHZ then
+          argstring := argstring + 'T_SWITCHZ'
+        else if asmcode[i].arg[v] = T_BYTE then
+          argstring := argstring + 'T_BYTE'
+        else if asmcode[i].arg[v] = T_WORD then
+          argstring := argstring + 'T_WORD'
+        else if asmcode[i].arg[v] = T_DWORD then
+          argstring := argstring + 'T_DWORD'
+        else if asmcode[i].arg[v] = T_DATA then
+          argstring := argstring + 'T_DATA'
+        else if asmcode[i].arg[v] = T_STRDATA then
+          argstring := argstring + 'T_STRDATA'
+        else if asmcode[i].arg[v] = T_PFLAG then
+          argstring := argstring + 'T_PFLAG'
+        else if asmcode[i].arg[v] = T_PFLAG then
+          argstring := argstring + 'T_PFLAG'
+        else if asmcode[i].arg[v] = T_FUNC then
+          argstring := argstring + 'T_FUNC'
+        else if asmcode[i].arg[v] = T_FUNC2 then
+          argstring := argstring + 'T_FUNC2'
+        else if asmcode[i].arg[v] = T_FLOAT then
+          argstring := argstring + 'T_FLOAT'
+        else if asmcode[i].arg[v] = T_STR then
+          argstring := argstring + 'T_STR';
+        argstring := argstring + ', ';
+        inc(v);
+      end;
+
+      if argstring = '' then
+        argstring := argstring + 'T_NONE';
+    end;
+  end;
+  if (length(argstring) > 0) and (argstring <> 'T_NONE') then
+    SetLength(argstring, length(argstring)-2);
+  if argstring <> '' then
+    argstring := ' (' + opcode + ' ' + argstring + ')';
+  TextEdit.Hint := 'Line: ' + inttostr(TextEdit.TextPosition.Line) + argstring;
 end;
 
 procedure TfmScriptTE.TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -391,11 +457,12 @@ end;
 
 procedure TfmScriptTE.Timer1Timer(Sender: TObject);
 var
-  currentline: TTextEditorTextPosition;
+  lineposition: TTextEditorTextPosition;
 begin
-  currentline.Line := 0;
-  if TextEdit.GetTextPositionOfMouse(currentline) then
-    TextEdit.Hint := 'Line: ' + inttostr(currentline.Line);
+  lineposition.Line := 0;
+  if TextEdit.GetTextPositionOfMouse(lineposition) then
+    currentline := lineposition.Line;
+  TextEditClick(Timer1);
 end;
 
 procedure TfmScriptTE.Undo1Click(Sender: TObject);
