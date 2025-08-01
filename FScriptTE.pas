@@ -3,7 +3,7 @@ unit FScriptTE;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.Generics.Collections, System.Generics.Defaults, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
   Vcl.ExtCtrls;
 
@@ -192,10 +192,9 @@ begin
           JSONOpcodeList := JSONOpcodeList + ',' + sLineBreak;
         end;
       end;
+      JSONOpcodeList := JSONOpcodeList + '"' + 'Unknow_Opcode' + '"';
       except MessageDlg('Could not generate JSON asm list', mtInformation, [mbOk], 0);
     end;
-
-    SetLength(JSONOpcodeList,length(JSONOpcodeList)-3);
 
     // JSON list for registers
     try
@@ -379,10 +378,22 @@ begin
 end;
 
 procedure TfmScriptTE.TextEditClick(Sender: TObject);
-  var
+var
   opcode, argstring: string;
-  spacepos, i, v: integer;
+  i, v: integer;
+  opcodelist: array [0 .. 1000] of TAsmFnc;
 begin
+  for i := 0 to Length(asmcode) - 1 do
+    opcodelist[i] := asmcode[i];
+
+  // Sort opcode list by name string length (highest to lowest)
+  TArray.Sort<TAsmFnc>(opcodelist,TDelegatedComparer<TAsmFnc>.Construct(
+  function(const Right, Left: TAsmFnc): Integer
+  begin
+    Result := Length(Left.name) - Length(Right.name);
+  end
+  ));
+
   argstring := '';
   opcode := '';
   if sender <> Timer1 then
@@ -392,49 +403,47 @@ begin
   // The script is blank or end of line was reached; catch the exception
   except end;
 
-  for i := 0 to Length(asmcode) - 1 do
+  for i := 0 to Length(opcodelist) - 1 do
   begin
-    if  (asmcode[i].name <> '') and (opcode.StartsWith(asmcode[i].name)) then
+    if  (opcodelist[i].name <> '') and (opcode.StartsWith(opcodelist[i].name)) then
     begin
       // Create argument list
       v := 0;
-      while asmcode[i].arg[v] <> T_NONE do
+      while opcodelist[i].arg[v] <> T_NONE do
       begin
-        if asmcode[i].arg[v] = T_REG then
+        if opcodelist[i].arg[v] = T_REG then
           argstring := argstring + 'T_REG'
-        else if asmcode[i].arg[v] = T_RREG then
+        else if opcodelist[i].arg[v] = T_RREG then
           argstring := argstring + 'T_RREG'
-        else if asmcode[i].arg[v] = T_BREG then
+        else if opcodelist[i].arg[v] = T_BREG then
           argstring := argstring + 'T_BREG'
-        else if asmcode[i].arg[v] = T_DREG then
+        else if opcodelist[i].arg[v] = T_DREG then
           argstring := argstring + 'T_DREG'
-        else if asmcode[i].arg[v] = T_SWITCH2B then
+        else if opcodelist[i].arg[v] = T_SWITCH2B then
           argstring := argstring + 'T_SWITCH2B'
-        else if asmcode[i].arg[v] = T_SWITCH then
+        else if opcodelist[i].arg[v] = T_SWITCH then
           argstring := argstring + 'T_SWITCH'
-        else if asmcode[i].arg[v] = T_SWITCHZ then
+        else if opcodelist[i].arg[v] = T_SWITCHZ then
           argstring := argstring + 'T_SWITCHZ'
-        else if asmcode[i].arg[v] = T_BYTE then
+        else if opcodelist[i].arg[v] = T_BYTE then
           argstring := argstring + 'T_BYTE'
-        else if asmcode[i].arg[v] = T_WORD then
+        else if opcodelist[i].arg[v] = T_WORD then
           argstring := argstring + 'T_WORD'
-        else if asmcode[i].arg[v] = T_DWORD then
+        else if opcodelist[i].arg[v] = T_DWORD then
           argstring := argstring + 'T_DWORD'
-        else if asmcode[i].arg[v] = T_DATA then
+        else if opcodelist[i].arg[v] = T_DATA then
           argstring := argstring + 'T_DATA'
-        else if asmcode[i].arg[v] = T_STRDATA then
+        else if opcodelist[i].arg[v] = T_STRDATA then
           argstring := argstring + 'T_STRDATA'
-        else if asmcode[i].arg[v] = T_PFLAG then
+        else if opcodelist[i].arg[v] = T_PFLAG then
           argstring := argstring + 'T_PFLAG'
-        else if asmcode[i].arg[v] = T_PFLAG then
-          argstring := argstring + 'T_PFLAG'
-        else if asmcode[i].arg[v] = T_FUNC then
+        else if opcodelist[i].arg[v] = T_FUNC then
           argstring := argstring + 'T_FUNC'
-        else if asmcode[i].arg[v] = T_FUNC2 then
+        else if opcodelist[i].arg[v] = T_FUNC2 then
           argstring := argstring + 'T_FUNC2'
-        else if asmcode[i].arg[v] = T_FLOAT then
+        else if opcodelist[i].arg[v] = T_FLOAT then
           argstring := argstring + 'T_FLOAT'
-        else if asmcode[i].arg[v] = T_STR then
+        else if opcodelist[i].arg[v] = T_STR then
           argstring := argstring + 'T_STR';
         argstring := argstring + ', ';
         inc(v);
@@ -442,14 +451,14 @@ begin
 
       if argstring = '' then
         argstring := argstring + 'T_NONE';
-      opcode := asmcode[i].name;
+      opcode := opcodelist[i].name;
       break;
     end;
   end;
   if (length(argstring) > 0) and (argstring <> 'T_NONE') then
     SetLength(argstring, length(argstring)-2);
   if argstring <> '' then
-    argstring := ' (' + opcode + ' ' + argstring + ')';
+    argstring := ' <' + opcode + '> ' + argstring;
   TextEdit.Hint := 'Line: ' + inttostr(currentline) + argstring;
 end;
 
