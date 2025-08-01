@@ -568,7 +568,7 @@ object Form4: TForm4
         Caption = '-'
       end
       object Delete2: TMenuItem
-        Caption = 'Delete chuck'
+        Caption = 'Delete chunk'
         OnClick = Delete2Click
       end
       object Addsymbolechat1: TMenuItem
@@ -616,7 +616,7 @@ object Form4: TForm4
       OnClick = Cut1Click
     end
     object Past1: TMenuItem
-      Caption = 'Past'
+      Caption = 'Paste'
       OnClick = Past1Click
     end
     object Delete1: TMenuItem

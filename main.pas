@@ -4665,6 +4665,11 @@ begin
     flp.Position := 0;
     LanguageString.LoadFromStream(flp);
     SetInterfaceText;
+    if mylang = 0 then
+    begin
+      form4.Past1.Caption := 'Paste';
+      form4.Delete2.Caption := 'Delete chunk';
+    end;
     flp.Clear;
     CheckShadow;
   end;
