@@ -386,12 +386,14 @@ begin
   argstring := '';
   if sender <> Timer1 then
     currentline := TextEdit.TextPosition.Line;
-  opcode := copy(TextEdit.Lines.TextLines[currentline], 9, length(TextEdit.Lines.TextLines[currentline]));
-  spacepos := pos(' ', opcode);
-  opcode := copy(opcode, 0, spacepos - 1);
+  try
+    opcode := copy(TextEdit.Lines.TextLines[currentline], 9, TextEdit.Lines.TextLines[currentline].Length);
+  // The script is blank or end of line was reached; catch the exception
+  except end;
+
   for i := 0 to Length(asmcode) - 1 do
   begin
-    if (opcode = asmcode[i].name) and (asmcode[i].name <> '') then
+    if  (asmcode[i].name <> '') and (opcode.StartsWith(asmcode[i].name)) then
     begin
       // Create argument list
       v := 0;
@@ -439,13 +441,15 @@ begin
 
       if argstring = '' then
         argstring := argstring + 'T_NONE';
+      opcode := asmcode[i].name;
+      break;
     end;
   end;
   if (length(argstring) > 0) and (argstring <> 'T_NONE') then
     SetLength(argstring, length(argstring)-2);
   if argstring <> '' then
     argstring := ' (' + opcode + ' ' + argstring + ')';
-  TextEdit.Hint := 'Line: ' + inttostr(TextEdit.TextPosition.Line) + argstring;
+  TextEdit.Hint := 'Line: ' + inttostr(currentline) + argstring;
 end;
 
 procedure TfmScriptTE.TextEditMouseDown(Sender: TObject; Button: TMouseButton;
