@@ -384,6 +384,7 @@ procedure TfmScriptTE.TextEditClick(Sender: TObject);
   spacepos, i, v: integer;
 begin
   argstring := '';
+  opcode := '';
   if sender <> Timer1 then
     currentline := TextEdit.TextPosition.Line;
   try
