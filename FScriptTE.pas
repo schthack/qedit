@@ -77,10 +77,11 @@ procedure UpdateTextRefs();
 
 var
   fmScriptTE: TfmScriptTE;
+  firstsetup: Boolean = true;
 
 implementation
 
-uses main, unit1, FScrypt, FFind, FReplace, FGoto, TextEditor.CompletionProposal.Snippets;
+uses main, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.CompletionProposal.Snippets;
 
 {$R *.dfm}
 
@@ -152,6 +153,7 @@ procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   i: integer;
 begin
+  fmScriptTE.Hide;
   form4.listbox1.Clear;
   Form1.ViewScrypt1.Enabled := true;
 
@@ -173,6 +175,8 @@ var
   JSONStrings: TStringList;
   LItem1: TTextEditorCompletionProposalSnippetItem;
 begin
+  if firstsetup then
+  begin
     TextEdit.CompletionProposal.Snippets.Items.Clear;
 
     // JSON list for ASM opcodes
@@ -194,7 +198,7 @@ begin
 
     // JSON list for registers
     try
-    for i := 1 to 255  do
+    for i := 0 to 255  do
     begin
         JSONRegisterList := JSONRegisterList + '"' + 'R' + inttostr(i) + '"';
       if i < 255 then
@@ -234,7 +238,7 @@ begin
                 "Element": "String"
               },
               "Properties": {
-                "CloseOnEndOfLine": false
+                "CloseOnEndOfLine": true
               },
               "TokenRange": {
                 "Open": "'",
@@ -308,13 +312,26 @@ begin
     LItem1.Keyword := 'new value (00000000)';
     LItem1.Description := '';
     LItem1.Snippet.Add('00000000');
-
+    firstsetup := false;
+  end;
     Form4.Hide;
     Form1.ViewScrypt1.Enabled := false;
     TextEdit.Lines.Clear;
+    form14.Caption := 'Loading Script';
+    form14.Label1.Hide;
+    form14.Show;
+    form14.ProgressBar1.max := Form4.ListBox1.items.count - 1;
     for i := 0 to Form4.ListBox1.items.count - 1 do
+    begin
+      form14.ProgressBar1.Position := i;
+      form14.Repaint;
       TextEdit.InsertText(Form4.ListBox1.items[i] + sLineBreak);
+    end;
     TextEdit.MoveCaretToBeginning;
+    form14.Hide;
+    form14.Caption := '3D Processing';
+    form14.ProgressBar1.Position := 1;
+    form14.Label1.Show;
 end;
 
 procedure TfmScriptTE.GoToLabel1Click(Sender: TObject);
