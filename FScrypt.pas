@@ -434,9 +434,7 @@ Procedure AddLabel(l:integer);
 var x,i:integer;
     s:ansistring;
 begin
-    for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
-        datablock[i] := l;
-        datablockT[i] := T_NONE;
+    for i:=0 to 1000 do if (datablock[i]=l) then datablock[i] := -1;
     s:='F_'+inttostr(l);
     {for x:=0 to TrFnc.Count -1 do
         if TrFnc.Item[x].Text = s then break; }
@@ -456,8 +454,8 @@ Procedure AddDataRef(l:integer);
 var x,i:integer;
 begin
     for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
-      datablock[i] := l;
-      datablockT[i] := T_DATA;
+    datablock[i] := l;
+    datablockT[i] := T_DATA;
     {for x:=0 to TrData.Count -1 do
         if TrData.Item[x].Text = 'D_'+inttostr(l) then break;   }
     x:=tsdata.IndexOf('D_'+inttostr(l));
@@ -476,8 +474,8 @@ Procedure AddStrRef(l:integer);
 var x,i:integer;
 begin
     for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
-      datablock[i] := l;
-      datablockT[i] := T_STRDATA;
+    datablock[i] := l;
+    datablockT[i] := T_STRDATA;
     {for x:=0 to TrData.Count -1 do
         if TrData.Item[x].Text = 'S_'+inttostr(l) then break;  }
     x:=tsdata.IndexOf('S_'+inttostr(l));
