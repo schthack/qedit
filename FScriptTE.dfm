@@ -41,6 +41,19 @@ object fmScriptTE: TfmScriptTE
   object PopupMenu1: TPopupMenu
     Left = 344
     Top = 232
+    object Newlabel1: TMenuItem
+      Caption = 'Add new unused label'
+      ShortCut = 16460
+      OnClick = Newlabel1Click
+    end
+    object Newregister1: TMenuItem
+      Caption = 'Add new unused register'
+      ShortCut = 16466
+      OnClick = Newregister1Click
+    end
+    object N3: TMenuItem
+      Caption = '-'
+    end
     object Argumentformat1: TMenuItem
       Caption = 'Set argument format'
       object Hex1: TMenuItem
@@ -153,6 +166,20 @@ object fmScriptTE: TfmScriptTE
           Caption = '300 %'
           OnClick = Z300Click
         end
+      end
+    end
+    object Hotkeys1: TMenuItem
+      Caption = '[Hotkeys]'
+      Visible = False
+      object Addlabel1: TMenuItem
+        Caption = 'Add label'
+        ShortCut = 16460
+        OnClick = Addlabel1Click
+      end
+      object Addregister1: TMenuItem
+        Caption = 'Add register'
+        ShortCut = 16466
+        OnClick = Addregister1Click
       end
     end
   end

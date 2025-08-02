@@ -41,6 +41,12 @@ type
     Argumentformat1: TMenuItem;
     Hex1: TMenuItem;
     Decimal1: TMenuItem;
+    N3: TMenuItem;
+    Newlabel1: TMenuItem;
+    Newregister1: TMenuItem;
+    Hotkeys1: TMenuItem;
+    Addlabel1: TMenuItem;
+    Addregister1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -67,6 +73,10 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure Openfromfile1Click(Sender: TObject);
     procedure Savetofile1Click(Sender: TObject);
+    procedure Newlabel1Click(Sender: TObject);
+    procedure Newregister1Click(Sender: TObject);
+    procedure Addlabel1Click(Sender: TObject);
+    procedure Addregister1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -89,16 +99,16 @@ uses main, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.Completion
 
 procedure UpdateTextRefs();
 var
-  i,x,y, labelnum: integer;
+  i,j,x,y, labelnum: integer;
   reftype,currentline,labelstr: widestring;
 begin
-  // Clear and update all label flag data references
   for i := 0 to 1000 do datablock[i]:=-1;
   for i := 0 to fmScriptTE.TextEdit.Lines.Count do
   begin
     currentline := fmScriptTE.TextEdit.Lines[i];
     if currentline <> '' then
     begin
+      // Update all label flag data references
       x := pos(':',fmScriptTE.TextEdit.Lines[i]);
       labelstr := copy(currentline, 0, x-1);
       currentline := copy(currentline, x+1, length(currentline));
@@ -112,8 +122,32 @@ begin
           AddDataRef(labelnum)
         else AddLabel(labelnum);
       end;
+
+      // Update registers
+      for j := 0 to 255 do
+      begin
+        if fmScriptTE.TextEdit.Lines[i].Contains('R' + inttostr(j)) then
+          AddRegister(j);
+      end;
+
+      // Update functions used
+      for j := 0 to asmcount - 1 do
+      begin
+        if fmScriptTE.TextEdit.Lines[i].Contains(asmcode[j].name) then
+          AddFunctionUsed(asmcode[j].name);
+      end;
     end;
   end;
+end;
+
+procedure TfmScriptTE.Addlabel1Click(Sender: TObject);
+begin
+  Newlabel1Click(nil);
+end;
+
+procedure TfmScriptTE.Addregister1Click(Sender: TObject);
+begin
+  Newregister1Click(nil);
 end;
 
 procedure TfmScriptTE.Copy1Click(Sender: TObject);
@@ -157,17 +191,24 @@ var
 begin
   fmScriptTE.Hide;
   form4.listbox1.Clear;
-  Form1.ViewScrypt1.Enabled := true;
-
+  form14.Caption := 'Updating Script References';
+  form14.Label1.Hide;
+  form14.Show;
+  form14.ProgressBar1.max := TextEdit.LineNumbersCount;
   UpdateTextRefs();
-
   for i := 0 to TextEdit.LineNumbersCount do
   begin
     if TextEdit.Lines[i] <> '' then
     begin
+      form14.ProgressBar1.Position := i;
+      form14.Repaint;
       form4.ListBox1.items.add(TextEdit.Lines[i]);
     end;
   end;
+  form14.Hide;
+  form14.Caption := '3D Processing';
+  form14.ProgressBar1.Position := 1;
+  form14.Label1.Show;
 end;
 
 procedure TfmScriptTE.FormShow(Sender: TObject);
@@ -316,7 +357,6 @@ begin
     firstsetup := false;
   end;
     Form4.Hide;
-    Form1.ViewScrypt1.Enabled := false;
     TextEdit.Lines.Clear;
     form14.Caption := 'Loading Script';
     form14.Label1.Hide;
@@ -343,6 +383,72 @@ end;
 procedure TfmScriptTE.Hex1Click(Sender: TObject);
 begin
   form4.Hex1Click(nil);
+end;
+
+procedure TfmScriptTE.Newlabel1Click(Sender: TObject);
+var
+  i, j, lastline, lastcaret, labellength: integer;
+  found: Boolean;
+  whitespace: string;
+begin
+  lastline := TextEdit.TextPosition.Line;
+  lastcaret := TextEdit.CaretIndex;
+  whitespace := '';
+  // Add the next unused label
+  with TextEdit do
+  begin
+    for i := 0 to 65535 do
+    begin
+      found := false;
+      for j := 0 to Lines.Count do
+      begin
+        if Lines[j].StartsWith(inttostr(i) + ':') then
+        found := true;
+      end;
+      if not found then
+      begin
+        labellength := 6 - length(inttostr(i));
+        for j := 0 to labellength do
+          whitespace := whitespace + ' ';
+        InsertLine(lastline + 2, inttostr(i) + ':' + whitespace);
+        GoToLine(lastline + 1);
+        // Move caret to end of the new line
+        CaretIndex := lastcaret + 1 + length(Lines[lastline + 1]);
+        break;
+      end;
+    end;
+  end;
+end;
+
+procedure TfmScriptTE.Newregister1Click(Sender: TObject);
+var
+  i, j: integer;
+  found: Boolean;
+begin
+  // Add the next unused register
+  with TextEdit do
+  begin
+    for i := 0 to 255 do
+    begin
+      found := false;
+      for j := 0 to Lines.Count do
+      begin
+        if Lines[j].Contains('R' + inttostr(i)) then
+          found := true;
+      end;
+      if not found
+      // Exclude all reserved registers
+      and (i <> 74) and (i <> 75)
+      and (i <> 76) and (i <> 77)
+      and (i <> 78) and (i <> 79)
+      and (i <> 253) and (i <> 255)
+      then
+      begin
+        InsertText('R' + inttostr(i));
+        break;
+      end;
+    end;
+  end;
 end;
 
 procedure TfmScriptTE.Openfromfile1Click(Sender: TObject);
