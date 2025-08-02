@@ -330,7 +330,7 @@ type
     smSnapOptions: TMenuItem;
     SnapOptions2: TMenuItem;
     Options2: TMenuItem;
-    Showtexteditor1: TMenuItem;
+    Texteditor1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -440,7 +440,7 @@ type
     procedure Hidemainwindow1Click(Sender: TObject);
     procedure smSnapOptionsClick(Sender: TObject);
     procedure SnapOptions2Click(Sender: TObject);
-    procedure Showtexteditor1Click(Sender: TObject);
+    procedure Texteditor1Click(Sender: TObject);
 
 
   private
@@ -6775,11 +6775,6 @@ begin
   // Form1.CheckListBox1Click(form1);
 end;
 
-procedure TForm1.Showtexteditor1Click(Sender: TObject);
-begin
-  fmScriptTE.Show;
-end;
-
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   HideIndicator();
@@ -8862,6 +8857,11 @@ begin
     fileclose(f);
 
   end;
+end;
+
+procedure TForm1.Texteditor1Click(Sender: TObject);
+begin
+  fmScriptTE.Show;
 end;
 
 Function ReadUniString(f: integer): widestring;

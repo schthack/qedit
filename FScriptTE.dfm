@@ -41,6 +41,20 @@ object fmScriptTE: TfmScriptTE
   object PopupMenu1: TPopupMenu
     Left = 344
     Top = 232
+    object Argumentformat1: TMenuItem
+      Caption = 'Set argument format'
+      object Hex1: TMenuItem
+        Caption = 'Hex'
+        OnClick = Hex1Click
+      end
+      object Decimal1: TMenuItem
+        Caption = 'Decimal'
+        OnClick = Decimal1Click
+      end
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
     object Cut1: TMenuItem
       Caption = 'Cut'
       ShortCut = 16472
@@ -116,17 +130,6 @@ object fmScriptTE: TfmScriptTE
     end
     object View1: TMenuItem
       Caption = 'View'
-      object Setargumentformat1: TMenuItem
-        Caption = 'Argument format'
-        object Hex1: TMenuItem
-          Caption = 'Hex'
-          OnClick = Hex1Click
-        end
-        object Decimal1: TMenuItem
-          Caption = 'Decimal'
-          OnClick = Decimal1Click
-        end
-      end
       object Zoom1: TMenuItem
         Caption = 'Zoom'
         object Z100: TMenuItem

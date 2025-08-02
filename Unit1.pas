@@ -303,7 +303,7 @@ function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
 
 implementation
 
-uses FScrypt, FScriptTE, D3DEngin, ComCtrls, Classes, MyConst;
+uses FScrypt, FScriptTE, unit14, D3DEngin, ComCtrls, Classes, MyConst;
 
 function MakeUni(s: ansistring): ansistring;
 var
@@ -1184,8 +1184,20 @@ begin
   if fmScriptTE.Visible then
   begin
     fmScriptTE.TextEdit.Lines.Clear;
+    form14.Caption := 'Loading Script';
+    form14.Label1.Hide;
+    form14.Show;
+    form14.ProgressBar1.max := Form4.ListBox1.items.count - 1;
     for i := 0 to Form4.ListBox1.items.count - 1 do
+    begin
+      form14.ProgressBar1.Position := i;
+      form14.Repaint;
       fmScriptTE.TextEdit.InsertText(Form4.ListBox1.items[i] + sLineBreak);
+    end;
+    form14.Hide;
+    form14.Caption := '3D Processing';
+    form14.ProgressBar1.Position := 1;
+    form14.Label1.Show;
     fmScriptTE.TextEdit.MoveCaretToBeginning;
   end;
 end;

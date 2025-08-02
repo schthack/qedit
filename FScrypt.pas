@@ -60,7 +60,6 @@ type
     Changedataformat1: TMenuItem;
     Decimal1: TMenuItem;
     Hex1: TMenuItem;
-    btnEditText: TButton;
     procedure Button4Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -104,7 +103,6 @@ type
     procedure Addsymbolechat1Click(Sender: TObject);
     procedure Decimal1Click(Sender: TObject);
     procedure Hex1Click(Sender: TObject);
-    procedure btnEditTextClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
 
 
@@ -1667,11 +1665,6 @@ begin
           Showmessage(getlanguagestring(189));
       end;
     end;
-end;
-
-procedure TForm4.btnEditTextClick(Sender: TObject);
-begin
-  fmScriptTE.Show;
 end;
 
 procedure TForm4.TreeView1Compare(Sender: TObject; Node1, Node2: TTreeNode;

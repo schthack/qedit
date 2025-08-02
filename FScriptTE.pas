@@ -23,9 +23,6 @@ type
     File1: TMenuItem;
     Exit1: TMenuItem;
     View1: TMenuItem;
-    Setargumentformat1: TMenuItem;
-    Hex1: TMenuItem;
-    Decimal1: TMenuItem;
     Deleteselection1: TMenuItem;
     Delete1: TMenuItem;
     Zoom1: TMenuItem;
@@ -40,6 +37,10 @@ type
     Savetofile1: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
+    N2: TMenuItem;
+    Argumentformat1: TMenuItem;
+    Hex1: TMenuItem;
+    Decimal1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;

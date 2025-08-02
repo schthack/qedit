@@ -481,6 +481,11 @@ object Form1: TForm1
         ImageIndex = 4
         OnClick = ViewScrypt1Click
       end
+      object Texteditor1: TMenuItem
+        Caption = 'Text editor'
+        ImageIndex = 4
+        OnClick = Texteditor1Click
+      end
       object N5: TMenuItem
         Caption = '-'
       end
@@ -679,11 +684,6 @@ object Form1: TForm1
         Caption = 'Hide main window'
         ShortCut = 16472
         OnClick = Hidemainwindow1Click
-      end
-      object Showtexteditor1: TMenuItem
-        Caption = 'Show text editor'
-        ShortCut = 16453
-        OnClick = Showtexteditor1Click
       end
     end
   end
