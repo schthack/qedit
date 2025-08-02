@@ -1192,7 +1192,7 @@ begin
     begin
       form14.ProgressBar1.Position := i;
       form14.Repaint;
-      fmScriptTE.TextEdit.InsertText(Form4.ListBox1.items[i] + sLineBreak);
+      fmScriptTE.TextEdit.Lines.Add(Form4.ListBox1.items[i]);
     end;
     form14.Hide;
     form14.Caption := '3D Processing';
@@ -1216,7 +1216,7 @@ begin
   begin
     Form4.Listbox1.Clear;
     UpdateTextRefs();
-    for i := 0 to fmScriptTE.TextEdit.LineNumbersCount do
+    for i := 0 to fmScriptTE.TextEdit.Lines.Count do
     begin
     if fmScriptTE.TextEdit.Lines[i] <> '' then
       begin

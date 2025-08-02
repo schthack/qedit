@@ -103,8 +103,14 @@ var
   reftype,currentline,labelstr: widestring;
 begin
   for i := 0 to 1000 do datablock[i]:=-1;
+  form14.Caption := 'Updating References';
+  form14.Label1.Hide;
+  form14.Show;
+  form14.ProgressBar1.max := fmScriptTE.TextEdit.Lines.Count;
   for i := 0 to fmScriptTE.TextEdit.Lines.Count do
   begin
+    form14.ProgressBar1.Position := i;
+    form14.Repaint;
     currentline := fmScriptTE.TextEdit.Lines[i];
     if currentline <> '' then
     begin
@@ -138,6 +144,11 @@ begin
       end;
     end;
   end;
+
+  form14.Hide;
+  form14.Caption := '3D Processing';
+  form14.ProgressBar1.Position := 1;
+  form14.Label1.Show;
 end;
 
 procedure TfmScriptTE.Addlabel1Click(Sender: TObject);
@@ -191,12 +202,12 @@ var
 begin
   fmScriptTE.Hide;
   form4.listbox1.Clear;
-  form14.Caption := 'Updating Script References';
+  UpdateTextRefs();
+  form14.Caption := 'Saving Script';
   form14.Label1.Hide;
   form14.Show;
-  form14.ProgressBar1.max := TextEdit.LineNumbersCount;
-  UpdateTextRefs();
-  for i := 0 to TextEdit.LineNumbersCount do
+  form14.ProgressBar1.max := TextEdit.Lines.Count;
+  for i := 0 to TextEdit.Lines.Count do
   begin
     if TextEdit.Lines[i] <> '' then
     begin
@@ -366,7 +377,7 @@ begin
     begin
       form14.ProgressBar1.Position := i;
       form14.Repaint;
-      TextEdit.InsertText(Form4.ListBox1.items[i] + sLineBreak);
+      TextEdit.Lines.Add(Form4.ListBox1.items[i]);
     end;
     TextEdit.MoveCaretToBeginning;
     form14.Hide;
