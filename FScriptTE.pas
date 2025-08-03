@@ -89,6 +89,7 @@ procedure UpdateTextRefs();
 var
   fmScriptTE: TfmScriptTE;
   firstsetup: Boolean = true;
+  textEdited: Boolean = false;
   currentline: integer = 0;
 
 implementation
@@ -99,10 +100,37 @@ uses main, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.Completion
 
 procedure UpdateTextRefs();
 var
-  i,j,x,y, labelnum: integer;
+  i,j,x,labelnum: integer;
   reftype,currentline,labelstr: widestring;
 begin
+  // Clear data references
   for i := 0 to 1000 do datablock[i]:=-1;
+  for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
+    RemoveRef(AnsiString(fmScriptTE.TextEdit.Lines[i]));
+
+   // Clear and re-initialize the treeview
+  form4.TreeView1.Items.Clear;
+  TrFnc := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Function');
+  TrData := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Data/Str');
+  TrReg := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Register');
+  Tropc := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Opcode');
+  TrData.Text := getlanguagestring(133);
+  TrFnc.Text := getlanguagestring(132);
+  TrReg.Text := getlanguagestring(134);
+  Tropc.Text := getlanguagestring(135);
+  TrFnc.ImageIndex := 2;
+  TrFnc.SelectedIndex := 2;
+  TrData.ImageIndex := 2;
+  TrData.SelectedIndex := 2;
+  TrReg.ImageIndex := 2;
+  TrReg.SelectedIndex := 2;
+  Tropc.ImageIndex := 2;
+  Tropc.SelectedIndex := 2;
+  TsData.Clear;
+  TsFnc.Clear;
+  TsReg.Clear;
+  Tsopc.Clear;
+
   form14.Caption := 'Updating References';
   form14.Label1.Hide;
   form14.Show;
@@ -140,11 +168,10 @@ begin
       for j := 0 to asmcount - 1 do
       begin
         if fmScriptTE.TextEdit.Lines[i].Contains(asmcode[j].name) then
-          AddFunctionUsed(asmcode[j].name);
+          AddFunctionUsed(AnsiString(asmcode[j].name));
       end;
     end;
   end;
-
   form14.Hide;
   form14.Caption := '3D Processing';
   form14.ProgressBar1.Position := 1;
@@ -200,26 +227,29 @@ procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   i: integer;
 begin
-  fmScriptTE.Hide;
-  form4.listbox1.Clear;
-  UpdateTextRefs();
-  form14.Caption := 'Saving Script';
-  form14.Label1.Hide;
-  form14.Show;
-  form14.ProgressBar1.max := TextEdit.Lines.Count;
-  for i := 0 to TextEdit.Lines.Count do
+  if textEdited then
   begin
-    if TextEdit.Lines[i] <> '' then
+    fmScriptTE.Hide;
+    form4.listbox1.Clear;
+    UpdateTextRefs();
+    form14.Caption := 'Saving Script';
+    form14.Label1.Hide;
+    form14.Show;
+    form14.ProgressBar1.max := TextEdit.Lines.Count;
+    for i := 0 to TextEdit.Lines.Count do
     begin
-      form14.ProgressBar1.Position := i;
-      form14.Repaint;
-      form4.ListBox1.items.add(TextEdit.Lines[i]);
+      if TextEdit.Lines[i] <> '' then
+      begin
+        form14.ProgressBar1.Position := i;
+        form14.Repaint;
+        form4.ListBox1.items.add(TextEdit.Lines[i]);
+      end;
     end;
+    form14.Hide;
+    form14.Caption := '3D Processing';
+    form14.ProgressBar1.Position := 1;
+    form14.Label1.Show;
   end;
-  form14.Hide;
-  form14.Caption := '3D Processing';
-  form14.ProgressBar1.Position := 1;
-  form14.Label1.Show;
 end;
 
 procedure TfmScriptTE.FormShow(Sender: TObject);
@@ -229,6 +259,7 @@ var
   JSONStrings: TStringList;
   LItem1: TTextEditorCompletionProposalSnippetItem;
 begin
+  textEdited := false;
   if firstsetup then
   begin
     TextEdit.CompletionProposal.Snippets.Items.Clear;
@@ -491,8 +522,36 @@ begin
 end;
 
 procedure TfmScriptTE.TextEditChange(Sender: TObject);
+var
+  l,x,y,g: integer;
+  s: ansistring;
 begin
   isEdited := true;
+  textEdited := true;
+  l := TextEdit.TextPosition.Line;
+  s := '';
+  try
+  // Update maps
+  if (lowercase(TextEdit.Lines[l]).Contains(lowercase(GetOpcodeName($c4)))) or
+  (lowercase(TextEdit.Lines[l]).Contains(lowercase(GetOpcodeName($f80d)))) or
+  (lowercase(TextEdit.Lines[l]).Contains(lowercase(GetOpcodeName($9)))) then ScanForMap;
+
+  if (lowercase(TextEdit.Lines[l]).Contains(lowercase(GetOpcodeName($f951)))) then
+  begin
+    //bb map
+    s:=fmScriptTE.TextEdit.Lines[l];
+    delete(s,1,9+length(GetOpcodeName($f951)));
+    x:=hextoint(copy(s,1,2));
+    g:=hextoint(copy(s,5,4));
+    y:=hextoint(copy(s,11,2));
+  if x < 30 then
+  begin
+    mapxvmfile[x]:=path+'map\xvm\'+mapxvmname[mapid[g]+y];
+    mapfile[x]:=path+'map\'+mapfilename[mapid[g]+y];
+    floor[x].floorid:=MapArea[mapid[g]+y];
+    Form1.CheckListBox1.Items.Strings[x]:=mapname[mapid[g]+y];
+  end;
+end; except end;// End of line reached, catch exception
 end;
 
 procedure TfmScriptTE.TextEditClick(Sender: TObject);

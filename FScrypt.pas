@@ -352,7 +352,7 @@ begin
 end;
 
 Procedure RemoveRef(s:ansistring);
-var x,y,labn,i:integer;
+var x,y,labn,i,j:integer;
     lab,fnc,b:ansistring;
     flab,ffnc:integer;
     lreg:tstringlist;
@@ -375,8 +375,14 @@ begin
     delete(b,1,length(fnc));
     if b <> '' then
     if b[1] <> ' ' then b:=' '+b;
-    if fnc = 'HEX:' then ffnc:=1;
-    if fnc = 'STR:' then ffnc:=1;
+    if (fnc = 'HEX:') or (fnc = 'STR:') then
+    begin
+      if flab = 0 then
+      begin
+        for j:=0 to 1000 do if (datablock[j]=labn) then datablock[j] := -1;
+      end;
+      ffnc:=1;
+    end;
     if ffnc = 0 then begin
         //look for any reg
         x:=pos(' R',b);
