@@ -23,6 +23,8 @@ object fmScriptTE: TfmScriptTE
     Align = alClient
     Colors.ActiveLineBackground = clBtnFace
     Colors.CodeFoldingActiveLineBackground = clBtnFace
+    Colors.EditorStringBackground = clNone
+    Colors.EditorStringForeground = clNone
     Colors.SearchHighlighterBackground = clBtnFace
     Colors.SearchMapForeground = clBtnFace
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
