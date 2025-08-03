@@ -123,7 +123,7 @@ object Form4: TForm4
       end
       object Button7: TButton
         Left = 9
-        Top = 379
+        Top = 351
         Width = 75
         Height = 25
         Anchors = [akRight, akBottom]
@@ -150,6 +150,15 @@ object Form4: TForm4
         Caption = 'Import'
         TabOrder = 7
         OnClick = Button9Click
+      end
+      object btnEditText: TButton
+        Left = 9
+        Top = 379
+        Width = 75
+        Height = 25
+        Caption = 'Edit text'
+        TabOrder = 8
+        OnClick = btnEditTextClick
       end
     end
     object ListBox1: TListBox

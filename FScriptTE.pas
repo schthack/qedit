@@ -105,8 +105,13 @@ var
 begin
   // Clear data references
   for i := 0 to 1000 do datablock[i]:=-1;
-  for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
-    RemoveRef(AnsiString(fmScriptTE.TextEdit.Lines[i]));
+  for i := 0 to fmScriptTE.TextEdit.Lines.Count do
+  begin
+    try
+      RemoveRef(AnsiString(fmScriptTE.TextEdit.Lines[i]));
+    except // New or imported file with no references to delete, catch exception
+    end;
+  end;
 
    // Clear and re-initialize the treeview
   form4.TreeView1.Items.Clear;
@@ -498,6 +503,7 @@ begin
   if opendialog1.Execute then
   begin
     Textedit.LoadFromFile(opendialog1.FileName);
+    textedited:=true;
     isedited:=true;
   end;
 end;

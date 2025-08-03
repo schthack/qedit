@@ -482,7 +482,7 @@ object Form1: TForm1
         OnClick = ViewScrypt1Click
       end
       object Texteditor1: TMenuItem
-        Caption = 'Script text editor'
+        Caption = 'Text editor'
         ImageIndex = 4
         OnClick = Texteditor1Click
       end

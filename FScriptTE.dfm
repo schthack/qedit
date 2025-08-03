@@ -23,6 +23,8 @@ object fmScriptTE: TfmScriptTE
     Align = alClient
     Colors.ActiveLineBackground = clBtnFace
     Colors.CodeFoldingActiveLineBackground = clBtnFace
+    Colors.SearchHighlighterBackground = clBtnFace
+    Colors.SearchMapForeground = clBtnFace
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
     HighlightLine.Items = <
       item
@@ -104,7 +106,7 @@ object fmScriptTE: TfmScriptTE
       Caption = 'File'
       object Openfromfile1: TMenuItem
         Caption = 'Import from file'
-        ShortCut = 16463
+        ShortCut = 16457
         OnClick = Openfromfile1Click
       end
       object Savetofile1: TMenuItem
