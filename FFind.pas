@@ -41,6 +41,7 @@ begin
   begin
     SearchText := Edit1.Text;
     SetOption(TTextEditorSearchOption.soCaseSensitive,chkMatchCase.Checked);
+    SetOption(TTextEditorSearchOption.soWrapAround, true);
     Execute;
     ClearItems;
     SearchText := '';

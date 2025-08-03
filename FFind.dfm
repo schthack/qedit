@@ -22,7 +22,7 @@ object fmFind: TfmFind
     TabOrder = 0
   end
   object btnOK: TButton
-    Left = 23
+    Left = 20
     Top = 80
     Width = 75
     Height = 25
@@ -40,7 +40,7 @@ object fmFind: TfmFind
     TabOrder = 1
   end
   object btnClose: TButton
-    Left = 104
+    Left = 107
     Top = 80
     Width = 75
     Height = 25

@@ -229,10 +229,10 @@ object Form4: TForm4
       end>
   end
   object FontDialog1: TFontDialog
-    Font.Charset = DEFAULT_CHARSET
+    Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
-    Font.Name = 'MS Sans Serif'
+    Font.Name = 'Fixedsys'
     Font.Style = []
     Left = 582
     Top = 440

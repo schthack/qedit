@@ -4439,6 +4439,13 @@ begin
         if Reg.ValueExists('FontStyle') then
           form4.ListBox1.Font.Style := Tfontstyles(byte(Reg.ReadInteger('FontStyle')));
         form4.ListBox1.Font.Pitch := fpFixed;
+        if Reg.ValueExists('TEFontName') then
+          fmScriptTE.TextEdit.Fonts.Text.name := Reg.ReadString('TEFontName');
+        if Reg.ValueExists('TEFontSize') then
+          fmScriptTE.TextEdit.Fonts.Text.size := Reg.ReadInteger('TEFontSize');
+        if Reg.ValueExists('TEFontStyle') then
+          fmScriptTE.TextEdit.Fonts.Text.Style := Tfontstyles(byte(Reg.ReadInteger('TEFontStyle')));
+        fmScriptTE.TextEdit.Fonts.Text.Pitch := fpFixed;
         if Reg.ValueExists('Lang') then
           mylang := Reg.ReadInteger('Lang');
         if Reg.ValueExists('LoadFrom') then

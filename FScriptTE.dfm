@@ -23,10 +23,7 @@ object fmScriptTE: TfmScriptTE
     Align = alClient
     Colors.ActiveLineBackground = clBtnFace
     Colors.CodeFoldingActiveLineBackground = clBtnFace
-    Colors.EditorStringBackground = clNone
-    Colors.EditorStringForeground = clNone
-    Colors.SearchHighlighterBackground = clBtnFace
-    Colors.SearchMapForeground = clBtnFace
+    Colors.EditorStringForeground = clBlack
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
     HighlightLine.Items = <
       item
@@ -145,6 +142,13 @@ object fmScriptTE: TfmScriptTE
         OnClick = Deleteselection1Click
       end
     end
+    object Format1: TMenuItem
+      Caption = 'Format'
+      object Changefont1: TMenuItem
+        Caption = 'Change font'
+        OnClick = Changefont1Click
+      end
+    end
     object View1: TMenuItem
       Caption = 'View'
       object Zoom1: TMenuItem
@@ -202,5 +206,14 @@ object fmScriptTE: TfmScriptTE
     Filter = 'Pso quest Asm|*.pasm'
     Left = 24
     Top = 136
+  end
+  object FontDialog1: TFontDialog
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Courier New'
+    Font.Style = []
+    Left = 24
+    Top = 248
   end
 end

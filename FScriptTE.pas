@@ -47,6 +47,9 @@ type
     Hotkeys1: TMenuItem;
     Addlabel1: TMenuItem;
     Addregister1: TMenuItem;
+    Format1: TMenuItem;
+    Changefont1: TMenuItem;
+    FontDialog1: TFontDialog;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -77,6 +80,7 @@ type
     procedure Newregister1Click(Sender: TObject);
     procedure Addlabel1Click(Sender: TObject);
     procedure Addregister1Click(Sender: TObject);
+    procedure Changefont1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -191,6 +195,37 @@ end;
 procedure TfmScriptTE.Addregister1Click(Sender: TObject);
 begin
   Newregister1Click(nil);
+end;
+
+procedure TfmScriptTE.Changefont1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+  lastcaret: integer;
+begin
+    // Save text position
+    lastcaret := TextEdit.CaretIndex;
+    if fontdialog1.Execute then begin
+        TextEdit.Fonts.Text:=fontdialog1.Font;
+        Textedit.Fonts.Text.Pitch:=fpFixed;
+        Reg := TRegistry.Create;
+        try
+            Reg.RootKey := HKEY_CURRENT_USER;
+            if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+        begin
+            Reg.WriteInteger('TEFontSize',fontdialog1.Font.Size);
+            Reg.WriteString('TEFontName',fontdialog1.Font.Name);
+            Reg.WriteInteger('TEFontStyle',byte(fontdialog1.Font.Style));
+            Reg.CloseKey;
+            end;
+        finally
+            Reg.Free;
+        end;
+    end;
+
+    fmScriptTE.Close;
+    fmScriptTE.Show;
+    // Reset to last caret position
+    TextEdit.CaretIndex := lastcaret;
 end;
 
 procedure TfmScriptTE.Copy1Click(Sender: TObject);
@@ -362,7 +397,7 @@ begin
           "Set": [
             {
               "Type": "Numbers",
-              "Symbols": ".0123456789ABCDEF",
+              "Symbols": "0123456789ABCDEF",
               "Attributes": {
                 "Element": "Number"
               }
