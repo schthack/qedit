@@ -149,11 +149,11 @@ object fmScriptTE: TfmScriptTE
         Caption = 'Zoom'
         object Z100: TMenuItem
           Caption = '100 %'
-          Checked = True
           OnClick = Z100Click
         end
         object Z125: TMenuItem
           Caption = '125 %'
+          Checked = True
           OnClick = Z125Click
         end
         object Z150: TMenuItem

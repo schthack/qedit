@@ -551,7 +551,7 @@ var
   lsatsaveformat: integer = 4;
   snapvalue: integer = 10;
   distancelimit: integer = 30;
-  texteditzoom: integer = 0;
+  texteditzoom: integer = 1;
   dragenabled: Boolean = false;
   snapenabled: Boolean = false;
   autoaxis: Boolean = false;
