@@ -100,6 +100,7 @@ type
 
 procedure UpdateTextRefs();
 procedure SetTextZoom(zoomvalue: integer);
+procedure SetTextColor(colortype: string);
 
 var
   fmScriptTE: TfmScriptTE;
@@ -240,6 +241,49 @@ begin
   finally
     Reg.Free;
   end;
+end;
+
+procedure SetTextColor(colortype: string);
+var
+  Reg: TRegistry;
+  lastcaret: integer;
+begin
+    with fmScriptTE do
+    begin
+      // Save text position
+      lastcaret := TextEdit.CaretIndex;
+      // Set default color
+      if colortype = 'TEValueColor' then
+        colordialog1.Color := clBlue
+      else colordialog1.Color := clNavy;
+      if colordialog1.Execute then begin
+          if colortype = 'TEOpcodeColor' then
+            TextEdit.Colors.EditorReservedWordForeground:=colordialog1.Color
+          else if colortype = 'TERegisterColor' then
+            TextEdit.Colors.EditorSymbolForeground:=colordialog1.Color
+          else if colortype = 'TEValueColor' then
+          begin
+            TextEdit.Colors.EditorNumberForeground:=colordialog1.Color;
+            TextEdit.Colors.EditorHexNumberForeground:=colordialog1.Color;
+          end;
+
+          Reg := TRegistry.Create;
+          try
+              Reg.RootKey := HKEY_CURRENT_USER;
+              if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+          begin
+              Reg.WriteInteger(colortype,colordialog1.Color);
+              Reg.CloseKey;
+              end;
+          finally
+              Reg.Free;
+          end;
+      end;
+      Close;
+      Show;
+      // Reset to last caret position
+      TextEdit.CaretIndex := lastcaret;
+    end;
 end;
 
 procedure TfmScriptTE.Addlabel1Click(Sender: TObject);
@@ -589,36 +633,6 @@ begin
   end;
 end;
 
-procedure TfmScriptTE.Opcodes1Click(Sender: TObject);
-var
-  Reg: TRegistry;
-  lastcaret: integer;
-begin
-    // Save text position
-    lastcaret := TextEdit.CaretIndex;
-    // Set default color
-    colordialog1.Color := clNavy;
-    if colordialog1.Execute then begin
-        TextEdit.Colors.EditorReservedWordForeground:=colordialog1.Color;
-        Reg := TRegistry.Create;
-        try
-            Reg.RootKey := HKEY_CURRENT_USER;
-            if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
-        begin
-            Reg.WriteInteger('TEOpcodeColor',colordialog1.Color);
-            Reg.CloseKey;
-            end;
-        finally
-            Reg.Free;
-        end;
-    end;
-
-    fmScriptTE.Close;
-    fmScriptTE.Show;
-    // Reset to last caret position
-    TextEdit.CaretIndex := lastcaret;
-end;
-
 procedure TfmScriptTE.Openfromfile1Click(Sender: TObject);
 begin
   if opendialog1.Execute then
@@ -634,34 +648,19 @@ begin
   TextEdit.PasteFromClipboard;
 end;
 
-procedure TfmScriptTE.Registers1Click(Sender: TObject);
-var
-  Reg: TRegistry;
-  lastcaret: integer;
+procedure TfmScriptTE.Opcodes1Click(Sender: TObject);
 begin
-    // Save text position
-    lastcaret := TextEdit.CaretIndex;
-    // Set default color
-    colordialog1.Color := clNavy;
-    if colordialog1.Execute then begin
-        TextEdit.Colors.EditorSymbolForeground:=colordialog1.Color;
-        Reg := TRegistry.Create;
-        try
-            Reg.RootKey := HKEY_CURRENT_USER;
-            if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
-        begin
-            Reg.WriteInteger('TERegisterColor',colordialog1.Color);
-            Reg.CloseKey;
-            end;
-        finally
-            Reg.Free;
-        end;
-    end;
+  SetTextColor('TEOpcodeColor');
+end;
 
-    fmScriptTE.Close;
-    fmScriptTE.Show;
-    // Reset to last caret position
-    TextEdit.CaretIndex := lastcaret;
+procedure TfmScriptTE.Registers1Click(Sender: TObject);
+begin
+  SetTextColor('TERegisterColor');
+end;
+
+procedure TfmScriptTE.Values1Click(Sender: TObject);
+begin
+  SetTextColor('TEValueColor');
 end;
 
 procedure TfmScriptTE.Replace1Click(Sender: TObject);
@@ -830,37 +829,6 @@ end;
 procedure TfmScriptTE.Undo1Click(Sender: TObject);
 begin
   TextEdit.DoUndo;
-end;
-
-procedure TfmScriptTE.Values1Click(Sender: TObject);
-var
-  Reg: TRegistry;
-  lastcaret: integer;
-begin
-    // Save text position
-    lastcaret := TextEdit.CaretIndex;
-    // Set default color
-    colordialog1.Color := clBlue;
-    if colordialog1.Execute then begin
-        TextEdit.Colors.EditorNumberForeground:=colordialog1.Color;
-        TextEdit.Colors.EditorHexNumberForeground:=colordialog1.Color;
-        Reg := TRegistry.Create;
-        try
-            Reg.RootKey := HKEY_CURRENT_USER;
-            if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
-        begin
-            Reg.WriteInteger('TEValueColor',colordialog1.Color);
-            Reg.CloseKey;
-            end;
-        finally
-            Reg.Free;
-        end;
-    end;
-
-    fmScriptTE.Close;
-    fmScriptTE.Show;
-    // Reset to last caret position
-    TextEdit.CaretIndex := lastcaret;
 end;
 
 procedure TfmScriptTE.Z100Click(Sender: TObject);
