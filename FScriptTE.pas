@@ -684,6 +684,11 @@ var
   x2,y2,g: integer;
   s: ansistring;
 begin
+  // Only enable auto-complete for the opcode and argument parts of the line
+  if TextEdit.TextPosition.Char >= 9 then
+    Textedit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true)
+  else Textedit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,false);
+
   nextline := TextEdit.TextPosition.Line;
   if nextline <> editline then
   begin
