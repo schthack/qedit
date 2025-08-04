@@ -551,7 +551,7 @@ var
   lsatsaveformat: integer = 4;
   snapvalue: integer = 10;
   distancelimit: integer = 30;
-  texteditzoom: integer = 1;
+  texteditzoom: integer = 125;
   dragenabled: Boolean = false;
   snapenabled: Boolean = false;
   autoaxis: Boolean = false;
@@ -4446,6 +4446,15 @@ begin
         if Reg.ValueExists('TEFontStyle') then
           fmScriptTE.TextEdit.Fonts.Text.Style := Tfontstyles(byte(Reg.ReadInteger('TEFontStyle')));
         fmScriptTE.TextEdit.Fonts.Text.Pitch := fpFixed;
+        if Reg.ValueExists('TEOpcodeColor') then
+          fmScriptTE.TextEdit.Colors.EditorReservedWordForeground := Reg.ReadInteger('TEOpcodeColor');
+        if Reg.ValueExists('TERegisterColor') then
+          fmScriptTE.TextEdit.Colors.EditorSymbolForeground := Reg.ReadInteger('TERegisterColor');
+        if Reg.ValueExists('TEValueColor') then
+        begin
+          fmScriptTE.TextEdit.Colors.EditorNumberForeground := Reg.ReadInteger('TEValueColor');
+          fmScriptTE.TextEdit.Colors.EditorHexNumberForeground := Reg.ReadInteger('TEValueColor');
+        end;
         if Reg.ValueExists('Lang') then
           mylang := Reg.ReadInteger('Lang');
         if Reg.ValueExists('LoadFrom') then
@@ -4659,15 +4668,7 @@ begin
     FPlacementOptions.nbDefaultY.Value := DefaultY;
     FPlacementOptions.nbDefaultZ.Value := DefaultZ;
 
-    if (texteditzoom = 1) then
-      fmScriptTE.Z125Click(nil)
-    else if (texteditzoom = 2) then
-      fmScriptTE.Z150Click(nil)
-    else if (texteditzoom = 3) then
-      fmScriptTE.Z200Click(nil)
-    else if (texteditzoom = 4) then
-      fmScriptTE.Z300Click(nil)
-    else fmScriptTE.Z100Click(nil);
+    SetTextZoom(texteditzoom);
 
     flp.Position := 0;
     LanguageString.LoadFromStream(flp);

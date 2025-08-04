@@ -299,6 +299,7 @@ const
 Function QuestDisam(code: pansichar; ref: array of dword; CodeLength, RefCount: integer): boolean;
 Function QuestBuild(code: pansichar): dword;
 function MakeUni(s: ansistring): ansistring;
+function GetDisplayValue(value: dword; size: byte): ansistring;
 function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
 
 implementation
@@ -313,6 +314,12 @@ begin
   for x := 1 to length(s) do
     result := result + s[x] + #0;
 
+end;
+
+function GetDisplayValue(value: dword; size: byte): ansistring;
+begin
+  if showdecimal then result := Format('%.' + inttostr(size) + 'd', [value])
+  else result := inttohex(value, size);
 end;
 
 Function QuestDisam(code: pansichar; ref: array of dword; CodeLength, RefCount: integer): boolean;
@@ -577,12 +584,7 @@ begin
                     end;
                   end
                   else
-                  begin
-                    if showdecimal then
-                      s := s + MakeUni(format('%.8d',[Stack[stackb].value]))
-                    else
-                      s := s + MakeUni(inttohex(Stack[stackb].value, 8));
-                  end;
+                    s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 8));
                   lr := Stack[stackb].value and 255;
                   StackP := 0;
                   inc(stackb);
@@ -750,19 +752,13 @@ begin
               begin
                 if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                 begin
-                    if showdecimal then
-                      s := s + MakeUni(format('%.2d',[Stack[stackb].value]))
-                    else
-                      s := s + MakeUni(inttohex(Stack[stackb].value, 2));
+                  s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 2));
                   StackP := 0;
                   inc(stackb);
                 end
                 else
                 begin
-                  if showdecimal then
-                    s := s + MakeUni(format('%.2d',[byte(code[x])]))
-                  else
-                    s := s + MakeUni(inttohex(byte(code[x]), 2));
+                  s := s + MakeUni(GetDisplayValue(byte(code[x]), 2));
                   inc(x);
                 end;
               end
@@ -770,19 +766,13 @@ begin
               begin
                 if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                 begin
-                  if showdecimal then
-                    s := s + MakeUni(format('%.4d',[Stack[stackb].value]))
-                  else
-                    s := s + MakeUni(inttohex(Stack[stackb].value, 4));
+                  s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 4));
                   StackP := 0;
                   inc(stackb);
                 end
                 else
                 begin
-                  if showdecimal then
-                    s := s + MakeUni(format('%.4d',[byte(code[x]) + (byte(code[x + 1]) * 256)]))
-                  else
-                    s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
+                    s := s + MakeUni(GetDisplayValue(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
                   if AsmCode[y].fnc = $F951 then
                   begin // .name='BB_Map_Designate' then begin
                     // map info
@@ -841,19 +831,13 @@ begin
                 begin
                   if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                   begin
-                    if showdecimal then
-                      s := s + MakeUni(format('%.4d',[Stack[stackb].value]))
-                    else
-                      s := s + MakeUni(inttohex(Stack[stackb].value, 4));
+                    s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 4));
                     StackP := 0;
                     inc(stackb);
                   end
                   else
                   begin
-                    if showdecimal then
-                      s := s + MakeUni(format('%.4d',[byte(code[x]) + (byte(code[x + 1]) * 256)]))
-                    else
-                      s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
+                    s := s + MakeUni(GetDisplayValue(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
                     x := x + 2;
                   end;
                 end
@@ -907,12 +891,7 @@ begin
                       end;
                     end
                     else
-                    begin
-                      if showdecimal then
-                        s := s + MakeUni(format('%.8d',[Stack[stackb].value]))
-                      else
-                        s := s + MakeUni(inttohex(Stack[stackb].value, 8));
-                    end;
+                      s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 8));
                     if AsmCode[y].fnc = $9 then
                     begin // .name='leti' then begin
                       regis[lr] := Stack[stackb].value;
@@ -926,11 +905,7 @@ begin
                   end
                   else
                   begin
-                    if showdecimal then
-                      s := s + MakeUni(format('%.8d',[byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
-                      (byte(code[x + 3]) * $1000000)]))
-                    else
-                      s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
+                      s := s + MakeUni(GetDisplayValue(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
                       (byte(code[x + 3]) * $1000000), 8));
                     if AsmCode[y].fnc = $9 then
                     begin // name='leti' then begin
@@ -1042,20 +1017,13 @@ begin
                 begin
                   if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                   begin
-                    if showdecimal then
-                      s := s + MakeUni(format('%.8d',[Stack[stackb].value]))
-                    else
-                      s := s + MakeUni(inttohex(Stack[stackb].value, 8));
+                      s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 8));
                     StackP := 0;
                     inc(stackb);
                   end
                   else
                   begin
-                    if showdecimal then
-                      s := s + MakeUni(format('%.8d',[byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
-                        (byte(code[x + 3]) * $1000000)]))
-                    else
-                      s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
+                    s := s + MakeUni(GetDisplayValue(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
                         (byte(code[x + 3]) * $1000000), 8));
                     x := x + 4;
                   end;

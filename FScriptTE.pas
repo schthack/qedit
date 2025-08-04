@@ -50,6 +50,11 @@ type
     Format1: TMenuItem;
     Changefont1: TMenuItem;
     FontDialog1: TFontDialog;
+    Changetextcolor1: TMenuItem;
+    Opcodes1: TMenuItem;
+    Registers1: TMenuItem;
+    Values1: TMenuItem;
+    ColorDialog1: TColorDialog;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -81,6 +86,11 @@ type
     procedure Addlabel1Click(Sender: TObject);
     procedure Addregister1Click(Sender: TObject);
     procedure Changefont1Click(Sender: TObject);
+    procedure TextEditCaretChanged(const ASender: TObject; const X, Y,
+      AOffset: Integer);
+    procedure Opcodes1Click(Sender: TObject);
+    procedure Registers1Click(Sender: TObject);
+    procedure Values1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -89,12 +99,14 @@ type
   end;
 
 procedure UpdateTextRefs();
+procedure SetTextZoom(zoomvalue: integer);
 
 var
   fmScriptTE: TfmScriptTE;
-  firstsetup: Boolean = true;
   textEdited: Boolean = false;
   currentline: integer = 0;
+  editline: integer = 0;
+  nextline: integer = 0;
 
 implementation
 
@@ -153,17 +165,20 @@ begin
     begin
       // Update all label flag data references
       x := pos(':',fmScriptTE.TextEdit.Lines[i]);
-      labelstr := copy(currentline, 0, x-1);
-      currentline := copy(currentline, x+1, length(currentline));
-      currentline := TrimLeft(currentline);
-      reftype := copy(currentline, 0, 4);
-      if TryStrToInt(labelstr, labelnum) then
+      if (x <= 6) and (x <> 0) then
       begin
-        if reftype = 'STR:' then
-          AddStrRef(labelnum)
-        else if reftype = 'HEX:' then
-          AddDataRef(labelnum)
-        else AddLabel(labelnum);
+        labelstr := copy(currentline, 0, x-1);
+        currentline := copy(currentline, x+1, length(currentline));
+        currentline := TrimLeft(currentline);
+        reftype := copy(currentline, 0, 4);
+        if TryStrToInt(labelstr, labelnum) then
+        begin
+          if reftype = 'STR:' then
+            AddStrRef(labelnum)
+          else if reftype = 'HEX:' then
+            AddDataRef(labelnum)
+          else AddLabel(labelnum);
+      end;
       end;
 
       // Update registers
@@ -185,6 +200,46 @@ begin
   form14.Caption := '3D Processing';
   form14.ProgressBar1.Position := 1;
   form14.Label1.Show;
+end;
+
+procedure SetTextZoom(zoomvalue: integer);
+var
+  Reg: TRegistry;
+begin
+  with fmScriptTE do
+  begin
+    TextEdit.Zoom(zoomvalue);
+    Z100.Checked := false;
+    Z125.Checked := false;
+    Z150.Checked := false;
+    Z200.Checked := false;
+    Z300.Checked := false;
+
+    if zoomvalue = 100 then
+      Z100.Checked := true
+    else if zoomvalue = 125 then
+      Z125.Checked := true
+    else if zoomvalue = 150 then
+      Z150.Checked := true
+    else if zoomvalue = 200 then
+      Z200.Checked := true
+    else if zoomvalue = 300 then
+      Z300.Checked := true
+    else
+      Z125.Checked := true;
+  end;
+
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('TextEditZoom', zoomvalue);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
 end;
 
 procedure TfmScriptTE.Addlabel1Click(Sender: TObject);
@@ -221,6 +276,10 @@ begin
             Reg.Free;
         end;
     end;
+
+    // Set zoom down to 100 if a non-default font was chosen, in case it's a bigger font
+    if fontdialog1.Font.Name <> 'Courier New' then
+      SetTextZoom(100);
 
     fmScriptTE.Close;
     fmScriptTE.Show;
@@ -299,9 +358,7 @@ var
   JSONStrings: TStringList;
   LItem1: TTextEditorCompletionProposalSnippetItem;
 begin
-  textEdited := false;
-  if firstsetup then
-  begin
+    textEdited := false;
     TextEdit.CompletionProposal.Snippets.Items.Clear;
 
     // JSON list for ASM opcodes
@@ -436,8 +493,7 @@ begin
     LItem1.Keyword := 'new value (00000000)';
     LItem1.Description := '';
     LItem1.Snippet.Add('00000000');
-    firstsetup := false;
-  end;
+
     Form4.Hide;
     TextEdit.Lines.Clear;
     form14.Caption := 'Loading Script';
@@ -533,6 +589,36 @@ begin
   end;
 end;
 
+procedure TfmScriptTE.Opcodes1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+  lastcaret: integer;
+begin
+    // Save text position
+    lastcaret := TextEdit.CaretIndex;
+    // Set default color
+    colordialog1.Color := clNavy;
+    if colordialog1.Execute then begin
+        TextEdit.Colors.EditorReservedWordForeground:=colordialog1.Color;
+        Reg := TRegistry.Create;
+        try
+            Reg.RootKey := HKEY_CURRENT_USER;
+            if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+        begin
+            Reg.WriteInteger('TEOpcodeColor',colordialog1.Color);
+            Reg.CloseKey;
+            end;
+        finally
+            Reg.Free;
+        end;
+    end;
+
+    fmScriptTE.Close;
+    fmScriptTE.Show;
+    // Reset to last caret position
+    TextEdit.CaretIndex := lastcaret;
+end;
+
 procedure TfmScriptTE.Openfromfile1Click(Sender: TObject);
 begin
   if opendialog1.Execute then
@@ -546,6 +632,36 @@ end;
 procedure TfmScriptTE.Paste1Click(Sender: TObject);
 begin
   TextEdit.PasteFromClipboard;
+end;
+
+procedure TfmScriptTE.Registers1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+  lastcaret: integer;
+begin
+    // Save text position
+    lastcaret := TextEdit.CaretIndex;
+    // Set default color
+    colordialog1.Color := clNavy;
+    if colordialog1.Execute then begin
+        TextEdit.Colors.EditorSymbolForeground:=colordialog1.Color;
+        Reg := TRegistry.Create;
+        try
+            Reg.RootKey := HKEY_CURRENT_USER;
+            if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+        begin
+            Reg.WriteInteger('TERegisterColor',colordialog1.Color);
+            Reg.CloseKey;
+            end;
+        finally
+            Reg.Free;
+        end;
+    end;
+
+    fmScriptTE.Close;
+    fmScriptTE.Show;
+    // Reset to last caret position
+    TextEdit.CaretIndex := lastcaret;
 end;
 
 procedure TfmScriptTE.Replace1Click(Sender: TObject);
@@ -562,37 +678,46 @@ begin
   end;
 end;
 
-procedure TfmScriptTE.TextEditChange(Sender: TObject);
+procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X, Y,
+  AOffset: Integer);
 var
-  l,x,y,g: integer;
+  x2,y2,g: integer;
   s: ansistring;
+begin
+  nextline := TextEdit.TextPosition.Line;
+  if nextline <> editline then
+  begin
+      s := '';
+      try
+      // Update maps
+      if (lowercase(TextEdit.Lines[editline]).Contains(lowercase(GetOpcodeName($c4)))) or
+      (lowercase(TextEdit.Lines[editline]).Contains(lowercase(GetOpcodeName($f80d)))) or
+      (lowercase(TextEdit.Lines[editline]).Contains(lowercase(GetOpcodeName($9)))) then ScanForMap;
+
+      if (lowercase(TextEdit.Lines[editline]).Contains(lowercase(GetOpcodeName($f951)))) then
+      begin
+        //bb map
+        s:=fmScriptTE.TextEdit.Lines[editline];
+        delete(s,1,9+length(GetOpcodeName($f951)));
+        x2:=hextoint(copy(s,1,2));
+        g:=hextoint(copy(s,5,4));
+        y2:=hextoint(copy(s,11,2));
+      if x2 < 30 then
+      begin
+        mapxvmfile[x2]:=path+'map\xvm\'+mapxvmname[mapid[g]+y2];
+        mapfile[x2]:=path+'map\'+mapfilename[mapid[g]+y2];
+        floor[x2].floorid:=MapArea[mapid[g]+y2];
+        Form1.CheckListBox1.Items.Strings[x2]:=mapname[mapid[g]+y2];
+      end;
+    end; except end;// End of line reached, catch exception
+  end;
+end;
+
+procedure TfmScriptTE.TextEditChange(Sender: TObject);
 begin
   isEdited := true;
   textEdited := true;
-  l := TextEdit.TextPosition.Line;
-  s := '';
-  try
-  // Update maps
-  if (lowercase(TextEdit.Lines[l]).Contains(lowercase(GetOpcodeName($c4)))) or
-  (lowercase(TextEdit.Lines[l]).Contains(lowercase(GetOpcodeName($f80d)))) or
-  (lowercase(TextEdit.Lines[l]).Contains(lowercase(GetOpcodeName($9)))) then ScanForMap;
-
-  if (lowercase(TextEdit.Lines[l]).Contains(lowercase(GetOpcodeName($f951)))) then
-  begin
-    //bb map
-    s:=fmScriptTE.TextEdit.Lines[l];
-    delete(s,1,9+length(GetOpcodeName($f951)));
-    x:=hextoint(copy(s,1,2));
-    g:=hextoint(copy(s,5,4));
-    y:=hextoint(copy(s,11,2));
-  if x < 30 then
-  begin
-    mapxvmfile[x]:=path+'map\xvm\'+mapxvmname[mapid[g]+y];
-    mapfile[x]:=path+'map\'+mapfilename[mapid[g]+y];
-    floor[x].floorid:=MapArea[mapid[g]+y];
-    Form1.CheckListBox1.Items.Strings[x]:=mapname[mapid[g]+y];
-  end;
-end; except end;// End of line reached, catch exception
+  editline := TextEdit.TextPosition.Line;
 end;
 
 procedure TfmScriptTE.TextEditClick(Sender: TObject);
@@ -702,124 +827,60 @@ begin
   TextEdit.DoUndo;
 end;
 
-procedure TfmScriptTE.Z100Click(Sender: TObject);
+procedure TfmScriptTE.Values1Click(Sender: TObject);
 var
   Reg: TRegistry;
+  lastcaret: integer;
 begin
-  TextEdit.Zoom(100);
-  Z100.Checked := true;
-  Z125.Checked := false;
-  Z150.Checked := false;
-  Z200.Checked := false;
-  Z300.Checked := false;
-
-  Reg := TRegistry.Create;
-  try
-    Reg.RootKey := HKEY_CURRENT_USER;
-    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
-    begin
-      Reg.WriteInteger('TextEditZoom', 0);
-      Reg.CloseKey;
+    // Save text position
+    lastcaret := TextEdit.CaretIndex;
+    // Set default color
+    colordialog1.Color := clBlue;
+    if colordialog1.Execute then begin
+        TextEdit.Colors.EditorNumberForeground:=colordialog1.Color;
+        TextEdit.Colors.EditorHexNumberForeground:=colordialog1.Color;
+        Reg := TRegistry.Create;
+        try
+            Reg.RootKey := HKEY_CURRENT_USER;
+            if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+        begin
+            Reg.WriteInteger('TEValueColor',colordialog1.Color);
+            Reg.CloseKey;
+            end;
+        finally
+            Reg.Free;
+        end;
     end;
-  finally
-    Reg.Free;
-  end;
+
+    fmScriptTE.Close;
+    fmScriptTE.Show;
+    // Reset to last caret position
+    TextEdit.CaretIndex := lastcaret;
+end;
+
+procedure TfmScriptTE.Z100Click(Sender: TObject);
+begin
+  SetTextZoom(100);
 end;
 
 procedure TfmScriptTE.Z125Click(Sender: TObject);
-var
-  Reg: TRegistry;
 begin
-  TextEdit.Zoom(125);
-  Z100.Checked := false;
-  Z125.Checked := true;
-  Z150.Checked := false;
-  Z200.Checked := false;
-  Z300.Checked := false;
-
-  Reg := TRegistry.Create;
-  try
-    Reg.RootKey := HKEY_CURRENT_USER;
-    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
-    begin
-      Reg.WriteInteger('TextEditZoom', 1);
-      Reg.CloseKey;
-    end;
-  finally
-    Reg.Free;
-  end;
+  SetTextZoom(125);
 end;
 
 procedure TfmScriptTE.Z150Click(Sender: TObject);
-var
-  Reg: TRegistry;
 begin
-  TextEdit.Zoom(150);
-  Z100.Checked := false;
-  Z125.Checked := false;
-  Z150.Checked := true;
-  Z200.Checked := false;
-  Z300.Checked := false;
-
-  Reg := TRegistry.Create;
-  try
-    Reg.RootKey := HKEY_CURRENT_USER;
-    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
-    begin
-      Reg.WriteInteger('TextEditZoom', 2);
-      Reg.CloseKey;
-    end;
-  finally
-    Reg.Free;
-  end;
+  SetTextZoom(150);
 end;
 
 procedure TfmScriptTE.Z200Click(Sender: TObject);
-var
-  Reg: TRegistry;
 begin
-  TextEdit.Zoom(200);
-  Z100.Checked := false;
-  Z125.Checked := false;
-  Z150.Checked := false;
-  Z200.Checked := true;
-  Z300.Checked := false;
-
-  Reg := TRegistry.Create;
-  try
-    Reg.RootKey := HKEY_CURRENT_USER;
-    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
-    begin
-      Reg.WriteInteger('TextEditZoom', 3);
-      Reg.CloseKey;
-    end;
-  finally
-    Reg.Free;
-  end;
+  SetTextZoom(200);
 end;
 
 procedure TfmScriptTE.Z300Click(Sender: TObject);
-var
-  Reg: TRegistry;
 begin
-  TextEdit.Zoom(300);
-  Z100.Checked := false;
-  Z125.Checked := false;
-  Z150.Checked := false;
-  Z200.Checked := false;
-  Z300.Checked := true;
-
-  Reg := TRegistry.Create;
-  try
-    Reg.RootKey := HKEY_CURRENT_USER;
-    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
-    begin
-      Reg.WriteInteger('TextEditZoom', 4);
-      Reg.CloseKey;
-    end;
-  finally
-    Reg.Free;
-  end;
+  SetTextZoom(300);
 end;
 
 end.

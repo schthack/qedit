@@ -30,6 +30,7 @@ object fmScriptTE: TfmScriptTE
       end>
     LeftMargin.Visible = False
     LeftMargin.Width = 0
+    OnCaretChanged = TextEditCaretChanged
     OnChange = TextEditChange
     OnClick = TextEditClick
     OnMouseDown = TextEditMouseDown
@@ -148,6 +149,21 @@ object fmScriptTE: TfmScriptTE
         Caption = 'Change font'
         OnClick = Changefont1Click
       end
+      object Changetextcolor1: TMenuItem
+        Caption = 'Change text color'
+        object Opcodes1: TMenuItem
+          Caption = 'Opcode'
+          OnClick = Opcodes1Click
+        end
+        object Registers1: TMenuItem
+          Caption = 'Register'
+          OnClick = Registers1Click
+        end
+        object Values1: TMenuItem
+          Caption = 'Number'
+          OnClick = Values1Click
+        end
+      end
     end
     object View1: TMenuItem
       Caption = 'View'
@@ -215,5 +231,9 @@ object fmScriptTE: TfmScriptTE
     Font.Style = []
     Left = 24
     Top = 248
+  end
+  object ColorDialog1: TColorDialog
+    Left = 24
+    Top = 304
   end
 end
