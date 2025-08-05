@@ -67,6 +67,10 @@ object fmScriptTE: TfmScriptTE
         OnClick = Decimal1Click
       end
     end
+    object HideNOPs1: TMenuItem
+      Caption = 'Hide nops'
+      OnClick = HideNOPs1Click
+    end
     object N2: TMenuItem
       Caption = '-'
     end

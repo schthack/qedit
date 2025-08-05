@@ -61,6 +61,7 @@ type
     Decimal1: TMenuItem;
     Hex1: TMenuItem;
     btnEditText: TButton;
+    HideNOPs1: TMenuItem;
     procedure Button4Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -106,6 +107,7 @@ type
     procedure Hex1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnEditTextClick(Sender: TObject);
+    procedure HideNOPs1Click(Sender: TObject);
 
 
   private
@@ -2088,6 +2090,42 @@ begin
         Showmessage('Error reloading quest data.');
       end;
     end;
+end;
+
+procedure TForm4.HideNOPs1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+  choice, lastcaret: integer;
+begin
+      if isedited then
+        choice := MessageDlg('Changing the NOP opcode display will cancel any unsaved changes, continue?',
+          mtConfirmation, [mbYes, mbNo], 0);
+      if (choice = mrYes) or (not isedited) then
+      begin
+        HideNOPs1.Checked := not HideNOPs1.Checked;
+        fmScriptTE.HideNOPs1.Checked := not fmScriptTE.HideNOPs1.Checked;
+        hidenops := not hidenops;
+        Reg := TRegistry.Create;
+        choice := listbox1.ItemIndex;
+        lastcaret := fmScriptTE.TextEdit.CaretIndex;
+        try
+          Reg.RootKey := HKEY_CURRENT_USER;
+        if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+        begin
+          Reg.WriteBool('HideNOPs', HideNOPs1.Checked);
+          Reg.CloseKey;
+        end;
+        finally
+          Reg.Free;
+        end;
+      end;
+      try
+        QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+        listbox1.ItemIndex := choice;
+        fmScriptTE.TextEdit.CaretIndex := lastcaret;
+      except
+        Showmessage('Error reloading quest data.');
+      end;
 end;
 
 end.

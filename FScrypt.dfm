@@ -604,6 +604,10 @@ object Form4: TForm4
         OnClick = Decimal1Click
       end
     end
+    object HideNOPs1: TMenuItem
+      Caption = 'Hide nops'
+      OnClick = HideNOPs1Click
+    end
     object N1: TMenuItem
       Caption = '-'
     end

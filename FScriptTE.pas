@@ -55,6 +55,7 @@ type
     Registers1: TMenuItem;
     Values1: TMenuItem;
     ColorDialog1: TColorDialog;
+    HideNOPs1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -91,6 +92,7 @@ type
     procedure Opcodes1Click(Sender: TObject);
     procedure Registers1Click(Sender: TObject);
     procedure Values1Click(Sender: TObject);
+    procedure HideNOPs1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -98,7 +100,7 @@ type
     { Public declarations }
   end;
 
-procedure UpdateTextRefs();
+procedure ParseTextLines();
 procedure SetTextZoom(zoomvalue: integer);
 procedure SetTextColor(colortype: string);
 
@@ -115,11 +117,27 @@ uses main, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.Completion
 
 {$R *.dfm}
 
-procedure UpdateTextRefs();
+procedure ParseTextLines();
 var
-  i,j,x,labelnum: integer;
-  reftype,currentline,labelstr: widestring;
+  i,j,k,x,labelnum,opcodepos,argpos: integer;
+  reftype,currentline,currentarg,labelstr,opcodestr,whitespace: widestring;
+  argstrings: TStringList;
+  opcodelist: array [0 .. 1000] of TAsmFnc;
+  stringarg,instring: Boolean;
 begin
+  argstrings := TStringList.Create;
+
+  for i := 0 to Length(asmcode) - 1 do
+    opcodelist[i] := asmcode[i];
+
+  // Sort opcode list by name string length (highest to lowest)
+  TArray.Sort<TAsmFnc>(opcodelist,TDelegatedComparer<TAsmFnc>.Construct(
+  function(const Right, Left: TAsmFnc): Integer
+  begin
+    Result := Length(Left.name) - Length(Right.name);
+  end
+  ));
+
   // Clear data references
   for i := 0 to 1000 do datablock[i]:=-1;
   for i := 0 to fmScriptTE.TextEdit.Lines.Count do
@@ -153,7 +171,7 @@ begin
   TsReg.Clear;
   Tsopc.Clear;
 
-  form14.Caption := 'Updating References';
+  form14.Caption := 'Parsing Text';
   form14.Label1.Hide;
   form14.Show;
   form14.ProgressBar1.max := fmScriptTE.TextEdit.Lines.Count;
@@ -164,7 +182,8 @@ begin
     currentline := fmScriptTE.TextEdit.Lines[i];
     if currentline <> '' then
     begin
-      // Update all label flag data references
+      // Get label if it exists and update all label flag data references
+      labelstr := '';
       x := pos(':',fmScriptTE.TextEdit.Lines[i]);
       if (x <= 6) and (x <> 0) then
       begin
@@ -179,28 +198,127 @@ begin
           else if reftype = 'HEX:' then
             AddDataRef(labelnum)
           else AddLabel(labelnum);
-      end;
-      end;
-
-      // Update registers
-      for j := 0 to 255 do
-      begin
-        if fmScriptTE.TextEdit.Lines[i].Contains('R' + inttostr(j)) then
-          AddRegister(j);
+        end
+        else labelstr := '';
       end;
 
-      // Update functions used
-      for j := 0 to asmcount - 1 do
+      // Get opcode if it exists and update functions used
+      opcodestr := '';
+      for j := 0 to Length(opcodelist) - 1 do
       begin
-        if fmScriptTE.TextEdit.Lines[i].Contains(asmcode[j].name) then
-          AddFunctionUsed(AnsiString(asmcode[j].name));
+        if (opcodelist[j].name <> '') and (fmScriptTE.TextEdit.Lines[i].Contains(opcodelist[j].name)) then
+        begin
+          AddFunctionUsed(AnsiString(opcodelist[j].name));
+          opcodestr := opcodelist[j].name;
+          opcodepos := pos(opcodelist[j].name, fmScriptTE.TextEdit.Lines[i]);
+          break;
+        end
+        else if fmScriptTE.TextEdit.Lines[i].Contains('Unknow_Opcode') then
+        begin
+          opcodestr := 'Unknow_Opcode';
+          opcodepos := pos('Unknow_Opcode', fmScriptTE.TextEdit.Lines[i]);
+          break;
+        end;
       end;
+
+      if opcodestr = '' then
+      begin
+        fmScriptTE.TextEdit.Lines[i] := '';
+        continue;
+      end;
+
+      // Get arguments
+      stringarg := false;
+      if opcodestr <> '' then
+      begin
+        argstrings.Add('');
+        argstrings.Strings[0] := copy(fmScriptTE.TextEdit.Lines[i], opcodepos +
+        length(opcodelist[j].name),length(fmScriptTE.TextEdit.Lines[i]));
+
+        if (opcodestr <> 'STR:') and (opcodestr <> 'HEX:') and (opcodestr <> 'Unknow_Opcode')
+        and not stringarg then
+        begin
+          instring := false;
+          currentarg := '';
+          // Ignore any arguments in strings
+          for k := 1 to Length(argstrings.Strings[0]) do
+          begin
+            case argstrings[0][k] of
+              '''':
+              instring := not instring;
+              ',':
+            if not instring then
+            begin
+              argstrings.Add(Trim(currentarg));
+              currentarg := '';
+            end
+            else
+            begin
+              currentarg := currentarg + argstrings[0][k];
+            end;
+            else
+              currentarg := currentarg + argstrings[0][k];
+            end;
+          end;
+          argstrings.add(Trim(currentarg));
+          argstrings.Delete(0);
+        end;
+      end;
+
+      // Add quotes to string arguments
+      for k := 0 to argstrings.count do
+      begin
+        if opcodelist[j].arg[k] = T_STR then
+          argstrings.Strings[k] := '''' + argstrings.Strings[k] + '''';
+      end;
+
+      with fmScriptTE.TextEdit do
+        begin
+        // Reconstruct the line
+        Lines[i] := '';
+        whitespace := '        ';
+
+        // Label/whitespace
+        if labelstr <> '' then
+        begin
+          Lines[i] := labelstr + ':';
+          for j := 1 to length(labelstr) + 1 do
+          SetLength(whitespace,length(whitespace)-1);
+        end;
+        Lines[i] := Lines[i] + whitespace;
+
+        // Opcode
+        Lines[i] := Lines[i] + opcodestr + ' ';
+
+        // Arguments
+        for j := 0 to argstrings.count - 1 do
+        begin
+          Lines[i] := Lines[i] + argstrings.Strings[j];
+          if j <> argstrings.count - 1 then
+            Lines[i] := Lines[i] + ', ';
+
+          // Update register reference if found
+          for k := 0 to 255 do
+          begin
+            if argstrings.Strings[j] = 'R' + inttostr(k) then
+              AddRegister(k);
+          end;
+        end;
+      end;
+
+      // Clear the argument list
+      argstrings.Clear;
     end;
   end;
+
+  // Clean up empty lines
+  fmScriptTE.TextEdit.DeleteEmptyLines;
   form14.Hide;
   form14.Caption := '3D Processing';
   form14.ProgressBar1.Position := 1;
   form14.Label1.Show;
+
+  argstrings.Free;
 end;
 
 procedure SetTextZoom(zoomvalue: integer);
@@ -374,7 +492,7 @@ begin
   begin
     fmScriptTE.Hide;
     form4.listbox1.Clear;
-    UpdateTextRefs();
+    ParseTextLines();
     form14.Caption := 'Saving Script';
     form14.Label1.Hide;
     form14.Show;
@@ -565,6 +683,11 @@ end;
 procedure TfmScriptTE.Hex1Click(Sender: TObject);
 begin
   form4.Hex1Click(nil);
+end;
+
+procedure TfmScriptTE.HideNOPs1Click(Sender: TObject);
+begin
+  form4.HideNOPs1Click(nil);
 end;
 
 procedure TfmScriptTE.Newlabel1Click(Sender: TObject);

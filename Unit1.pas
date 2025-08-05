@@ -1090,17 +1090,6 @@ begin
         end;
         s := s + #0#0;
         form4.ListBox1.Items.Add(pwidechar(@s[1]));
-
-        // Clean up remaining leading nops
-        if form4.listbox1.items.count >= 3 then
-        begin
-          i := form4.listbox1.items.count - 2;
-          while form4.listbox1.items[i].contains('        nop') do
-          begin
-            form4.listbox1.items.delete(i);
-            dec(i);
-          end;
-        end;
       end
       else
       begin
@@ -1137,14 +1126,13 @@ begin
   TsFnc.CustomSort(CompareLabel);
   TsData.CustomSort(CompareLabel);
 
-  if isdc then
+  // Clean up remaining nops if the option is enabled
+  if hidenops then
   begin
-    // Clean up remaining trailing nops
-    i := form4.listbox1.items.count - 1;
-    while form4.listbox1.items[i].contains('        nop') do
+    for i := form4.Listbox1.items.count - 1 downto 0 do
     begin
-      form4.listbox1.items.delete(i);
-      dec(i);
+      if form4.Listbox1.items[i].contains('        nop') then
+        form4.ListBox1.Items.Delete(i);
     end;
   end;
 
@@ -1183,7 +1171,7 @@ begin
   if fmScriptTE.Visible then
   begin
     Form4.Listbox1.Clear;
-    UpdateTextRefs();
+    ParseTextLines();
     for i := 0 to fmScriptTE.TextEdit.Lines.Count do
     begin
     if fmScriptTE.TextEdit.Lines[i] <> '' then

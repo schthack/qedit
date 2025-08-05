@@ -562,6 +562,7 @@ var
   fullscreen: Boolean = false;
   showdata: Boolean = false;
   showdecimal: Boolean = false;
+  hidenops: Boolean = true;
   OffsetX: single = 0.0;
   OffsetY: single = 0.0;
   OffsetZ: single = 0.0;
@@ -4501,6 +4502,8 @@ begin
           showdata := Reg.ReadBool('ShowData');
         if Reg.ValueExists('ShowDecimal') then
           ShowDecimal := Reg.ReadBool('ShowDecimal');
+        if Reg.ValueExists('HideNOPs') then
+          hidenops := Reg.ReadBool('HideNOPs');
         Reg.CloseKey;
       end;
       Reg.Free;
@@ -4658,6 +4661,9 @@ begin
       fmScriptTE.Hex1.Checked := true;
       fmScriptTE.Decimal1.Checked := false;
     end;
+
+    form4.HideNOPs1.Checked := hidenops;
+    fmScriptTE.HideNOPs1.Checked := hidenops;
 
     FSnapOptions.seDistanceLimit.Value := distancelimit;
     FPlacementOptions.nbOffsetX.Value := OffsetX;
