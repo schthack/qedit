@@ -168,6 +168,10 @@ object fmScriptTE: TfmScriptTE
           OnClick = Values1Click
         end
       end
+      object Setformattingdefaults1: TMenuItem
+        Caption = 'Reset formatting'
+        OnClick = Setformattingdefaults1Click
+      end
     end
     object View1: TMenuItem
       Caption = 'View'

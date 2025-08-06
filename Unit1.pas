@@ -1170,8 +1170,8 @@ begin
   // Copy text editor lines if visible
   if fmScriptTE.Visible then
   begin
+    UpdateTextRefs();
     Form4.Listbox1.Clear;
-    ParseTextLines();
     for i := 0 to fmScriptTE.TextEdit.Lines.Count do
     begin
     if fmScriptTE.TextEdit.Lines[i] <> '' then
