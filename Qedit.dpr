@@ -49,7 +49,6 @@ uses
   FHotkeys in 'FHotkeys.pas' {fmHotkeys},
   FSnap in 'FSnap.pas' {FSnapOptions},
   FScriptTE in 'FScriptTE.pas' {fmScriptTE},
-  FFind in 'FFind.pas' {fmFind},
   FReplace in 'FReplace.pas' {fmReplace},
   FGoto in 'FGoto.pas' {fmGoto};
 
@@ -102,7 +101,6 @@ begin
   Application.CreateForm(TfmHotkeys, fmHotkeys);
   Application.CreateForm(TFSnapOptions, FSnapOptions);
   Application.CreateForm(TfmScriptTE, fmScriptTE);
-  Application.CreateForm(TfmFind, fmFind);
   Application.CreateForm(TfmReplace, fmReplace);
   Application.CreateForm(TfmGoto, fmGoto);
   Application.Run;

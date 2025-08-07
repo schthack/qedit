@@ -554,6 +554,7 @@ var
   texteditzoom: integer = 125;
   dragenabled: Boolean = false;
   snapenabled: Boolean = false;
+  texttheme: integer = -1;
   autoaxis: Boolean = false;
   snaprotate: Boolean = false;
   snapdistance: Boolean = false;
@@ -3858,12 +3859,15 @@ end;
 
 procedure TForm1.Copymonster1Click(Sender: TObject);
 begin
-  if Copylastmonster1.Enabled and not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused then
+  if Copylastmonster1.Enabled and not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
+  and not fmScriptTE.Edit2.Focused then
     Copylastmonster1Click(nil)
   else if form4.edit1.Focused then
     form4.edit1.CopyToClipboard
   else if fmScriptTE.TextEdit.Focused then
-    fmScriptTE.TextEdit.CopyToClipboard(false);
+    fmScriptTE.TextEdit.CopyToClipboard(false)
+  else if fmScriptTE.Edit2.Focused then
+    fmScriptTE.Edit2.CopyToClipboard;
 end;
 
 procedure TForm1.ViewScrypt1Click(Sender: TObject);
@@ -4447,6 +4451,7 @@ begin
         if Reg.ValueExists('TEFontStyle') then
           fmScriptTE.TextEdit.Fonts.Text.Style := Tfontstyles(byte(Reg.ReadInteger('TEFontStyle')));
         fmScriptTE.TextEdit.Fonts.Text.Pitch := fpFixed;
+        // Set theme and text editor colors
         if Reg.ValueExists('TEOpcodeColor') then
           fmScriptTE.TextEdit.Colors.EditorReservedWordForeground := Reg.ReadInteger('TEOpcodeColor');
         if Reg.ValueExists('TERegisterColor') then
@@ -4455,6 +4460,69 @@ begin
         begin
           fmScriptTE.TextEdit.Colors.EditorNumberForeground := Reg.ReadInteger('TEValueColor');
           fmScriptTE.TextEdit.Colors.EditorHexNumberForeground := Reg.ReadInteger('TEValueColor');
+        end;
+        if Reg.ValueExists('TETheme') then
+          texttheme := Reg.ReadInteger('TETheme');
+        if DirectoryExists('Text editor\Themes') then
+        begin
+          with fmScriptTE do
+          begin
+            if texttheme = -1 then
+            begin
+              Changetextcolor1.Enabled := true;
+              Changefont1.Enabled := true
+            end
+            else
+            begin
+              Changetextcolor1.Enabled := false;
+              Changefont1.Enabled := false;
+            end;
+            Changetheme1.Enabled := true;
+            if texttheme = -1 then
+              ChangeTheme(Default1)
+            else if texttheme = 0 then
+              ChangeTheme(Blue1)
+            else if texttheme = 1 then
+              ChangeTheme(Classic1)
+            else if texttheme = 2 then
+              ChangeTheme(Darcula1)
+            else if texttheme = 3 then
+              ChangeTheme(DarkIcon1)
+            else if texttheme = 4 then
+              ChangeTheme(Dark1)
+            else if texttheme = 5 then
+              ChangeTheme(Darker1)
+            else if texttheme = 6 then
+              ChangeTheme(Dracula1)
+            else if texttheme = 7 then
+              ChangeTheme(FluentNight1)
+            else if texttheme = 8 then
+              ChangeTheme(GitHubDark1)
+            else if texttheme = 9 then
+              ChangeTheme(MonokaiDistilled1)
+            else if texttheme = 10 then
+              ChangeTheme(Monokai1)
+            else if texttheme = 11 then
+              ChangeTheme(Oblivion1)
+            else if texttheme = 12 then
+              ChangeTheme(Obsid1)
+            else if texttheme = 13 then
+              ChangeTheme(Ocean1)
+            else if texttheme = 14 then
+              ChangeTheme(Oceanic1)
+            else if texttheme = 15 then
+              ChangeTheme(Okaidia1)
+            else if texttheme = 16 then
+              ChangeTheme(Purple1)
+            else if texttheme = 17 then
+              ChangeTheme(Twilight1)
+            else if texttheme = 18 then
+              ChangeTheme(VisualStudioDark1)
+            else if texttheme = 19 then
+              ChangeTheme(VisualStudio1)
+            else if texttheme = 20 then
+              ChangeTheme(Windows11Dark1);
+          end;
         end;
         if Reg.ValueExists('Lang') then
           mylang := Reg.ReadInteger('Lang');
@@ -8006,6 +8074,8 @@ begin
     Form4.edit1.CutToClipboard
    else if fmScriptTE.TextEdit.Focused then
     fmScriptTE.TextEdit.CutToClipboard
+   else if fmScriptTE.Edit2.Focused then
+    fmScriptTE.Edit2.CutToClipboard
    else if (have3d) and (form13.BorderStyle = bsNone) and (not form13.Focused) then
     Form1.WindowState := wsMinimized
    else if (have3d) and (form13.BorderStyle = bsNone) and (form13.Focused) then
@@ -8714,10 +8784,15 @@ end;
 
 procedure TForm1.Undo1Click(Sender: TObject);
 begin
-  if not fmScriptTE.TextEdit.Focused then
+  if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
+  and not fmScriptTE.Edit2.Focused then
     Button11Click(nil)
+  else if form4.edit1.Focused then
+    form4.edit1.Undo
   else if fmScriptTE.TextEdit.Focused then
-    fmScriptTE.TextEdit.DoUndo;
+    fmScriptTE.TextEdit.DoUndo
+  else if fmScriptTE.Edit2.focused then
+    fmScriptTE.Edit2.Undo;
 end;
 
 procedure TForm1.English1Click(Sender: TObject);

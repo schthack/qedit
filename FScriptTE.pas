@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.Generics.Collections, System.Generics.Defaults, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
-  Vcl.ExtCtrls, main, Vcl.ComCtrls;
+  Vcl.ExtCtrls, main, Vcl.ComCtrls, Vcl.StdCtrls;
 
 type
     TfmScriptTE = class(TForm)
@@ -57,6 +57,43 @@ type
     HideNOPs1: TMenuItem;
     Setformattingdefaults1: TMenuItem;
     StatusBar1: TStatusBar;
+    Edit2: TEdit;
+    btnSearch: TButton;
+    Changetheme1: TMenuItem;
+    Blue1: TMenuItem;
+    Classic1: TMenuItem;
+    Darcula1: TMenuItem;
+    DarkIcon1: TMenuItem;
+    Dark1: TMenuItem;
+    Darker1: TMenuItem;
+    Default1: TMenuItem;
+    Dracula1: TMenuItem;
+    FluentNight1: TMenuItem;
+    GitHubDark1: TMenuItem;
+    MonokaiDistilled1: TMenuItem;
+    Monokai1: TMenuItem;
+    Oblivion1: TMenuItem;
+    Obsid1: TMenuItem;
+    Ocean1: TMenuItem;
+    Oceanic1: TMenuItem;
+    Okaidia1: TMenuItem;
+    Purple1: TMenuItem;
+    Twilight1: TMenuItem;
+    VisualStudioDark1: TMenuItem;
+    VisualStudio1: TMenuItem;
+    Windows11Dark1: TMenuItem;
+    N4: TMenuItem;
+    Addeditdata1: TMenuItem;
+    NPC1: TMenuItem;
+    Image1: TMenuItem;
+    Enemy1: TMenuItem;
+    Float1: TMenuItem;
+    Symbolchat1: TMenuItem;
+    Vector1: TMenuItem;
+    Enemystat1: TMenuItem;
+    EnemyResist1: TMenuItem;
+    EnemyAttack1: TMenuItem;
+    EnemyMovement1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -96,6 +133,10 @@ type
     procedure Setformattingdefaults1Click(Sender: TObject);
     procedure TextEditKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure btnSearchClick(Sender: TObject);
+    procedure Edit2Exit(Sender: TObject);
+    procedure ChangeTheme(Sender: TObject);
+    procedure AddEditData(Sender: TObject);
 
   private
     { Private declarations }
@@ -217,6 +258,7 @@ begin
   form14.Caption := '3D Processing';
   form14.ProgressBar1.Position := 1;
   form14.Label1.Show;
+  TextEdited := false;
 end;
 
 procedure SetTextZoom(zoomvalue: integer);
@@ -312,6 +354,85 @@ begin
   Newregister1Click(nil);
 end;
 
+procedure TfmScriptTE.ChangeTheme(Sender: TObject);
+var
+  lastcaret: integer;
+  selection: TMenuItem;
+  themename: string;
+  Reg: TRegistry;
+begin
+  lastcaret := TextEdit.CaretIndex;
+  Default1.Checked := false;
+  Blue1.Checked := false;
+  Classic1.Checked := false;
+  Darcula1.Checked := false;
+  DarkIcon1.Checked := false;
+  Dark1.Checked := false;
+  Darker1.Checked := false;
+  Dracula1.Checked := false;
+  FluentNight1.Checked := false;
+  GitHubDark1.Checked := false;
+  MonoKaiDistilled1.Checked := false;
+  Monokai1.Checked := false;
+  Oblivion1.Checked := false;
+  Obsid1.Checked := false;
+  Ocean1.Checked := false;
+  Oceanic1.Checked := false;
+  Okaidia1.Checked := false;
+  Purple1.Checked := false;
+  Twilight1.Checked := false;
+  VisualStudioDark1.Checked := false;
+  VisualStudio1.Checked := false;
+  Windows11Dark1.Checked := false;
+
+  selection := TMenuItem(Sender);
+  themename := StringReplace(selection.Caption, '&', '', [rfReplaceAll]);
+  TextEdit.Highlighter.LoadFromFile('Text editor\Themes\' + themename + '.json');
+  TextEdit.Highlighter.Colors.LoadFromFile('Text editor\Themes\' + themename + '.json');
+  tmenuitem(sender).Checked := true;
+  Reg := TRegistry.Create;
+  try
+  Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+  begin
+    Reg.WriteInteger('TETheme',selection.Tag);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
+
+  if Sender = Default1 then
+  begin
+    Changetextcolor1.Enabled := true;
+    Changefont1.Enabled := true
+  end
+  else
+  begin
+    Changetextcolor1.Enabled := false;
+    Changefont1.Enabled := false;
+  end;
+
+  // Set string color
+  TextEdit.Colors.EditorStringForeground := TextEdit.Colors.EditorForeground;
+
+  if fmScriptTE.Visible then
+  begin
+    fmScriptTE.Close;
+    fmScriptTE.Show;
+    TextEdit.CaretIndex := lastcaret;
+  end;
+end;
+
+procedure TfmScriptTE.btnSearchClick(Sender: TObject);
+begin
+  with fmScriptTE.TextEdit.Search do
+  begin
+    SearchText := Edit2.Text;
+    Execute;
+  end;
+end;
+
 procedure TfmScriptTE.Changefont1Click(Sender: TObject);
 var
   Reg: TRegistry;
@@ -372,6 +493,11 @@ begin
   fmScriptTE.TextEdit.DeleteSelection;
 end;
 
+procedure TfmScriptTE.Edit2Exit(Sender: TObject);
+begin
+  Edit2.Hide;
+end;
+
 procedure TfmScriptTE.Exit1Click(Sender: TObject);
 begin
   fmScriptTE.Close;
@@ -379,7 +505,8 @@ end;
 
 procedure TfmScriptTE.Find1Click(Sender: TObject);
 begin
-  fmFind.ShowModal;
+  Edit2.Show;
+  Edit2.SetFocus;
 end;
 
 procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -716,6 +843,10 @@ begin
       TextEdit.Colors.EditorNumberForeground:=clBlue;
       TextEdit.Colors.EditorHexNumberForeground:=clBlue;
 
+      // Reset theme
+      if DirectoryExists('Text editor\themes') then
+        ChangeTheme(Default1);
+
       Reg := TRegistry.Create;
       try
       Reg.RootKey := HKEY_CURRENT_USER;
@@ -727,14 +858,13 @@ begin
           Reg.WriteInteger('TEOpcodeColor',clNavy);
           Reg.WriteInteger('TERegisterColor',clNavy);
           Reg.WriteInteger('TEValueColor',clBlue);
+          Reg.WriteInteger('TETheme',-1);
           Reg.CloseKey;
       end;
       finally
         Reg.Free;
       end;
 
-      // Reset text zoom
-      SetTextZoom(125);
       fmScriptTE.Close;
       fmScriptTE.Show;
 
@@ -743,13 +873,66 @@ begin
     end;
 end;
 
+procedure TfmScriptTE.AddEditData(Sender: TObject);
+var
+  i: integer;
+begin
+  form4.ListBox1.Clear;
+  for i := 0 to form4.ListBox1.Items.Count - 1 do
+    form4.ListBox1.Items.Add(TextEdit.Lines[i]);
+
+  form4.ListBox1.ItemIndex := TextEdit.TextPosition.Line;
+
+  if tmenuitem(sender).Tag = 0 then
+  begin
+    form4.Button10Click(nil)
+  end
+  else if tmenuitem(sender).Tag = 1 then
+  begin
+    form4.SaveImage1Click(nil)
+  end
+  else if tmenuitem(sender).Tag = 2 then
+  begin
+    form4.EnemyStatEdit(nil)
+  end
+  else if tmenuitem(sender).Tag = 3 then
+  begin
+    form4.EnemyResistEdit(nil)
+  end
+  else if tmenuitem(sender).Tag = 4 then
+  begin
+    form4.EnemyAttackEdit(nil)
+  end
+  else if tmenuitem(sender).Tag = 5 then
+  begin
+    form4.EnemyMovementEdit(nil)
+  end
+  else if tmenuitem(sender).Tag = 6 then
+  begin
+    form4.EditFloatdata1Click(nil)
+  end
+  else if tmenuitem(sender).Tag = 7 then
+  begin
+    form4.Addsymbolechat1Click(nil)
+  end
+  else if tmenuitem(sender).Tag = 8 then
+  begin
+    form4.EditVectordata1Click(nil);
+  end;
+
+  for i := 0 to form4.ListBox1.Items.Count - 1 do
+    TextEdit.Lines.Add(form4.Listbox1.Items[i]);
+
+  TextEdit.MoveCaretToEnd;
+end;
+
 procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
   AOffset: Integer);
 var
   i,j,j2,k,x,y,x3,y3,g,d,labelnum,opcodepos,argpos: integer;
   reftype,trimline,currentarg,labelstr,opcodestr,whitespace,s,o: widestring;
   argstrings: TStringList;
-  stringarg,instring: Boolean;
+  stringarg,instring,invalidswitch: Boolean;
   i2: double;
   f: single;
 begin
@@ -862,8 +1045,16 @@ begin
         inc(k);
       for x := argstrings.Count - 1 downto k do
         argstrings.Delete(x);
+      if (argstrings.Count > 0) and (argstrings.Count - 1 < k) then
+      begin
+        k := k - argstrings.Count;
+        if argstrings.Strings[0] = '' then
+          argstrings.Strings[0] := '0';
+        for x := 0 to k - 1 do
+          argstrings.Add('0');
+      end;
 
-      // Error check and adjustment argument values
+      // Adjustment argument formatting
       for x := 0 to argstrings.count - 1 do
       begin
         if argstrings.Strings[x] <> '' then
@@ -883,16 +1074,16 @@ begin
             ((length(s) = 8) and (lowercase(copy(s,1,1))<> 'r')) then begin
            y:=hextoint(s);
            if y = -1 then
-                break;
+                y := 0;
            if y>$FFFFFFff then
-                break;
+                y := $FFFFFFFF;
            s:=GetDisplayValue(y,8);
 
            end else begin
            if s[1] = 'R' then s:=copy(s,2,length(s)-1);
            trystrtoint(s,y);
            if y>255 then
-                break;
+                y := 255;
            s:='R'+inttostr(y);
            end;
           end else
@@ -902,25 +1093,25 @@ begin
           if (opcodelist[j].arg[x] = T_BYTE) then begin
              y:=hextoint(s);
              if y = -1 then
-                  break;
+                  y := 0;
              if y>255 then
-                  break;
+                  y := 255;
              s:=GetDisplayValue(y,2);
           end else
           if (opcodelist[j].arg[x] = T_WORD) then begin
              y:=hextoint(s);
              if y = -1 then
-                  break;
+                  y := 0;
              if y>65535 then
-                  break;
+                  y := 65535;
              s:=GetDisplayValue(y,4);
           end else
           if (opcodelist[j].arg[x] = T_PFLAG) then begin
              y:=hextoint(s);
              if y = -1 then
-                  break;
+                  y := 0;
              if y>65535 then
-                  break;
+                  y := 65535;
              s:=GetDisplayValue(y,4);
           end else
           if (opcodelist[j].arg[x] = T_FUNC) or
@@ -929,7 +1120,7 @@ begin
               (opcodelist[j].arg[x] = T_FUNC2) then begin
              trystrtoint(s,y);
              if y>65535 then
-                  break;
+                  y := 65535;
              s:=inttostr(y);
            end else
           if (opcodelist[j].arg[x] = T_FLOAT) then begin
@@ -938,7 +1129,7 @@ begin
               s:=copy(s,2,length(s)-1);
              trystrtoint(s,y);
              if y>255 then
-                  break;
+                  y := 255;
              s:='R'+inttostr(y);
               end else begin
              trystrtofloat(s,i2);
@@ -953,12 +1144,12 @@ begin
              while g > 0 do begin
                   d:=pos(':',o);
                   if (g = 1) and (d > 0) then begin
-                      break;
+                      invalidswitch := true;
                   end;
                   if d = 0 then begin
                       if g = 1 then d:=length(o)+1
                       else begin
-                        break;
+                        invalidswitch := true;
                       end;
                   end;
                   trystrtoint(copy(o,1,d-1),j2);
@@ -966,6 +1157,8 @@ begin
                   dec(g);
                   s:=s+':'+inttostr(j2);
              end;
+             if invalidswitch or (g = 0) then
+                s:='1:1';
           end else
           if (opcodelist[j].arg[x] = T_SWITCH2B) then begin
              trystrtoint(copy(s,1,pos(':',s)-1),g);
@@ -974,12 +1167,12 @@ begin
              while g > 0 do begin
                   d:=pos(':',o);
                   if (g = 1) and (d > 0) then begin
-                    break;
+                    invalidswitch := true;
                   end;
                   if d = 0 then begin
                       if g = 1 then d:=length(o)+1
                       else begin
-                        break;
+                        invalidswitch := true;
                       end;
                   end;
                   trystrtoint(copy(o,1,d-1),j2);
@@ -987,6 +1180,8 @@ begin
                   dec(g);
                   s:=s+':'+inttostr(j2);
              end;
+              if invalidswitch or (g = 0) then
+                  s:='1:1';
           end else
           if (opcodelist[j].arg[x] = T_STRHEX) then begin
              s:=s;
@@ -1000,7 +1195,7 @@ begin
               if s[1] = 'R' then s:=copy(s,2,length(s)-1);
              trystrtoint(s,y);
              if y>255 then
-                  break;
+                  y := 255;
              s:='R'+inttostr(y);
              end else begin
              if Form5.TabControl1.TabIndex = 0 then y:=hextoint(s);
@@ -1018,7 +1213,7 @@ begin
                   break;
              end;
              if y>$FFFFFFff then
-                  break;
+                  y := $FFFFFFFF;
              s:=GetDisplayValue(y,8);
              end;
           end;

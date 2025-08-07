@@ -263,10 +263,6 @@
             <Form>fmScriptTE</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="FFind.pas">
-            <Form>fmFind</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="FReplace.pas">
             <Form>fmReplace</Form>
             <FormType>dfm</FormType>

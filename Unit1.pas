@@ -1171,6 +1171,7 @@ begin
   if fmScriptTE.Visible then
   begin
     UpdateTextRefs();
+    isEdited := false;
     Form4.Listbox1.Clear;
     for i := 0 to fmScriptTE.TextEdit.Lines.Count do
     begin
