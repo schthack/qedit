@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.Generics.Collections, System.Generics.Defaults, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, main, Vcl.ComCtrls;
 
 type
     TfmScriptTE = class(TForm)
@@ -32,7 +32,6 @@ type
     Z200: TMenuItem;
     Z300: TMenuItem;
     N1: TMenuItem;
-    Timer1: TTimer;
     Openfromfile1: TMenuItem;
     Savetofile1: TMenuItem;
     OpenDialog1: TOpenDialog;
@@ -57,6 +56,7 @@ type
     ColorDialog1: TColorDialog;
     HideNOPs1: TMenuItem;
     Setformattingdefaults1: TMenuItem;
+    StatusBar1: TStatusBar;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -80,7 +80,6 @@ type
     procedure Z300Click(Sender: TObject);
     procedure TextEditChange(Sender: TObject);
     procedure TextEditClick(Sender: TObject);
-    procedure Timer1Timer(Sender: TObject);
     procedure Openfromfile1Click(Sender: TObject);
     procedure Savetofile1Click(Sender: TObject);
     procedure Newlabel1Click(Sender: TObject);
@@ -95,6 +94,8 @@ type
     procedure Values1Click(Sender: TObject);
     procedure HideNOPs1Click(Sender: TObject);
     procedure Setformattingdefaults1Click(Sender: TObject);
+    procedure TextEditKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
 
   private
     { Private declarations }
@@ -109,13 +110,16 @@ procedure SetTextColor(colortype: string);
 var
   fmScriptTE: TfmScriptTE;
   textEdited: Boolean = false;
+  linechanged: Boolean = false;
+  changeline: integer = 0;
   currentline: integer = 0;
   editline: integer = 0;
   nextline: integer = 0;
+  opcodelist: array [0 .. 1000] of TAsmFnc;
 
 implementation
 
-uses main, TCom, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.CompletionProposal.Snippets,
+uses TCom, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.CompletionProposal.Snippets,
   NPCBuild, EnemyStat, FEnemyResist, FEnemyMov, FEnemyAttack, FVector;
 
 {$R *.dfm}
@@ -129,6 +133,9 @@ begin
   form14.Label1.Hide;
   form14.Show;
   form14.ProgressBar1.max := fmScriptTE.TextEdit.Lines.Count;
+
+  // Remove empty lines
+  fmScriptTE.TextEdit.DeleteEmptyLines;
 
   // Clear data references
   for i := 0 to 1000 do datablock[i]:=-1;
@@ -381,6 +388,7 @@ var
 begin
   if textEdited then
   begin
+    fmScriptTE.TextEdit.MoveCaretToBeginning;
     fmScriptTE.Hide;
     UpdateTextRefs();
     form4.listbox1.Clear;
@@ -409,7 +417,6 @@ var
   i: integer;
   JSONOpcodeList, JSONRegisterList: String;
   JSONStrings: TStringList;
-  LItem1: TTextEditorCompletionProposalSnippetItem;
 begin
     textEdited := false;
     TextEdit.CompletionProposal.Snippets.Items.Clear;
@@ -540,12 +547,6 @@ begin
     JSONStrings.Free;
 
     // End of JSON code
-
-    // Add autocomplete for padded number opcode arguments
-    LItem1 := TextEdit.CompletionProposal.Snippets.Items.Add;
-    LItem1.Keyword := 'new value (00000000)';
-    LItem1.Description := '';
-    LItem1.Snippet.Add('00000000');
 
     Form4.Hide;
     TextEdit.Lines.Clear;
@@ -745,14 +746,16 @@ end;
 procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
   AOffset: Integer);
 var
-  i,j,k,x,y,x3,y3,g,labelnum,opcodepos,argpos: integer;
-  reftype,trimline,currentarg,labelstr,opcodestr,whitespace,s: widestring;
+  i,j,j2,k,x,y,x3,y3,g,d,labelnum,opcodepos,argpos: integer;
+  reftype,trimline,currentarg,labelstr,opcodestr,whitespace,s,o: widestring;
   argstrings: TStringList;
-  opcodelist: array [0 .. 1000] of TAsmFnc;
   stringarg,instring: Boolean;
+  i2: double;
+  f: single;
 begin
+  TextEditClick(nil);
   nextline := TextEdit.TextPosition.Line;
-  if nextline <> editline then
+  if (nextline <> editline) or linechanged then
   begin
     argstrings := TStringList.Create;
 
@@ -767,7 +770,13 @@ begin
     end
     ));
 
-    i := editline;
+    if linechanged then
+      i := changeline
+    else
+      i := editline;
+
+    linechanged := false;
+
     trimline := Trim(fmScriptTE.TextEdit.Lines[i]);
     if trimline <> '' then
     begin
@@ -854,11 +863,167 @@ begin
       for x := argstrings.Count - 1 downto k do
         argstrings.Delete(x);
 
-      // Re-add quotes to string arguments
+      // Error check and adjustment argument values
       for x := 0 to argstrings.count - 1 do
       begin
-        if opcodelist[j].arg[x] = T_STR then
-          argstrings.Strings[x] := '''' + argstrings.Strings[x] + '''';
+        if argstrings.Strings[x] <> '' then
+        begin
+            y := 0;
+            f := 0;
+            i2 := 0;
+            s := argstrings.Strings[x];
+            if (opcodelist[j].arg[x] <> T_STR) and
+              (opcodelist[j].arg[x] <> T_STRHEX) then
+            s:=uppercase(s);
+            if (opcodelist[j].arg[x] = T_REG) or
+            (opcodelist[j].arg[x] = T_BREG) or
+            (opcodelist[j].arg[x] = T_DREG) or
+           (opcodelist[j].arg[x] = T_RREG) then begin
+           if (opcodelist[j].order = T_Args) and
+            ((length(s) = 8) and (lowercase(copy(s,1,1))<> 'r')) then begin
+           y:=hextoint(s);
+           if y = -1 then
+                break;
+           if y>$FFFFFFff then
+                break;
+           s:=GetDisplayValue(y,8);
+
+           end else begin
+           if s[1] = 'R' then s:=copy(s,2,length(s)-1);
+           trystrtoint(s,y);
+           if y>255 then
+                break;
+           s:='R'+inttostr(y);
+           end;
+          end else
+          if (opcodelist[j].arg[x] = T_STR) then begin
+             s:=''''+s+'''';
+          end else
+          if (opcodelist[j].arg[x] = T_BYTE) then begin
+             y:=hextoint(s);
+             if y = -1 then
+                  break;
+             if y>255 then
+                  break;
+             s:=GetDisplayValue(y,2);
+          end else
+          if (opcodelist[j].arg[x] = T_WORD) then begin
+             y:=hextoint(s);
+             if y = -1 then
+                  break;
+             if y>65535 then
+                  break;
+             s:=GetDisplayValue(y,4);
+          end else
+          if (opcodelist[j].arg[x] = T_PFLAG) then begin
+             y:=hextoint(s);
+             if y = -1 then
+                  break;
+             if y>65535 then
+                  break;
+             s:=GetDisplayValue(y,4);
+          end else
+          if (opcodelist[j].arg[x] = T_FUNC) or
+              (opcodelist[j].arg[x] = T_DATA) or
+              (opcodelist[j].arg[x] = T_STRDATA) or
+              (opcodelist[j].arg[x] = T_FUNC2) then begin
+             trystrtoint(s,y);
+             if y>65535 then
+                  break;
+             s:=inttostr(y);
+           end else
+          if (opcodelist[j].arg[x] = T_FLOAT) then begin
+              if (opcodelist[j].order = T_Args) and
+              (s[1] = 'R') then begin
+              s:=copy(s,2,length(s)-1);
+             trystrtoint(s,y);
+             if y>255 then
+                  break;
+             s:='R'+inttostr(y);
+              end else begin
+             trystrtofloat(s,i2);
+             s:=floattostr(i2);
+             end;
+          end else
+
+          if (opcodelist[j].arg[x] = T_SWITCH) then begin
+             trystrtoint(copy(s,1,pos(':',s)-1),g);
+             o:=copy(s,pos(':',s)+1,length(s)-pos(':',s));
+             s:=inttostr(g);
+             while g > 0 do begin
+                  d:=pos(':',o);
+                  if (g = 1) and (d > 0) then begin
+                      break;
+                  end;
+                  if d = 0 then begin
+                      if g = 1 then d:=length(o)+1
+                      else begin
+                        break;
+                      end;
+                  end;
+                  trystrtoint(copy(o,1,d-1),j2);
+                  o:=copy(o,d+1,length(o)-d);
+                  dec(g);
+                  s:=s+':'+inttostr(j2);
+             end;
+          end else
+          if (opcodelist[j].arg[x] = T_SWITCH2B) then begin
+             trystrtoint(copy(s,1,pos(':',s)-1),g);
+             o:=copy(s,pos(':',s)+1,length(s)-pos(':',s));
+             s:=inttostr(g);
+             while g > 0 do begin
+                  d:=pos(':',o);
+                  if (g = 1) and (d > 0) then begin
+                    break;
+                  end;
+                  if d = 0 then begin
+                      if g = 1 then d:=length(o)+1
+                      else begin
+                        break;
+                      end;
+                  end;
+                  trystrtoint(copy(o,1,d-1),j2);
+                  o:=copy(o,d+1,length(o)-d);
+                  dec(g);
+                  s:=s+':'+inttostr(j2);
+             end;
+          end else
+          if (opcodelist[j].arg[x] = T_STRHEX) then begin
+             s:=s;
+          end else
+          if (opcodelist[j].arg[x] = T_HEX) then begin
+             s:=s;
+          end else
+          begin
+             if (opcodelist[j].order = T_Args) and
+              (s[1] = 'R') then begin
+              if s[1] = 'R' then s:=copy(s,2,length(s)-1);
+             trystrtoint(s,y);
+             if y>255 then
+                  break;
+             s:='R'+inttostr(y);
+             end else begin
+             if Form5.TabControl1.TabIndex = 0 then y:=hextoint(s);
+             if Form5.TabControl1.TabIndex = 1 then
+             begin
+                trystrtoint(s,y);
+                y := dword(y);
+             end;
+             if Form5.TabControl1.TabIndex = 2 then begin
+                  y:=0;
+                  trystrtofloat(s,f);
+                  move(f,y,4);
+             end;
+             if y = -1 then begin
+                  break;
+             end;
+             if y>$FFFFFFff then
+                  break;
+             s:=GetDisplayValue(y,8);
+             end;
+          end;
+          argstrings.Strings[x] := s;
+        end;
       end;
 
       with fmScriptTE.TextEdit do
@@ -888,24 +1053,27 @@ begin
         end;
 
         // Update maps
-        form4.ListBox1.items.Add(Lines[i]);
-        if (lowercase(opcodestr) = lowercase(GetOpcodeName($c4))) or
-        (lowercase(opcodestr) = lowercase(GetOpcodeName($f80d))) or
-        (lowercase(opcodestr) = lowercase(GetOpcodeName($9))) then ScanForMap;
-        if (lowercase(opcodestr)) = lowercase(GetOpcodeName($f951)) then begin
-         //bb map
-         s:=Lines[i];
-         delete(s,1,9+length(GetOpcodeName($f951)));
-         x3:=hextoint(copy(s,1,2));
-         g:=hextoint(copy(s,5,4));
-         y3:=hextoint(copy(s,11,2));
-         if x < 30 then begin
-         mapxvmfile[x3]:=path+'map\xvm\'+mapxvmname[mapid[g]+y3];
-         mapfile[x3]:=path+'map\'+mapfilename[mapid[g]+y3];
-         floor[x3].floorid:=MapArea[mapid[g]+y3];
-         Form1.CheckListBox1.Items.Strings[x3]:=mapname[mapid[g]+y3];
+        try
+           form4.ListBox1.items.Add(Lines[i]);
+           if (lowercase(opcodestr) = lowercase(GetOpcodeName($c4))) or
+           (lowercase(opcodestr) = lowercase(GetOpcodeName($f80d))) or
+           (lowercase(opcodestr) = lowercase(GetOpcodeName($9))) then ScanForMap;
+           if (lowercase(opcodestr) = lowercase(GetOpcodeName($f951)))
+           and (argstrings.Count = 4) then begin
+           //bb map
+           s:=Lines[i];
+           delete(s,1,9+length(GetOpcodeName($f951)));
+           x3:=hextoint(copy(s,1,2));
+           g:=hextoint(copy(s,5,4));
+           y3:=hextoint(copy(s,11,2));
+           if x < 30 then begin
+           mapxvmfile[x3]:=path+'map\xvm\'+mapxvmname[mapid[g]+y3];
+           mapfile[x3]:=path+'map\'+mapfilename[mapid[g]+y3];
+           floor[x3].floorid:=MapArea[mapid[g]+y3];
+           Form1.CheckListBox1.Items.Strings[x3]:=mapname[mapid[g]+y3];
          end;
         end;
+        except end; // End of line reached, catch exception
       end;
     end;
   end;
@@ -914,17 +1082,32 @@ begin
 end;
 
 procedure TfmScriptTE.TextEditChange(Sender: TObject);
+var
+  i: integer;
 begin
   isEdited := true;
   textEdited := true;
   editline := TextEdit.TextPosition.Line;
+  // Update autocomplete invoke status
+  if fmScriptTE.Visible then
+  begin
+    for i := 0 to Length(opcodelist) - 1 do
+    begin
+      if  (opcodelist[i].name <> '') and (TextEdit.Lines[editline].Contains(opcodelist[i].name)) then
+      begin
+        TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,false);
+        break
+      end
+      else
+        TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
+      end;
+    end;
 end;
 
 procedure TfmScriptTE.TextEditClick(Sender: TObject);
 var
   opcode, argstring: string;
   i, v: integer;
-  opcodelist: array [0 .. 1000] of TAsmFnc;
 begin
   for i := 0 to Length(asmcode) - 1 do
     opcodelist[i] := asmcode[i];
@@ -939,8 +1122,7 @@ begin
 
   argstring := '';
   opcode := '';
-  if sender <> Timer1 then
-    currentline := TextEdit.TextPosition.Line;
+  currentline := TextEdit.TextPosition.Line;
   try
     opcode := copy(TextEdit.Lines.TextLines[currentline], 9, TextEdit.Lines.TextLines[currentline].Length);
   // The script is blank or end of line was reached; catch the exception
@@ -1001,8 +1183,19 @@ begin
   if (length(argstring) > 0) and (argstring <> 'T_NONE') then
     SetLength(argstring, length(argstring)-2);
   if argstring <> '' then
-    argstring := ' <' + opcode + '> ' + argstring;
-  TextEdit.Hint := 'Line: ' + inttostr(currentline) + argstring;
+    argstring := opcode + ' <' + argstring + '>';
+  Statusbar1.Panels.Items[1].Text := inttostr(currentline);
+  Statusbar1.Panels.Items[2].Text := argstring;
+end;
+
+procedure TfmScriptTE.TextEditKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if key = VK_RETURN then
+  begin
+    linechanged := true;
+    changeline := TextEdit.TextPosition.Line;
+  end;
 end;
 
 procedure TfmScriptTE.TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -1010,16 +1203,6 @@ procedure TfmScriptTE.TextEditMouseDown(Sender: TObject; Button: TMouseButton;
 begin
   if Button = mbRight then
     PopupMenu1.Popup(mouse.CursorPos.X, mouse.CursorPos.Y);
-end;
-
-procedure TfmScriptTE.Timer1Timer(Sender: TObject);
-var
-  lineposition: TTextEditorTextPosition;
-begin
-  lineposition.Line := 0;
-  if TextEdit.GetTextPositionOfMouse(lineposition) then
-    currentline := lineposition.Line;
-  TextEditClick(Timer1);
 end;
 
 procedure TfmScriptTE.Undo1Click(Sender: TObject);

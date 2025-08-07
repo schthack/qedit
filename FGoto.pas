@@ -44,15 +44,8 @@ begin
       if Lines[i].StartsWith(SpinEdit1.Text + ':') then
       begin
         labelfound := true;
-        if i = Lines.Count then
-          GoToLine(i)
-        else
-        begin
-          GoToLine(i + 1);
-          TopLine := i + 1;
-        end;
         // Move caret to end of line
-        CaretIndex := CaretIndex + Length(Lines[i]) - 1;
+        GoToLineAndSetPosition(i,length(Lines[i]) + 1);
       end;
     end;
   end;

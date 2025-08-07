@@ -4,7 +4,7 @@ object fmFind: TfmFind
   BorderStyle = bsDialog
   Caption = 'Find Text'
   ClientHeight = 118
-  ClientWidth = 201
+  ClientWidth = 198
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText

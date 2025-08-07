@@ -19,7 +19,7 @@ object fmScriptTE: TfmScriptTE
     Left = 0
     Top = 0
     Width = 794
-    Height = 517
+    Height = 498
     Align = alClient
     Colors.ActiveLineBackground = clBtnFace
     Colors.CodeFoldingActiveLineBackground = clBtnFace
@@ -33,12 +33,30 @@ object fmScriptTE: TfmScriptTE
     OnCaretChanged = TextEditCaretChanged
     OnChange = TextEditChange
     OnClick = TextEditClick
+    OnKeyDown = TextEditKeyDown
     OnMouseDown = TextEditMouseDown
     ParentShowHint = False
     RightMargin.Visible = False
     ShowHint = True
     TabOrder = 0
     Tabs.Options = [toColumns, toSelectedBlockIndent, toTabsToSpaces]
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 498
+    Width = 794
+    Height = 19
+    Panels = <
+      item
+        Text = 'Line'
+        Width = 115
+      end
+      item
+        Width = 100
+      end
+      item
+        Width = 100
+      end>
   end
   object PopupMenu1: TPopupMenu
     Left = 344
@@ -215,11 +233,6 @@ object fmScriptTE: TfmScriptTE
       end
     end
   end
-  object Timer1: TTimer
-    OnTimer = Timer1Timer
-    Left = 24
-    Top = 192
-  end
   object OpenDialog1: TOpenDialog
     Filter = 'Pso quest Asm|*.pasm'
     Left = 24
@@ -238,10 +251,10 @@ object fmScriptTE: TfmScriptTE
     Font.Name = 'Courier New'
     Font.Style = []
     Left = 24
-    Top = 248
+    Top = 192
   end
   object ColorDialog1: TColorDialog
     Left = 24
-    Top = 304
+    Top = 248
   end
 end
