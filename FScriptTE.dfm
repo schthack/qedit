@@ -58,7 +58,7 @@ object fmScriptTE: TfmScriptTE
   end
   object Edit2: TEdit
     Left = 120
-    Top = 8
+    Top = 5
     Width = 529
     Height = 21
     TabOrder = 2
