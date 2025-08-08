@@ -605,7 +605,7 @@ object Form4: TForm4
       end
     end
     object HideNOPs1: TMenuItem
-      Caption = 'Hide nops'
+      Caption = 'Hide NOPs'
       OnClick = HideNOPs1Click
     end
     object N1: TMenuItem

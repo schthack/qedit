@@ -1038,18 +1038,30 @@ begin
       begin
         k := k - argstrings.Count;
         if argstrings.Strings[0] = '' then
-          argstrings.Strings[0] := '0';
+        begin
+          if opcodelist[j].arg[0] = T_STR then
+            argstrings.Strings[0] := ' '
+          else argstrings.Strings[0] := '0';
+        end;
         for x := 0 to k - 1 do
-          argstrings.Add('0');
+        begin
+          if opcodelist[j].arg[argstrings.Count] <> T_STR then
+            argstrings.Add('0')
+          else argstrings.Add('');
+        end;
       end;
+      if (opcodelist[j].arg[argstrings.Count - 1] = T_STR)
+      and (argstrings.Strings[argstrings.Count - 1] = '') then
+        argstrings.Strings[argstrings.Count - 1] := ' ';
 
-      // Adjustment argument formatting
+      // Adjust argument formatting
       for x := 0 to argstrings.count - 1 do
       begin
         if argstrings.Strings[x] <> '' then
         begin
             y := 0;
             f := 0;
+            g := 0;
             i2 := 0;
             s := argstrings.Strings[x];
             if (opcodelist[j].arg[x] <> T_STR) and
@@ -1130,6 +1142,8 @@ begin
              trystrtoint(copy(s,1,pos(':',s)-1),g);
              o:=copy(s,pos(':',s)+1,length(s)-pos(':',s));
              s:=inttostr(g);
+             if g = 0 then
+              s:='1:1';
              while g > 0 do begin
                   d:=pos(':',o);
                   if (g = 1) and (d > 0) then begin
@@ -1146,13 +1160,15 @@ begin
                   dec(g);
                   s:=s+':'+inttostr(j2);
              end;
-             if invalidswitch or (g = 0) then
-                s:='1:1';
+             if invalidswitch then
+              s:='1:1';
           end else
           if (opcodelist[j].arg[x] = T_SWITCH2B) then begin
              trystrtoint(copy(s,1,pos(':',s)-1),g);
              o:=copy(s,pos(':',s)+1,length(s)-pos(':',s));
              s:=inttostr(g);
+             if g = 0 then
+              s:='1:1';
              while g > 0 do begin
                   d:=pos(':',o);
                   if (g = 1) and (d > 0) then begin
@@ -1169,8 +1185,8 @@ begin
                   dec(g);
                   s:=s+':'+inttostr(j2);
              end;
-              if invalidswitch or (g = 0) then
-                  s:='1:1';
+             if invalidswitch then
+              s:='1:1';
           end else
           if (opcodelist[j].arg[x] = T_STRHEX) then begin
              s:=s;
@@ -1199,7 +1215,7 @@ begin
                   move(f,y,4);
              end;
              if y = -1 then begin
-                  break;
+                  y := 0;
              end;
              if y>$FFFFFFff then
                   y := $FFFFFFFF;

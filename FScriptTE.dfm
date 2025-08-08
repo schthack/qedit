@@ -162,7 +162,7 @@ object fmScriptTE: TfmScriptTE
       end
     end
     object HideNOPs1: TMenuItem
-      Caption = 'Hide nops'
+      Caption = 'Hide NOPs'
       OnClick = HideNOPs1Click
     end
     object N2: TMenuItem
