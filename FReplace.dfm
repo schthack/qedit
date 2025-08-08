@@ -36,7 +36,7 @@ object fmReplace: TfmReplace
     TabOrder = 0
   end
   object btnOK: TButton
-    Left = 37
+    Left = 28
     Top = 168
     Width = 75
     Height = 25
@@ -54,7 +54,7 @@ object fmReplace: TfmReplace
     TabOrder = 2
   end
   object btnClose: TButton
-    Left = 118
+    Left = 116
     Top = 168
     Width = 75
     Height = 25
