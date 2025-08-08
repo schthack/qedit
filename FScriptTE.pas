@@ -1203,13 +1203,13 @@ begin
                   y := 255;
              s:='R'+inttostr(y);
              end else begin
-             if Form5.TabControl1.TabIndex = 0 then y:=hextoint(s);
-             if Form5.TabControl1.TabIndex = 1 then
+             if not showdecimal then y:=hextoint(s);
+             if showdecimal then
              begin
                 trystrtoint(s,y);
                 y := dword(y);
              end;
-             if Form5.TabControl1.TabIndex = 2 then begin
+             if opcodelist[j].arg[x] = T_FLOAT then begin
                   y:=0;
                   trystrtofloat(s,f);
                   move(f,y,4);
