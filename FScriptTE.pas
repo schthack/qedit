@@ -85,7 +85,7 @@ type
     N4: TMenuItem;
     Addeditdata1: TMenuItem;
     NPC1: TMenuItem;
-    Image1: TMenuItem;
+    SaveImage1: TMenuItem;
     Enemy1: TMenuItem;
     Float1: TMenuItem;
     Symbolchat1: TMenuItem;
@@ -94,6 +94,8 @@ type
     EnemyResist1: TMenuItem;
     EnemyAttack1: TMenuItem;
     EnemyMovement1: TMenuItem;
+    Image1: TMenuItem;
+    Changeimage1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -875,55 +877,42 @@ end;
 
 procedure TfmScriptTE.AddEditData(Sender: TObject);
 var
-  i: integer;
+  i,lastcaret: integer;
 begin
+  lastcaret := TextEdit.CaretIndex;
   form4.ListBox1.Clear;
-  for i := 0 to form4.ListBox1.Items.Count - 1 do
+  for i := 0 to TextEdit.Lines.Count - 1 do
     form4.ListBox1.Items.Add(TextEdit.Lines[i]);
 
   form4.ListBox1.ItemIndex := TextEdit.TextPosition.Line;
 
   if tmenuitem(sender).Tag = 0 then
-  begin
-    form4.Button10Click(nil)
-  end
+    form4.Button10Click(fmScriptTE)
   else if tmenuitem(sender).Tag = 1 then
-  begin
-    form4.SaveImage1Click(nil)
-  end
+    form4.SaveImage1Click(fmScriptTE)
   else if tmenuitem(sender).Tag = 2 then
-  begin
-    form4.EnemyStatEdit(nil)
-  end
+    form4.Image1Click(fmScriptTE)
   else if tmenuitem(sender).Tag = 3 then
-  begin
-    form4.EnemyResistEdit(nil)
-  end
+    form4.EnemyStatEdit(fmScriptTE)
   else if tmenuitem(sender).Tag = 4 then
-  begin
-    form4.EnemyAttackEdit(nil)
-  end
+    form4.EnemyResistEdit(fmScriptTE)
   else if tmenuitem(sender).Tag = 5 then
-  begin
-    form4.EnemyMovementEdit(nil)
-  end
+    form4.EnemyAttackEdit(fmScriptTE)
   else if tmenuitem(sender).Tag = 6 then
-  begin
-    form4.EditFloatdata1Click(nil)
-  end
+    form4.EnemyMovementEdit(fmScriptTE)
   else if tmenuitem(sender).Tag = 7 then
-  begin
-    form4.Addsymbolechat1Click(nil)
-  end
+    form4.EditFloatdata1Click(fmScriptTE)
   else if tmenuitem(sender).Tag = 8 then
-  begin
-    form4.EditVectordata1Click(nil);
-  end;
+    form4.Editsymbolechat1Click(fmScriptTE)
+  else if tmenuitem(sender).Tag = 9 then
+    form4.EditVectordata1Click(fmScriptTE);
+
+  TextEdit.Lines.Clear;
 
   for i := 0 to form4.ListBox1.Items.Count - 1 do
     TextEdit.Lines.Add(form4.Listbox1.Items[i]);
 
-  TextEdit.MoveCaretToEnd;
+  TextEdit.CaretIndex := lastcaret;
 end;
 
 procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
@@ -1237,7 +1226,10 @@ begin
         Lines[i] := Lines[i] + whitespace;
 
         // Opcode
-        Lines[i] := Lines[i] + opcodestr + ' ';
+        if (argstrings.Count > 0) and ((opcodestr = 'STR:') or (opcodestr = 'HEX:'))
+        and (argstrings.Strings[0][1] = ' ') then
+          Lines[i] := Lines[i] + opcodestr
+        else Lines[i] := Lines[i] + opcodestr + ' ';
 
         // Arguments
         for j := 0 to argstrings.count - 1 do

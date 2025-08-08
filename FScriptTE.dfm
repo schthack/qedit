@@ -79,52 +79,60 @@ object fmScriptTE: TfmScriptTE
     Left = 344
     Top = 232
     object Addeditdata1: TMenuItem
-      Caption = 'Add data'
+      Caption = 'Add/edit data'
       object NPC1: TMenuItem
         Caption = 'NPC'
         OnClick = AddEditData
       end
       object Image1: TMenuItem
-        Tag = 1
         Caption = 'Image'
-        OnClick = AddEditData
+        object SaveImage1: TMenuItem
+          Tag = 1
+          Caption = 'Save'
+          OnClick = AddEditData
+        end
+        object Changeimage1: TMenuItem
+          Tag = 2
+          Caption = 'Change'
+          OnClick = AddEditData
+        end
       end
       object Enemy1: TMenuItem
         Tag = 4
         Caption = 'Enemy'
         object Enemystat1: TMenuItem
-          Tag = 2
+          Tag = 3
           Caption = 'Physical'
           OnClick = AddEditData
         end
         object EnemyResist1: TMenuItem
-          Tag = 3
+          Tag = 4
           Caption = 'Resist'
           OnClick = AddEditData
         end
         object EnemyAttack1: TMenuItem
-          Tag = 4
+          Tag = 5
           Caption = 'Attack'
           OnClick = AddEditData
         end
         object EnemyMovement1: TMenuItem
-          Tag = 5
+          Tag = 6
           Caption = 'Movement'
           OnClick = AddEditData
         end
       end
       object Float1: TMenuItem
-        Tag = 6
+        Tag = 7
         Caption = 'Float'
         OnClick = AddEditData
       end
       object Symbolchat1: TMenuItem
-        Tag = 7
+        Tag = 8
         Caption = 'Symbol chat'
         OnClick = AddEditData
       end
       object Vector1: TMenuItem
-        Tag = 8
+        Tag = 9
         Caption = 'Vector'
         OnClick = AddEditData
       end

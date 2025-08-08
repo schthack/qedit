@@ -846,7 +846,7 @@ begin
         y:=pos(':',b)-1;
         form20.SpinEdit1.Value:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form20.SpinEdit1.Value);
-        if x > 1 then if messagedlg(getlanguagestring(178), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x > 1) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(178), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1271,7 +1271,7 @@ begin
         y:=pos(':',b)-1;
         form21.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form21.tag);
-        if (x <> 0) and (x <> 5) then if messagedlg(getlanguagestring(184), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 5) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(184), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1354,7 +1354,7 @@ begin
         y:=pos(':',b)-1;
         form24.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form24.tag);
-        if (x <> 0) and (x <> 6) then if messagedlg(getlanguagestring(185), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 6) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(185), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1477,7 +1477,7 @@ begin
         y:=pos(':',b)-1;
         form25.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form25.tag);
-        if (x <> 0) and (x <> 7) then if messagedlg(getlanguagestring(186), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 7) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(186), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1571,7 +1571,7 @@ begin
         y:=pos(':',b)-1;
         form26.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form26.tag);
-        if (x <> 0) and (x <> 8) then if messagedlg(getlanguagestring(187), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 8) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(187), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1791,7 +1791,7 @@ begin
         y:=pos(':',b)-1;
         form28.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form28.tag);
-        if (x <> 0) and (x <> 9) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 9) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1882,7 +1882,7 @@ begin
         y:=pos(':',b)-1;
         form33.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form33.tag);
-        if (x <> 0) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1970,7 +1970,7 @@ begin
         y:=pos(':',b)-1;
         form32.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form32.tag);
-        if (x <> 0) and (x <> 10) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 10) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
