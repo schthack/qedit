@@ -3248,10 +3248,12 @@ end;
 
 procedure TForm1.Delete1Click(Sender: TObject);
 begin
-  if not form4.edit1.Focused then
+  if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused then
     Button3Click(nil)
   else if form4.edit1.Focused then
-    form4.edit1.Clear;
+    form4.edit1.Clear
+  else if fmScriptTE.TextEdit.Focused then
+    fmScriptTE.TextEdit.DeleteSelection;
 end;
 
 procedure TForm1.Description1Click(Sender: TObject);
