@@ -1173,7 +1173,7 @@ begin
     UpdateTextRefs();
     isEdited := false;
     Form4.Listbox1.Clear;
-    for i := 0 to fmScriptTE.TextEdit.Lines.Count do
+    for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
     begin
     if fmScriptTE.TextEdit.Lines[i] <> '' then
       begin

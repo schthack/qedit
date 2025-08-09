@@ -154,6 +154,8 @@ var
   fmScriptTE: TfmScriptTE;
   textEdited: Boolean = false;
   linechanged: Boolean = false;
+  acenabled: Boolean = false;
+  actoggled: Boolean = false;
   changeline: integer = 0;
   currentline: integer = 0;
   editline: integer = 0;
@@ -176,14 +178,14 @@ begin
   form14.Caption := 'Clearing References';
   form14.Label1.Hide;
   form14.Show;
-  form14.ProgressBar1.max := fmScriptTE.TextEdit.Lines.Count;
+  form14.ProgressBar1.max := fmScriptTE.TextEdit.Lines.Count - 1;
 
   // Remove empty lines
   fmScriptTE.TextEdit.DeleteEmptyLines;
 
   // Clear data references
   for i := 0 to 1000 do datablock[i]:=-1;
-  for i := 0 to fmScriptTE.TextEdit.Lines.Count do
+  for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
   begin
     try
       form14.ProgressBar1.Position := i;
@@ -217,7 +219,7 @@ begin
   Tsopc.Clear;
 
   form14.Caption := 'Adding New References';
-  for i := 0 to fmScriptTE.TextEdit.Lines.Count do
+  for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
   begin
     form14.ProgressBar1.Position := i;
     form14.Repaint;
@@ -532,8 +534,8 @@ begin
     form14.Caption := 'Saving Script';
     form14.Label1.Hide;
     form14.Show;
-    form14.ProgressBar1.max := TextEdit.Lines.Count;
-    for i := 0 to TextEdit.Lines.Count do
+    form14.ProgressBar1.max := TextEdit.Lines.Count - 1;
+    for i := 0 to TextEdit.Lines.Count - 1 do
     begin
       if TextEdit.Lines[i] <> '' then
       begin
@@ -1235,6 +1237,13 @@ begin
             Lines[i] := Lines[i] + ', ';
         end;
 
+        // Move to the next line if autocomplete was invoked
+        if actoggled then
+        begin
+          TextEdit.GoToLineAndSetPosition(i + 1, 9);
+          actoggled := false;
+        end;
+
         // Update maps
         try
            form4.ListBox1.items.Add(Lines[i]);
@@ -1279,10 +1288,16 @@ begin
       if  (opcodelist[i].name <> '') and (TextEdit.Lines[editline].Contains(opcodelist[i].name)) then
       begin
         TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,false);
+        if acenabled then
+          actoggled := true;
+        acenabled := false;
         break
       end
       else
-        TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
+        begin
+          TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
+          acenabled := true;
+        end;
       end;
     end;
 end;
