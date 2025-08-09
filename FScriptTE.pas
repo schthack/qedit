@@ -737,9 +737,7 @@ begin
         for j := 0 to labellength do
           whitespace := whitespace + ' ';
         InsertLine(lastline + 2, inttostr(i) + ':' + whitespace);
-        GoToLine(lastline + 1);
-        // Move caret to end of the new line
-        CaretIndex := lastcaret + 1 + length(Lines[lastline + 1]);
+        GoToLineAndSetPosition(lastline + 1,length(Lines[lastline + 1]) + 1);
         break;
       end;
     end;
@@ -980,14 +978,6 @@ begin
           opcodepos := pos('Unknow_Opcode', fmScriptTE.TextEdit.Lines[i]);
           break;
         end;
-      end;
-
-      // Clean up empty or invalid opcode lines
-      if opcodestr = '' then
-      begin
-        fmScriptTE.TextEdit.Lines[i] := '';
-        TextEdit.DeleteEmptyLines;
-        exit;
       end;
 
       // Get arguments
