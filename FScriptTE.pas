@@ -3,8 +3,8 @@ unit FScriptTE;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.Generics.Collections, System.Generics.Defaults, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
+  Winapi.Windows, Winapi.Messages, System.Generics.Collections, System.Generics.Defaults, System.RegularExpressions, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
   Vcl.ExtCtrls, main, Vcl.ComCtrls, Vcl.StdCtrls;
 
 type
@@ -935,9 +935,10 @@ procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
   AOffset: Integer);
 var
   i,j,j2,k,x,y,x3,y3,g,d,labelnum,opcodepos,argpos: integer;
-  reftype,trimline,currentarg,labelstr,opcodestr,whitespace,s,o: widestring;
+  reftype,trimline,currentarg,labelstr,opcodestr,whitespace,s,o,fullargs: widestring;
+  argarray: TArray<string>;
   argstrings: TStringList;
-  stringarg,instring,invalidswitch: Boolean;
+  instring,invalidswitch: Boolean;
   i2: double;
   f: single;
 begin
@@ -988,42 +989,21 @@ begin
       end;
 
       // Get arguments
-      stringarg := false;
       if opcodestr <> '' then
       begin
-        argstrings.Add('');
-        argstrings.Strings[0] := copy(fmScriptTE.TextEdit.Lines[i], opcodepos +
+        fullargs := copy(fmScriptTE.TextEdit.Lines[i], opcodepos +
         length(opcodestr),length(fmScriptTE.TextEdit.Lines[i]));
 
-        if (opcodestr <> 'STR:') and (opcodestr <> 'HEX:') and (opcodestr <> 'Unknow_Opcode')
-        and not stringarg then
+        if (opcodestr <> 'STR:') and (opcodestr <> 'HEX:') and (opcodestr <> 'Unknow_Opcode') then
         begin
-          instring := false;
-          currentarg := '';
-          // Ignore any arguments in strings
-          for k := 1 to Length(argstrings.Strings[0]) do
-          begin
-            case argstrings[0][k] of
-              '''':
-              instring := not instring;
-              ',':
-            if not instring then
-            begin
-              argstrings.Add(Trim(currentarg));
-              currentarg := '';
-            end
-            else
-            begin
-              currentarg := currentarg + argstrings[0][k];
-            end;
-            else
-              currentarg := currentarg + argstrings[0][k];
-            end;
-          end;
-          argstrings.add(Trim(currentarg));
-          argstrings.Delete(0);
+              argarray := TRegEx.Split(fullargs, ',(?=(?:[^'']*''[^'']*'')*[^'']*$)');
+              for var arg in argarray do
+                argstrings.add(trim(arg));
         end;
+        if argstrings.Count = 0 then
+          argstrings.add(trim(fullargs));
       end;
+
 
       // Check and adjust argument count
       k := 0;
@@ -1054,7 +1034,7 @@ begin
       // Adjust argument formatting
       for x := 0 to argstrings.count - 1 do
       begin
-        if argstrings.Strings[x] <> '' then
+        if (argstrings.Strings[x] <> '') and (opcodestr <> 'Unknow_Opcode') then
         begin
             y := 0;
             f := 0;
@@ -1086,7 +1066,10 @@ begin
            end;
           end else
           if (opcodelist[j].arg[x] = T_STR) then begin
-             s:=''''+s+'''';
+             if s[1] <> '''' then
+              s:=''''+s;
+             if s[length(s)] <> '''' then
+             s:=s+'''';
           end else
           if (opcodelist[j].arg[x] = T_BYTE) then begin
              y:=hextoint(s);
