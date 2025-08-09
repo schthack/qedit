@@ -558,6 +558,16 @@ begin
     textEdited := false;
     TextEdit.CompletionProposal.Snippets.Items.Clear;
 
+    // Sort opcode list by name string length (highest to lowest)
+    for i := 0 to Length(asmcode) - 1 do
+      opcodelist[i] := asmcode[i];
+    TArray.Sort<TAsmFnc>(opcodelist,TDelegatedComparer<TAsmFnc>.Construct(
+    function(const Right, Left: TAsmFnc): Integer
+    begin
+      Result := Length(Left.name) - Length(Right.name);
+    end
+    ));
+
     // JSON list for ASM opcodes
     JSONOpcodeList := '';
     JSONRegisterList := '';
@@ -937,17 +947,6 @@ begin
   begin
     argstrings := TStringList.Create;
 
-    for i := 0 to Length(asmcode) - 1 do
-      opcodelist[i] := asmcode[i];
-
-    // Sort opcode list by name string length (highest to lowest)
-    TArray.Sort<TAsmFnc>(opcodelist,TDelegatedComparer<TAsmFnc>.Construct(
-    function(const Right, Left: TAsmFnc): Integer
-    begin
-      Result := Length(Left.name) - Length(Right.name);
-    end
-    ));
-
     if linechanged then
       i := changeline
     else
@@ -1310,17 +1309,6 @@ var
   opcode, argstring: string;
   i, v: integer;
 begin
-  for i := 0 to Length(asmcode) - 1 do
-    opcodelist[i] := asmcode[i];
-
-  // Sort opcode list by name string length (highest to lowest)
-  TArray.Sort<TAsmFnc>(opcodelist,TDelegatedComparer<TAsmFnc>.Construct(
-  function(const Right, Left: TAsmFnc): Integer
-  begin
-    Result := Length(Left.name) - Length(Right.name);
-  end
-  ));
-
   argstring := '';
   opcode := '';
   currentline := TextEdit.TextPosition.Line;
