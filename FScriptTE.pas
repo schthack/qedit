@@ -171,6 +171,7 @@ procedure UpdateTextRefs();
 var
   i,j,x,labelnum: integer;
   reftype,currentline,labelstr: widestring;
+  opcodestr: string;
 begin
   form14.Caption := 'Clearing References';
   form14.Label1.Hide;
@@ -249,10 +250,17 @@ begin
       end;
 
       // Update functions used
-      for j := 0 to asmcount - 1 do
+      opcodestr := '';
+      try
+        opcodestr := copy(fmScriptTE.TextEdit.Lines.TextLines[i], 9, fmScriptTE.TextEdit.Lines.TextLines[i].Length);
+      except end; // End of line was reached; catch the exception
+      for j := 0 to length(opcodelist) - 1 do
       begin
-        if fmScriptTE.TextEdit.Lines[i].Contains(asmcode[j].name) then
-          AddFunctionUsed(AnsiString(asmcode[j].name));
+        if (opcodelist[j].name <> '') and (opcodestr.StartsWith(opcodelist[j].name)) then
+        begin
+          AddFunctionUsed(AnsiString(opcodelist[j].name));
+          break;
+        end;
       end;
     end;
   end;
