@@ -972,6 +972,7 @@ begin
 
       // Get opcode if it exists
       opcodestr := '';
+      TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
       for j := 0 to Length(opcodelist) - 1 do
       begin
         if (opcodelist[j].name <> '') and (fmScriptTE.TextEdit.Lines[i].Contains(opcodelist[j].name)) then
