@@ -154,8 +154,6 @@ var
   fmScriptTE: TfmScriptTE;
   textEdited: Boolean = false;
   linechanged: Boolean = false;
-  acenabled: Boolean = false;
-  actoggled: Boolean = false;
   changeline: integer = 0;
   currentline: integer = 0;
   editline: integer = 0;
@@ -1237,13 +1235,6 @@ begin
             Lines[i] := Lines[i] + ', ';
         end;
 
-        // Move to the next line if autocomplete was invoked
-        if actoggled then
-        begin
-          TextEdit.GoToLineAndSetPosition(i + 1, 9);
-          actoggled := false;
-        end;
-
         // Update maps
         try
            form4.ListBox1.items.Add(Lines[i]);
@@ -1288,16 +1279,10 @@ begin
       if  (opcodelist[i].name <> '') and (TextEdit.Lines[editline].Contains(opcodelist[i].name)) then
       begin
         TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,false);
-        if acenabled then
-          actoggled := true;
-        acenabled := false;
         break
       end
       else
-        begin
-          TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
-          acenabled := true;
-        end;
+        TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
       end;
     end;
 end;
