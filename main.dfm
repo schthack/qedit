@@ -201,8 +201,8 @@ object Form1: TForm1
     end
   end
   object ListBox2: TListBox
-    Left = 463
-    Top = 25
+    Left = 464
+    Top = 24
     Width = 257
     Height = 137
     BevelInner = bvNone
@@ -328,8 +328,8 @@ object Form1: TForm1
     OnClick = Button6Click
   end
   object Button9: TButton
-    Left = 592
-    Top = 298
+    Left = 591
+    Top = 302
     Width = 129
     Height = 22
     Anchors = [akTop, akRight]
