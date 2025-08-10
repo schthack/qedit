@@ -1232,6 +1232,8 @@ begin
         for j := 0 to argstrings.count - 1 do
         begin
           Lines[i] := Lines[i] + argstrings.Strings[j];
+          if (j = 0) and (opcodestr = 'Unknow_Opcode') then
+            break;
           if j <> argstrings.count - 1 then
             Lines[i] := Lines[i] + ', ';
         end;
