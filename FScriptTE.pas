@@ -935,10 +935,10 @@ procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
   AOffset: Integer);
 var
   i,j,j2,k,x,y,x3,y3,g,d,labelnum,opcodepos,argpos: integer;
-  reftype,trimline,currentarg,labelstr,opcodestr,whitespace,s,o,fullargs: widestring;
+  reftype,trimline,labelstr,opcodestr,whitespace,s,o,fullargs: widestring;
   argarray: TArray<string>;
   argstrings: TStringList;
-  instring,invalidswitch: Boolean;
+  invalidswitch: Boolean;
   i2: double;
   f: single;
 begin
