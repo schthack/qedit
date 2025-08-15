@@ -10,10 +10,9 @@ object Form4: TForm4
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
-  PixelsPerInch = 96
+  OnShow = FormShow
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 185
@@ -124,7 +123,7 @@ object Form4: TForm4
       end
       object Button7: TButton
         Left = 9
-        Top = 379
+        Top = 351
         Width = 75
         Height = 25
         Anchors = [akRight, akBottom]
@@ -151,6 +150,15 @@ object Form4: TForm4
         Caption = 'Import'
         TabOrder = 7
         OnClick = Button9Click
+      end
+      object btnEditText: TButton
+        Left = 9
+        Top = 379
+        Width = 75
+        Height = 25
+        Caption = 'Edit text'
+        TabOrder = 8
+        OnClick = btnEditTextClick
       end
     end
     object ListBox1: TListBox
@@ -195,13 +203,14 @@ object Form4: TForm4
       OnCompare = TreeView1Compare
       OnDblClick = TreeView1DblClick
       Items.NodeData = {
-        03040000002E0000000200000002000000FFFFFFFFFFFFFFFF00000000000000
-        00000000000108460075006E006300740069006F006E002E0000000200000002
-        000000FFFFFFFFFFFFFFFF000000000000000000000000010844006100740061
-        002F005300740072002E0000000200000002000000FFFFFFFFFFFFFFFF000000
-        0000000000000000000108520065006700690073007400650072002A00000002
-        00000002000000FFFFFFFFFFFFFFFF00000000000000000000000001064F0070
-        0063006F0064006500}
+        070400000009540054007200650065004E006F00640065002F00000002000000
+        02000000FFFFFFFFFFFFFFFF000000000000000000000000000108460075006E
+        006300740069006F006E0000002F0000000200000002000000FFFFFFFFFFFFFF
+        FF00000000000000000000000000010844006100740061002F00530074007200
+        00002F0000000200000002000000FFFFFFFFFFFFFFFF00000000000000000000
+        00000001085200650067006900730074006500720000002B0000000200000002
+        000000FFFFFFFFFFFFFFFF0000000000000000000000000001064F0070006300
+        6F0064006500}
     end
   end
   object StatusBar1: TStatusBar
@@ -220,10 +229,10 @@ object Form4: TForm4
       end>
   end
   object FontDialog1: TFontDialog
-    Font.Charset = DEFAULT_CHARSET
+    Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
-    Font.Name = 'MS Sans Serif'
+    Font.Name = 'Fixedsys'
     Font.Style = []
     Left = 582
     Top = 440
@@ -559,7 +568,7 @@ object Form4: TForm4
         Caption = '-'
       end
       object Delete2: TMenuItem
-        Caption = 'Delete chuck'
+        Caption = 'Delete chunk'
         OnClick = Delete2Click
       end
       object Addsymbolechat1: TMenuItem
@@ -584,6 +593,21 @@ object Form4: TForm4
         OnClick = Ascode1Click
       end
     end
+    object Changedataformat1: TMenuItem
+      Caption = 'Set argument format'
+      object Hex1: TMenuItem
+        Caption = 'Hex'
+        OnClick = Hex1Click
+      end
+      object Decimal1: TMenuItem
+        Caption = 'Decimal'
+        OnClick = Decimal1Click
+      end
+    end
+    object HideNOPs1: TMenuItem
+      Caption = 'Hide NOPs'
+      OnClick = HideNOPs1Click
+    end
     object N1: TMenuItem
       Caption = '-'
     end
@@ -596,7 +620,7 @@ object Form4: TForm4
       OnClick = Cut1Click
     end
     object Past1: TMenuItem
-      Caption = 'Past'
+      Caption = 'Paste'
       OnClick = Past1Click
     end
     object Delete1: TMenuItem

@@ -1,0 +1,1413 @@
+unit FScriptTE;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.Generics.Collections, System.Generics.Defaults, System.RegularExpressions, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
+  Vcl.ExtCtrls, main, Vcl.ComCtrls, Vcl.StdCtrls;
+
+type
+    TfmScriptTE = class(TForm)
+    TextEdit: TTextEditor;
+    PopupMenu1: TPopupMenu;
+    MainMenu1: TMainMenu;
+    Edit1: TMenuItem;
+    Find1: TMenuItem;
+    Replace1: TMenuItem;
+    GoToLabel1: TMenuItem;
+    Cut1: TMenuItem;
+    Copy1: TMenuItem;
+    Paste1: TMenuItem;
+    Undo1: TMenuItem;
+    File1: TMenuItem;
+    Exit1: TMenuItem;
+    View1: TMenuItem;
+    Deleteselection1: TMenuItem;
+    Delete1: TMenuItem;
+    Zoom1: TMenuItem;
+    Z100: TMenuItem;
+    Z125: TMenuItem;
+    Z150: TMenuItem;
+    Z200: TMenuItem;
+    Z300: TMenuItem;
+    N1: TMenuItem;
+    Openfromfile1: TMenuItem;
+    Savetofile1: TMenuItem;
+    OpenDialog1: TOpenDialog;
+    SaveDialog1: TSaveDialog;
+    N2: TMenuItem;
+    Argumentformat1: TMenuItem;
+    Hex1: TMenuItem;
+    Decimal1: TMenuItem;
+    N3: TMenuItem;
+    Newlabel1: TMenuItem;
+    Newregister1: TMenuItem;
+    Hotkeys1: TMenuItem;
+    Addlabel1: TMenuItem;
+    Addregister1: TMenuItem;
+    Format1: TMenuItem;
+    Changefont1: TMenuItem;
+    FontDialog1: TFontDialog;
+    Changetextcolor1: TMenuItem;
+    Opcodes1: TMenuItem;
+    Registers1: TMenuItem;
+    Values1: TMenuItem;
+    ColorDialog1: TColorDialog;
+    HideNOPs1: TMenuItem;
+    Setformattingdefaults1: TMenuItem;
+    StatusBar1: TStatusBar;
+    Edit2: TEdit;
+    btnSearch: TButton;
+    Changetheme1: TMenuItem;
+    Blue1: TMenuItem;
+    Classic1: TMenuItem;
+    Darcula1: TMenuItem;
+    DarkIcon1: TMenuItem;
+    Dark1: TMenuItem;
+    Darker1: TMenuItem;
+    Default1: TMenuItem;
+    Dracula1: TMenuItem;
+    FluentNight1: TMenuItem;
+    GitHubDark1: TMenuItem;
+    MonokaiDistilled1: TMenuItem;
+    Monokai1: TMenuItem;
+    Oblivion1: TMenuItem;
+    Obsid1: TMenuItem;
+    Ocean1: TMenuItem;
+    Oceanic1: TMenuItem;
+    Okaidia1: TMenuItem;
+    Purple1: TMenuItem;
+    Twilight1: TMenuItem;
+    VisualStudioDark1: TMenuItem;
+    VisualStudio1: TMenuItem;
+    Windows11Dark1: TMenuItem;
+    N4: TMenuItem;
+    Addeditdata1: TMenuItem;
+    NPC1: TMenuItem;
+    SaveImage1: TMenuItem;
+    Enemy1: TMenuItem;
+    Float1: TMenuItem;
+    Symbolchat1: TMenuItem;
+    Vector1: TMenuItem;
+    Enemystat1: TMenuItem;
+    EnemyResist1: TMenuItem;
+    EnemyAttack1: TMenuItem;
+    EnemyMovement1: TMenuItem;
+    Image1: TMenuItem;
+    Changeimage1: TMenuItem;
+    procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure Replace1Click(Sender: TObject);
+    procedure Find1Click(Sender: TObject);
+    procedure GoToLabel1Click(Sender: TObject);
+    procedure Cut1Click(Sender: TObject);
+    procedure Copy1Click(Sender: TObject);
+    procedure Paste1Click(Sender: TObject);
+    procedure Delete1Click(Sender: TObject);
+    procedure Undo1Click(Sender: TObject);
+    procedure Exit1Click(Sender: TObject);
+    procedure Deleteselection1Click(Sender: TObject);
+    procedure Hex1Click(Sender: TObject);
+    procedure Decimal1Click(Sender: TObject);
+    procedure Z100Click(Sender: TObject);
+    procedure Z125Click(Sender: TObject);
+    procedure Z150Click(Sender: TObject);
+    procedure Z200Click(Sender: TObject);
+    procedure Z300Click(Sender: TObject);
+    procedure TextEditChange(Sender: TObject);
+    procedure TextEditClick(Sender: TObject);
+    procedure Openfromfile1Click(Sender: TObject);
+    procedure Savetofile1Click(Sender: TObject);
+    procedure Newlabel1Click(Sender: TObject);
+    procedure Newregister1Click(Sender: TObject);
+    procedure Addlabel1Click(Sender: TObject);
+    procedure Addregister1Click(Sender: TObject);
+    procedure Changefont1Click(Sender: TObject);
+    procedure TextEditCaretChanged(const ASender: TObject; const X2, Y2,
+      AOffset: Integer);
+    procedure Opcodes1Click(Sender: TObject);
+    procedure Registers1Click(Sender: TObject);
+    procedure Values1Click(Sender: TObject);
+    procedure HideNOPs1Click(Sender: TObject);
+    procedure Setformattingdefaults1Click(Sender: TObject);
+    procedure TextEditKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure btnSearchClick(Sender: TObject);
+    procedure Edit2Exit(Sender: TObject);
+    procedure ChangeTheme(Sender: TObject);
+    procedure AddEditData(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+procedure UpdateTextRefs();
+procedure SetTextZoom(zoomvalue: integer);
+procedure SetTextColor(colortype: string);
+
+var
+  fmScriptTE: TfmScriptTE;
+  textEdited: Boolean = false;
+  linechanged: Boolean = false;
+  changeline: integer = 0;
+  currentline: integer = 0;
+  editline: integer = 0;
+  nextline: integer = 0;
+  opcodelist: array [0 .. 1000] of TAsmFnc;
+
+implementation
+
+uses TCom, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.CompletionProposal.Snippets,
+  NPCBuild, EnemyStat, FEnemyResist, FEnemyMov, FEnemyAttack, FVector;
+
+{$R *.dfm}
+
+procedure UpdateTextRefs();
+var
+  i,j,x,labelnum: integer;
+  reftype,currentline,labelstr: widestring;
+  opcodestr: string;
+begin
+  form14.Caption := 'Clearing References';
+  form14.Label1.Hide;
+  form14.Show;
+  form14.ProgressBar1.max := fmScriptTE.TextEdit.Lines.Count - 1;
+
+  // Remove empty lines
+  fmScriptTE.TextEdit.DeleteEmptyLines;
+
+  // Clear data references
+  for i := 0 to 1000 do datablock[i]:=-1;
+  for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
+  begin
+    try
+      form14.ProgressBar1.Position := i;
+      form14.Repaint;
+      RemoveRef(AnsiString(fmScriptTE.TextEdit.Lines[i]));
+    except // New or imported file with no references to delete, catch exception
+    end;
+  end;
+
+   // Clear and re-initialize the treeview
+  form4.TreeView1.Items.Clear;
+  TrFnc := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Function');
+  TrData := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Data/Str');
+  TrReg := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Register');
+  Tropc := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Opcode');
+  TrData.Text := getlanguagestring(133);
+  TrFnc.Text := getlanguagestring(132);
+  TrReg.Text := getlanguagestring(134);
+  Tropc.Text := getlanguagestring(135);
+  TrFnc.ImageIndex := 2;
+  TrFnc.SelectedIndex := 2;
+  TrData.ImageIndex := 2;
+  TrData.SelectedIndex := 2;
+  TrReg.ImageIndex := 2;
+  TrReg.SelectedIndex := 2;
+  Tropc.ImageIndex := 2;
+  Tropc.SelectedIndex := 2;
+  TsData.Clear;
+  TsFnc.Clear;
+  TsReg.Clear;
+  Tsopc.Clear;
+
+  form14.Caption := 'Adding New References';
+  for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
+  begin
+    form14.ProgressBar1.Position := i;
+    form14.Repaint;
+    currentline := fmScriptTE.TextEdit.Lines[i];
+    if currentline <> '' then
+    begin
+      // Update all label flag data references
+      x := pos(':',fmScriptTE.TextEdit.Lines[i]);
+      if (x <= 6) and (x <> 0) then
+      begin
+        labelstr := copy(currentline, 0, x-1);
+        currentline := copy(currentline, x+1, length(currentline));
+        currentline := TrimLeft(currentline);
+        reftype := copy(currentline, 0, 4);
+        if TryStrToInt(labelstr, labelnum) then
+        begin
+          if reftype = 'STR:' then
+            AddStrRef(labelnum)
+          else if reftype = 'HEX:' then
+            AddDataRef(labelnum)
+          else AddLabel(labelnum);
+      end;
+      end;
+
+      // Update registers
+      for j := 0 to 255 do
+      begin
+        if fmScriptTE.TextEdit.Lines[i].Contains('R' + inttostr(j)) then
+          AddRegister(j);
+      end;
+
+      // Update functions used
+      opcodestr := '';
+      try
+        opcodestr := copy(fmScriptTE.TextEdit.Lines.TextLines[i], 9, fmScriptTE.TextEdit.Lines.TextLines[i].Length);
+      except end; // End of line was reached; catch the exception
+      for j := 0 to length(opcodelist) - 1 do
+      begin
+        if (opcodelist[j].name <> '') and (opcodestr.StartsWith(opcodelist[j].name)) then
+        begin
+          AddFunctionUsed(AnsiString(opcodelist[j].name));
+          break;
+        end;
+      end;
+    end;
+  end;
+  form14.Hide;
+  form14.Caption := '3D Processing';
+  form14.ProgressBar1.Position := 1;
+  form14.Label1.Show;
+  TextEdited := false;
+end;
+
+procedure SetTextZoom(zoomvalue: integer);
+var
+  Reg: TRegistry;
+begin
+  with fmScriptTE do
+  begin
+    TextEdit.Zoom(zoomvalue);
+    Z100.Checked := false;
+    Z125.Checked := false;
+    Z150.Checked := false;
+    Z200.Checked := false;
+    Z300.Checked := false;
+
+    if zoomvalue = 100 then
+      Z100.Checked := true
+    else if zoomvalue = 125 then
+      Z125.Checked := true
+    else if zoomvalue = 150 then
+      Z150.Checked := true
+    else if zoomvalue = 200 then
+      Z200.Checked := true
+    else if zoomvalue = 300 then
+      Z300.Checked := true
+    else
+      Z125.Checked := true;
+  end;
+
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('TextEditZoom', zoomvalue);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+end;
+
+procedure SetTextColor(colortype: string);
+var
+  Reg: TRegistry;
+  lastcaret: integer;
+begin
+    with fmScriptTE do
+    begin
+      // Save text position
+      lastcaret := TextEdit.CaretIndex;
+      // Set default color
+      if colortype = 'TEValueColor' then
+        colordialog1.Color := clBlue
+      else colordialog1.Color := clNavy;
+      if colordialog1.Execute then begin
+          if colortype = 'TEOpcodeColor' then
+            TextEdit.Colors.EditorReservedWordForeground:=colordialog1.Color
+          else if colortype = 'TERegisterColor' then
+            TextEdit.Colors.EditorSymbolForeground:=colordialog1.Color
+          else if colortype = 'TEValueColor' then
+          begin
+            TextEdit.Colors.EditorNumberForeground:=colordialog1.Color;
+            TextEdit.Colors.EditorHexNumberForeground:=colordialog1.Color;
+          end;
+
+          Reg := TRegistry.Create;
+          try
+              Reg.RootKey := HKEY_CURRENT_USER;
+              if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+          begin
+              Reg.WriteInteger(colortype,colordialog1.Color);
+              Reg.CloseKey;
+              end;
+          finally
+              Reg.Free;
+          end;
+      end;
+      Close;
+      Show;
+      // Reset to last caret position
+      TextEdit.CaretIndex := lastcaret;
+    end;
+end;
+
+procedure TfmScriptTE.Addlabel1Click(Sender: TObject);
+begin
+  Newlabel1Click(nil);
+end;
+
+procedure TfmScriptTE.Addregister1Click(Sender: TObject);
+begin
+  Newregister1Click(nil);
+end;
+
+procedure TfmScriptTE.ChangeTheme(Sender: TObject);
+var
+  lastcaret: integer;
+  selection: TMenuItem;
+  themename: string;
+  Reg: TRegistry;
+begin
+  lastcaret := TextEdit.CaretIndex;
+  Default1.Checked := false;
+  Blue1.Checked := false;
+  Classic1.Checked := false;
+  Darcula1.Checked := false;
+  DarkIcon1.Checked := false;
+  Dark1.Checked := false;
+  Darker1.Checked := false;
+  Dracula1.Checked := false;
+  FluentNight1.Checked := false;
+  GitHubDark1.Checked := false;
+  MonoKaiDistilled1.Checked := false;
+  Monokai1.Checked := false;
+  Oblivion1.Checked := false;
+  Obsid1.Checked := false;
+  Ocean1.Checked := false;
+  Oceanic1.Checked := false;
+  Okaidia1.Checked := false;
+  Purple1.Checked := false;
+  Twilight1.Checked := false;
+  VisualStudioDark1.Checked := false;
+  VisualStudio1.Checked := false;
+  Windows11Dark1.Checked := false;
+
+  selection := TMenuItem(Sender);
+  themename := StringReplace(selection.Caption, '&', '', [rfReplaceAll]);
+  TextEdit.Highlighter.LoadFromFile('Text editor\Themes\' + themename + '.json');
+  TextEdit.Highlighter.Colors.LoadFromFile('Text editor\Themes\' + themename + '.json');
+  tmenuitem(sender).Checked := true;
+  Reg := TRegistry.Create;
+  try
+  Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+  begin
+    Reg.WriteInteger('TETheme',selection.Tag);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
+
+  if Sender = Default1 then
+  begin
+    Changetextcolor1.Enabled := true;
+    Changefont1.Enabled := true
+  end
+  else
+  begin
+    Changetextcolor1.Enabled := false;
+    Changefont1.Enabled := false;
+  end;
+
+  // Set string color
+  TextEdit.Colors.EditorStringForeground := TextEdit.Colors.EditorForeground;
+
+  if fmScriptTE.Visible then
+  begin
+    fmScriptTE.Close;
+    fmScriptTE.Show;
+    TextEdit.CaretIndex := lastcaret;
+  end;
+end;
+
+procedure TfmScriptTE.btnSearchClick(Sender: TObject);
+begin
+  with fmScriptTE.TextEdit.Search do
+  begin
+    SearchText := Edit2.Text;
+    Execute;
+  end;
+end;
+
+procedure TfmScriptTE.Changefont1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+  lastcaret: integer;
+begin
+    // Save text position
+    lastcaret := TextEdit.CaretIndex;
+    if fontdialog1.Execute then begin
+        TextEdit.Fonts.Text:=fontdialog1.Font;
+        Textedit.Fonts.Text.Pitch:=fpFixed;
+        Reg := TRegistry.Create;
+        try
+            Reg.RootKey := HKEY_CURRENT_USER;
+            if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+        begin
+            Reg.WriteInteger('TEFontSize',fontdialog1.Font.Size);
+            Reg.WriteString('TEFontName',fontdialog1.Font.Name);
+            Reg.WriteInteger('TEFontStyle',byte(fontdialog1.Font.Style));
+            Reg.CloseKey;
+            end;
+        finally
+            Reg.Free;
+        end;
+    end;
+
+    // Set zoom down to 100 if a non-default font was chosen, in case it's a bigger font
+    if fontdialog1.Font.Name <> 'Courier New' then
+      SetTextZoom(100);
+
+    fmScriptTE.Close;
+    fmScriptTE.Show;
+    // Reset to last caret position
+    TextEdit.CaretIndex := lastcaret;
+end;
+
+procedure TfmScriptTE.Copy1Click(Sender: TObject);
+begin
+  TextEdit.CopyToClipboard;
+end;
+
+procedure TfmScriptTE.Cut1Click(Sender: TObject);
+begin
+  TextEdit.CutToClipboard;
+end;
+
+procedure TfmScriptTE.Decimal1Click(Sender: TObject);
+begin
+  form4.Decimal1Click(nil);
+end;
+
+procedure TfmScriptTE.Delete1Click(Sender: TObject);
+begin
+  TextEdit.DeleteSelection;
+end;
+
+procedure TfmScriptTE.Deleteselection1Click(Sender: TObject);
+begin
+  fmScriptTE.TextEdit.DeleteSelection;
+end;
+
+procedure TfmScriptTE.Edit2Exit(Sender: TObject);
+begin
+  Edit2.Hide;
+end;
+
+procedure TfmScriptTE.Exit1Click(Sender: TObject);
+begin
+  fmScriptTE.Close;
+end;
+
+procedure TfmScriptTE.Find1Click(Sender: TObject);
+begin
+  Edit2.Show;
+  Edit2.SetFocus;
+end;
+
+procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  i: integer;
+begin
+  if textEdited then
+  begin
+    fmScriptTE.TextEdit.MoveCaretToBeginning;
+    fmScriptTE.Hide;
+    UpdateTextRefs();
+    form4.listbox1.Clear;
+    form14.Caption := 'Saving Script';
+    form14.Label1.Hide;
+    form14.Show;
+    form14.ProgressBar1.max := TextEdit.Lines.Count - 1;
+    for i := 0 to TextEdit.Lines.Count - 1 do
+    begin
+      if TextEdit.Lines[i] <> '' then
+      begin
+        form14.ProgressBar1.Position := i;
+        form14.Repaint;
+        form4.ListBox1.items.add(TextEdit.Lines[i]);
+      end;
+    end;
+    form14.Hide;
+    form14.Caption := '3D Processing';
+    form14.ProgressBar1.Position := 1;
+    form14.Label1.Show;
+  end;
+end;
+
+procedure TfmScriptTE.FormShow(Sender: TObject);
+var
+  i: integer;
+  JSONOpcodeList, JSONRegisterList: String;
+  JSONStrings: TStringList;
+begin
+    textEdited := false;
+    TextEdit.CompletionProposal.Snippets.Items.Clear;
+
+    // Sort opcode list by name string length (highest to lowest)
+    for i := 0 to Length(asmcode) - 1 do
+      opcodelist[i] := asmcode[i];
+    TArray.Sort<TAsmFnc>(opcodelist,TDelegatedComparer<TAsmFnc>.Construct(
+    function(const Right, Left: TAsmFnc): Integer
+    begin
+      Result := Length(Left.name) - Length(Right.name);
+    end
+    ));
+
+    // JSON list for ASM opcodes
+    JSONOpcodeList := '';
+    JSONRegisterList := '';
+    try
+      for i := 0 to Length(asmcode) - 1 do
+      begin
+        if asmcode[i].name <> '' then
+        begin
+          JSONOpcodeList := JSONOpcodeList + '"' + asmcode[i].name + '"';
+          JSONOpcodeList := JSONOpcodeList + ',' + sLineBreak;
+        end;
+      end;
+      JSONOpcodeList := JSONOpcodeList + '"' + 'Unknow_Opcode' + '"';
+      except MessageDlg('Could not generate JSON asm list', mtInformation, [mbOk], 0);
+    end;
+
+    // JSON list for registers
+    try
+    for i := 0 to 255  do
+    begin
+        JSONRegisterList := JSONRegisterList + '"' + 'R' + inttostr(i) + '"';
+      if i < 255 then
+        JSONRegisterList := JSONRegisterList + ',' + sLineBreak;
+      end;
+      except MessageDlg('Could not generate JSON register list', mtInformation, [mbOk], 0);
+    end;
+
+    JSONStrings := TStringList.Create;
+
+    // Start of JSON code
+    JSONStrings.Add (
+      '''
+    {
+        "Highlighter": {
+          "MainRules": {
+        "Attributes": {
+          "Element": "Editor"
+        },
+        "SubRules": {
+          "Range": [
+            {
+              "Type": "LineComment",
+              "Attributes": {
+                "Element": "Comment"
+              },
+              "Properties": {
+                "CloseOnEndOfLine": true
+              },
+              "TokenRange": {
+                "Open": "STR:"
+              }
+            },
+            {
+              "Type": "String",
+              "Attributes": {
+                "Element": "String"
+              },
+              "Properties": {
+                "CloseOnEndOfLine": true
+              },
+              "TokenRange": {
+                "Open": "'",
+                "Close": "'"
+              }
+            }
+          ],
+          "KeyList": [
+            {
+              "Type": "ReservedWord",
+              "Words": [
+    '''
+    + sLineBreak + JSONOpcodeList +
+    '''
+                ],
+              "Attributes": {
+                "Element": "ReservedWord"
+              }
+            },
+            {
+              "Type": "Symbol",
+              "Words": [
+    '''
+    +  sLineBreak + JSONRegisterList +
+    '''
+                          ],
+              "Attributes": {
+                "Element": "Symbol"
+              }
+            }
+          ],
+          "Set": [
+            {
+              "Type": "Numbers",
+              "Symbols": "0123456789ABCDEF",
+              "Attributes": {
+                "Element": "Number"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "MatchingPair": {
+      "Pairs": [
+        {
+          "OpenToken": "'",
+          "CloseToken": "'"
+        }
+      ]
+    },
+    "CompletionProposal": {
+      "SkipRegion": [
+        {
+          "OpenToken": "STR:",
+          "RegionType": "SingleLine"
+        }
+      ]
+    }
+    }
+    ''');
+
+    TextEdit.Highlighter.JSON := JSONStrings;
+    TextEdit.Highlighter.LoadFromJSON;
+    JSONStrings.Free;
+
+    // End of JSON code
+
+    Form4.Hide;
+    TextEdit.Lines.Clear;
+    form14.Caption := 'Loading Script';
+    form14.Label1.Hide;
+    form14.Show;
+    form14.ProgressBar1.max := Form4.ListBox1.items.count - 1;
+    for i := 0 to Form4.ListBox1.items.count - 1 do
+    begin
+      form14.ProgressBar1.Position := i;
+      form14.Repaint;
+      TextEdit.Lines.Add(Form4.ListBox1.items[i]);
+    end;
+    TextEdit.MoveCaretToBeginning;
+    form14.Hide;
+    form14.Caption := '3D Processing';
+    form14.ProgressBar1.Position := 1;
+    form14.Label1.Show;
+end;
+
+procedure TfmScriptTE.GoToLabel1Click(Sender: TObject);
+begin
+  fmGoto.ShowModal;
+end;
+
+procedure TfmScriptTE.Hex1Click(Sender: TObject);
+begin
+  form4.Hex1Click(nil);
+end;
+
+procedure TfmScriptTE.HideNOPs1Click(Sender: TObject);
+begin
+  form4.HideNOPs1Click(nil);
+end;
+
+procedure TfmScriptTE.Newlabel1Click(Sender: TObject);
+var
+  i, j, lastline, lastcaret, labellength: integer;
+  found: Boolean;
+  whitespace: string;
+begin
+  lastline := TextEdit.TextPosition.Line;
+  lastcaret := TextEdit.CaretIndex;
+  whitespace := '';
+  // Add the next unused label
+  with TextEdit do
+  begin
+    for i := 0 to 65535 do
+    begin
+      found := false;
+      for j := 0 to Lines.Count do
+      begin
+        if Lines[j].StartsWith(inttostr(i) + ':') then
+        found := true;
+      end;
+      if not found then
+      begin
+        labellength := 6 - length(inttostr(i));
+        for j := 0 to labellength do
+          whitespace := whitespace + ' ';
+        InsertLine(lastline + 2, inttostr(i) + ':' + whitespace);
+        GoToLineAndSetPosition(lastline + 1,length(Lines[lastline + 1]) + 1);
+        break;
+      end;
+    end;
+  end;
+end;
+
+procedure TfmScriptTE.Newregister1Click(Sender: TObject);
+var
+  i, j: integer;
+  found: Boolean;
+begin
+  // Add the next unused register
+  with TextEdit do
+  begin
+    for i := 0 to 255 do
+    begin
+      found := false;
+      for j := 0 to Lines.Count do
+      begin
+        if Lines[j].Contains('R' + inttostr(i)) then
+          found := true;
+      end;
+      if not found
+      // Exclude all reserved registers
+      and (i <> 74) and (i <> 75)
+      and (i <> 76) and (i <> 77)
+      and (i <> 78) and (i <> 79)
+      and (i <> 253) and (i <> 255)
+      then
+      begin
+        InsertText('R' + inttostr(i));
+        break;
+      end;
+    end;
+  end;
+end;
+
+procedure TfmScriptTE.Openfromfile1Click(Sender: TObject);
+begin
+  if opendialog1.Execute then
+  begin
+    Textedit.LoadFromFile(opendialog1.FileName);
+    textedited:=true;
+    isedited:=true;
+  end;
+end;
+
+procedure TfmScriptTE.Paste1Click(Sender: TObject);
+begin
+  TextEdit.PasteFromClipboard;
+end;
+
+procedure TfmScriptTE.Opcodes1Click(Sender: TObject);
+begin
+  SetTextColor('TEOpcodeColor');
+end;
+
+procedure TfmScriptTE.Registers1Click(Sender: TObject);
+begin
+  SetTextColor('TERegisterColor');
+end;
+
+procedure TfmScriptTE.Values1Click(Sender: TObject);
+begin
+  SetTextColor('TEValueColor');
+end;
+
+procedure TfmScriptTE.Replace1Click(Sender: TObject);
+begin
+  fmReplace.ShowModal;
+end;
+
+procedure TfmScriptTE.Savetofile1Click(Sender: TObject);
+begin
+  if savedialog1.Execute then
+  begin
+    Textedit.SaveToFile(savedialog1.FileName);
+    isedited:=true;
+  end;
+end;
+
+procedure TfmScriptTE.Setformattingdefaults1Click(Sender: TObject);
+var
+  choice, lastcaret: integer;
+  Reg: TRegistry;
+begin
+    choice := MessageDlg('Font and color options will be reset back to their defaults, continue?',
+      mtConfirmation, [mbYes, mbNo], 0);
+
+    if choice = mrYes then
+    begin
+      // Save text position
+      lastcaret := TextEdit.CaretIndex;
+
+      // Reset font
+      TextEdit.Fonts.Text.Size := 9;
+      TextEdit.Fonts.Text.Name := 'Courier New';
+      TextEdit.Fonts.Text.Style := [];
+
+      // Reset text colors
+      TextEdit.Colors.EditorReservedWordForeground:=clNavy;
+      TextEdit.Colors.EditorSymbolForeground:=clNavy;
+      TextEdit.Colors.EditorNumberForeground:=clBlue;
+      TextEdit.Colors.EditorHexNumberForeground:=clBlue;
+
+      // Reset theme
+      if DirectoryExists('Text editor\themes') then
+        ChangeTheme(Default1);
+
+      Reg := TRegistry.Create;
+      try
+      Reg.RootKey := HKEY_CURRENT_USER;
+      if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+      begin
+          Reg.WriteInteger('TEFontSize',9);
+          Reg.WriteString('TEFontName','Courier New');
+          Reg.WriteInteger('TEFontStyle',0);
+          Reg.WriteInteger('TEOpcodeColor',clNavy);
+          Reg.WriteInteger('TERegisterColor',clNavy);
+          Reg.WriteInteger('TEValueColor',clBlue);
+          Reg.WriteInteger('TETheme',-1);
+          Reg.CloseKey;
+      end;
+      finally
+        Reg.Free;
+      end;
+
+      fmScriptTE.Close;
+      fmScriptTE.Show;
+
+      // Reset to last caret position
+      TextEdit.CaretIndex := lastcaret;
+    end;
+end;
+
+procedure TfmScriptTE.AddEditData(Sender: TObject);
+var
+  i,lastcaret: integer;
+begin
+  lastcaret := TextEdit.CaretIndex;
+  form4.ListBox1.Clear;
+  for i := 0 to TextEdit.Lines.Count - 1 do
+    form4.ListBox1.Items.Add(TextEdit.Lines[i]);
+
+  form4.ListBox1.ItemIndex := TextEdit.TextPosition.Line;
+
+  if tmenuitem(sender).Tag = 0 then
+    form4.Button10Click(fmScriptTE)
+  else if tmenuitem(sender).Tag = 1 then
+    form4.SaveImage1Click(fmScriptTE)
+  else if tmenuitem(sender).Tag = 2 then
+    form4.Image1Click(fmScriptTE)
+  else if tmenuitem(sender).Tag = 3 then
+    form4.EnemyStatEdit(fmScriptTE)
+  else if tmenuitem(sender).Tag = 4 then
+    form4.EnemyResistEdit(fmScriptTE)
+  else if tmenuitem(sender).Tag = 5 then
+    form4.EnemyAttackEdit(fmScriptTE)
+  else if tmenuitem(sender).Tag = 6 then
+    form4.EnemyMovementEdit(fmScriptTE)
+  else if tmenuitem(sender).Tag = 7 then
+    form4.EditFloatdata1Click(fmScriptTE)
+  else if tmenuitem(sender).Tag = 8 then
+    form4.Editsymbolechat1Click(fmScriptTE)
+  else if tmenuitem(sender).Tag = 9 then
+    form4.EditVectordata1Click(fmScriptTE);
+
+  TextEdit.Lines.Clear;
+
+  for i := 0 to form4.ListBox1.Items.Count - 1 do
+    TextEdit.Lines.Add(form4.Listbox1.Items[i]);
+
+  TextEdit.CaretIndex := lastcaret;
+end;
+
+procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
+  AOffset: Integer);
+var
+  i,j,j2,k,x,y,x3,y3,g,d,labelnum,opcodepos,argpos: integer;
+  reftype,trimline,labelstr,opcodestr,whitespace,s,o,fullargs: widestring;
+  argarray: TArray<string>;
+  argstrings: TStringList;
+  invalidswitch: Boolean;
+  i2: double;
+  f: single;
+begin
+  TextEditClick(nil);
+  nextline := TextEdit.TextPosition.Line;
+  if (nextline <> editline) or linechanged then
+  begin
+    argstrings := TStringList.Create;
+
+    if linechanged then
+      i := changeline
+    else
+      i := editline;
+
+    linechanged := false;
+
+    trimline := Trim(fmScriptTE.TextEdit.Lines[i]);
+    if trimline <> '' then
+    begin
+      // Get label if it exists
+      labelstr := '';
+      x := pos(':',trimline);
+      if (x <= 6) and (x <> 0) then
+      begin
+        labelstr := copy(trimline, 0, x-1);
+        trimline := copy(trimline, x+1, length(trimline));
+        reftype := copy(trimline, 0, 4);
+        if not TryStrToInt(labelstr, labelnum) then
+          labelstr := '';
+      end;
+
+      // Get opcode if it exists
+      opcodestr := '';
+      TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
+      for j := 0 to Length(opcodelist) - 1 do
+      begin
+        if (opcodelist[j].name <> '') and (fmScriptTE.TextEdit.Lines[i].Contains(opcodelist[j].name)) then
+        begin
+          opcodestr := opcodelist[j].name;
+          opcodepos := pos(opcodelist[j].name, fmScriptTE.TextEdit.Lines[i]);
+          break;
+        end
+        else if fmScriptTE.TextEdit.Lines[i].Contains('Unknow_Opcode') then
+        begin
+          opcodestr := 'Unknow_Opcode';
+          opcodepos := pos('Unknow_Opcode', fmScriptTE.TextEdit.Lines[i]);
+          break;
+        end;
+      end;
+
+      // Get arguments
+      if opcodestr <> '' then
+      begin
+        fullargs := copy(fmScriptTE.TextEdit.Lines[i], opcodepos +
+        length(opcodestr),length(fmScriptTE.TextEdit.Lines[i]));
+
+        if (opcodestr <> 'STR:') and (opcodestr <> 'HEX:') and (opcodestr <> 'Unknow_Opcode') then
+        begin
+              argarray := TRegEx.Split(fullargs, ',(?=(?:[^'']*''[^'']*'')*[^'']*$)');
+              for var arg in argarray do
+                argstrings.add(trim(arg));
+        end;
+        if argstrings.Count = 0 then
+          argstrings.add(trim(fullargs));
+      end;
+
+
+      // Check and adjust argument count
+      k := 0;
+      while opcodelist[j].arg[k] <> T_NONE do
+        inc(k);
+      for x := argstrings.Count - 1 downto k do
+        argstrings.Delete(x);
+      if (argstrings.Count > 0) and (argstrings.Count - 1 < k) then
+      begin
+        k := k - argstrings.Count;
+        if argstrings.Strings[0] = '' then
+        begin
+          if opcodelist[j].arg[0] = T_STR then
+            argstrings.Strings[0] := ' '
+          else argstrings.Strings[0] := '0';
+        end;
+        for x := 0 to k - 1 do
+        begin
+          if opcodelist[j].arg[argstrings.Count] <> T_STR then
+            argstrings.Add('0')
+          else argstrings.Add('');
+        end;
+      end;
+      if (opcodelist[j].arg[argstrings.Count - 1] = T_STR)
+      and (argstrings.Strings[argstrings.Count - 1] = '') then
+        argstrings.Strings[argstrings.Count - 1] := ' ';
+
+      // Adjust argument formatting
+      for x := 0 to argstrings.count - 1 do
+      begin
+        if (argstrings.Strings[x] <> '') and (opcodestr <> 'Unknow_Opcode') then
+        begin
+            y := 0;
+            f := 0;
+            g := 0;
+            i2 := 0;
+            s := argstrings.Strings[x];
+            if (opcodelist[j].arg[x] <> T_STR) and
+              (opcodelist[j].arg[x] <> T_STRHEX) then
+            s:=uppercase(s);
+            if (opcodelist[j].arg[x] = T_REG) or
+            (opcodelist[j].arg[x] = T_BREG) or
+            (opcodelist[j].arg[x] = T_DREG) or
+           (opcodelist[j].arg[x] = T_RREG) then begin
+           if (opcodelist[j].order = T_Args) and
+            ((length(s) = 8) and (lowercase(copy(s,1,1))<> 'r')) then begin
+           y:=hextoint(s);
+           if y = -1 then
+                y := 0;
+           if y>$FFFFFFff then
+                y := $FFFFFFFF;
+           s:=GetDisplayValue(y,8);
+
+           end else begin
+           if s[1] = 'R' then s:=copy(s,2,length(s)-1);
+           trystrtoint(s,y);
+           if y>255 then
+                y := 255;
+           s:='R'+inttostr(y);
+           end;
+          end else
+          if (opcodelist[j].arg[x] = T_STR) then begin
+             if s[1] <> '''' then
+              s:=''''+s;
+             if s[length(s)] <> '''' then
+             s:=s+'''';
+          end else
+          if (opcodelist[j].arg[x] = T_BYTE) then begin
+             y:=hextoint(s);
+             if y = -1 then
+                  y := 0;
+             if y>255 then
+                  y := 255;
+             s:=GetDisplayValue(y,2);
+          end else
+          if (opcodelist[j].arg[x] = T_WORD) then begin
+             y:=hextoint(s);
+             if y = -1 then
+                  y := 0;
+             if y>65535 then
+                  y := 65535;
+             s:=GetDisplayValue(y,4);
+          end else
+          if (opcodelist[j].arg[x] = T_PFLAG) then begin
+             y:=hextoint(s);
+             if y = -1 then
+                  y := 0;
+             if y>65535 then
+                  y := 65535;
+             s:=GetDisplayValue(y,4);
+          end else
+          if (opcodelist[j].arg[x] = T_FUNC) or
+              (opcodelist[j].arg[x] = T_DATA) or
+              (opcodelist[j].arg[x] = T_STRDATA) or
+              (opcodelist[j].arg[x] = T_FUNC2) then begin
+             trystrtoint(s,y);
+             if y>65535 then
+                  y := 65535;
+             s:=inttostr(y);
+           end else
+          if (opcodelist[j].arg[x] = T_FLOAT) then begin
+              if (opcodelist[j].order = T_Args) and
+              (s[1] = 'R') then begin
+              s:=copy(s,2,length(s)-1);
+             trystrtoint(s,y);
+             if y>255 then
+                  y := 255;
+             s:='R'+inttostr(y);
+              end else begin
+             trystrtofloat(s,i2);
+             s:=floattostr(i2);
+             end;
+          end else
+
+          if (opcodelist[j].arg[x] = T_SWITCH) then begin
+             trystrtoint(copy(s,1,pos(':',s)-1),g);
+             o:=copy(s,pos(':',s)+1,length(s)-pos(':',s));
+             s:=inttostr(g);
+             if g = 0 then
+              s:='1:1';
+             while g > 0 do begin
+                  d:=pos(':',o);
+                  if (g = 1) and (d > 0) then begin
+                      invalidswitch := true;
+                  end;
+                  if d = 0 then begin
+                      if g = 1 then d:=length(o)+1
+                      else begin
+                        invalidswitch := true;
+                      end;
+                  end;
+                  trystrtoint(copy(o,1,d-1),j2);
+                  o:=copy(o,d+1,length(o)-d);
+                  dec(g);
+                  s:=s+':'+inttostr(j2);
+             end;
+             if invalidswitch then
+              s:='1:1';
+          end else
+          if (opcodelist[j].arg[x] = T_SWITCH2B) then begin
+             trystrtoint(copy(s,1,pos(':',s)-1),g);
+             o:=copy(s,pos(':',s)+1,length(s)-pos(':',s));
+             s:=inttostr(g);
+             if g = 0 then
+              s:='1:1';
+             while g > 0 do begin
+                  d:=pos(':',o);
+                  if (g = 1) and (d > 0) then begin
+                    invalidswitch := true;
+                  end;
+                  if d = 0 then begin
+                      if g = 1 then d:=length(o)+1
+                      else begin
+                        invalidswitch := true;
+                      end;
+                  end;
+                  trystrtoint(copy(o,1,d-1),j2);
+                  o:=copy(o,d+1,length(o)-d);
+                  dec(g);
+                  s:=s+':'+inttostr(j2);
+             end;
+             if invalidswitch then
+              s:='1:1';
+          end else
+          if (opcodelist[j].arg[x] = T_STRHEX) then begin
+             s:=s;
+          end else
+          if (opcodelist[j].arg[x] = T_HEX) then begin
+             s:=s;
+          end else
+          begin
+             if (opcodelist[j].order = T_Args) and
+              (s[1] = 'R') then begin
+              if s[1] = 'R' then s:=copy(s,2,length(s)-1);
+             trystrtoint(s,y);
+             if y>255 then
+                  y := 255;
+             s:='R'+inttostr(y);
+             end else begin
+             if not showdecimal then y:=hextoint(s);
+             if showdecimal then
+             begin
+                trystrtoint(s,y);
+                y := dword(y);
+             end;
+             if opcodelist[j].arg[x] = T_FLOAT then begin
+                  y:=0;
+                  trystrtofloat(s,f);
+                  move(f,y,4);
+             end;
+             if y = -1 then begin
+                  y := 0;
+             end;
+             if y>$FFFFFFff then
+                  y := $FFFFFFFF;
+             s:=GetDisplayValue(y,8);
+             end;
+          end;
+          argstrings.Strings[x] := s;
+        end;
+      end;
+
+      with fmScriptTE.TextEdit do
+        begin
+        // Reconstruct the line
+        Lines[i] := '';
+        whitespace := '        ';
+
+        // Label/whitespace
+        if labelstr <> '' then
+        begin
+          Lines[i] := labelstr + ':';
+          for j := 1 to length(labelstr) + 1 do
+          SetLength(whitespace,length(whitespace)-1);
+        end;
+        Lines[i] := Lines[i] + whitespace;
+
+        // Opcode
+        if (argstrings.Count > 0) and ((opcodestr = 'STR:') or (opcodestr = 'HEX:'))
+        and (argstrings.Strings[0][1] = ' ') then
+          Lines[i] := Lines[i] + opcodestr
+        else Lines[i] := Lines[i] + opcodestr + ' ';
+
+        // Arguments
+        for j := 0 to argstrings.count - 1 do
+        begin
+          Lines[i] := Lines[i] + argstrings.Strings[j];
+          if (j = 0) and (opcodestr = 'Unknow_Opcode') then
+            break;
+          if j <> argstrings.count - 1 then
+            Lines[i] := Lines[i] + ', ';
+        end;
+
+        // Update maps
+        try
+           form4.ListBox1.items.Add(Lines[i]);
+           if (lowercase(opcodestr) = lowercase(GetOpcodeName($c4))) or
+           (lowercase(opcodestr) = lowercase(GetOpcodeName($f80d))) or
+           (lowercase(opcodestr) = lowercase(GetOpcodeName($9))) then ScanForMap;
+           if (lowercase(opcodestr) = lowercase(GetOpcodeName($f951)))
+           and (argstrings.Count = 4) then begin
+           //bb map
+           s:=Lines[i];
+           delete(s,1,9+length(GetOpcodeName($f951)));
+           x3:=hextoint(copy(s,1,2));
+           g:=hextoint(copy(s,5,4));
+           y3:=hextoint(copy(s,11,2));
+           if x < 30 then begin
+           mapxvmfile[x3]:=path+'map\xvm\'+mapxvmname[mapid[g]+y3];
+           mapfile[x3]:=path+'map\'+mapfilename[mapid[g]+y3];
+           floor[x3].floorid:=MapArea[mapid[g]+y3];
+           Form1.CheckListBox1.Items.Strings[x3]:=mapname[mapid[g]+y3];
+         end;
+        end;
+        except end; // End of line reached, catch exception
+      end;
+    end;
+  end;
+   // Free the argument list
+   argstrings.Free;
+end;
+
+procedure TfmScriptTE.TextEditChange(Sender: TObject);
+var
+  i: integer;
+begin
+  isEdited := true;
+  textEdited := true;
+  editline := TextEdit.TextPosition.Line;
+  // Update autocomplete invoke status
+  if fmScriptTE.Visible then
+  begin
+    for i := 0 to Length(opcodelist) - 1 do
+    begin
+      if  (opcodelist[i].name <> '') and (TextEdit.Lines[editline].Contains(opcodelist[i].name)) then
+      begin
+        TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,false);
+        break
+      end
+      else
+        TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
+      end;
+    end;
+end;
+
+procedure TfmScriptTE.TextEditClick(Sender: TObject);
+var
+  opcode, argstring: string;
+  i, v: integer;
+begin
+  argstring := '';
+  opcode := '';
+  currentline := TextEdit.TextPosition.Line;
+  try
+    opcode := copy(TextEdit.Lines.TextLines[currentline], 9, TextEdit.Lines.TextLines[currentline].Length);
+  // The script is blank or end of line was reached; catch the exception
+  except end;
+
+  for i := 0 to Length(opcodelist) - 1 do
+  begin
+    if  (opcodelist[i].name <> '') and (opcode.StartsWith(opcodelist[i].name)) then
+    begin
+      // Create argument list
+      v := 0;
+      while opcodelist[i].arg[v] <> T_NONE do
+      begin
+        if opcodelist[i].arg[v] = T_REG then
+          argstring := argstring + 'T_REG'
+        else if opcodelist[i].arg[v] = T_RREG then
+          argstring := argstring + 'T_RREG'
+        else if opcodelist[i].arg[v] = T_BREG then
+          argstring := argstring + 'T_BREG'
+        else if opcodelist[i].arg[v] = T_DREG then
+          argstring := argstring + 'T_DREG'
+        else if opcodelist[i].arg[v] = T_SWITCH2B then
+          argstring := argstring + 'T_SWITCH2B'
+        else if opcodelist[i].arg[v] = T_SWITCH then
+          argstring := argstring + 'T_SWITCH'
+        else if opcodelist[i].arg[v] = T_SWITCHZ then
+          argstring := argstring + 'T_SWITCHZ'
+        else if opcodelist[i].arg[v] = T_BYTE then
+          argstring := argstring + 'T_BYTE'
+        else if opcodelist[i].arg[v] = T_WORD then
+          argstring := argstring + 'T_WORD'
+        else if opcodelist[i].arg[v] = T_DWORD then
+          argstring := argstring + 'T_DWORD'
+        else if opcodelist[i].arg[v] = T_DATA then
+          argstring := argstring + 'T_DATA'
+        else if opcodelist[i].arg[v] = T_STRDATA then
+          argstring := argstring + 'T_STRDATA'
+        else if opcodelist[i].arg[v] = T_PFLAG then
+          argstring := argstring + 'T_PFLAG'
+        else if opcodelist[i].arg[v] = T_FUNC then
+          argstring := argstring + 'T_FUNC'
+        else if opcodelist[i].arg[v] = T_FUNC2 then
+          argstring := argstring + 'T_FUNC2'
+        else if opcodelist[i].arg[v] = T_FLOAT then
+          argstring := argstring + 'T_FLOAT'
+        else if opcodelist[i].arg[v] = T_STR then
+          argstring := argstring + 'T_STR';
+        argstring := argstring + ', ';
+        inc(v);
+      end;
+
+      if argstring = '' then
+        argstring := argstring + 'T_NONE';
+      opcode := opcodelist[i].name;
+      break;
+    end;
+  end;
+  if (length(argstring) > 0) and (argstring <> 'T_NONE') then
+    SetLength(argstring, length(argstring)-2);
+  if argstring <> '' then
+    argstring := opcode + ' <' + argstring + '>';
+  Statusbar1.Panels.Items[1].Text := inttostr(currentline);
+  Statusbar1.Panels.Items[2].Text := argstring;
+end;
+
+procedure TfmScriptTE.TextEditKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if key = VK_RETURN then
+  begin
+    linechanged := true;
+    changeline := TextEdit.TextPosition.Line;
+  end;
+end;
+
+procedure TfmScriptTE.TextEditMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if Button = mbRight then
+    PopupMenu1.Popup(mouse.CursorPos.X, mouse.CursorPos.Y);
+end;
+
+procedure TfmScriptTE.Undo1Click(Sender: TObject);
+begin
+  TextEdit.DoUndo;
+end;
+
+procedure TfmScriptTE.Z100Click(Sender: TObject);
+begin
+  SetTextZoom(100);
+end;
+
+procedure TfmScriptTE.Z125Click(Sender: TObject);
+begin
+  SetTextZoom(125);
+end;
+
+procedure TfmScriptTE.Z150Click(Sender: TObject);
+begin
+  SetTextZoom(150);
+end;
+
+procedure TfmScriptTE.Z200Click(Sender: TObject);
+begin
+  SetTextZoom(200);
+end;
+
+procedure TfmScriptTE.Z300Click(Sender: TObject);
+begin
+  SetTextZoom(300);
+end;
+
+end.

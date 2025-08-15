@@ -201,8 +201,8 @@ object Form1: TForm1
     end
   end
   object ListBox2: TListBox
-    Left = 463
-    Top = 25
+    Left = 464
+    Top = 24
     Width = 257
     Height = 137
     BevelInner = bvNone
@@ -328,8 +328,8 @@ object Form1: TForm1
     OnClick = Button6Click
   end
   object Button9: TButton
-    Left = 592
-    Top = 298
+    Left = 591
+    Top = 302
     Width = 129
     Height = 22
     Anchors = [akTop, akRight]
@@ -480,6 +480,11 @@ object Form1: TForm1
         Caption = 'View Script'
         ImageIndex = 4
         OnClick = ViewScrypt1Click
+      end
+      object Texteditor1: TMenuItem
+        Caption = 'Text editor'
+        ImageIndex = 4
+        OnClick = Texteditor1Click
       end
       object N5: TMenuItem
         Caption = '-'
@@ -661,9 +666,14 @@ object Form1: TForm1
         OnClick = Undo1Click
       end
       object Options1: TMenuItem
-        Caption = 'Options'
+        Caption = 'Placement Options'
         ShortCut = 113
         OnClick = Options1Click
+      end
+      object SnapOptions2: TMenuItem
+        Caption = 'Snap Options'
+        ShortCut = 114
+        OnClick = SnapOptions2Click
       end
       object Cancelplacement1: TMenuItem
         Caption = 'Cancel placement'
@@ -1573,14 +1583,18 @@ object Form1: TForm1
       Caption = 'Drag to move'
       OnClick = smDragClick
     end
-    object smSnap: TMenuItem
-      Caption = 'Snap alignment'
-      OnClick = smSnapClick
-    end
-    object smPlacement: TMenuItem
+    object Options2: TMenuItem
       Caption = 'Options'
-      ShortCut = 113
-      OnClick = smPlacementClick
+      object smPlacement: TMenuItem
+        Caption = 'Placement options'
+        ShortCut = 113
+        OnClick = smPlacementClick
+      end
+      object smSnapOptions: TMenuItem
+        Caption = 'Snap options'
+        ShortCut = 114
+        OnClick = smSnapOptionsClick
+      end
     end
   end
   object PopupMenu2: TPopupMenu

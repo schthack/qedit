@@ -46,7 +46,11 @@ uses
   FSymbolChat in 'FSymbolChat.pas' {Form33},
   FAsmModeSel in 'FAsmModeSel.pas' {Form34},
   FPlacement in 'FPlacement.pas' {FPlacementOptions},
-  FHotkeys in 'FHotkeys.pas' {fmHotkeys};
+  FHotkeys in 'FHotkeys.pas' {fmHotkeys},
+  FSnap in 'FSnap.pas' {FSnapOptions},
+  FScriptTE in 'FScriptTE.pas' {fmScriptTE},
+  FReplace in 'FReplace.pas' {fmReplace},
+  FGoto in 'FGoto.pas' {fmGoto};
 
 {$R *.res}
 
@@ -95,6 +99,10 @@ begin
   Application.CreateForm(TForm34, Form34);
   Application.CreateForm(TFPlacementOptions, FPlacementOptions);
   Application.CreateForm(TfmHotkeys, fmHotkeys);
+  Application.CreateForm(TFSnapOptions, FSnapOptions);
+  Application.CreateForm(TfmScriptTE, fmScriptTE);
+  Application.CreateForm(TfmReplace, fmReplace);
+  Application.CreateForm(TfmGoto, fmGoto);
   Application.Run;
   end;
 end.

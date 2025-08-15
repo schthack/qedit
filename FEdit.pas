@@ -17,6 +17,7 @@ type
     StringGrid1: TStringGrid;
     Image2: TImage;
     chkAutoAxis: TCheckBox;
+    btnToggleData: TButton;
     procedure Button1Click(Sender: TObject);
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
@@ -34,6 +35,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure chkAutoAxisMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure btnToggleDataClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -88,11 +90,28 @@ begin
                 StringGrid1.Cells[0,y]:=t.Strings[x];
                 if x = 0 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow5));
                 if x = 1 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow6));
-                if x = 2 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow7));
 
-                if x = 3 then StringGrid1.Cells[1,y]:=floattostrf(EObjData.unknow8,ffFixed,10,4);
+                CalculateWarpOffsets(EObjData.unknow6 + rev[EObjData.map_section]);
+
+                if x = 2 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow7));
+                if x = 3 then
+                begin
+                  if ((EObjData.Skin = 3) or (EObjData.Skin = 321) or (EObjData.Skin = 697)) and not showdata then
+                    StringGrid1.Cells[1,y]:=floattostrf(EObjData.unknow8 + warpx,ffFixed,10,4)
+                  else
+                    StringGrid1.Cells[1,y]:=floattostrf(EObjData.unknow8,ffFixed,10,4);
+                end;
                 if x = 4 then StringGrid1.Cells[1,y]:=floattostrf(EObjData.unknow9,ffFixed,10,4);
-                if x = 5 then StringGrid1.Cells[1,y]:=floattostrf(EObjData.unknow10,ffFixed,10,4);
+
+                if x = 5 then
+                begin
+
+                  if ((EObjData.Skin = 3) or (EObjData.Skin = 321) or (EObjData.Skin = 697)) and not showdata then
+                    StringGrid1.Cells[1,y]:=floattostrf(EObjData.unknow10 + warpz,ffFixed,10,4)
+                  else
+                    StringGrid1.Cells[1,y]:=floattostrf(EObjData.unknow10,ffFixed,10,4);
+                end;
+
                 if x = 6 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.obj_id));
                 if x = 7 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.action));
                 if x = 8 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow13));
@@ -186,6 +205,36 @@ begin
     px3 := cos(rt/10430.37835)*px2 - sin(rt/10430.37835)*py2;
     py3 := sin(rt/10430.37835)*px2 + cos(rt/10430.37835)*py2;
     form7.Image2.Canvas.FloodFill(52+round(px3),48+round(py3),$008000,fsSurface);
+end;
+
+procedure TForm7.btnToggleDataClick(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  showdata := not showdata;
+  if showdata then
+  begin
+    btnToggleData.Caption := 'Hide data';
+    StringGrid1.Cells[1,11]:=floattostrf(EObjData.unknow8,ffFixed,10,4);
+    StringGrid1.Cells[1,13]:=floattostrf(EObjData.unknow10,ffFixed,10,4);
+  end
+  else
+  begin
+    btnToggleData.Caption := 'Show data';
+    StringGrid1.Cells[1,11]:=floattostrf(EObjData.unknow8 + warpx,ffFixed,10,4);
+    StringGrid1.Cells[1,13]:=floattostrf(EObjData.unknow10 + warpz,ffFixed,10,4);
+  end;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+  begin
+    Reg.WriteBool('ShowData', showdata);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
 end;
 
 procedure TForm7.Button1Click(Sender: TObject);
@@ -373,7 +422,18 @@ begin
         if arow = 2 then EObjData.unknow2:=strtoint64(StringGrid1.Cells[1,2]);
         if arow = 3 then EObjData.id:=strtoint(StringGrid1.Cells[1,3]);
         if arow = 4 then EObjData.grp:=strtoint(StringGrid1.Cells[1,4]);
-        if arow = 5 then EObjData.Map_Section:=strtoint64(StringGrid1.Cells[1,5]);
+        if arow = 5 then
+        begin
+          EObjData.Map_Section:=strtoint64(StringGrid1.Cells[1,5]);
+
+          // map section changed; update new warp offsets
+          if ((EObjData.Skin = 3) or (EObjData.Skin = 321) or (EObjData.Skin = 697)) and not showdata then
+          begin
+            CalculateWarpOffsets(EObjData.unknow6 + rev[EObjData.map_section]);
+            EObjData.unknow8:=strtofloat(StringGrid1.Cells[1,11]) - warpx;
+            EObjData.unknow10:=strtofloat(StringGrid1.Cells[1,13]) - warpz;
+          end;
+        end;
         if arow = 6 then EObjData.unknow5:=strtoint64(StringGrid1.Cells[1,6]);
         if arow = 7 then EObjData.Pos_X:=strtofloat(StringGrid1.Cells[1,7]);
         if arow = 8 then EObjData.Pos_z:=strtofloat(StringGrid1.Cells[1,8]);
@@ -387,11 +447,40 @@ begin
                 //StringGrid1.Cells[0,y]:=t.Strings[x];
                 if y = arow then begin
                 if x = 0 then EObjData.unknow5:=strtoint64(StringGrid1.Cells[1,y]);
-                if x = 1 then EObjData.unknow6:=strtoint64(StringGrid1.Cells[1,y]);
+                if x = 1 then
+                begin
+                  EObjData.unknow6:=strtoint64(StringGrid1.Cells[1,y]);
+
+                  // Rotation changed; update new warp offsets
+                  if ((EObjData.Skin = 3) or (EObjData.Skin = 321) or (EObjData.Skin = 697)) and not showdata then
+                  begin
+                    CalculateWarpOffsets(EObjData.unknow6 + rev[EObjData.map_section]);
+                    EObjData.unknow8:=strtofloat(StringGrid1.Cells[1,11]) - warpx;
+                    EObjData.unknow10:=strtofloat(StringGrid1.Cells[1,13]) - warpz;
+                  end;
+                end;
+
                 if x = 2 then EObjData.unknow7:=strtoint64(StringGrid1.Cells[1,y]);
-                if x = 3 then EObjData.unknow8:=strtofloat(StringGrid1.Cells[1,y]);
+
+                if x = 3 then
+                begin
+                  CalculateWarpOffsets(EObjData.unknow6 + rev[EObjData.map_section]);
+                  if ((EObjData.Skin = 3) or (EObjData.Skin = 321) or (EObjData.Skin = 697)) and not showdata then
+                    EObjData.unknow8:=strtofloat(StringGrid1.Cells[1,y]) - warpx
+                  else
+                    EObjData.unknow8:=strtofloat(StringGrid1.Cells[1,y]);
+                end;
+
                 if x = 4 then EObjData.unknow9:=strtofloat(StringGrid1.Cells[1,y]);
-                if x = 5 then EObjData.unknow10:=strtofloat(StringGrid1.Cells[1,y]);
+                if x = 5 then
+                begin
+                  CalculateWarpOffsets(EObjData.unknow6 + rev[EObjData.map_section]);
+                  if ((EObjData.Skin = 3) or (EObjData.Skin = 321) or (EObjData.Skin = 697)) and not showdata then
+                    EObjData.unknow10:=strtofloat(StringGrid1.Cells[1,y]) - warpz
+                  else
+                    EObjData.unknow10:=strtofloat(StringGrid1.Cells[1,y]);
+                end;
+
                 if x = 6 then EObjData.obj_id:=strtoint64(StringGrid1.Cells[1,y]);
                 if x = 7 then EObjData.action:=strtoint(StringGrid1.Cells[1,y]);
                 if x = 8 then EObjData.unknow13:=strtoint64(StringGrid1.Cells[1,y]);
@@ -530,6 +619,10 @@ procedure TForm7.FormShow(Sender: TObject);
     var
   myRect: TGridRect;
 begin
+  if (EObjData.Skin = 3) or (EObjData.Skin = 321) or (EObjData.Skin = 697) then
+    btnToggleData.Visible := true
+  else
+    btnToggleData.Visible := false;
   myRect.Left := 1;
   myRect.Top := 0;
   myRect.Right := 1;

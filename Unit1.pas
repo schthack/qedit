@@ -299,11 +299,12 @@ const
 Function QuestDisam(code: pansichar; ref: array of dword; CodeLength, RefCount: integer): boolean;
 Function QuestBuild(code: pansichar): dword;
 function MakeUni(s: ansistring): ansistring;
+function GetDisplayValue(value: dword; size: byte): ansistring;
 function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
 
 implementation
 
-uses FScrypt, D3DEngin, ComCtrls, Classes, MyConst;
+uses FScrypt, FScriptTE, unit14, D3DEngin, ComCtrls, Classes, MyConst;
 
 function MakeUni(s: ansistring): ansistring;
 var
@@ -313,6 +314,12 @@ begin
   for x := 1 to length(s) do
     result := result + s[x] + #0;
 
+end;
+
+function GetDisplayValue(value: dword; size: byte): ansistring;
+begin
+  if showdecimal then result := Format('%.' + inttostr(size) + 'd', [value])
+  else result := inttohex(value, size);
 end;
 
 Function QuestDisam(code: pansichar; ref: array of dword; CodeLength, RefCount: integer): boolean;
@@ -577,7 +584,7 @@ begin
                     end;
                   end
                   else
-                    s := s + MakeUni(inttohex(Stack[stackb].value, 8));
+                    s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 8));
                   lr := Stack[stackb].value and 255;
                   StackP := 0;
                   inc(stackb);
@@ -745,13 +752,13 @@ begin
               begin
                 if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                 begin
-                  s := s + MakeUni(inttohex(Stack[stackb].value, 2));
+                  s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 2));
                   StackP := 0;
                   inc(stackb);
                 end
                 else
                 begin
-                  s := s + MakeUni(inttohex(byte(code[x]), 2));
+                  s := s + MakeUni(GetDisplayValue(byte(code[x]), 2));
                   inc(x);
                 end;
               end
@@ -759,13 +766,13 @@ begin
               begin
                 if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                 begin
-                  s := s + MakeUni(inttohex(Stack[stackb].value, 4));
+                  s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 4));
                   StackP := 0;
                   inc(stackb);
                 end
                 else
                 begin
-                  s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
+                    s := s + MakeUni(GetDisplayValue(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
                   if AsmCode[y].fnc = $F951 then
                   begin // .name='BB_Map_Designate' then begin
                     // map info
@@ -824,13 +831,13 @@ begin
                 begin
                   if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                   begin
-                    s := s + MakeUni(inttohex(Stack[stackb].value, 4));
+                    s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 4));
                     StackP := 0;
                     inc(stackb);
                   end
                   else
                   begin
-                    s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
+                    s := s + MakeUni(GetDisplayValue(byte(code[x]) + (byte(code[x + 1]) * 256), 4));
                     x := x + 2;
                   end;
                 end
@@ -884,7 +891,7 @@ begin
                       end;
                     end
                     else
-                      s := s + MakeUni(inttohex(Stack[stackb].value, 8));
+                      s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 8));
                     if AsmCode[y].fnc = $9 then
                     begin // .name='leti' then begin
                       regis[lr] := Stack[stackb].value;
@@ -898,7 +905,7 @@ begin
                   end
                   else
                   begin
-                    s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
+                      s := s + MakeUni(GetDisplayValue(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
                       (byte(code[x + 3]) * $1000000), 8));
                     if AsmCode[y].fnc = $9 then
                     begin // name='leti' then begin
@@ -1010,14 +1017,14 @@ begin
                 begin
                   if (AsmMode = 2) and (AsmCode[y].order = T_ARGS) then
                   begin
-                    s := s + MakeUni(inttohex(Stack[stackb].value, 8));
+                      s := s + MakeUni(GetDisplayValue(Stack[stackb].value, 8));
                     StackP := 0;
                     inc(stackb);
                   end
                   else
                   begin
-                    s := s + MakeUni(inttohex(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
-                      (byte(code[x + 3]) * $1000000), 8));
+                    s := s + MakeUni(GetDisplayValue(byte(code[x]) + (byte(code[x + 1]) * 256) + (byte(code[x + 2]) * $10000) +
+                        (byte(code[x + 3]) * $1000000), 8));
                     x := x + 4;
                   end;
                 end;
@@ -1068,7 +1075,13 @@ begin
               s := s + code[x + (y * 2)] + code[x + (y * 2) + 1]
             else
               break;
-        inc(x, dlength);
+        if isdc then
+        begin
+          i := length(s) - 24;
+          inc(x, i div 2);
+        end
+        else
+          inc(x, y * 2 + 2);
         while pos(#10#0, s) > 0 do
         begin
           y := pos(#10#0, s);
@@ -1112,17 +1125,66 @@ begin
   Tsopc.CustomSort(Comparestr);
   TsFnc.CustomSort(CompareLabel);
   TsData.CustomSort(CompareLabel);
+
+  // Clean up remaining nops if the option is enabled
+  if hidenops then
+  begin
+    for i := form4.Listbox1.items.count - 1 downto 0 do
+    begin
+      if form4.Listbox1.items[i].contains('        nop') then
+        form4.ListBox1.Items.Delete(i);
+    end;
+  end;
+
+  // Insert script lines into text editor if visible
+  if fmScriptTE.Visible then
+  begin
+    fmScriptTE.TextEdit.Lines.Clear;
+    form14.Caption := 'Loading Script';
+    form14.Label1.Hide;
+    form14.Show;
+    form14.ProgressBar1.max := Form4.ListBox1.items.count - 1;
+    for i := 0 to Form4.ListBox1.items.count - 1 do
+    begin
+      form14.ProgressBar1.Position := i;
+      form14.Repaint;
+      fmScriptTE.TextEdit.Lines.Add(Form4.ListBox1.items[i]);
+    end;
+    form14.Hide;
+    form14.Caption := '3D Processing';
+    form14.ProgressBar1.Position := 1;
+    form14.Label1.Show;
+    fmScriptTE.TextEdit.MoveCaretToBeginning;
+  end;
 end;
 
 Function QuestBuild(code: pansichar): dword;
 var
   b, cmd, o: widestring;
   s, v: widestring;
-  x, p, y, z, i, j, g, d, ll, kkk, oldval, um: integer;
+  x, p, y, z, i, j, g, d, ll, kkk, oldval, um, lastsection: integer;
   m: single;
   a: ansistring;
   dw: dword;
 begin
+  // Copy text editor lines if visible
+  if fmScriptTE.Visible then
+  begin
+    UpdateTextRefs();
+    isEdited := false;
+    Form4.Listbox1.Clear;
+    for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
+    begin
+    if fmScriptTE.TextEdit.Lines[i] <> '' then
+      begin
+        s := fmScriptTE.TextEdit.Lines[i];
+        // Replace tabs with spaces when adding back to listbox
+        s := StringReplace(s, #9, '  ', [rfReplaceAll]);
+        form4.ListBox1.items.add(s);
+      end;
+    end;
+  end;
+  lastsection := -1;
   p := 0;
   for x := 0 to form4.ListBox1.Items.Count - 1 do
   begin
@@ -1140,6 +1202,8 @@ begin
           raise exception.Create('Duplicated label: ' + inttostr(kkk));
         end;
         asmref[kkk] := p;
+        if kkk <> -1 then
+          lastsection := kkk;
         ll := 1;
       end;
       delete(s, 1, 8);
@@ -1152,6 +1216,22 @@ begin
       end
       else if cmd = 'STR:' then
       begin
+        if kkk = -1 then
+        begin
+          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
+          'String data declared without a label', mtInformation, [mbOk], 0);
+          form4.Show;
+          form4.ListBox1.ItemIndex := x;
+        end;
+        for i := 0 to 1000 do
+          if datablock[i] = lastsection then break;
+        if (datablockT[i] <> T_STRDATA) and (lastsection <> -1) then
+        begin
+          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
+          'String data declared in a code or Hex section', mtInformation, [mbOk], 0);
+          form4.Show;
+          form4.ListBox1.ItemIndex := x;
+        end;
         while (p div 4) * 4 <> p do
         begin
           code[p] := #0;
@@ -1191,6 +1271,15 @@ begin
       end
       else if cmd = 'HEX:' then
       begin
+        for i := 0 to 1000 do
+          if datablock[i] = lastsection then break;
+        if (datablockT[i] <> T_DATA) and (lastsection <> -1) then
+        begin
+          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
+          'Hex data declared in a code or String section', mtInformation, [mbOk], 0);
+          form4.Show;
+          form4.ListBox1.ItemIndex := x;
+        end;
         if ll = 1 then
           while (p div 4) * 4 <> p do
           begin
@@ -1329,7 +1418,10 @@ begin
               begin
                 code[p] := #$49;
                 inc(p);
-                dw := hextoint(b);
+                if showdecimal then
+                  dw := strtoint(b)
+                else
+                  dw := hextoint(b);
                 move(dw, code[p], 4);
                 inc(p, 4);
               end;
@@ -1353,17 +1445,30 @@ begin
             begin
               code[p] := #$4a;
               inc(p);
-              code[p] := ansichar(hextoint(b));
+              if showdecimal then
+                code[p] := ansichar(strtoint(b))
+              else
+                code[p] := ansichar(hextoint(b));
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_WORD) or (AsmCode[z].arg[i] = T_PFLAG) then
             begin
               code[p] := #$4b;
               inc(p);
-              code[p] := ansichar(hextoint(b));
-              inc(p);
-              code[p] := ansichar(hextoint(b) div 256);
-              inc(p);
+              if showdecimal then
+              begin
+                code[p] := ansichar(strtoint(b));
+                inc(p);
+                code[p] := ansichar(strtoint(b) div 256);
+                inc(p);
+              end
+              else
+              begin
+                code[p] := ansichar(hextoint(b));
+                inc(p);
+                code[p] := ansichar(hextoint(b) div 256);
+                inc(p);
+              end;
             end
             else if (AsmCode[z].arg[i] = T_DATA) then
             begin
@@ -1487,7 +1592,10 @@ begin
               begin
                 code[p] := #$49;
                 inc(p);
-                dw := hextoint(b);
+                if showdecimal then
+                  dw := strtoint(b)
+                else
+                  dw := hextoint(b);
                 move(dw, code[p], 4);
                 inc(p, 4);
               end;
@@ -1547,14 +1655,26 @@ begin
             end
             else if (AsmCode[z].arg[i] = T_BYTE) then
             begin
-              code[p] := ansichar(hextoint(b));
+              if showdecimal then
+                code[p] := ansichar(strtoint(b))
+              else
+                code[p] := ansichar(hextoint(b));
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_WORD) or (AsmCode[z].arg[i] = T_PFLAG) then
             begin
-              code[p] := ansichar(hextoint(b));
-              inc(p);
-              code[p] := ansichar(hextoint(b) div 256);
+              if showdecimal then
+              begin
+                code[p] := ansichar(strtoint(b));
+                inc(p);
+                code[p] := ansichar(strtoint(b) div 256);
+              end
+              else
+              begin
+                code[p] := ansichar(hextoint(b));
+                inc(p);
+                code[p] := ansichar(hextoint(b) div 256);
+              end;
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_DATA) or (AsmCode[z].arg[i] = T_STRDATA) then
@@ -1692,14 +1812,28 @@ begin
             end
             else
             begin
-              code[p] := ansichar(hextoint(b));
-              inc(p);
-              code[p] := ansichar(hextoint(b) div 256);
-              inc(p);
-              code[p] := ansichar(hextoint(b) div $10000);
-              inc(p);
-              code[p] := ansichar(hextoint(b) div $1000000);
-              inc(p);
+              if showdecimal then
+              begin
+                code[p] := ansichar(strtoint(b));
+                inc(p);
+                code[p] := ansichar(strtoint(b) div 256);
+                inc(p);
+                code[p] := ansichar(strtoint(b) div $10000);
+                inc(p);
+                code[p] := ansichar(strtoint(b) div $1000000);
+                inc(p);
+              end
+              else
+              begin
+                code[p] := ansichar(hextoint(b));
+                inc(p);
+                code[p] := ansichar(hextoint(b) div 256);
+                inc(p);
+                code[p] := ansichar(hextoint(b) div $10000);
+                inc(p);
+                code[p] := ansichar(hextoint(b) div $1000000);
+                inc(p);
+              end;
             end;
             inc(i);
           end;

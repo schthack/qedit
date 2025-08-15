@@ -57,6 +57,11 @@ type
     EditVectordata1: TMenuItem;
     Editsymbolechat1: TMenuItem;
     Addsymbolechat1: TMenuItem;
+    Changedataformat1: TMenuItem;
+    Decimal1: TMenuItem;
+    Hex1: TMenuItem;
+    btnEditText: TButton;
+    HideNOPs1: TMenuItem;
     procedure Button4Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -98,6 +103,11 @@ type
     procedure EditVectordata1Click(Sender: TObject);
     procedure Editsymbolechat1Click(Sender: TObject);
     procedure Addsymbolechat1Click(Sender: TObject);
+    procedure Decimal1Click(Sender: TObject);
+    procedure Hex1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnEditTextClick(Sender: TObject);
+    procedure HideNOPs1Click(Sender: TObject);
 
 
   private
@@ -130,7 +140,7 @@ var
 implementation
 
 uses TCom, main, Unit1, NPCBuild, PikaPackage, EnemyStat, Unit22,
-  FEnemyResist, FEnemyAttack, FEnemyMov, FFloatEdit, FVector, FSymbolChat;
+  FEnemyResist, FEnemyAttack, FEnemyMov, FFloatEdit, FVector, FSymbolChat, FScriptTE;
 
 {$R *.dfm}
 
@@ -346,7 +356,7 @@ begin
 end;
 
 Procedure RemoveRef(s:ansistring);
-var x,y,labn,i:integer;
+var x,y,labn,i,j:integer;
     lab,fnc,b:ansistring;
     flab,ffnc:integer;
     lreg:tstringlist;
@@ -369,8 +379,14 @@ begin
     delete(b,1,length(fnc));
     if b <> '' then
     if b[1] <> ' ' then b:=' '+b;
-    if fnc = 'HEX:' then ffnc:=1;
-    if fnc = 'STR:' then ffnc:=1;
+    if (fnc = 'HEX:') or (fnc = 'STR:') then
+    begin
+      if flab = 0 then
+      begin
+        for j:=0 to 1000 do if (datablock[j]=labn) then datablock[j] := -1;
+      end;
+      ffnc:=1;
+    end;
     if ffnc = 0 then begin
         //look for any reg
         x:=pos(' R',b);
@@ -425,9 +441,10 @@ begin
 end;
 
 Procedure AddLabel(l:integer);
-var x:integer;
+var x,i:integer;
     s:ansistring;
 begin
+    for i:=0 to 1000 do if (datablock[i]=l) then datablock[i] := -1;
     s:='F_'+inttostr(l);
     {for x:=0 to TrFnc.Count -1 do
         if TrFnc.Item[x].Text = s then break; }
@@ -444,8 +461,11 @@ begin
 end;
 
 Procedure AddDataRef(l:integer);
-var x:integer;
+var x,i:integer;
 begin
+    for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
+    datablock[i] := l;
+    datablockT[i] := T_DATA;
     {for x:=0 to TrData.Count -1 do
         if TrData.Item[x].Text = 'D_'+inttostr(l) then break;   }
     x:=tsdata.IndexOf('D_'+inttostr(l));
@@ -461,8 +481,11 @@ begin
 end;
 
 Procedure AddStrRef(l:integer);
-var x:integer;
+var x,i:integer;
 begin
+    for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
+    datablock[i] := l;
+    datablockT[i] := T_STRDATA;
     {for x:=0 to TrData.Count -1 do
         if TrData.Item[x].Text = 'S_'+inttostr(l) then break;  }
     x:=tsdata.IndexOf('S_'+inttostr(l));
@@ -560,7 +583,16 @@ procedure TForm4.Button3Click(Sender: TObject);
 begin
     form5.Tag:=0;
     form5.Edit5.Text:='';
-    lastmode:=0;
+    if showdecimal then
+    begin
+      lastmode:=1;
+      form5.TabControl1.TabIndex := 1;
+    end
+    else
+    begin
+      lastmode:=0;
+      form5.TabControl1.TabIndex := 0;
+    end;
     form5.TabControl1Change(form5);
     Form5.ShowModal;
 end;
@@ -602,14 +634,24 @@ begin
                 delete(b,1,length(s)+4);
             end else begin
                 y:=pos(WideString(', '),b);
-                if y = 0 then y:=length(b)+1;
+                if (y = 0) or (AsmCode[form5.ComboBox1.ItemIndex].name = 'STR:') then
+                  y:=length(b)+1;
                 s:=copy(b,1,y-1);
                 delete(b,1,length(s)+2);
             end;
         form5.UnicodeStringGrid1.Cells[1,x]:=s;
         inc(x);
         end;
-        lastmode:=0;
+        if showdecimal then
+        begin
+          lastmode:=1;
+          form5.TabControl1.TabIndex := 1;
+        end
+        else
+        begin
+          lastmode:=0;
+          form5.TabControl1.TabIndex := 0;
+        end;
         form5.TabControl1Change(form5);
         Form5.ShowModal;
     end;
@@ -804,7 +846,7 @@ begin
         y:=pos(':',b)-1;
         form20.SpinEdit1.Value:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form20.SpinEdit1.Value);
-        if x > 1 then if messagedlg(getlanguagestring(178), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x > 1) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(178), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1150,6 +1192,47 @@ begin
     end;
 end;
 
+procedure TForm4.Decimal1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+  choice, lastcaret: integer;
+begin
+    if not Decimal1.Checked then
+    begin
+      if isedited then
+        choice := MessageDlg('Changing the display format will cancel any unsaved changes, continue?',
+          mtConfirmation, [mbYes, mbNo], 0);
+      if (choice = mrYes) or (not isedited) then
+      begin
+        showdecimal := true;
+        Decimal1.Checked := true;
+        fmScriptTE.Decimal1.Checked := true;
+        Hex1.Checked := false;
+        fmScriptTE.Hex1.Checked := false;
+        Reg := TRegistry.Create;
+        choice := listbox1.ItemIndex;
+        lastcaret := fmScriptTE.TextEdit.CaretIndex;
+        try
+          Reg.RootKey := HKEY_CURRENT_USER;
+        if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+        begin
+          Reg.WriteBool('ShowDecimal', true);
+          Reg.CloseKey;
+        end;
+        finally
+          Reg.Free;
+        end;
+        try
+          QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+          listbox1.ItemIndex := choice;
+          fmScriptTE.TextEdit.CaretIndex := lastcaret;
+        except
+          Showmessage('Error reloading quest data.');
+        end;
+      end;
+    end;
+end;
+
 procedure TForm4.Delete1Click(Sender: TObject);
 begin
     if listbox1.itemindex > -1 then begin
@@ -1188,7 +1271,7 @@ begin
         y:=pos(':',b)-1;
         form21.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form21.tag);
-        if (x <> 0) and (x <> 5) then if messagedlg(getlanguagestring(184), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 5) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(184), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1271,7 +1354,7 @@ begin
         y:=pos(':',b)-1;
         form24.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form24.tag);
-        if (x <> 0) and (x <> 6) then if messagedlg(getlanguagestring(185), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 6) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(185), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1394,7 +1477,7 @@ begin
         y:=pos(':',b)-1;
         form25.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form25.tag);
-        if (x <> 0) and (x <> 7) then if messagedlg(getlanguagestring(186), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 7) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(186), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1488,7 +1571,7 @@ begin
         y:=pos(':',b)-1;
         form26.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form26.tag);
-        if (x <> 0) and (x <> 8) then if messagedlg(getlanguagestring(187), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 8) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(187), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1567,25 +1650,34 @@ begin
 end;
 
 procedure TForm4.Ascode1Click(Sender: TObject);
-var x,i:integer;
+var x,i,choice:integer;
 begin
-    if MessageDlg(getlanguagestring(188),
-    mtConfirmation, [mbYes, mbNo], 0) = mrYes then  begin
+    if isedited then
+      choice := MessageDlg(getlanguagestring(188),
+        mtConfirmation, [mbYes, mbNo], 0);
+    if (choice = mrYes) or (not isedited) then
+    begin
+      choice := listbox1.ItemIndex;
+      x:=tmenuitem(sender).Tag;
+      if x = 0 then begin
+          for i:=0 to 1000 do if datablock[i]=section1.Tag then datablock[i]:=-1;
+      end else begin
+          for i:=0 to 1000 do if (datablock[i]=section1.Tag) or (datablock[i]=-1) then break;
+          datablock[i]:=section1.Tag;
+          datablockt[i]:=x;
+      end;
+      try
+      QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+      listbox1.ItemIndex := choice;
+      except
+          Showmessage(getlanguagestring(189));
+      end;
+    end;
+end;
 
-    x:=tmenuitem(sender).Tag;
-    if x = 0 then begin
-        for i:=0 to 1000 do if datablock[i]=section1.Tag then datablock[i]:=-1;
-    end else begin
-        for i:=0 to 1000 do if (datablock[i]=section1.Tag) or (datablock[i]=-1) then break;
-        datablock[i]:=section1.Tag;
-        datablockt[i]:=x;
-    end;
-    try
-    QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
-    except
-        Showmessage(getlanguagestring(189));
-    end;
-    end;
+procedure TForm4.btnEditTextClick(Sender: TObject);
+begin
+  fmScriptTE.Show;
 end;
 
 procedure TForm4.TreeView1Compare(Sender: TObject; Node1, Node2: TTreeNode;
@@ -1699,7 +1791,7 @@ begin
         y:=pos(':',b)-1;
         form28.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form28.tag);
-        if (x <> 0) and (x <> 9) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 9) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1790,7 +1882,7 @@ begin
         y:=pos(':',b)-1;
         form33.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form33.tag);
-        if (x <> 0) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1878,7 +1970,7 @@ begin
         y:=pos(':',b)-1;
         form32.tag:=strtoint(copy(b,1,y));
         x:=GetReferenceType(form32.tag);
-        if (x <> 0) and (x <> 10) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+        if (x <> 0) and (x <> 10) and (sender <> fmScriptTE) then if messagedlg(getlanguagestring(190), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
         delete(b,1,13);
         x:=0;
         y:=0;
@@ -1951,6 +2043,89 @@ end;
 procedure TForm4.FormCreate(Sender: TObject);
 begin
    // listbox1:=TMyNewUnicode.create;
+end;
+
+procedure TForm4.FormShow(Sender: TObject);
+begin
+  if fmScriptTE.Visible then
+    fmScriptTE.Close;
+end;
+
+procedure TForm4.Hex1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+  choice, lastcaret: integer;
+begin
+    if not Hex1.Checked then
+    begin
+      if isedited then
+        choice := MessageDlg('Changing the display format will cancel any unsaved changes, continue?',
+          mtConfirmation, [mbYes, mbNo], 0);
+      if (choice = mrYes) or (not isedited) then
+      begin
+        showdecimal := false;
+        Decimal1.Checked := false;
+        fmScriptTE.Decimal1.Checked := false;
+        Hex1.Checked := true;
+        fmScriptTE.Hex1.Checked := true;
+        Reg := TRegistry.Create;
+        choice := listbox1.ItemIndex;
+        lastcaret := fmScriptTE.TextEdit.CaretIndex;
+        try
+          Reg.RootKey := HKEY_CURRENT_USER;
+        if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+        begin
+          Reg.WriteBool('ShowDecimal', false);
+          Reg.CloseKey;
+        end;
+        finally
+          Reg.Free;
+        end;
+      end;
+      try
+        QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+        listbox1.ItemIndex := choice;
+        fmScriptTE.TextEdit.CaretIndex := lastcaret;
+      except
+        Showmessage('Error reloading quest data.');
+      end;
+    end;
+end;
+
+procedure TForm4.HideNOPs1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+  choice, lastcaret: integer;
+begin
+      if isedited then
+        choice := MessageDlg('Changing the NOP opcode display will cancel any unsaved changes, continue?',
+          mtConfirmation, [mbYes, mbNo], 0);
+      if (choice = mrYes) or (not isedited) then
+      begin
+        HideNOPs1.Checked := not HideNOPs1.Checked;
+        fmScriptTE.HideNOPs1.Checked := not fmScriptTE.HideNOPs1.Checked;
+        hidenops := not hidenops;
+        Reg := TRegistry.Create;
+        choice := listbox1.ItemIndex;
+        lastcaret := fmScriptTE.TextEdit.CaretIndex;
+        try
+          Reg.RootKey := HKEY_CURRENT_USER;
+        if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+        begin
+          Reg.WriteBool('HideNOPs', HideNOPs1.Checked);
+          Reg.CloseKey;
+        end;
+        finally
+          Reg.Free;
+        end;
+      end;
+      try
+        QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+        listbox1.ItemIndex := choice;
+        fmScriptTE.TextEdit.CaretIndex := lastcaret;
+      except
+        Showmessage('Error reloading quest data.');
+      end;
 end;
 
 end.

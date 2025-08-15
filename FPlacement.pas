@@ -5,15 +5,12 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Samples.Spin, registry,
-  Vcl.NumberBox, Math;
+  Vcl.NumberBox, Math, Vcl.ExtCtrls;
 
 type
   TFPlacementOptions = class(TForm)
-    GroupBox1: TGroupBox;
-    GroupBox3: TGroupBox;
     btnSave: TButton;
     seDefaultSect: TSpinEdit;
-    seSnapTolerance: TSpinEdit;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -21,7 +18,6 @@ type
     Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
-    Label8: TLabel;
     nbOffsetX: TNumberBox;
     nbOffsetY: TNumberBox;
     nbOffsetZ: TNumberBox;
@@ -29,14 +25,10 @@ type
     nbDefaultY: TNumberBox;
     nbDefaultX: TNumberBox;
     btnReset: TButton;
-    chkSnapRotate: TCheckBox;
-    chkSnapDistance: TCheckBox;
-    seDistanceLimit: TSpinEdit;
-    chkDistancelimit: TCheckBox;
+    Bevel1: TBevel;
     procedure btnSaveClick(Sender: TObject);
     procedure btnResetClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure chkDistanceLimitClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -67,22 +59,12 @@ begin
       Reg.WriteFloat('DefaultX', nbDefaultX.Value);
       Reg.WriteFloat('DefaultY', nbDefaultY.Value);
       Reg.WriteFloat('DefaultZ', nbDefaultZ.Value);
-      Reg.WriteInteger('SnapValue', seSnapTolerance.Value);
-      Reg.WriteInteger('DistanceLimit', seDistanceLimit.Value);
-      Reg.WriteBool('SnapRotate', chkSnapRotate.Checked);
-      Reg.WriteBool('SnapDistance', chkSnapDistance.Checked);
-      Reg.WriteBool('AnchorEnabled', chkDistanceLimit.Checked);
       Reg.CloseKey;
     end;
   finally
     Reg.Free;
   end;
     close;
-end;
-
-procedure TFPlacementOptions.chkDistanceLimitClick(Sender: TObject);
-begin
-  seDistanceLimit.Enabled := chkDistanceLimit.Checked;
 end;
 
 procedure TFPlacementOptions.FormCreate(Sender: TObject);
@@ -94,7 +76,6 @@ begin
   nbOffsetY.MaxValue := single.MaxValue;
   nbOffsetZ.MinValue := single.MinValue;
   nbOffsetZ.MaxValue := single.MaxValue;
-
   seDefaultSect.MinValue := 0;
   seDefaultSect.MaxValue := High(word);
   nbDefaultX.MinValue := single.MinValue;
@@ -103,11 +84,6 @@ begin
   nbDefaultY.MaxValue := single.MaxValue;
   nbDefaultZ.MinValue := single.MinValue;
   nbDefaultZ.MaxValue := single.MaxValue;
-
-  seSnapTolerance.MinValue := 0;
-  seSnapTolerance.MaxValue := High(integer);
-  seDistanceLimit.MinValue := 0;
-  seDistanceLimit.MaxValue := High (integer);
 end;
 
 procedure TFPlacementOptions.btnResetClick(Sender: TObject);
@@ -120,12 +96,6 @@ begin
   nbDefaultX.Value := 0.0;
   nbDefaultY.Value := 0.0;
   nbDefaultZ.Value := 0.0;
-  seSnapTolerance.Value := 10;
-  seDistanceLimit.Value := 30;
-  seDistanceLimit.Enabled := false;
-  chkDistanceLimit.Checked := false;
-  chkSnapRotate.Checked := false;
-  chkSnapDistance.Checked := false;
 end;
 
 end.
