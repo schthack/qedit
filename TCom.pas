@@ -190,7 +190,9 @@ begin
            (AsmCode[ComboBox1.ItemIndex].arg[x] = T_RREG) then begin
            if (AsmCode[ComboBox1.ItemIndex].order = T_Args) and
             ((length(s) = 8) or (lowercase(copy(s,1,1))<> 'r')) then begin
-           y:=hextoint(s);
+           if not showdecimal or (TabControl1.TabIndex = 0) then
+            y:=hextoint(s)
+           else trystrtoint64(s,y);
            if y = -1 then begin
                 MessageDlg(getlanguagestring(211), mtInformation,[mbOk], 0);
                 exit;
@@ -216,7 +218,9 @@ begin
            s:=''''+s+'''';
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_BYTE) then begin
-           y:=hextoint(s);
+           if not showdecimal or (TabControl1.TabIndex = 0) then
+            y:=hextoint(s)
+           else trystrtoint64(s,y);
            if y = -1 then begin
                 MessageDlg(getlanguagestring(214), mtInformation,[mbOk], 0);
                 exit;
@@ -228,7 +232,9 @@ begin
            s:=GetDisplayValue(y,2);
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_WORD) then begin
-           y:=hextoint(s);
+           if not showdecimal or (TabControl1.TabIndex = 0) then
+            y:=hextoint(s)
+           else trystrtoint64(s,y);
            if y = -1 then begin
                 MessageDlg(getlanguagestring(216), mtInformation,[mbOk], 0);
                 exit;
@@ -240,7 +246,9 @@ begin
            s:=GetDisplayValue(y,4);
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_PFLAG) then begin
-           y:=hextoint(s);
+           if not showdecimal or (TabControl1.TabIndex = 0) then
+            y:=hextoint(s)
+           else trystrtoint64(s,y);
            if y = -1 then begin
                 MessageDlg(getlanguagestring(218), mtInformation,[mbOk], 0);
                 exit;

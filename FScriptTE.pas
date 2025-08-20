@@ -1051,7 +1051,10 @@ begin
            (opcodelist[j].arg[x] = T_RREG) then begin
            if (opcodelist[j].order = T_Args) and
             ((length(s) = 8) and (lowercase(copy(s,1,1))<> 'r')) then begin
-           y:=hextoint(s);
+           if not showdecimal then
+            y:=hextoint(s)
+           else
+            trystrtoint(s,y);
            if y = -1 then
                 y := 0;
            if y>$FFFFFFff then
@@ -1073,7 +1076,10 @@ begin
              s:=s+'''';
           end else
           if (opcodelist[j].arg[x] = T_BYTE) then begin
-             y:=hextoint(s);
+             if not showdecimal then
+              y:=hextoint(s)
+             else
+              trystrtoint(s,y);
              if y = -1 then
                   y := 0;
              if y>255 then
@@ -1081,7 +1087,10 @@ begin
              s:=GetDisplayValue(y,2);
           end else
           if (opcodelist[j].arg[x] = T_WORD) then begin
-             y:=hextoint(s);
+             if not showdecimal then
+              y:=hextoint(s)
+             else
+              trystrtoint(s,y);
              if y = -1 then
                   y := 0;
              if y>65535 then
@@ -1089,7 +1098,10 @@ begin
              s:=GetDisplayValue(y,4);
           end else
           if (opcodelist[j].arg[x] = T_PFLAG) then begin
-             y:=hextoint(s);
+             if not showdecimal then
+              y:=hextoint(s)
+             else
+              trystrtoint(s,y);
              if y = -1 then
                   y := 0;
              if y>65535 then
@@ -1184,8 +1196,8 @@ begin
                   y := 255;
              s:='R'+inttostr(y);
              end else begin
-             if not showdecimal then y:=hextoint(s);
-             if showdecimal then
+             if not showdecimal and (not opcodelist[j].arg[x] = T_FLOAT) then y:=hextoint(s);
+             if showdecimal and (not opcodelist[j].arg[x] = T_FLOAT) then
              begin
                 trystrtoint(s,y);
                 y := dword(y);

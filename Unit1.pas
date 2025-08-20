@@ -300,6 +300,7 @@ Function QuestDisam(code: pansichar; ref: array of dword; CodeLength, RefCount: 
 Function QuestBuild(code: pansichar): dword;
 function MakeUni(s: ansistring): ansistring;
 function GetDisplayValue(value: dword; size: byte): ansistring;
+function HexToSignedInt(const hexstring: string; numbits: integer): integer;
 function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
 
 implementation
@@ -317,9 +318,33 @@ begin
 end;
 
 function GetDisplayValue(value: dword; size: byte): ansistring;
+var
+  s: ansistring;
 begin
-  if showdecimal then result := Format('%.' + inttostr(size) + 'd', [value])
-  else result := inttohex(value, size);
+  s := inttohex(value, size);
+  if showdecimal then
+  begin
+    value := HexToSignedInt(s, size*4);
+    s := Format('%.' + inttostr(size) + 'd', [value]);
+  end;
+  result := s;
+end;
+
+function HexToSignedInt(const hexstring: string; numbits: integer): integer;
+var
+  intvalue: cardinal;
+  signMask: cardinal;
+begin
+  intvalue := strtoint('$' + hexstring);
+  signmask := 1 shl (numbits - 1);
+  if (intvalue and signmask) <> 0 then
+  begin
+    result := - ( (not intvalue and ((1 shl numbits) - 1)) + 1 );
+  end
+  else
+  begin
+    result := intvalue;
+  end;
 end;
 
 Function QuestDisam(code: pansichar; ref: array of dword; CodeLength, RefCount: integer): boolean;
@@ -1419,9 +1444,8 @@ begin
                 code[p] := #$49;
                 inc(p);
                 if showdecimal then
-                  dw := strtoint(b)
-                else
-                  dw := hextoint(b);
+                  b := inttohex(strtoint(b));
+                dw := hextoint(b);
                 move(dw, code[p], 4);
                 inc(p, 4);
               end;
@@ -1446,9 +1470,8 @@ begin
               code[p] := #$4a;
               inc(p);
               if showdecimal then
-                code[p] := ansichar(strtoint(b))
-              else
-                code[p] := ansichar(hextoint(b));
+                b := inttohex(strtoint(b));
+              code[p] := ansichar(hextoint(b));
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_WORD) or (AsmCode[z].arg[i] = T_PFLAG) then
@@ -1456,19 +1479,11 @@ begin
               code[p] := #$4b;
               inc(p);
               if showdecimal then
-              begin
-                code[p] := ansichar(strtoint(b));
-                inc(p);
-                code[p] := ansichar(strtoint(b) div 256);
-                inc(p);
-              end
-              else
-              begin
-                code[p] := ansichar(hextoint(b));
-                inc(p);
-                code[p] := ansichar(hextoint(b) div 256);
-                inc(p);
-              end;
+                b := inttohex(strtoint(b));
+              code[p] := ansichar(hextoint(b));
+              inc(p);
+              code[p] := ansichar(hextoint(b) div 256);
+              inc(p);
             end
             else if (AsmCode[z].arg[i] = T_DATA) then
             begin
@@ -1593,9 +1608,8 @@ begin
                 code[p] := #$49;
                 inc(p);
                 if showdecimal then
-                  dw := strtoint(b)
-                else
-                  dw := hextoint(b);
+                  b := inttohex(strtoint(b));
+                dw := hextoint(b);
                 move(dw, code[p], 4);
                 inc(p, 4);
               end;
@@ -1656,25 +1670,17 @@ begin
             else if (AsmCode[z].arg[i] = T_BYTE) then
             begin
               if showdecimal then
-                code[p] := ansichar(strtoint(b))
-              else
-                code[p] := ansichar(hextoint(b));
+                b := inttohex(strtoint(b));
+              code[p] := ansichar(hextoint(b));
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_WORD) or (AsmCode[z].arg[i] = T_PFLAG) then
             begin
               if showdecimal then
-              begin
-                code[p] := ansichar(strtoint(b));
-                inc(p);
-                code[p] := ansichar(strtoint(b) div 256);
-              end
-              else
-              begin
-                code[p] := ansichar(hextoint(b));
-                inc(p);
-                code[p] := ansichar(hextoint(b) div 256);
-              end;
+                b := inttohex(strtoint(b));
+              code[p] := ansichar(hextoint(b));
+              inc(p);
+              code[p] := ansichar(hextoint(b) div 256);
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_DATA) or (AsmCode[z].arg[i] = T_STRDATA) then
@@ -1813,27 +1819,15 @@ begin
             else
             begin
               if showdecimal then
-              begin
-                code[p] := ansichar(strtoint(b));
-                inc(p);
-                code[p] := ansichar(strtoint(b) div 256);
-                inc(p);
-                code[p] := ansichar(strtoint(b) div $10000);
-                inc(p);
-                code[p] := ansichar(strtoint(b) div $1000000);
-                inc(p);
-              end
-              else
-              begin
-                code[p] := ansichar(hextoint(b));
-                inc(p);
-                code[p] := ansichar(hextoint(b) div 256);
-                inc(p);
-                code[p] := ansichar(hextoint(b) div $10000);
-                inc(p);
-                code[p] := ansichar(hextoint(b) div $1000000);
-                inc(p);
-              end;
+                b := inttohex(strtoint(b));
+              code[p] := ansichar(hextoint(b));
+              inc(p);
+              code[p] := ansichar(hextoint(b) div 256);
+              inc(p);
+              code[p] := ansichar(hextoint(b) div $10000);
+              inc(p);
+              code[p] := ansichar(hextoint(b) div $1000000);
+              inc(p);
             end;
             inc(i);
           end;
