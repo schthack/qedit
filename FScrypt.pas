@@ -733,6 +733,8 @@ end;
 
 procedure TForm4.Button8Click(Sender: TObject);
 begin
+    if fmScriptTE.Visible then
+      form4.Show;
     if savedialog1.Execute then begin
         //listbox1.WideItems.SaveUnicode:=true;
          listbox1.Items.SaveToFile(savedialog1.FileName);
@@ -741,6 +743,8 @@ end;
 
 procedure TForm4.Button9Click(Sender: TObject);
 begin
+    if fmScriptTE.Visible then
+      form4.Show;
     if opendialog1.Execute then begin
     listbox1.Items.LoadFromFile(opendialog1.FileName);
         isedited:=true;
