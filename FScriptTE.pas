@@ -1196,8 +1196,8 @@ begin
                   y := 255;
              s:='R'+inttostr(y);
              end else begin
-             if not showdecimal and (not opcodelist[j].arg[x] = T_FLOAT) then y:=hextoint(s);
-             if showdecimal and (not opcodelist[j].arg[x] = T_FLOAT) then
+             if not showdecimal then y:=hextoint(s);
+             if showdecimal then
              begin
                 trystrtoint(s,y);
                 y := dword(y);
