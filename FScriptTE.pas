@@ -1252,10 +1252,15 @@ begin
 
         // Update maps
         try
-           form4.ListBox1.items.Add(Lines[i]);
            if (lowercase(opcodestr) = lowercase(GetOpcodeName($c4))) or
            (lowercase(opcodestr) = lowercase(GetOpcodeName($f80d))) or
-           (lowercase(opcodestr) = lowercase(GetOpcodeName($9))) then ScanForMap;
+           (lowercase(opcodestr) = lowercase(GetOpcodeName($9))) then
+           begin
+            form4.ListBox1.Clear;
+            for i := 0 to TextEdit.Lines.Count - 1 do
+              form4.ListBox1.Items.Add(TextEdit.Lines[i]);
+            ScanForMap;
+           end;
            if (lowercase(opcodestr) = lowercase(GetOpcodeName($f951)))
            and (argstrings.Count = 4) then begin
            //bb map
