@@ -324,7 +324,8 @@ begin
   s := inttohex(value, size);
   if showdecimal then
   begin
-    value := HexToSignedInt(s, size*4);
+    if value < 0 then
+      value := HexToSignedInt(s, (size*4)-1);
     s := Format('%.' + inttostr(size) + 'd', [value]);
   end;
   result := s;
