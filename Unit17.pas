@@ -69,13 +69,6 @@ begin
       else myscreen.Setclipping(0);
       if form17.CheckBox1.Checked then myscreen.Antializing:=true
       else myscreen.Antializing:=false;
-  end
-  else
-  // Re-render screen next time with new settings.
-  if myscreen <> nil then
-  begin
-    myscreen.Free;
-    myscreen := nil;
   end;
 
   close;
