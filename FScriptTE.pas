@@ -96,6 +96,7 @@ type
     EnemyMovement1: TMenuItem;
     Image1: TMenuItem;
     Changeimage1: TMenuItem;
+    Wholewords1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -139,6 +140,7 @@ type
     procedure Edit2Exit(Sender: TObject);
     procedure ChangeTheme(Sender: TObject);
     procedure AddEditData(Sender: TObject);
+    procedure Wholewords1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -438,6 +440,10 @@ procedure TfmScriptTE.btnSearchClick(Sender: TObject);
 begin
   with fmScriptTE.TextEdit.Search do
   begin
+     if Wholewords1.Checked then
+    SetOption(TTextEditorSearchOption.soWholeWordsOnly,true)
+    else
+     SetOption(TTextEditorSearchOption.soWholeWordsOnly,false);
     SearchText := Edit2.Text;
     Execute;
   end;
@@ -522,6 +528,24 @@ procedure TfmScriptTE.Find1Click(Sender: TObject);
 begin
   Edit2.Show;
   Edit2.SetFocus;
+end;
+
+procedure TfmScriptTE.Wholewords1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  Wholewords1.Checked := not Wholewords1.Checked;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+  begin
+    Reg.WriteBool('SearchWholeWords', Wholewords1.Checked);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
 end;
 
 procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);

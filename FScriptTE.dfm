@@ -19,7 +19,7 @@ object fmScriptTE: TfmScriptTE
     Left = 0
     Top = 0
     Width = 794
-    Height = 498
+    Height = 477
     Align = alClient
     Colors.EditorStringForeground = clBlack
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
@@ -58,10 +58,11 @@ object fmScriptTE: TfmScriptTE
       end>
   end
   object Edit2: TEdit
-    Left = 120
-    Top = 5
-    Width = 529
+    Left = 0
+    Top = 477
+    Width = 794
     Height = 21
+    Align = alBottom
     TabOrder = 2
     Visible = False
     OnExit = Edit2Exit
@@ -224,6 +225,10 @@ object fmScriptTE: TfmScriptTE
         Caption = 'Find'
         ShortCut = 16454
         OnClick = Find1Click
+      end
+      object Wholewords1: TMenuItem
+        Caption = 'Find whole words/registers only'
+        OnClick = Wholewords1Click
       end
       object Replace1: TMenuItem
         Caption = 'Replace'

@@ -564,6 +564,7 @@ var
   showdata: Boolean = false;
   showdecimal: Boolean = false;
   hidenops: Boolean = true;
+  searchwholewords: Boolean = false;
   OffsetX: single = 0.0;
   OffsetY: single = 0.0;
   OffsetZ: single = 0.0;
@@ -4574,6 +4575,8 @@ begin
           ShowDecimal := Reg.ReadBool('ShowDecimal');
         if Reg.ValueExists('HideNOPs') then
           hidenops := Reg.ReadBool('HideNOPs');
+        if Reg.ValueExists('SearchWholeWords') then
+          searchwholewords := Reg.ReadBool('SearchWholeWords');
         Reg.CloseKey;
       end;
       Reg.Free;
@@ -4745,6 +4748,7 @@ begin
     FPlacementOptions.nbDefaultZ.Value := DefaultZ;
 
     SetTextZoom(texteditzoom);
+    fmScriptTE.Wholewords1.Checked := searchwholewords;
 
     flp.Position := 0;
     LanguageString.LoadFromStream(flp);
