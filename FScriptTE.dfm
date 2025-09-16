@@ -35,6 +35,7 @@ object fmScriptTE: TfmScriptTE
     OnMouseDown = TextEditMouseDown
     ParentShowHint = False
     RightMargin.Visible = False
+    Search.Options = [soBeepIfStringNotFound, soHighlightResults, soSearchOnTyping, soShowSearchMatchNotFound, soWrapAround]
     ShowHint = True
     TabOrder = 0
     Tabs.Options = [toColumns, toSelectedBlockIndent, toTabsToSpaces]

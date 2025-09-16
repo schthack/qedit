@@ -506,6 +506,7 @@ end;
 procedure TfmScriptTE.Edit2Exit(Sender: TObject);
 begin
   Edit2.Hide;
+  TextEdit.Search.SearchText := '';
 end;
 
 procedure TfmScriptTE.Exit1Click(Sender: TObject);
