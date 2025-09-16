@@ -659,8 +659,7 @@ begin
                 "CloseOnEndOfLine": true
               },
               "TokenRange": {
-                "Open": "'",
-                "Close": "'"
+                "Open": "'"
               }
             }
           ],
