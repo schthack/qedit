@@ -441,6 +441,10 @@ begin
     SearchText := Edit2.Text;
     Execute;
   end;
+
+  if TextEdit.SelectedText = '' then
+    // Could not find the search text - indicate with a system beep noise
+    Beep;
 end;
 
 procedure TfmScriptTE.Changefont1Click(Sender: TObject);
