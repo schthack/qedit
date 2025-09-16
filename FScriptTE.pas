@@ -528,6 +528,7 @@ procedure TfmScriptTE.Find1Click(Sender: TObject);
 begin
   Edit2.Show;
   Edit2.SetFocus;
+  Edit2.SelectAll;
 end;
 
 procedure TfmScriptTE.Wholewords1Click(Sender: TObject);
