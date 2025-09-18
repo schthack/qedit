@@ -2,7 +2,7 @@ object fmScriptTE: TfmScriptTE
   Left = 0
   Top = 0
   Caption = 'Script Text Editor'
-  ClientHeight = 517
+  ClientHeight = 545
   ClientWidth = 794
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -19,7 +19,7 @@ object fmScriptTE: TfmScriptTE
     Left = 0
     Top = 0
     Width = 794
-    Height = 477
+    Height = 505
     Align = alClient
     Colors.EditorStringForeground = clBlack
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
@@ -42,7 +42,7 @@ object fmScriptTE: TfmScriptTE
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 498
+    Top = 526
     Width = 794
     Height = 19
     Panels = <
@@ -59,7 +59,7 @@ object fmScriptTE: TfmScriptTE
   end
   object Edit2: TEdit
     Left = 0
-    Top = 477
+    Top = 505
     Width = 794
     Height = 21
     Align = alBottom
@@ -149,6 +149,13 @@ object fmScriptTE: TfmScriptTE
       ShortCut = 16466
       OnClick = Newregister1Click
     end
+    object N10: TMenuItem
+      Caption = '-'
+    end
+    object AddArgs1: TMenuItem
+      Caption = 'Add register arguments automatically'
+      OnClick = AddArgs1Click
+    end
     object N3: TMenuItem
       Caption = '-'
     end
@@ -214,6 +221,9 @@ object fmScriptTE: TfmScriptTE
         ShortCut = 16467
         OnClick = Savetofile1Click
       end
+      object N9: TMenuItem
+        Caption = '-'
+      end
       object Exit1: TMenuItem
         Caption = 'Exit'
         OnClick = Exit1Click
@@ -226,14 +236,57 @@ object fmScriptTE: TfmScriptTE
         ShortCut = 16454
         OnClick = Find1Click
       end
-      object Wholewords1: TMenuItem
-        Caption = 'Find whole words/registers only'
-        OnClick = Wholewords1Click
-      end
       object Replace1: TMenuItem
         Caption = 'Replace'
         ShortCut = 16456
         OnClick = Replace1Click
+      end
+      object Searchreplacesettings1: TMenuItem
+        Caption = 'Search and replace settings'
+        object Wholewords1: TMenuItem
+          Caption = 'Find whole words and registers only'
+          OnClick = Wholewords1Click
+        end
+        object Matchcase1: TMenuItem
+          Caption = 'Match case'
+          OnClick = Matchcase1Click
+        end
+        object Engine1: TMenuItem
+          Caption = 'Engine'
+          object Normal1: TMenuItem
+            Caption = 'Normal'
+            OnClick = Normal1Click
+          end
+          object Extended1: TMenuItem
+            Caption = 'Extended'
+            OnClick = Extended1Click
+          end
+          object RegularExpression1: TMenuItem
+            Caption = 'Regular Expression'
+            OnClick = RegularExpression1Click
+          end
+          object Wildcard1: TMenuItem
+            Caption = 'Wildcard'
+            OnClick = Wildcard1Click
+          end
+        end
+        object N5: TMenuItem
+          Caption = '-'
+        end
+        object Selectiononly1: TMenuItem
+          Caption = 'Replace selected text only'
+          OnClick = Selectiononly1Click
+        end
+        object N6: TMenuItem
+          Caption = '-'
+        end
+        object Resetsettings1: TMenuItem
+          Caption = 'Reset'
+          OnClick = Resetsettings1Click
+        end
+      end
+      object N8: TMenuItem
+        Caption = '-'
       end
       object GoToLabel1: TMenuItem
         Caption = 'Go to label'
@@ -383,6 +436,9 @@ object fmScriptTE: TfmScriptTE
           Caption = 'Windows 11 Dark'
           OnClick = ChangeTheme
         end
+      end
+      object N7: TMenuItem
+        Caption = '-'
       end
       object Setformattingdefaults1: TMenuItem
         Caption = 'Reset formatting'

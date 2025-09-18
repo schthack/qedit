@@ -97,6 +97,22 @@ type
     Image1: TMenuItem;
     Changeimage1: TMenuItem;
     Wholewords1: TMenuItem;
+    AddArgs1: TMenuItem;
+    Searchreplacesettings1: TMenuItem;
+    Matchcase1: TMenuItem;
+    Selectiononly1: TMenuItem;
+    N5: TMenuItem;
+    Engine1: TMenuItem;
+    Extended1: TMenuItem;
+    Normal1: TMenuItem;
+    RegularExpression1: TMenuItem;
+    Wildcard1: TMenuItem;
+    N6: TMenuItem;
+    Resetsettings1: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -141,6 +157,14 @@ type
     procedure ChangeTheme(Sender: TObject);
     procedure AddEditData(Sender: TObject);
     procedure Wholewords1Click(Sender: TObject);
+    procedure AddArgs1Click(Sender: TObject);
+    procedure Normal1Click(Sender: TObject);
+    procedure Extended1Click(Sender: TObject);
+    procedure RegularExpression1Click(Sender: TObject);
+    procedure Wildcard1Click(Sender: TObject);
+    procedure Matchcase1Click(Sender: TObject);
+    procedure Selectiononly1Click(Sender: TObject);
+    procedure Resetsettings1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -150,6 +174,7 @@ type
 
 procedure UpdateTextRefs();
 procedure SetTextZoom(zoomvalue: integer);
+procedure SetSearchEngine(engine: integer);
 procedure SetTextColor(colortype: string);
 
 var
@@ -313,6 +338,62 @@ begin
   end;
 end;
 
+procedure SetSearchEngine(engine: integer);
+var
+  Reg: TRegistry;
+begin
+  with fmScriptTE do
+  begin
+    Normal1.Checked := false;
+    Extended1.Checked := false;
+    RegularExpression1.Checked := false;
+    Wildcard1.Checked := false;
+
+    if engine = 0 then
+    begin
+      Normal1.Checked := true;
+      TextEdit.Search.Engine := seNormal;
+      TextEdit.Replace.Engine := seNormal
+    end
+    else if engine = 1 then
+    begin
+      Extended1.Checked := true;
+      TextEdit.Search.Engine := seExtended;
+      TextEdit.Replace.Engine := seExtended
+    end
+    else if engine = 2 then
+    begin
+      RegularExpression1.Checked := true;
+      TextEdit.Search.Engine := seRegularExpression;
+      TextEdit.Replace.Engine := seRegularExpression
+    end
+    else if engine = 3 then
+    begin
+      Wildcard1.Checked := true;
+      TextEdit.Search.Engine := seWildcard;
+      TextEdit.Replace.Engine := seWildcard
+    end
+    else
+    begin
+      Normal1.Checked := true;
+      TextEdit.Search.Engine := seNormal;
+      TextEdit.Replace.Engine := seNormal;
+    end;
+  end;
+
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('SearchEngine', engine);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+end;
+
 procedure SetTextColor(colortype: string);
 var
   Reg: TRegistry;
@@ -441,9 +522,13 @@ begin
   with fmScriptTE.TextEdit.Search do
   begin
      if Wholewords1.Checked then
-    SetOption(TTextEditorSearchOption.soWholeWordsOnly,true)
-    else
-     SetOption(TTextEditorSearchOption.soWholeWordsOnly,false);
+      SetOption(TTextEditorSearchOption.soWholeWordsOnly,true)
+     else
+      SetOption(TTextEditorSearchOption.soWholeWordsOnly,false);
+     if Matchcase1.Checked then
+      SetOption(TTextEditorSearchOption.soCaseSensitive,true)
+     else
+      SetOption(TTextEditorSearchOption.soCaseSensitive,false);
     SearchText := Edit2.Text;
     Execute;
   end;
@@ -524,6 +609,11 @@ begin
   fmScriptTE.Close;
 end;
 
+procedure TfmScriptTE.Extended1Click(Sender: TObject);
+begin
+  SetSearchEngine(1);
+end;
+
 procedure TfmScriptTE.Find1Click(Sender: TObject);
 begin
   Edit2.Show;
@@ -547,6 +637,11 @@ begin
   finally
     Reg.Free;
   end;
+end;
+
+procedure TfmScriptTE.Wildcard1Click(Sender: TObject);
+begin
+  SetSearchEngine(3);
 end;
 
 procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -758,6 +853,24 @@ begin
   form4.HideNOPs1Click(nil);
 end;
 
+procedure TfmScriptTE.Matchcase1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  Matchcase1.Checked := not Matchcase1.Checked;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+  begin
+    Reg.WriteBool('SearchMatchCase', MatchCase1.Checked);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
+end;
+
 procedure TfmScriptTE.Newlabel1Click(Sender: TObject);
 var
   i, j, lastline, lastcaret, labellength: integer;
@@ -822,6 +935,11 @@ begin
   end;
 end;
 
+procedure TfmScriptTE.Normal1Click(Sender: TObject);
+begin
+  SetSearchEngine(0);
+end;
+
 procedure TfmScriptTE.Openfromfile1Click(Sender: TObject);
 begin
   if opendialog1.Execute then
@@ -847,6 +965,11 @@ begin
   SetTextColor('TERegisterColor');
 end;
 
+procedure TfmScriptTE.RegularExpression1Click(Sender: TObject);
+begin
+  SetSearchEngine(2);
+end;
+
 procedure TfmScriptTE.Values1Click(Sender: TObject);
 begin
   SetTextColor('TEValueColor');
@@ -857,12 +980,62 @@ begin
   fmReplace.ShowModal;
 end;
 
+procedure TfmScriptTE.Resetsettings1Click(Sender: TObject);
+var
+  choice: integer;
+  Reg: TRegistry;
+begin
+    choice := MessageDlg('Search and replace settings will be reset back to their defaults, continue?',
+      mtConfirmation, [mbYes, mbNo], 0);
+
+    if choice = mrYes then
+    begin
+      Wholewords1.Checked := false;
+      Matchcase1.Checked := false;
+      SetSearchEngine(0);
+      Selectiononly1.Checked := false;
+
+      Reg := TRegistry.Create;
+      try
+      Reg.RootKey := HKEY_CURRENT_USER;
+      if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+      begin
+          Reg.WriteBool('SearchWholeWords',false);
+          Reg.WriteBool('SearchMatchCase',false);
+          Reg.WriteInteger('SearchEngine',0);
+          Reg.WriteBool('ReplaceSelectionOnly',false);
+          Reg.CloseKey;
+      end;
+      finally
+        Reg.Free;
+      end;
+    end;
+end;
+
 procedure TfmScriptTE.Savetofile1Click(Sender: TObject);
 begin
   if savedialog1.Execute then
   begin
     Textedit.SaveToFile(savedialog1.FileName);
     isedited:=true;
+  end;
+end;
+
+procedure TfmScriptTE.Selectiononly1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  Selectiononly1.Checked := not Selectiononly1.Checked;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+  begin
+    Reg.WriteBool('ReplaceSelectionOnly', Selectiononly1.Checked);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
   end;
 end;
 
@@ -918,6 +1091,24 @@ begin
       // Reset to last caret position
       TextEdit.CaretIndex := lastcaret;
     end;
+end;
+
+procedure TfmScriptTE.AddArgs1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  AddArgs1.Checked := not AddArgs1.Checked;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+  begin
+    Reg.WriteBool('AddArgs', AddArgs1.Checked);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
 end;
 
 procedure TfmScriptTE.AddEditData(Sender: TObject);
@@ -1277,6 +1468,38 @@ begin
             break;
           if j <> argstrings.count - 1 then
             Lines[i] := Lines[i] + ', ';
+        end;
+
+        // Add register arguments
+        if AddArgs1.Checked then
+        begin
+          g := 0;
+          for j := 0 to length(asmarg) - 1 do
+          begin
+            if GetOpcodeId(opcodestr) = asmarg[j].opcodeid then
+            begin
+              if (asmarg[j].argtype = 'leti') and (Lines[i-1].Contains(GetOpcodeName($9) + ' ')) then break;
+              if (asmarg[j].argtype = 'fleti') and (Lines[i-1].Contains(GetOpcodeName($f904) + ' ')) then break;
+              // Find the register argument
+              for k := 0 to argstrings.count - 1 do
+                if Uppercase(argstrings[k][1]) = 'R' then break;
+              s := copy(argstrings.Strings[k],2,Length(argstrings.Strings[k]) - 1);
+              for k := 0 to asmarg[j].argnum - 1 do
+              begin
+                trystrtoint(s,g);
+                g := g + k;
+                if g <= 255 then
+                begin
+                  if asmarg[j].argtype = 'leti' then
+                    InsertLine(1 + i + k,'        ' + GetOpcodeName($9) + ' R' + inttostr(g) + ', 00000000')
+                  else if asmarg[j].argtype = 'fleti' then
+                    InsertLine(1 + i + k,'        ' + GetOpcodeName($f904)  + ' R' + inttostr(g) + ', 0');
+                end;
+              end;
+              GoToLine(i + 1);
+              break;
+            end;
+          end;
         end;
 
         // Update maps

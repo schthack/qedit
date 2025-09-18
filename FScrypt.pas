@@ -124,6 +124,7 @@ type
   Procedure AddStrRef(l:integer);
   Procedure RemoveRef(s:ansistring);
   Function GetOpcodeName(id:dword):ansistring;
+  function GetOpcodeId(opcodename:ansistring):dword;
   function CompareReg(List: TStringList; Index1, Index2: Integer): Integer;
     function CompareLabel(List: TStringList; Index1, Index2: Integer): Integer;
     function CompareStr(List: TStringList; Index1, Index2: Integer): Integer;
@@ -945,6 +946,14 @@ begin
     for x:=0 to asmcount-1 do
         if AsmCode[x].fnc = id then break;
     result:=AsmCode[x].name;
+end;
+
+Function GetOpcodeId(opcodename:ansistring):dword;
+var x:integer;
+begin
+   for x:=0 to asmcount-1 do
+          if AsmCode[x].name = opcodename then break;
+      result:=AsmCode[x].fnc;
 end;
 
 Function GetReferenceType(x:integer):integer;

@@ -10,12 +10,10 @@ type
   TfmReplace = class(TForm)
     Edit1: TEdit;
     btnOK: TButton;
-    chkMatchCase: TCheckBox;
     btnClose: TButton;
     Edit2: TEdit;
     Label1: TLabel;
     Label2: TLabel;
-    chkSelection: TCheckBox;
     procedure btnOKClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -43,8 +41,8 @@ procedure TfmReplace.btnOKClick(Sender: TObject);
 begin
   with fmScriptTE.TextEdit do
   begin
-    Replace.SetOption(TTextEditorReplaceOption.roCaseSensitive,chkMatchCase.Checked);
-    Replace.SetOption(TTextEditorReplaceOption.roSelectedOnly,chkSelection.Checked);
+    Replace.SetOption(TTextEditorReplaceOption.roCaseSensitive,fmScriptTE.Matchcase1.Checked);
+    Replace.SetOption(TTextEditorReplaceOption.roSelectedOnly,fmScriptTE.Selectiononly1.Checked);
     ReplaceText(Edit1.Text,Edit2.Text,false);
   end;
 

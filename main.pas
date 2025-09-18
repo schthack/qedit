@@ -66,6 +66,12 @@ type
     arg: array [0 .. 9] of word;
   end;
 
+  TAsmArg = Record
+    opcodeid: dword;
+    argtype: ansistring;
+    argnum: integer;
+  end;
+
   TFloorIDData = Record
     count: array [0 .. 3] of integer;
     ids: array [0 .. 3, 0 .. 500] of word;
@@ -491,6 +497,7 @@ var
   mapfile, mapxvmfile: array [0 .. 40] of ansistring;
   lmpx, lmpy, mpx, mpy, mdown, mdrag, asmcount: integer;
   asmcode: array [0 .. 1000] of TAsmFnc;
+  asmarg: array [0 .. 1000] of TAsmArg;
   AsmRef: array [0 .. 100000] of dword;
   AsmData: Array [0 .. 4000000] of byte;
   isdc: Boolean;
@@ -563,8 +570,12 @@ var
   fullscreen: Boolean = false;
   showdata: Boolean = false;
   showdecimal: Boolean = false;
+  addargs: Boolean = true;
   hidenops: Boolean = true;
   searchwholewords: Boolean = false;
+  searchmatchcase: Boolean = false;
+  searchengine: integer = 0;
+  replaceselectiononly: Boolean = false;
   OffsetX: single = 0.0;
   OffsetY: single = 0.0;
   OffsetZ: single = 0.0;
@@ -4055,7 +4066,7 @@ var
   f: textfile;
   s, b: ansistring;
   x, y, z, ma, l, i, mylang: integer;
-  m, fl: tstringlist;
+  m, fl, arglist: tstringlist;
   fx: textfile;
   Reg: TRegistry;
   flp: TMemoryStream;
@@ -4300,6 +4311,33 @@ begin
       flp.Position := 0;
       flp.read(FogEntry[0], flp.size);
     end;
+
+    if fileexists('asmargs.txt') then
+      fl.LoadFromFile('asmargs.txt')
+    else
+    begin
+      flp.Clear;
+      PikaGetFile(flp, 'asmargs.txt', path + 'config.ppk', 'Build By Schthack');
+      fl.LoadFromStream(flp);
+    end;
+
+    // Load asm argument list
+    x := 0;
+    arglist := TStringList.Create;
+    while x < fl.count do
+    begin
+        arglist.StrictDelimiter := True;
+        arglist.Delimiter := ' ';
+        arglist.DelimitedText := fl.Strings[x];
+        if arglist.count > 2 then
+        begin
+          trystrtoint('$' + arglist[0],integer(asmarg[x].opcodeid));
+          asmarg[x].argtype := arglist[1];
+          trystrtoint('$' + arglist[2],asmarg[x].argnum);
+        end;
+        inc(x);
+    end;
+    arglist.Free;
 
     if fileexists('asm.txt') then
       fl.LoadFromFile('asm.txt')
@@ -4573,10 +4611,18 @@ begin
           showdata := Reg.ReadBool('ShowData');
         if Reg.ValueExists('ShowDecimal') then
           ShowDecimal := Reg.ReadBool('ShowDecimal');
+       if Reg.ValueExists('AddArgs') then
+          addargs := Reg.ReadBool('AddArgs');
         if Reg.ValueExists('HideNOPs') then
           hidenops := Reg.ReadBool('HideNOPs');
         if Reg.ValueExists('SearchWholeWords') then
           searchwholewords := Reg.ReadBool('SearchWholeWords');
+        if Reg.ValueExists('SearchMatchCase') then
+          searchmatchcase := Reg.ReadBool('SearchMatchCase');
+        if Reg.ValueExists('SearchEngine') then
+          searchengine := Reg.ReadInteger('SearchEngine');
+        if Reg.ValueExists('ReplaceSelectionOnly') then
+          replaceselectiononly := Reg.ReadBool('ReplaceSelectionOnly');
         Reg.CloseKey;
       end;
       Reg.Free;
@@ -4735,6 +4781,7 @@ begin
       fmScriptTE.Decimal1.Checked := false;
     end;
 
+    fmScriptTE.AddArgs1.Checked := addargs;
     form4.HideNOPs1.Checked := hidenops;
     fmScriptTE.HideNOPs1.Checked := hidenops;
 
@@ -4749,6 +4796,9 @@ begin
 
     SetTextZoom(texteditzoom);
     fmScriptTE.Wholewords1.Checked := searchwholewords;
+    fmScriptTE.Matchcase1.Checked := searchmatchcase;
+    SetSearchEngine(searchengine);
+    fmScriptTE.Selectiononly1.Checked := replaceselectiononly;
 
     flp.Position := 0;
     LanguageString.LoadFromStream(flp);
