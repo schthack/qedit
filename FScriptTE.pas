@@ -1471,7 +1471,7 @@ begin
         end;
 
         // Add register arguments
-        if AddArgs1.Checked then
+        if (AddArgs1.Checked) and (argstrings.count > 0) then
         begin
           g := 0;
           for j := 0 to length(asmarg) - 1 do
