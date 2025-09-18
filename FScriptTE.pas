@@ -1471,7 +1471,9 @@ begin
         end;
 
         // Add register arguments
-        if (AddArgs1.Checked) and (argstrings.count > 0) then
+        if (AddArgs1.Checked) and (argstrings.count > 0)
+        and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
+        and (opcodestr <> 'Unknow_Opcode') then
         begin
           g := 0;
           for j := 0 to length(asmarg) - 1 do
@@ -1496,7 +1498,7 @@ begin
                     InsertLine(1 + i + k,'        ' + GetOpcodeName($f904)  + ' R' + inttostr(g) + ', 0');
                 end;
               end;
-              GoToLine(i + 1);
+              GoToLineAndSetPosition(i, length(Lines[i]) + 1);
               break;
             end;
           end;
