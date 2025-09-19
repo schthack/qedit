@@ -3,7 +3,7 @@ object fmReplace: TfmReplace
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Replace Text'
-  ClientHeight = 162
+  ClientHeight = 149
   ClientWidth = 219
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -37,7 +37,7 @@ object fmReplace: TfmReplace
   end
   object btnOK: TButton
     Left = 28
-    Top = 120
+    Top = 112
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -47,7 +47,7 @@ object fmReplace: TfmReplace
   end
   object btnClose: TButton
     Left = 116
-    Top = 120
+    Top = 112
     Width = 75
     Height = 25
     Cancel = True
