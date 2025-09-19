@@ -19,6 +19,9 @@ type
     CheckBox2: TCheckBox;
     chkFullscreen: TCheckBox;
     procedure Button1Click(Sender: TObject);
+    procedure chkFullscreenClick(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -27,6 +30,7 @@ type
 
 var
   Form17: TForm17;
+  screenchanged: Boolean = false;
 
 implementation
 
@@ -72,6 +76,26 @@ begin
   end;
 
   close;
+  if (myscreen <> nil) and screenchanged then
+  begin
+    MessageDlg('Settings saved. Screen size and window settings will take effect the next time Qedit is launched.',
+     mtInformation, [mbOk], 0);
+  end;
+end;
+
+procedure TForm17.chkFullscreenClick(Sender: TObject);
+begin
+  screenchanged := true;
+end;
+
+procedure TForm17.ComboBox1Change(Sender: TObject);
+begin
+  screenchanged := true;
+end;
+
+procedure TForm17.FormShow(Sender: TObject);
+begin
+  screenchanged := false;
 end;
 
 end.

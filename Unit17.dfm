@@ -12,6 +12,7 @@ object Form17: TForm17
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   Position = poMainFormCenter
+  OnShow = FormShow
   TextHeight = 13
   object Label1: TLabel
     Left = 16
@@ -42,6 +43,7 @@ object Form17: TForm17
     ItemIndex = 0
     TabOrder = 0
     Text = '320x240'
+    OnChange = ComboBox1Change
     Items.Strings = (
       '320x240'
       '640x480'
@@ -113,5 +115,6 @@ object Form17: TForm17
     Height = 17
     Caption = 'Fullscreen'
     TabOrder = 5
+    OnClick = chkFullscreenClick
   end
 end
