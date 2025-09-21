@@ -6181,30 +6181,36 @@ begin
     begin
       if MoveType = 1 then
       begin
-        inc(Floor[sfloor].MonsterCount);
-        if have3d then
+        if not firstdrop then
         begin
-          setlength(MyMonst, Floor[sfloor].MonsterCount);
-          MyMonstCount := Floor[sfloor].MonsterCount;
-          MyMonst[Floor[sfloor].MonsterCount - 1] := t3ditem.Create(myscreen);
+          inc(Floor[sfloor].MonsterCount);
+          if have3d then
+          begin
+            setlength(MyMonst, Floor[sfloor].MonsterCount);
+            MyMonstCount := Floor[sfloor].MonsterCount;
+            MyMonst[Floor[sfloor].MonsterCount - 1] := t3ditem.Create(myscreen);
+          end;
+          for x := 0 to sizeof(TMonster) - 1 do
+            pansichar(@Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1])[x] :=
+              pansichar(@Floor[sfloor].Monster[MoveSel])[x];
         end;
-        for x := 0 to sizeof(TMonster) - 1 do
-          pansichar(@Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1])[x] :=
-            pansichar(@Floor[sfloor].Monster[MoveSel])[x];
         ShowIndicator();
         MoveSel := Floor[sfloor].MonsterCount - 1;
       end;
       if MoveType = 2 then
       begin
-        inc(Floor[sfloor].ObjCount);
-        if have3d then
+        if not firstdrop then
         begin
-          setlength(MyObj, Floor[sfloor].ObjCount);
-          MyObjCount := Floor[sfloor].ObjCount;
-          MyObj[Floor[sfloor].ObjCount - 1] := nil;
+          inc(Floor[sfloor].ObjCount);
+          if have3d then
+          begin
+            setlength(MyObj, Floor[sfloor].ObjCount);
+            MyObjCount := Floor[sfloor].ObjCount;
+            MyObj[Floor[sfloor].ObjCount - 1] := nil;
+          end;
+          for x := 0 to sizeof(TObj) - 1 do
+            pansichar(@Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1])[x] := pansichar(@Floor[sfloor].Obj[MoveSel])[x];
         end;
-        for x := 0 to sizeof(TObj) - 1 do
-          pansichar(@Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1])[x] := pansichar(@Floor[sfloor].Obj[MoveSel])[x];
         ShowIndicator();
         MoveSel := Floor[sfloor].ObjCount - 1;
       end;
@@ -6494,7 +6500,6 @@ begin
     end;
     HideIndicator();
     MoveSel := -1;
-    firstdrop := false;
     if ctrldw then
     begin
       // Form1.CheckListBox1Click(form1);
@@ -6502,20 +6507,23 @@ begin
       begin
         ShowIndicator();
         MoveSel := Floor[sfloor].MonsterCount - 1;
-        ListBox1.Items.Add('#' + inttostr(MoveSel) + ' - ' + GenerateMonsterName(Floor[sfloor].Monster[MoveSel],
-          MoveSel, 0));
+        if not firstdrop then
+          ListBox1.Items.Add('#' + inttostr(MoveSel) + ' - ' + GenerateMonsterName(Floor[sfloor].Monster[MoveSel],
+            MoveSel, 0));
         Selected := MoveSel;
       end;
       if MoveType = 2 then
       begin
         ShowIndicator();
         MoveSel := Floor[sfloor].ObjCount - 1;
-        ListBox2.Items.Add('#' + inttostr(MoveSel) + ' - ' + GetObjName(Floor[sfloor].Obj[MoveSel].Skin));
+        if not firstdrop then
+          ListBox2.Items.Add('#' + inttostr(MoveSel) + ' - ' + GetObjName(Floor[sfloor].Obj[MoveSel].Skin));
         Selected := MoveSel;
 
       end;
       DrawMap;
     end;
+    firstdrop := false;
     DrawMap;
   end
   else

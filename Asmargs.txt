@@ -1,7 +1,7 @@
-66 leti 6 // npc crp v3
-6d leti 5 // p_move v3
-7b leti 7 // npc crppk v3
-7d leti 6 // npc crptalk v3
+66 leti 6 // npc crp
+6d leti 5 // p_move
+7b leti 7 // npc crppk
+7d leti 6 // npc crptalk
 8a leti 3 // unhide_obj
 8b leti 4 // unhide_ene
 8c leti 5 // at_coords_call
@@ -10,26 +10,26 @@
 8f leti 6 // party_coords_call
 94 leti 6 // set_obj_param
 97 leti 9 // npc_check_straggle
-a8 leti 5 // pl_walk_v3
+a8 leti 5 // pl_walk
 b3 leti 3 // item_create
 b4 leti 12 // item_create2
 b5 leti 3 // item_delete
 b6 leti 3 // item_delete2
 b7 leti 3 // item_check
-c0 leti 5 // particle_v3
-cd leti 4 // particle_id_v3
-ce leti 7 // npc_crptalk_id_v3
+c0 leti 5 // particle
+cd leti 4 // particle_id
+ce leti 7 // npc_crptalk_id
 d1 leti 4 // pl_chk_item2
-d4 leti 14 // npc_param_v3
-e2 leti 6 // pcam_param_v3
-f1 leti 6 // leti_fixed_camera_v3
+d4 leti 14 // npc_param
+e2 leti 6 // pcam_param
+f1 leti 6 // leti_fixed_camera
 f801 leti 5 // set_chat_callback
 f80d leti 5 // mag_designate_ex
 f825 leti 3 // exp_multiplication
 f828 leti 1 // go_floor
 f82d leti 1 // if_switch_not_pressed
 f82e leti 2 // if_switch_pressed
-f85a leti 4 // equip_item_v3
+f85a leti 4 // equip_item
 f883 leti 2 // players_in_range
 f8a6 leti 10 // symbol_chat_create
 f8a7 leti 4 // set_shrink_size
