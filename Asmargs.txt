@@ -1,7 +1,13 @@
 66 leti 6 // npc crp
 6d leti 5 // p_move
+76 leti 4 // p_setpos
+79 leti 8 // npc_talk_pl
 7b leti 7 // npc crppk
 7d leti 6 // npc crptalk
+7f leti 7 // npc_crppk
+84 leti 5 // cam_pan
+87 leti 4 // pos_pipe
+88 leti 2 // if_zone_clear
 8a leti 3 // unhide_obj
 8b leti 4 // unhide_ene
 8c leti 5 // at_coords_call

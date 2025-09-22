@@ -1480,16 +1480,16 @@ begin
           begin
             if GetOpcodeId(opcodestr) = asmarg[j].opcodeid then
             begin
-              if (asmarg[j].argtype = 'leti') and (Lines[i-1].Contains(GetOpcodeName($9) + ' ')) then break;
-              if (asmarg[j].argtype = 'fleti') and (Lines[i-1].Contains(GetOpcodeName($f904) + ' ')) then break;
-              // Find the register argument
+              if (asmarg[j].argtype = 'leti') and (Lines[i-1].Contains('  ' + GetOpcodeName($9) + ' ')) then break;
+              if (asmarg[j].argtype = 'fleti') and (Lines[i-1].Contains('  ' + GetOpcodeName($f904) + ' ')) then break;
+              // Find the last register argument
               for k := 0 to argstrings.count - 1 do
-                if Uppercase(argstrings[k][1]) = 'R' then break;
-              s := copy(argstrings.Strings[k],2,Length(argstrings.Strings[k]) - 1);
+                if Uppercase(argstrings[k][1]) = 'R' then g:=k;
+              s := copy(argstrings.Strings[g],2,Length(argstrings.Strings[g]) - 1);
+              g := 0;
+              trystrtoint(s,g);
               for k := 0 to asmarg[j].argnum - 1 do
               begin
-                trystrtoint(s,g);
-                g := g + k;
                 if g <= 255 then
                 begin
                   if asmarg[j].argtype = 'leti' then
@@ -1497,6 +1497,7 @@ begin
                   else if asmarg[j].argtype = 'fleti' then
                     InsertLine(1 + i + k,'        ' + GetOpcodeName($f904)  + ' R' + inttostr(g) + ', 0');
                 end;
+                inc(g);
               end;
               GoToLineAndSetPosition(i, length(Lines[i]) + 1);
               break;
@@ -1509,20 +1510,24 @@ begin
            if (lowercase(opcodestr) = lowercase(GetOpcodeName($c4))) or
            (lowercase(opcodestr) = lowercase(GetOpcodeName($f80d))) or
            (lowercase(opcodestr) = lowercase(GetOpcodeName($9))) then
-           begin
-            form4.ListBox1.Clear;
-            for i := 0 to TextEdit.Lines.Count - 1 do
-              form4.ListBox1.Items.Add(TextEdit.Lines[i]);
             ScanForMap;
-           end;
            if (lowercase(opcodestr) = lowercase(GetOpcodeName($f951)))
            and (argstrings.Count = 4) then begin
            //bb map
            s:=Lines[i];
            delete(s,1,9+length(GetOpcodeName($f951)));
-           x3:=hextoint(copy(s,1,2));
-           g:=hextoint(copy(s,5,4));
-           y3:=hextoint(copy(s,11,2));
+           if not showdecimal then
+           begin
+             x3:=hextoint(copy(s,1,2));
+             g:=hextoint(copy(s,5,4));
+             y3:=hextoint(copy(s,11,2));
+           end
+           else
+           begin
+             x3:=strtoint(copy(s,1,2));
+             g:=strtoint(copy(s,5,4));
+             y3:=strtoint(copy(s,11,2));
+           end;
            if x < 30 then begin
            mapxvmfile[x3]:=path+'map\xvm\'+mapxvmname[mapid[g]+y3];
            mapfile[x3]:=path+'map\'+mapfilename[mapid[g]+y3];

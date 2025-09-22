@@ -8666,8 +8666,8 @@ begin
       if hextoint(s) = x then
       begin
         pos := c;
-        b := copy(form4.ListBox1.Items.Strings[c], 1, 8) + mapbb + ' ' + inttohex(x, 2) + ', ' +
-          inttohex(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + inttohex(TMenuItem(Sender).tag, 2) + ', 00';
+        b := copy(form4.ListBox1.Items.Strings[c], 1, 8) + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
+          GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00';
         form4.ListBox1.Items.Strings[c] := b;
         okfnd := 1;
         break;
@@ -8679,7 +8679,7 @@ begin
       pos := c;
       s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mapgc), 3); // the reg
       regused := strtoint(s);
-      strtofind := leti + ' R' + inttostr(regused) + ', ' + inttohex(x, 8);
+      strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
       regcount := 4;
     end;
     if copy(form4.ListBox1.Items.Strings[c], 9, length(mappc)) = mappc then
@@ -8688,7 +8688,7 @@ begin
       s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mappc), 3); // the reg
       pos := c;
       regused := strtoint(s);
-      strtofind := leti + ' R' + inttostr(regused) + ', ' + inttohex(x, 8);
+      strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
       regcount := 3;
     end;
     if strtofind <> '' then
@@ -8714,18 +8714,18 @@ begin
             inc(k); // didnt match
         end;
         // here insert all at the pos
-        b := b + leti + ' R' + inttostr(regused) + ', ' + inttohex(x, 8);
+        b := b + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
         form4.ListBox1.Items.insert(pos, b);
         y := 0;
         if regcount = 4 then
         begin
           form4.ListBox1.Items.insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
-            inttohex(Floor[CheckListBox1.ItemIndex].floorid, 8));
+            GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 8));
           y := 1;
         end;
         form4.ListBox1.Items.insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
         form4.ListBox1.Items.insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
-          inttohex(TMenuItem(Sender).tag, 8));
+          GetDisplayValue(TMenuItem(Sender).tag, 8));
         form4.ListBox1.Items.insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
         okfnd := 1;
         break;
@@ -8749,8 +8749,8 @@ begin
     // dec(c);
     if modetouse = 2 then
     begin
-      form4.ListBox1.Items.insert(c, '0:      ' + mapbb + ' ' + inttohex(x, 2) + ', ' +
-        inttohex(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + inttohex(TMenuItem(Sender).tag, 2) + ', 00');
+      form4.ListBox1.Items.insert(c, '0:      ' + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
+        GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00');
     end
     else
     begin
@@ -8767,18 +8767,18 @@ begin
         regused := 60;
         regcount := 4;
       end;
-      b := '0:      ' + leti + ' R' + inttostr(regused) + ', ' + inttohex(x, 8);
+      b := '0:      ' + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
       form4.ListBox1.Items.insert(pos, b);
       y := 0;
       if regcount = 4 then
       begin
         form4.ListBox1.Items.insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
-          inttohex(Floor[CheckListBox1.ItemIndex].floorid, 8));
+          GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 8));
         y := 1;
       end;
       form4.ListBox1.Items.insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
       form4.ListBox1.Items.insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
-        inttohex(TMenuItem(Sender).tag, 8));
+        GetDisplayValue(TMenuItem(Sender).tag, 8));
       form4.ListBox1.Items.insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
       if modetouse = 0 then
         form4.ListBox1.Items.insert(pos + y + 4, '        ' + mappc + 'R60')

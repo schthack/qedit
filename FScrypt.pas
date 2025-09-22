@@ -544,40 +544,78 @@ begin
     mappc:=GetOpcodeName($c4)+' ';
     mapgc:=GetOpcodeName($f80d)+' ';
     //mapbb:=GetOpcodeName($f951);
-    for x:=0 to form4.ListBox1.Items.Count-1 do begin
-        if copy(form4.ListBox1.Items.Strings[x],9,6) = 'leti R' then begin
-            s:=copy(form4.ListBox1.Items.Strings[x],15,15);
-            i:=pos(',',s);
-            y:=strtoint(copy(s,1,i-1));
-            delete(s,1,i+1);
-            tmpreg[y]:=hextoint(s);
-        end;
-        if copy(form4.ListBox1.Items.Strings[x],9,length(mapgc)) = mapgc then begin
-            s:=copy(form4.ListBox1.Items.Strings[x],10+length(mapgc),3);  //the reg
-            i:=strtoint(s);
-            if (tmpreg[i] < 30) and (tmpreg[i+1] < 46) then
-            if mapid[tmpreg[i+1]]+tmpreg[i+3] < 123 then begin
-            mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
-            mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
-            floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
-            Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
-            end;
-        end;
-        if copy(form4.ListBox1.Items.Strings[x],9,length(mappc)) = mappc then begin
-            s:=copy(form4.ListBox1.Items.Strings[x],10+length(mappc),3);  //the reg
-            i:=strtoint(s);
-            if (tmpreg[i] < 30) then
-            if mapid[tmpreg[i]]+tmpreg[i+2] < 123 then begin
-            mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i]]+tmpreg[i+2] ];
-            mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i]]+tmpreg[i+2] ];
-            floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i]]+tmpreg[i+2] ];
-            Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i]]+tmpreg[i+2] ];
-            end;
-        end;
-
-
+    if form4.Visible then
+    begin
+      for x:=0 to form4.ListBox1.Items.Count-1 do begin
+          if copy(form4.ListBox1.Items.Strings[x],9,6) = 'leti R' then begin
+              s:=copy(form4.ListBox1.Items.Strings[x],15,15);
+              i:=pos(',',s);
+              y:=strtoint(copy(s,1,i-1));
+              delete(s,1,i+1);
+              if not showdecimal then
+                tmpreg[y]:=hextoint(s)
+              else tmpreg[y] := strtoint(s);
+          end;
+          if copy(form4.ListBox1.Items.Strings[x],9,length(mapgc)) = mapgc then begin
+              s:=copy(form4.ListBox1.Items.Strings[x],10+length(mapgc),3);  //the reg
+              i:=strtoint(s);
+              if (tmpreg[i] < 30) and (tmpreg[i+1] < 46) then
+              if mapid[tmpreg[i+1]]+tmpreg[i+3] < 123 then begin
+              mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              end;
+          end;
+          if copy(form4.ListBox1.Items.Strings[x],9,length(mappc)) = mappc then begin
+              s:=copy(form4.ListBox1.Items.Strings[x],10+length(mappc),3);  //the reg
+              i:=strtoint(s);
+              if (tmpreg[i] < 30) then
+              if mapid[tmpreg[i]]+tmpreg[i+2] < 123 then begin
+              mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              end;
+          end;
+      end;
+    end
+    else if fmScriptTE.Visible then
+    begin
+      for x:=0 to fmScriptTE.TextEdit.Lines.Count-1 do begin
+          if copy(fmScriptTE.TextEdit.Lines[x],9,6) = 'leti R' then begin
+              s:=copy(fmScriptTE.TextEdit.Lines[x],15,15);
+              i:=pos(',',s);
+              y:=strtoint(copy(s,1,i-1));
+              delete(s,1,i+1);
+              if not showdecimal then
+                tmpreg[y]:=hextoint(s)
+              else tmpreg[y] := strtoint(s);
+          end;
+          if copy(fmScriptTE.TextEdit.Lines[x],9,length(mapgc)) = mapgc then begin
+              s:=copy(fmScriptTE.TextEdit.Lines[x],10+length(mapgc),3);  //the reg
+              i:=strtoint(s);
+              if (tmpreg[i] < 30) and (tmpreg[i+1] < 46) then
+              if mapid[tmpreg[i+1]]+tmpreg[i+3] < 123 then begin
+              mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              end;
+          end;
+          if copy(fmScriptTE.TextEdit.Lines[x],9,length(mappc)) = mappc then begin
+              s:=copy(fmScriptTE.TextEdit.Lines[x],10+length(mappc),3);  //the reg
+              i:=strtoint(s);
+              if (tmpreg[i] < 30) then
+              if mapid[tmpreg[i]]+tmpreg[i+2] < 123 then begin
+              mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              end;
+          end;
+      end;
     end;
-
 end;
 
 procedure TForm4.Button3Click(Sender: TObject);

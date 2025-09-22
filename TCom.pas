@@ -572,9 +572,18 @@ begin
          //bb map
          s:=Form4.ListBox1.Items.Strings[y];
          delete(s,1,9+length(GetOpcodeName($f951)));
-         x:=hextoint(copy(s,1,2));
-         g:=hextoint(copy(s,5,4));
-         y:=hextoint(copy(s,11,2));
+         if not showdecimal then
+         begin
+           x:=hextoint(copy(s,1,2));
+           g:=hextoint(copy(s,5,4));
+           y:=hextoint(copy(s,11,2));
+         end
+         else
+         begin
+           x:=strtoint(copy(s,1,2));
+           g:=strtoint(copy(s,5,4));
+           y:=strtoint(copy(s,11,2));
+         end;
          if x < 30 then begin
          mapxvmfile[x]:=path+'map\xvm\'+mapxvmname[mapid[g]+y];
          mapfile[x]:=path+'map\'+mapfilename[mapid[g]+y];
