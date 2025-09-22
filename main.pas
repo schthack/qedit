@@ -570,7 +570,7 @@ var
   fullscreen: Boolean = false;
   showdata: Boolean = false;
   showdecimal: Boolean = false;
-  addargs: Boolean = true;
+  addargs: Boolean = false;
   hidenops: Boolean = true;
   searchwholewords: Boolean = false;
   searchmatchcase: Boolean = false;
