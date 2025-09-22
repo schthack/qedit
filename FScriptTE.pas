@@ -1275,7 +1275,7 @@ begin
             y:=hextoint(s)
            else
             trystrtoint(s,y);
-           if y = -1 then
+           if (y = -1) and not showdecimal then
                 y := 0;
            if y>$FFFFFFff then
                 y := $FFFFFFFF;
@@ -1300,7 +1300,7 @@ begin
               y:=hextoint(s)
              else
               trystrtoint(s,y);
-             if y = -1 then
+             if (y = -1) and not showdecimal then
                   y := 0;
              if y>255 then
                   y := 255;
@@ -1311,7 +1311,7 @@ begin
               y:=hextoint(s)
              else
               trystrtoint(s,y);
-             if y = -1 then
+             if (y = -1) and not showdecimal then
                   y := 0;
              if y>65535 then
                   y := 65535;
@@ -1322,7 +1322,7 @@ begin
               y:=hextoint(s)
              else
               trystrtoint(s,y);
-             if y = -1 then
+             if (y = -1) and not showdecimal then
                   y := 0;
              if y>65535 then
                   y := 65535;
@@ -1427,7 +1427,7 @@ begin
                   trystrtofloat(s,f);
                   move(f,y,4);
              end;
-             if y = -1 then begin
+             if (y = -1) and not showdecimal then begin
                   y := 0;
              end;
              if y>$FFFFFFff then
