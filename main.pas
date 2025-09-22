@@ -8657,64 +8657,121 @@ begin
   if Floor[CheckListBox1.ItemIndex].floorid > $23 then
     modetouse := 2;
   strtofind := '';
-  for c := i downto 0 do
+  if not fmScriptTE.Visible then
   begin
-    if copy(form4.ListBox1.Items.Strings[c], 9, length(mapbb)) = mapbb then
+    for c := i downto 0 do
     begin
-      modetouse := 2;
-      s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mapbb), 2);
-      if hextoint(s) = x then
+      if copy(form4.ListBox1.Items.Strings[c], 9, length(mapbb)) = mapbb then
       begin
+        modetouse := 2;
+        s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mapbb), 2);
+        if showdecimal then
+          s := inttohex(x);
+        if hextoint(s) = x then
+        begin
+          pos := c;
+          b := copy(form4.ListBox1.Items.Strings[c], 1, 8) + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
+            GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00';
+          form4.ListBox1.Items.Strings[c] := b;
+          okfnd := 1;
+          break;
+        end;
+      end;
+      if copy(form4.ListBox1.Items.Strings[c], 9, length(mapgc)) = mapgc then
+      begin
+        modetouse := 1;
         pos := c;
-        b := copy(form4.ListBox1.Items.Strings[c], 1, 8) + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
-          GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00';
-        form4.ListBox1.Items.Strings[c] := b;
-        okfnd := 1;
-        break;
+        s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mapgc), 3); // the reg
+        regused := strtoint(s);
+        strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+        regcount := 4;
+      end;
+      if copy(form4.ListBox1.Items.Strings[c], 9, length(mappc)) = mappc then
+      begin
+        modetouse := 0;
+        s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mappc), 3); // the reg
+        pos := c;
+        regused := strtoint(s);
+        strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+        regcount := 3;
+      end;
+      if strtofind <> '' then
+      begin
+        if strtofind = copy(form4.ListBox1.Items.Strings[c], 9, length(form4.ListBox1.Items.Strings[c]) - 8) then
+        begin
+          k := c;
+          b := copy(form4.ListBox1.Items.Strings[c], 1, 8);
+          while k < pos do
+          begin // delete all reg
+            // scan for any matching reg
+            for y := regused to regused + regcount do
+            begin
+              s := leti + ' R' + inttostr(y) + ', ';
+              if copy(form4.ListBox1.Items.Strings[k], 9, length(s)) = s then
+              begin
+                form4.ListBox1.Items.delete(k);
+                dec(pos);
+                break;
+              end;
+            end;
+            if y > regused + regcount then
+              inc(k); // didnt match
+          end;
+          // here insert all at the pos
+          b := b + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+          form4.ListBox1.Items.insert(pos, b);
+          y := 0;
+          if regcount = 4 then
+          begin
+            form4.ListBox1.Items.insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
+              GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 8));
+            y := 1;
+          end;
+          form4.ListBox1.Items.insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
+          form4.ListBox1.Items.insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
+            GetDisplayValue(TMenuItem(Sender).tag, 8));
+          form4.ListBox1.Items.insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
+          okfnd := 1;
+          break;
+        end;
       end;
     end;
-    if copy(form4.ListBox1.Items.Strings[c], 9, length(mapgc)) = mapgc then
+
+    // if not found add it
+    if okfnd = 0 then
     begin
-      modetouse := 1;
-      pos := c;
-      s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mapgc), 3); // the reg
-      regused := strtoint(s);
-      strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
-      regcount := 4;
-    end;
-    if copy(form4.ListBox1.Items.Strings[c], 9, length(mappc)) = mappc then
-    begin
-      modetouse := 0;
-      s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mappc), 3); // the reg
-      pos := c;
-      regused := strtoint(s);
-      strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
-      regcount := 3;
-    end;
-    if strtofind <> '' then
-    begin
-      if strtofind = copy(form4.ListBox1.Items.Strings[c], 9, length(form4.ListBox1.Items.Strings[c]) - 8) then
-      begin
-        k := c;
-        b := copy(form4.ListBox1.Items.Strings[c], 1, 8);
-        while k < pos do
-        begin // delete all reg
-          // scan for any matching reg
-          for y := regused to regused + regcount do
-          begin
-            s := leti + ' R' + inttostr(y) + ', ';
-            if copy(form4.ListBox1.Items.Strings[k], 9, length(s)) = s then
-            begin
-              form4.ListBox1.Items.delete(k);
-              dec(pos);
-              break;
-            end;
-          end;
-          if y > regused + regcount then
-            inc(k); // didnt match
+      // find the label 0
+      for c := i downto 0 do
+        if copy(form4.ListBox1.Items.Strings[c], 1, 8) = '0:      ' then
+          break;
+      if c > -1 then
+        if copy(form4.ListBox1.Items.Strings[c], 1, 8) = '0:      ' then
+        begin
+          form4.ListBox1.Items.Strings[c] := '  ' + copy(form4.ListBox1.Items.Strings[c], 3,
+            length(form4.ListBox1.Items.Strings[c]) - 2);
         end;
-        // here insert all at the pos
-        b := b + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+      // dec(c);
+      if modetouse = 2 then
+      begin
+        form4.ListBox1.Items.insert(c, '0:      ' + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
+          GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00');
+      end
+      else
+      begin
+        pos := c;
+        if pos < 0 then
+          pos := 0;
+        if modetouse = 0 then
+        begin
+          regused := 60;
+          regcount := 3;
+        end
+        else
+        begin
+          regused := 60;
+          regcount := 4;
+        end;
+        b := '0:      ' + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
         form4.ListBox1.Items.insert(pos, b);
         y := 0;
         if regcount = 4 then
@@ -8727,66 +8784,149 @@ begin
         form4.ListBox1.Items.insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
           GetDisplayValue(TMenuItem(Sender).tag, 8));
         form4.ListBox1.Items.insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
-        okfnd := 1;
-        break;
+        if modetouse = 0 then
+          form4.ListBox1.Items.insert(pos + y + 4, '        ' + mappc + 'R60')
+        else
+          form4.ListBox1.Items.insert(pos + y + 4, '        ' + mapgc + 'R60')
       end;
     end;
-  end;
-
-  // if not found add it
-  if okfnd = 0 then
+  end
+  else
   begin
-    // find the label 0
+    i := fmScriptTE.TextEdit.Lines.Count - 1;
+    TextEdited := true;
     for c := i downto 0 do
-      if copy(form4.ListBox1.Items.Strings[c], 1, 8) = '0:      ' then
-        break;
-    if c > -1 then
-      if copy(form4.ListBox1.Items.Strings[c], 1, 8) = '0:      ' then
+    begin
+      if copy(fmScriptTE.TextEdit.Lines[c], 9, length(mapbb)) = mapbb then
       begin
-        form4.ListBox1.Items.Strings[c] := '  ' + copy(form4.ListBox1.Items.Strings[c], 3,
-          length(form4.ListBox1.Items.Strings[c]) - 2);
+        modetouse := 2;
+        s := copy(fmScriptTE.TextEdit.Lines[c], 10 + length(mapbb), 2);
+        if showdecimal then
+          s := inttohex(x);
+        if hextoint(s) = x then
+        begin
+          pos := c;
+          b := copy(fmScriptTE.TextEdit.Lines[c], 1, 8) + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
+            GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00';
+          fmScriptTE.TextEdit.Lines[c] := b;
+          okfnd := 1;
+          break;
+        end;
       end;
-    // dec(c);
-    if modetouse = 2 then
-    begin
-      form4.ListBox1.Items.insert(c, '0:      ' + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
-        GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00');
-    end
-    else
-    begin
-      pos := c;
-      if pos < 0 then
-        pos := 0;
-      if modetouse = 0 then
+      if copy(fmScriptTE.TextEdit.Lines[c], 9, length(mapgc)) = mapgc then
       begin
-        regused := 60;
+        modetouse := 1;
+        pos := c;
+        s := copy(fmScriptTE.TextEdit.Lines[c], 10 + length(mapgc), 3); // the reg
+        regused := strtoint(s);
+        strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+        regcount := 4;
+      end;
+      if copy(fmScriptTE.TextEdit.Lines[c], 9, length(mappc)) = mappc then
+      begin
+        modetouse := 0;
+        s := copy(fmScriptTE.TextEdit.Lines[c], 10 + length(mappc), 3); // the reg
+        pos := c;
+        regused := strtoint(s);
+        strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
         regcount := 3;
+      end;
+      if strtofind <> '' then
+      begin
+        if strtofind = copy(fmScriptTE.TextEdit.Lines[c], 9, length(fmScriptTE.TextEdit.Lines[c]) - 8) then
+        begin
+          k := c;
+          b := copy(fmScriptTE.TextEdit.Lines[c], 1, 8);
+          while k < pos do
+          begin // delete all reg
+            // scan for any matching reg
+            for y := regused to regused + regcount do
+            begin
+              s := leti + ' R' + inttostr(y) + ', ';
+              if copy(fmScriptTE.TextEdit.Lines[k], 9, length(s)) = s then
+              begin
+                fmScriptTE.TextEdit.Lines.Delete(k);
+                dec(pos);
+                break;
+              end;
+            end;
+            if y > regused + regcount then
+              inc(k); // didnt match
+          end;
+          // here insert all at the pos
+          b := b + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+          fmScriptTE.TextEdit.Lines.Insert(pos, b);
+          y := 0;
+          if regcount = 4 then
+          begin
+            fmScriptTE.TextEdit.Lines.Insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
+              GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 8));
+            y := 1;
+          end;
+          fmScriptTE.TextEdit.Lines.Insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
+          fmScriptTE.TextEdit.Lines.Insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
+            GetDisplayValue(TMenuItem(Sender).tag, 8));
+          fmScriptTE.TextEdit.Lines.Insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
+          okfnd := 1;
+          break;
+        end;
+      end;
+    end;
+
+    // if not found add it
+    if okfnd = 0 then
+    begin
+      // find the label 0
+      for c := i downto 0 do
+        if copy(fmScriptTE.TextEdit.Lines[c], 1, 8) = '0:      ' then
+          break;
+      if c > -1 then
+        if copy(fmScriptTE.TextEdit.Lines[c], 1, 8) = '0:      ' then
+        begin
+          fmScriptTE.TextEdit.Lines[c] := '  ' + copy(fmScriptTE.TextEdit.Lines[c], 3,
+            length(fmScriptTE.TextEdit.Lines[c]) - 2);
+        end;
+      // dec(c);
+      if modetouse = 2 then
+      begin
+        fmScriptTE.TextEdit.Lines.Insert(c, '0:      ' + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
+          GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00');
       end
       else
       begin
-        regused := 60;
-        regcount := 4;
+        pos := c;
+        if pos < 0 then
+          pos := 0;
+        if modetouse = 0 then
+        begin
+          regused := 60;
+          regcount := 3;
+        end
+        else
+        begin
+          regused := 60;
+          regcount := 4;
+        end;
+        b := '0:      ' + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+        fmScriptTE.TextEdit.Lines.Insert(pos, b);
+        y := 0;
+        if regcount = 4 then
+        begin
+          fmScriptTE.TextEdit.Lines.Insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
+            GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 8));
+          y := 1;
+        end;
+        fmScriptTE.TextEdit.Lines.Insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
+        fmScriptTE.TextEdit.Lines.Insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
+          GetDisplayValue(TMenuItem(Sender).tag, 8));
+        fmScriptTE.TextEdit.Lines.Insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
+        if modetouse = 0 then
+          fmScriptTE.TextEdit.Lines.Insert(pos + y + 4, '        ' + mappc + 'R60')
+        else
+          fmScriptTE.TextEdit.Lines.Insert(pos + y + 4, '        ' + mapgc + 'R60')
       end;
-      b := '0:      ' + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
-      form4.ListBox1.Items.insert(pos, b);
-      y := 0;
-      if regcount = 4 then
-      begin
-        form4.ListBox1.Items.insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
-          GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 8));
-        y := 1;
-      end;
-      form4.ListBox1.Items.insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
-      form4.ListBox1.Items.insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
-        GetDisplayValue(TMenuItem(Sender).tag, 8));
-      form4.ListBox1.Items.insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
-      if modetouse = 0 then
-        form4.ListBox1.Items.insert(pos + y + 4, '        ' + mappc + 'R60')
-      else
-        form4.ListBox1.Items.insert(pos + y + 4, '        ' + mapgc + 'R60')
     end;
   end;
-
   mapxvmfile[x] := path + 'map\xvm\' + mapxvmname[mapid[Floor[CheckListBox1.ItemIndex].floorid] +
     TMenuItem(Sender).tag];
   mapfile[x] := path + 'map\' + mapfilename[mapid[Floor[CheckListBox1.ItemIndex].floorid] + TMenuItem(Sender).tag];
