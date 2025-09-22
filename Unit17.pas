@@ -78,7 +78,7 @@ begin
   close;
   if (myscreen <> nil) and screenchanged then
   begin
-    MessageDlg('Settings saved. Screen size and window settings will take effect the next time Qedit is launched.',
+    MessageDlg('Settings saved. Screen size and window settings will take effect the next time QEdit is launched.',
      mtInformation, [mbOk], 0);
   end;
 end;
