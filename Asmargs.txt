@@ -23,6 +23,7 @@ b5 leti 3 // item_delete
 b6 leti 3 // item_delete2
 b7 leti 3 // item_check
 c0 leti 5 // particle
+c4 leti 4 // map_designate
 cd leti 4 // particle_id
 ce leti 7 // npc_crptalk_id
 d1 leti 4 // pl_chk_item2
