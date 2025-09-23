@@ -592,7 +592,7 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   Unit17, Unit18, Unit19, FCompat, MyConst, Unit29, crc32, EnemyStat,
   FEnemyAttack, FEnemyMov, FEnemyResist, FFloatEdit, NPCBuild, Unit22,
   FFFilter, FMonsDet, Unit23, FSymbolChat, FAsmModeSel, FPlacement, FHotkeys,
-  FSnap, FScriptTE;
+  FSnap, FScriptTE, FReplace;
 
 {$R *.dfm}
 
@@ -4798,7 +4798,7 @@ begin
     fmScriptTE.Wholewords1.Checked := searchwholewords;
     fmScriptTE.Matchcase1.Checked := searchmatchcase;
     SetSearchEngine(searchengine);
-    fmScriptTE.Selectiononly1.Checked := replaceselectiononly;
+    fmReplace.Selectiononly1.Checked := replaceselectiononly;
 
     flp.Position := 0;
     LanguageString.LoadFromStream(flp);

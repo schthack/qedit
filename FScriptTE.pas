@@ -100,14 +100,12 @@ type
     AddArgs1: TMenuItem;
     Searchreplacesettings1: TMenuItem;
     Matchcase1: TMenuItem;
-    Selectiononly1: TMenuItem;
     N5: TMenuItem;
     Engine1: TMenuItem;
     Extended1: TMenuItem;
     Normal1: TMenuItem;
     RegularExpression1: TMenuItem;
     Wildcard1: TMenuItem;
-    N6: TMenuItem;
     Resetsettings1: TMenuItem;
     N7: TMenuItem;
     N8: TMenuItem;
@@ -163,7 +161,6 @@ type
     procedure RegularExpression1Click(Sender: TObject);
     procedure Wildcard1Click(Sender: TObject);
     procedure Matchcase1Click(Sender: TObject);
-    procedure Selectiononly1Click(Sender: TObject);
     procedure Resetsettings1Click(Sender: TObject);
 
   private
@@ -993,7 +990,7 @@ begin
       Wholewords1.Checked := false;
       Matchcase1.Checked := false;
       SetSearchEngine(0);
-      Selectiononly1.Checked := false;
+      fmReplace.Selectiononly1.Checked := false;
 
       Reg := TRegistry.Create;
       try
@@ -1018,24 +1015,6 @@ begin
   begin
     Textedit.SaveToFile(savedialog1.FileName);
     isedited:=true;
-  end;
-end;
-
-procedure TfmScriptTE.Selectiononly1Click(Sender: TObject);
-var
-  Reg: TRegistry;
-begin
-  Selectiononly1.Checked := not Selectiononly1.Checked;
-  Reg := TRegistry.Create;
-  try
-    Reg.RootKey := HKEY_CURRENT_USER;
-  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
-  begin
-    Reg.WriteBool('ReplaceSelectionOnly', Selectiononly1.Checked);
-    Reg.CloseKey;
-  end;
-  finally
-    Reg.Free;
   end;
 end;
 

@@ -2,7 +2,7 @@ object fmScriptTE: TfmScriptTE
   Left = 0
   Top = 0
   Caption = 'Script Text Editor'
-  ClientHeight = 545
+  ClientHeight = 573
   ClientWidth = 794
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -19,7 +19,7 @@ object fmScriptTE: TfmScriptTE
     Left = 0
     Top = 0
     Width = 794
-    Height = 505
+    Height = 533
     Align = alClient
     Colors.EditorStringForeground = clBlack
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
@@ -39,10 +39,11 @@ object fmScriptTE: TfmScriptTE
     ShowHint = True
     TabOrder = 0
     Tabs.Options = [toColumns, toSelectedBlockIndent, toTabsToSpaces]
+    ExplicitHeight = 505
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 526
+    Top = 554
     Width = 794
     Height = 19
     Panels = <
@@ -56,16 +57,18 @@ object fmScriptTE: TfmScriptTE
       item
         Width = 100
       end>
+    ExplicitTop = 526
   end
   object Edit2: TEdit
     Left = 0
-    Top = 505
+    Top = 533
     Width = 794
     Height = 21
     Align = alBottom
     TabOrder = 2
     Visible = False
     OnExit = Edit2Exit
+    ExplicitTop = 505
   end
   object btnSearch: TButton
     Left = 655
@@ -153,7 +156,7 @@ object fmScriptTE: TfmScriptTE
       Caption = '-'
     end
     object AddArgs1: TMenuItem
-      Caption = 'Add register arguments automatically'
+      Caption = 'Automatically add register arguments'
       OnClick = AddArgs1Click
     end
     object N3: TMenuItem
@@ -271,13 +274,6 @@ object fmScriptTE: TfmScriptTE
           end
         end
         object N5: TMenuItem
-          Caption = '-'
-        end
-        object Selectiononly1: TMenuItem
-          Caption = 'Replace selected text only'
-          OnClick = Selectiononly1Click
-        end
-        object N6: TMenuItem
           Caption = '-'
         end
         object Resetsettings1: TMenuItem

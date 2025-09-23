@@ -3,7 +3,7 @@ object fmReplace: TfmReplace
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Replace Text'
-  ClientHeight = 149
+  ClientHeight = 175
   ClientWidth = 219
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -37,22 +37,22 @@ object fmReplace: TfmReplace
   end
   object btnOK: TButton
     Left = 28
-    Top = 112
+    Top = 137
     Width = 75
     Height = 25
     Caption = 'Ok'
     Default = True
-    TabOrder = 2
+    TabOrder = 3
     OnClick = btnOKClick
   end
   object btnClose: TButton
     Left = 116
-    Top = 112
+    Top = 137
     Width = 75
     Height = 25
     Cancel = True
     Caption = 'Close'
-    TabOrder = 3
+    TabOrder = 4
     OnClick = btnCloseClick
   end
   object Edit2: TEdit
@@ -61,5 +61,14 @@ object fmReplace: TfmReplace
     Width = 185
     Height = 21
     TabOrder = 1
+  end
+  object Selectiononly1: TCheckBox
+    Left = 16
+    Top = 106
+    Width = 153
+    Height = 17
+    Caption = 'From selection'
+    TabOrder = 2
+    OnClick = Selectiononly1Click
   end
 end
