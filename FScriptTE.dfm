@@ -39,7 +39,6 @@ object fmScriptTE: TfmScriptTE
     ShowHint = True
     TabOrder = 0
     Tabs.Options = [toColumns, toSelectedBlockIndent, toTabsToSpaces]
-    ExplicitHeight = 505
   end
   object StatusBar1: TStatusBar
     Left = 0
@@ -57,7 +56,6 @@ object fmScriptTE: TfmScriptTE
       item
         Width = 100
       end>
-    ExplicitTop = 526
   end
   object Edit2: TEdit
     Left = 0
@@ -68,7 +66,6 @@ object fmScriptTE: TfmScriptTE
     TabOrder = 2
     Visible = False
     OnExit = Edit2Exit
-    ExplicitTop = 505
   end
   object btnSearch: TButton
     Left = 655

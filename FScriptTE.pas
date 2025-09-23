@@ -528,6 +528,7 @@ begin
       SetOption(TTextEditorSearchOption.soCaseSensitive,false);
     SearchText := Edit2.Text;
     Execute;
+    TextEditClick(nil);
   end;
 
   if TextEdit.SelectedText = '' then
