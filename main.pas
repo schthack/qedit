@@ -8636,7 +8636,7 @@ end;
 
 procedure TForm1.Layout11Click(Sender: TObject);
 var
-  x, i, c, pos, k, y, okfnd: integer;
+  x, i, c, pos, k, y, z, okfnd: integer;
   strtofind, mappc, mapgc, mapbb, leti: ansistring;
   regused, modetouse, regcount: byte;
   s: ansistring;
@@ -8666,7 +8666,10 @@ begin
         modetouse := 2;
         s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mapbb), 2);
         if showdecimal then
-          s := inttohex(x);
+        begin
+          z := strtoint(s);
+          s := inttohex(z);
+        end;
         if hextoint(s) = x then
         begin
           pos := c;
@@ -8802,7 +8805,10 @@ begin
         modetouse := 2;
         s := copy(fmScriptTE.TextEdit.Lines[c], 10 + length(mapbb), 2);
         if showdecimal then
-          s := inttohex(x);
+        begin
+          z := strtoint(s);
+          s := inttohex(z);
+        end;
         if hextoint(s) = x then
         begin
           pos := c;

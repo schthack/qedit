@@ -64,7 +64,7 @@ object fmReplace: TfmReplace
   end
   object Selectiononly1: TCheckBox
     Left = 16
-    Top = 106
+    Top = 109
     Width = 153
     Height = 17
     Caption = 'From selection'
