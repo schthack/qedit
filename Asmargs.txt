@@ -53,7 +53,7 @@ f8dd leti 1 // get_pad_cond
 f8de leti 1 // get_button_cond
 f8f3 fleti 3 // particle2
 f901 leti 1 // dec2float
-f902 leti 1 // float2dec
+f902 fleti 1 // float2dec
 f911 leti 4 // get_stackable_item_count
 f94b leti 5 // particle3
 f94c leti 4 // particle3f_id
