@@ -6753,8 +6753,16 @@ begin
     CheckListBox1.Checked[x] := false;
     CheckListBox1.Items.Strings[x] := '';
   end;
-  form4.ListBox1.Items.Clear;
-  form4.ListBox1.Items.Add('0:      ret ');
+  if not fmScriptTE.Visible then
+  begin
+    form4.ListBox1.Items.Clear;
+    form4.ListBox1.Items.Add('0:      ret ')
+  end
+  else
+  begin
+    fmScriptTE.TextEdit.Lines.Clear;
+    fmScriptTE.TextEdit.Lines.Add('0:      ret ');
+  end;
   for x := 0 to 17 do
   begin
     Floor[x].MonsterCount := 0;
@@ -6806,9 +6814,18 @@ begin
     CheckListBox1.Checked[x] := false;
     CheckListBox1.Items.Strings[x] := '';
   end;
-  form4.ListBox1.Items.Clear;
-  form4.ListBox1.Items.Add('0:      ' + getopcodename($F8BC) + ' 00000001');
-  form4.ListBox1.Items.Add('        ret ');
+  if not fmScriptTE.Visible then
+  begin
+    form4.ListBox1.Items.Clear;
+    form4.ListBox1.Items.Add('0:      ' + getopcodename($F8BC) + ' 00000001');
+    form4.ListBox1.Items.Add('        ret ')
+  end
+  else
+  begin
+    fmScriptTE.TextEdit.Lines.Clear;
+    fmScriptTE.TextEdit.Lines.Add('0:      ' + getopcodename($F8BC) + ' 00000001');
+    fmScriptTE.TextEdit.Lines.Add('        ret ');
+  end;
   for x := 0 to 17 do
   begin
     Floor[x].MonsterCount := 0;
@@ -6859,9 +6876,18 @@ begin
     CheckListBox1.Checked[x] := false;
     CheckListBox1.Items.Strings[x] := '';
   end;
-  form4.ListBox1.Items.Clear;
-  form4.ListBox1.Items.Add('0:      ' + getopcodename($F8BC) + ' 00000002');
-  form4.ListBox1.Items.Add('        ret ');
+  if not fmScriptTE.Visible then
+  begin
+    form4.ListBox1.Items.Clear;
+    form4.ListBox1.Items.Add('0:      ' + getopcodename($F8BC) + ' 00000002');
+    form4.ListBox1.Items.Add('        ret ')
+  end
+  else
+  begin
+    fmScriptTE.TextEdit.Lines.Clear;
+    fmScriptTE.TextEdit.Lines.Add('0:      ' + getopcodename($F8BC) + ' 00000002');
+    fmScriptTE.TextEdit.Lines.Add('        ret ');
+  end;
   x := 10;
   Floor[0].MonsterCount := 0;
   Floor[0].ObjCount := 0;
@@ -8895,6 +8921,8 @@ begin
       // dec(c);
       if modetouse = 2 then
       begin
+        if c = -1 then
+          inc(c);
         fmScriptTE.TextEdit.Lines.Insert(c, '0:      ' + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
           GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00');
       end
@@ -9060,6 +9088,8 @@ var
   s, b: widestring;
   f, x, y, re, z, i, c: integer;
 begin
+  if fmScriptTE.Visible then
+    form4.Show;
   if SaveDialog3.Execute then
   begin
     f := filecreate(SaveDialog3.filename);
@@ -9181,6 +9211,8 @@ var
   s, b, a: widestring;
   f, x, y, re, z, i, c: integer;
 begin
+  if fmScriptTE.Visible then
+    form4.Show;
   if OpenDialog3.Execute then
   begin
     f := fileopen(OpenDialog3.filename, $40);
