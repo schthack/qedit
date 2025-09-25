@@ -1164,6 +1164,7 @@ begin
     begin
       // Get label if it exists
       labelstr := '';
+      labelnum := 0;
       x := pos(':',trimline);
       if (x <= 6) and (x <> 0) then
       begin
@@ -1173,6 +1174,10 @@ begin
         if not TryStrToInt(labelstr, labelnum) then
           labelstr := '';
       end;
+      if labelnum < 0 then
+        labelstr := '0'
+      else if labelnum > 65535 then
+        labelstr := '65535';
 
       // Get opcode if it exists
       opcodestr := '';

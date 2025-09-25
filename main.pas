@@ -469,6 +469,7 @@ Function GetMonsterParam(id: integer): tstringlist;
 Function GetMonsterName(id: integer): ansistring;
 procedure ClearShadow;
 Function GetLanguageString(id: integer): ansistring;
+function FindClosestSection(): integer;
 procedure SetMonsterDefaults();
 procedure SetObjectDefaults();
 procedure ShowIndicator();
@@ -2693,22 +2694,79 @@ begin
   end;
 end;
 
-procedure SetMonsterDefaults();
+function FindClosestSection(): integer;
+var
+  x, d: integer;
+  di, ppx2, ppy2: double;
 begin
+  // Find closest section to the player
+  d := -1;
+  di := $FFFFFF;
+  for x := 0 to 25566 do
+  if MidPU[x] then
+    begin
+    // Find the distance
+    ppx2 := ppx - (MidP[x].x * zoom);
+    ppy2 := -ppz - (MidP[x].y * zoom);
+    ppx2 := (ppx2 * ppx2) + (ppy2 * ppy2);
+    // Record if nearest
+    if di > ppx2 then
+    begin
+      di := ppx2;
+      d := x;
+    end;
+  end;
+  result := d;
+end;
+
+procedure SetMonsterDefaults();
+var
+  section: integer;
+  pz2: double;
+begin
+  section := FindClosestSection();
   // Set default monster position based on user's setting
-  Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].map_section := FPlacementOptions.seDefaultSect.Value;
-  Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_X := FPlacementOptions.nbDefaultX.Value;
-  Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
-  Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Z := FPlacementOptions.nbDefaultY.Value;
+  if form13.focused then
+  begin
+    pz2 := Form1.YFromBBRELFile(MidP[section].x * zoom, MidP[section].y * zoom);
+    pz2 := pz2 - miz[section] * zoom;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].map_section := section;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_X := 0;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Y := 0;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Z := pz2;
+  end
+  else
+  begin
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].map_section := FPlacementOptions.seDefaultSect.Value;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_X := FPlacementOptions.nbDefaultX.Value;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Z := FPlacementOptions.nbDefaultY.Value;
+  end;
 end;
 
 procedure SetObjectDefaults();
+var
+  section: integer;
+  pz2: double;
 begin
+  section := FindClosestSection();
   // Set default object position based on user's setting
-  Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].map_section := FPlacementOptions.seDefaultSect.Value;
-  Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_X := FPlacementOptions.nbDefaultX.Value;
-  Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
-  Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Z := FPlacementOptions.nbDefaultY.Value;
+  if form13.focused then
+  begin
+    pz2 := Form1.YFromBBRELFile(MidP[section].x * zoom, MidP[section].y * zoom);
+    pz2 := pz2 - miz[section] * zoom;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].map_section := section;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_X := 0;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Y := 0;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Z := pz2;
+  end
+  else
+  begin
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].map_section := FPlacementOptions.seDefaultSect.Value;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_X := FPlacementOptions.nbDefaultX.Value;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Z := FPlacementOptions.nbDefaultY.Value;
+  end;
 end;
 
 procedure ShowIndicator();
@@ -3836,6 +3894,11 @@ begin
     firstdrop := true;
     DrawMap;
     isedited := true;
+    if form13.focused then
+    begin
+      MoveSel := -1;
+      HideIndicator();
+    end;
   end;
 end;
 
@@ -3868,6 +3931,11 @@ begin
     DrawMap;
     ctrldw := true;
     isedited := true;
+    if form13.focused then
+    begin
+      MoveSel := -1;
+      HideIndicator();
+    end;
   end;
 end;
 
@@ -5964,6 +6032,11 @@ begin
     firstdrop := true;
     DrawMap;
     isedited := true;
+    if form13.focused then
+    begin
+      MoveSel := -1;
+      HideIndicator();
+    end;
     // CheckListBox1Click(form1);
   end;
 
@@ -6045,6 +6118,12 @@ begin
     DrawMap;
     ctrldw := true;
     isedited := true;
+    if form13.focused then
+    begin
+      MoveSel := -1;
+      HideIndicator();
+      ctrldw := false;
+    end;
   end;
 end;
 
