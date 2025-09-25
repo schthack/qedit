@@ -64,10 +64,10 @@ object fmReplace: TfmReplace
   end
   object Selectiononly1: TCheckBox
     Left = 16
-    Top = 109
+    Top = 110
     Width = 153
     Height = 17
-    Caption = 'From selection'
+    Caption = 'Selection only'
     TabOrder = 2
     OnClick = Selectiononly1Click
   end

@@ -18781,9 +18781,11 @@ var
   LActionReplace: TTextEditorReplaceAction;
   LTextPosition: TTextEditorTextPosition;
   LOriginalTextPosition: TTextEditorTextPosition;
+  LOriginalTextEndPosition: TTextEditorTextPosition;
   LItemIndex: Integer;
   LSearchItem: PTextEditorSearchItem;
   LIsWrapAround: Boolean;
+  LSelectedOnly: Boolean;
   LReplaceTextParams: TTextEditorReplaceTextParams;
 begin
   if not Assigned(FSearchEngine) then
@@ -18799,7 +18801,7 @@ begin
   LOriginalTextPosition := TextPosition;
 
   LIsWrapAround := soWrapAround in FSearch.Options;
-
+  LSelectedOnly := roSelectedOnly in FReplace.Options;
   with LReplaceTextParams do
   begin
     AddLineBreak := rtaAddLineBreak = FReplace.Action;
@@ -18842,7 +18844,10 @@ begin
     end;
 
     if SelectionAvailable then
+    begin
       TextPosition := SelectionBeginPosition;
+      LOriginalTextEndPosition := SelectionEndPosition;
+    end;
 
     if not LReplaceTextParams.Prompt then
       BeginUpdate;
@@ -18933,6 +18938,14 @@ begin
 
             Exit;
           end;
+      end;
+
+      if SelectionAvailable and LSelectedOnly then
+      begin
+        if (SelectionEndPosition.Line > LOriginalTextEndPosition.Line)
+        or ((SelectionEndPosition.Line = LOriginalTextEndPosition.Line)
+        and (SelectionEndPosition.Char > LOriginalTextEndPosition.Char))
+        then break;
       end;
 
       ReplaceSelectedText(AReplaceText, ASearchText, LReplaceTextParams.ReplaceTextAction);

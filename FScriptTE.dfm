@@ -81,7 +81,7 @@ object fmScriptTE: TfmScriptTE
     Left = 344
     Top = 232
     object Addeditdata1: TMenuItem
-      Caption = 'Add/Edit data'
+      Caption = 'Add or edit data'
       object NPC1: TMenuItem
         Caption = 'NPC'
         OnClick = AddEditData
@@ -211,15 +211,15 @@ object fmScriptTE: TfmScriptTE
     Top = 24
     object File1: TMenuItem
       Caption = 'File'
-      object Openfromfile1: TMenuItem
-        Caption = 'Import from file'
-        ShortCut = 16457
-        OnClick = Openfromfile1Click
-      end
       object Savetofile1: TMenuItem
         Caption = 'Export to file'
         ShortCut = 16467
         OnClick = Savetofile1Click
+      end
+      object Openfromfile1: TMenuItem
+        Caption = 'Import from file'
+        ShortCut = 16457
+        OnClick = Openfromfile1Click
       end
       object N9: TMenuItem
         Caption = '-'

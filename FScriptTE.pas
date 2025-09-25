@@ -1103,7 +1103,10 @@ begin
   form4.ListBox1.ItemIndex := TextEdit.TextPosition.Line;
 
   if tmenuitem(sender).Tag = 0 then
+  begin
+    AddLabel(0);
     form4.Button10Click(fmScriptTE)
+  end
   else if tmenuitem(sender).Tag = 1 then
     form4.SaveImage1Click(fmScriptTE)
   else if tmenuitem(sender).Tag = 2 then
@@ -1129,6 +1132,7 @@ begin
     TextEdit.Lines.Add(form4.Listbox1.Items[i]);
 
   TextEdit.CaretIndex := lastcaret;
+  TextEdited := true;
 end;
 
 procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,

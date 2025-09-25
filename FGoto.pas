@@ -51,7 +51,7 @@ begin
   end;
 
   if not labelfound then
-    MessageDlg('Label not found', mtInformation,[mbOk], 0)
+    MessageDlg('Label not found.', mtInformation,[mbOk], 0)
   else fmGoto.Close;
 end;
 
