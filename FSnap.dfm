@@ -89,7 +89,7 @@ object FSnapOptions: TFSnapOptions
   end
   object chkSnap: TCheckBox
     Left = 12
-    Top = 11
+    Top = 12
     Width = 118
     Height = 17
     Caption = 'Snap alignment'
