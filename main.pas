@@ -6392,7 +6392,7 @@ begin
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Monster[MoveSel].Direction := Floor[sfloor].Monster[j].Direction;
                     // Match monster's Y value if enabled
-                    if FSnapOptions.chkSnapYValue.Checked then
+                    if FSnapOptions.chkSnapYValue.Checked and not altdw then
                       Floor[sfloor].Monster[MoveSel].Pos_Z := Floor[sfloor].Monster[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
@@ -6430,7 +6430,7 @@ begin
                     Floor[sfloor].Monster[MoveSel].Pos_Y := Floor[sfloor].Monster[j].Pos_Y;
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Monster[MoveSel].Direction := Floor[sfloor].Monster[j].Direction;
-                    if FSnapOptions.chkSnapYValue.Checked then
+                    if FSnapOptions.chkSnapYValue.Checked and not altdw then
                       Floor[sfloor].Monster[MoveSel].Pos_Z := Floor[sfloor].Monster[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
@@ -6500,7 +6500,7 @@ begin
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
                     // Match object's Y value if enabled
-                    if FSnapOptions.chkSnapYValue.Checked then
+                    if FSnapOptions.chkSnapYValue.Checked and not altdw then
                       Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sfloor].Obj[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
@@ -6538,7 +6538,7 @@ begin
                     Floor[sfloor].Obj[MoveSel].Pos_Y := Floor[sfloor].Obj[j].Pos_Y;
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
-                    if FSnapOptions.chkSnapYValue.Checked then
+                    if FSnapOptions.chkSnapYValue.Checked and not altdw then
                       Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sfloor].Obj[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
