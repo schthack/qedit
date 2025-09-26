@@ -18,6 +18,7 @@ object Form13: TForm13
   OnMouseDown = FormMouseDown
   OnMouseMove = FormMouseMove
   OnMouseUp = FormMouseUp
+  OnMouseWheel = FormMouseWheel
   OnShow = FormShow
   TextHeight = 13
   object Timer1: TTimer

@@ -22,6 +22,8 @@ type
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
   private
     { Private declarations }
   public
@@ -51,8 +53,7 @@ var
   fogfl1,fogfl2:single;
   fogstep:single;
   Keys:array[0..256] of boolean;
-
-  
+  movespeed: integer = 3;
 
 implementation
 
@@ -66,9 +67,9 @@ begin
     px:=cos(vr);
     py:=sin(vz);
     pz:=(cos(vz))*sin(vr);
-    ppx:=ppx+(px*3);
-    ppy:=ppy+(py*3);
-    ppz:=ppz+(pz*3);
+    ppx:=ppx+(px*movespeed);
+    ppy:=ppy+(py*movespeed);
+    ppz:=ppz+(pz*movespeed);
     myscreen.SetView(ppx,ppy,ppz,vr,vz);
 end;
 
@@ -78,9 +79,9 @@ begin
     px:=cos(vr);
     py:=sin(vz);
     pz:=(cos(vz))*sin(vr);
-    ppx:=ppx-(px*3);
-    ppy:=ppy-(py*3);
-    ppz:=ppz-(pz*3);
+    ppx:=ppx-(px*movespeed);
+    ppy:=ppy-(py*movespeed);
+    ppz:=ppz-(pz*movespeed);
     myscreen.SetView(ppx,ppy,ppz,vr,vz);
 end;
 
@@ -217,6 +218,7 @@ begin
         inttohex(round(vr*10430.37835047) and $ffff,8)+'/'+inttohex(round(vz*10430.37835047) and $ffff,8),rect(0,0,640,30),$FFFFFFFF,1);
         end;
 
+        myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%',rect(0,15,640,30),$FFFFFFFF,1);
 
         if ini > 0 then begin
             dec(ini);
@@ -281,10 +283,10 @@ procedure TForm13.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
 
 var v,rayOrigin,rayDir:TD3DXVECTOR3;
     m,n:TD3DXMATRIX;
-    i,c,j,closest:integer;
+    i,z,c,d,j,closest:integer;
     rt:dword;
     px2,px3,py2,py3:single;
-    diff,diffmin:double;
+    di,diff,diffmin,ppx2,ppy2,pz2:double;
 begin
     if (shift = [ssleft]) and (not rtx) and (not rty) and (not rtz) then begin
         vz:=vz+((lmy-y)/120);
@@ -340,6 +342,29 @@ begin
             py3 := sin(rt/10430.37835)*px2 + cos(rt/10430.37835)*py2;
             floor[sfloor].Monster[selected].Pos_X:=px3;
             floor[sfloor].Monster[selected].Pos_Y:=py3;
+
+            // Find closest section
+            d := -1;
+            di := $FFFFFF;
+            for z := 0 to 25566 do
+            if MidPU[z] then
+              begin
+              // Find the distance
+              ppx2 := rayOrigin.x - (MidP[z].x * zoom);
+              ppy2 := -rayOrigin.z - (MidP[z].y * zoom);
+              ppx2 := (ppx2 * ppx2) + (ppy2 * ppy2);
+              // Save if nearest
+              if di > ppx2 then
+              begin
+                di := ppx2;
+                d := z;
+              end;
+            end;
+
+            floor[sfloor].Monster[selected].map_section := d;
+            pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
+            pz2 := pz2 - miz[d] * zoom;
+            floor[sfloor].Monster[selected].Pos_Z := pz2;
 
             if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
             begin
@@ -432,6 +457,29 @@ begin
             py3 := sin(rt/10430.37835)*px2 + cos(rt/10430.37835)*py2;
             floor[sfloor].Obj[selected].Pos_X:=px3;
             floor[sfloor].Obj[selected].Pos_Y:=py3;
+
+            // Find closest section
+            d := -1;
+            di := $FFFFFF;
+            for z := 0 to 25566 do
+            if MidPU[z] then
+              begin
+              // Find the distance
+              ppx2 := rayOrigin.x - (MidP[z].x * zoom);
+              ppy2 := -rayOrigin.z - (MidP[z].y * zoom);
+              ppx2 := (ppx2 * ppx2) + (ppy2 * ppy2);
+              // Save if nearest
+              if di > ppx2 then
+              begin
+                di := ppx2;
+                d := z;
+              end;
+            end;
+
+            floor[sfloor].Obj[selected].map_section := d;
+            pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
+            pz2 := pz2 - miz[d] * zoom;
+            floor[sfloor].Obj[selected].Pos_Z := pz2;
 
             if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
             begin
@@ -715,6 +763,15 @@ procedure TForm13.FormMouseUp(Sender: TObject; Button: TMouseButton;
 begin
     if inclick then form1.DrawMap;
     inclick:=false;
+end;
+
+procedure TForm13.FormMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+  if (WheelDelta > 0) and (movespeed < 30) then
+    movespeed := movespeed + 3
+  else if (WheelDelta < 0) and (movespeed > 3)  then
+    movespeed := movespeed - 3;
 end;
 
 procedure TForm13.FormClose(Sender: TObject; var Action: TCloseAction);

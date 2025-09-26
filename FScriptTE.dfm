@@ -465,6 +465,28 @@ object fmScriptTE: TfmScriptTE
         end
       end
     end
+    object Help1: TMenuItem
+      Caption = 'Help'
+      object Opcodes2: TMenuItem
+        Caption = 'Opcode list'
+        OnClick = Opcodes2Click
+      end
+      object ReservedRegisters1: TMenuItem
+        Caption = 'Typical register uses'
+        OnClick = ReservedRegisters1Click
+      end
+      object Functions1: TMenuItem
+        Caption = 'Common functions'
+        OnClick = Functions1Click
+      end
+      object N6: TMenuItem
+        Caption = '-'
+      end
+      object About1: TMenuItem
+        Caption = 'About'
+        OnClick = About1Click
+      end
+    end
     object Hotkeys1: TMenuItem
       Caption = '[Hotkeys]'
       Visible = False

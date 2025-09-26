@@ -3,7 +3,7 @@ unit FScriptTE;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.Generics.Collections, System.Generics.Defaults, System.RegularExpressions, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Windows, Winapi.Messages, ShellApi, System.Generics.Collections, System.Generics.Defaults, System.RegularExpressions, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
   Vcl.ExtCtrls, main, Vcl.ComCtrls, Vcl.StdCtrls;
 
@@ -111,6 +111,12 @@ type
     N8: TMenuItem;
     N9: TMenuItem;
     N10: TMenuItem;
+    Help1: TMenuItem;
+    Opcodes2: TMenuItem;
+    ReservedRegisters1: TMenuItem;
+    Functions1: TMenuItem;
+    N6: TMenuItem;
+    About1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -162,6 +168,10 @@ type
     procedure Wildcard1Click(Sender: TObject);
     procedure Matchcase1Click(Sender: TObject);
     procedure Resetsettings1Click(Sender: TObject);
+    procedure Opcodes2Click(Sender: TObject);
+    procedure ReservedRegisters1Click(Sender: TObject);
+    procedure Functions1Click(Sender: TObject);
+    procedure About1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -836,6 +846,11 @@ begin
     form14.Label1.Show;
 end;
 
+procedure TfmScriptTE.Functions1Click(Sender: TObject);
+begin
+  ShellExecute(0, 'open', 'https://qedit.info/index.php?title=Common_functions', '', '', 0);
+end;
+
 procedure TfmScriptTE.GoToLabel1Click(Sender: TObject);
 begin
   fmGoto.ShowModal;
@@ -958,6 +973,11 @@ begin
   SetTextColor('TEOpcodeColor');
 end;
 
+procedure TfmScriptTE.Opcodes2Click(Sender: TObject);
+begin
+  ShellExecute(0, 'open', 'https://qedit.info/index.php?title=OPCodes', '', '', 0);
+end;
+
 procedure TfmScriptTE.Registers1Click(Sender: TObject);
 begin
   SetTextColor('TERegisterColor');
@@ -976,6 +996,11 @@ end;
 procedure TfmScriptTE.Replace1Click(Sender: TObject);
 begin
   fmReplace.ShowModal;
+end;
+
+procedure TfmScriptTE.ReservedRegisters1Click(Sender: TObject);
+begin
+  ShellExecute(0, 'open', 'https://qedit.info/index.php?title=Barebones_registers_lists', '', '', 0);
 end;
 
 procedure TfmScriptTE.Resetsettings1Click(Sender: TObject);
@@ -1071,6 +1096,11 @@ begin
       // Reset to last caret position
       TextEdit.CaretIndex := lastcaret;
     end;
+end;
+
+procedure TfmScriptTE.About1Click(Sender: TObject);
+begin
+  Application.MessageBox('    Script Text Editor and 1.0-1.1c updates by Alisaryn.', 'About', 0);
 end;
 
 procedure TfmScriptTE.AddArgs1Click(Sender: TObject);
