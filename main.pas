@@ -4402,7 +4402,7 @@ begin
         begin
           trystrtoint('$' + arglist[0],integer(asmarg[x].opcodeid));
           asmarg[x].argtype := arglist[1];
-          trystrtoint('$' + arglist[2],asmarg[x].argnum);
+          trystrtoint(arglist[2],asmarg[x].argnum);
         end;
         inc(x);
     end;
