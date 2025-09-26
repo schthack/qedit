@@ -6127,7 +6127,6 @@ begin
     begin
       MoveSel := -1;
       HideIndicator();
-      ctrldw := false;
     end;
   end;
 end;
