@@ -2725,10 +2725,10 @@ var
   section: integer;
   pz2: double;
 begin
-  section := FindClosestSection();
   // Set default monster position based on user's setting
   if form13.focused then
   begin
+    section := FindClosestSection();
     pz2 := Form1.YFromBBRELFile(MidP[section].x * zoom, MidP[section].y * zoom);
     pz2 := pz2 - miz[section] * zoom;
     Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].map_section := section;
@@ -2750,10 +2750,10 @@ var
   section: integer;
   pz2: double;
 begin
-  section := FindClosestSection();
   // Set default object position based on user's setting
   if form13.focused then
   begin
+    section := FindClosestSection();
     pz2 := Form1.YFromBBRELFile(MidP[section].x * zoom, MidP[section].y * zoom);
     pz2 := pz2 - miz[section] * zoom;
     Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].map_section := section;
