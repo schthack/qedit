@@ -4694,6 +4694,10 @@ begin
           searchengine := Reg.ReadInteger('SearchEngine');
         if Reg.ValueExists('ReplaceSelectionOnly') then
           replaceselectiononly := Reg.ReadBool('ReplaceSelectionOnly');
+        if Reg.ValueExists('3DMoveSpeed') then
+          movespeed := Reg.ReadInteger('3DMoveSpeed');
+        if Reg.ValueExists('3DAutoAdjust') then
+          autoadjust := Reg.ReadBool('3DAutoAdjust');
         Reg.CloseKey;
       end;
       Reg.Free;

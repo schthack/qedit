@@ -3,7 +3,7 @@ unit Unit13;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Windows, Registry, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, D3Dx9, StdCtrls;
 
 type
@@ -788,11 +788,26 @@ end;
 
 procedure TForm13.FormMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+var
+  Reg: TRegistry;
 begin
   if (WheelDelta > 0) and (movespeed < 30) then
     movespeed := movespeed + 3
   else if (WheelDelta < 0) and (movespeed > 3)  then
     movespeed := movespeed - 3;
+
+  // Save movement value to the registry
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+  begin
+    Reg.WriteInteger('3DMoveSpeed', movespeed);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
 end;
 
 procedure TForm13.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -814,8 +829,25 @@ begin
 end;
 
 procedure TForm13.FormKeyPress(Sender: TObject; var Key: Char);
+var
+  Reg: TRegistry;
 begin
-    if key = 'e' then autoadjust := not autoadjust;
+    if key = 'e' then
+    begin
+        autoadjust := not autoadjust;
+        // Save auto-adjust setting to the registry
+        Reg := TRegistry.Create;
+        try
+          Reg.RootKey := HKEY_CURRENT_USER;
+          if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+          begin
+            Reg.WriteBool('3DAutoAdjust', autoadjust);
+            Reg.CloseKey;
+          end;
+        finally
+          Reg.Free;
+        end;
+    end;
     if key = 'd' then dta:=dta xor 1;
     if key = 'f' then fog:=fog xor 1;
     // Auto-rotate monster/object 45 degrees
