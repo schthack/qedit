@@ -565,6 +565,7 @@ var
   texttheme: integer = -1;
   autoaxis: Boolean = false;
   snaprotate: Boolean = false;
+  snapyvalue: Boolean = false;
   snapdistance: Boolean = false;
   anchorenabled: Boolean = false;
   disableindicator: Boolean = false;
@@ -4653,6 +4654,8 @@ begin
           texteditzoom := Reg.ReadInteger('TextEditZoom');
         if Reg.ValueExists('SnapRotate') then
           snaprotate := Reg.ReadBool('SnapRotate');
+       if Reg.ValueExists('SnapYValue') then
+          snapyvalue := Reg.ReadBool('SnapYValue');
         if Reg.ValueExists('SnapDistance') then
           snapdistance := Reg.ReadBool('SnapDistance');
         if Reg.ValueExists('AnchorEnabled') then
@@ -4819,11 +4822,13 @@ begin
     FSnapOptions.chkSnap.Checked := snapenabled;
     FSnapOptions.chkSnapDistance.Enabled := snapenabled;
     FSnapOptions.chkSnapRotate.Enabled := snapenabled;
+    FSnapOptions.chkSnapYValue.Enabled := snapenabled;
     FSnapOptions.chkDistancelimit.Enabled := snapenabled;
     FSnapOptions.seSnapTolerance.Enabled := snapenabled;
     Form7.chkAutoAxis.Checked := autoaxis;
     FSnapOptions.seSnapTolerance.Value := snapvalue;
     FSnapOptions.chkSnapRotate.Checked := snaprotate;
+    FSnapOptions.chkSnapYValue.Checked := snapyvalue;
     FSnapOptions.chkSnapDistance.Checked := snapdistance;
 
     smDisableIndicator.Checked := disableindicator;
@@ -6356,6 +6361,9 @@ begin
       Floor[sfloor].Monster[MoveSel].map_section := d;
       Floor[sfloor].Monster[MoveSel].Pos_X := px;
       Floor[sfloor].Monster[MoveSel].Pos_Y := py;
+      // look around to find the best pz
+      if not altdw or firstdrop then
+        Floor[sfloor].Monster[MoveSel].Pos_Z := pz2;
 
       if (FSnapOptions.chkSnap.Checked) or (sdown) then // S key
       begin
@@ -6380,6 +6388,9 @@ begin
                     // Match monster's rotations if enabled
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Monster[MoveSel].Direction := Floor[sfloor].Monster[j].Direction;
+                    // Match monster's Y value if enabled
+                    if FSnapOptions.chkSnapYValue.Checked then
+                      Floor[sfloor].Monster[MoveSel].Pos_Z := Floor[sfloor].Monster[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
                       diffmin := diff;
@@ -6416,6 +6427,8 @@ begin
                     Floor[sfloor].Monster[MoveSel].Pos_Y := Floor[sfloor].Monster[j].Pos_Y;
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Monster[MoveSel].Direction := Floor[sfloor].Monster[j].Direction;
+                    if FSnapOptions.chkSnapYValue.Checked then
+                      Floor[sfloor].Monster[MoveSel].Pos_Z := Floor[sfloor].Monster[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
                       diffmin := diff;
@@ -6429,10 +6442,6 @@ begin
         if closest > -1 then
           AdjustDistanceX(closest);
       end;
-
-      // look around to find the best pz
-      if not altdw or firstdrop then
-        Floor[sfloor].Monster[MoveSel].Pos_Z := pz2;
 
       // Placement modifiers - overwrite values if keys are pressed
       if (Selected > -1) and (fdown) then // F key
@@ -6461,6 +6470,8 @@ begin
       Floor[sfloor].Obj[MoveSel].map_section := d;
       Floor[sfloor].Obj[MoveSel].Pos_X := px;
       Floor[sfloor].Obj[MoveSel].Pos_Y := py;
+      if not altdw or firstdrop then
+        Floor[sfloor].Obj[MoveSel].Pos_Z := pz2;
 
       if (FSnapOptions.chkSnap.Checked) or (sdown) then // S key
       begin
@@ -6485,6 +6496,9 @@ begin
                     // Match object's rotations if enabled
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
+                    // Match object's Y value if enabled
+                    if FSnapOptions.chkSnapYValue.Checked then
+                      Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sfloor].Obj[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
                       diffmin := diff;
@@ -6521,6 +6535,8 @@ begin
                     Floor[sfloor].Obj[MoveSel].Pos_Y := Floor[sfloor].Obj[j].Pos_Y;
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
+                    if FSnapOptions.chkSnapYValue.Checked then
+                      Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sfloor].Obj[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
                       diffmin := diff;
@@ -6534,9 +6550,6 @@ begin
         if closest > -1 then
           AdjustDistanceX(closest);
       end;
-
-      if not altdw or firstdrop then
-        Floor[sfloor].Obj[MoveSel].Pos_Z := pz2;
 
       // Placement modifiers - overwrite values if keys are pressed
       if (Selected > -1) and (fdown) then // F key
@@ -7947,6 +7960,7 @@ begin
   // Update based on snap preferences
   snapvalue := FSnapOptions.seSnapTolerance.Value;
   snaprotate := FSnapOptions.chkSnapRotate.Checked;
+  snapyvalue := FSnapOptions.chkSnapYValue.Checked;
   snapdistance := FSnapOptions.chkSnapDistance.Checked;
 end;
 

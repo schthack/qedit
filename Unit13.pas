@@ -54,6 +54,7 @@ var
   fogstep:single;
   Keys:array[0..256] of boolean;
   movespeed: integer = 3;
+  autoadjust: Boolean = false;
 
 implementation
 
@@ -218,7 +219,10 @@ begin
         inttohex(round(vr*10430.37835047) and $ffff,8)+'/'+inttohex(round(vz*10430.37835047) and $ffff,8),rect(0,0,640,30),$FFFFFFFF,1);
         end;
 
-        myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%',rect(0,15,640,30),$FFFFFFFF,1);
+        if autoadjust then
+          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: ON (E = Toggle)',rect(0,15,640,30),$FFFFFFFF,1)
+        else
+          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: OFF (E = Toggle)',rect(0,15,640,30),$FFFFFFFF,1);
 
         if ini > 0 then begin
             dec(ini);
@@ -325,6 +329,25 @@ begin
             rayOrigin.z := rayOrigin.z + rayDir.z;
             inc(c);
         end;
+
+        // Find closest section
+        d := -1;
+        di := $FFFFFF;
+        for z := 0 to 25566 do
+        if MidPU[z] then
+        begin
+          // Find the distance
+          ppx2 := rayOrigin.x - (MidP[z].x * zoom);
+          ppy2 := -rayOrigin.z - (MidP[z].y * zoom);
+          ppx2 := (ppx2 * ppx2) + (ppy2 * ppy2);
+          // Save if nearest
+          if di > ppx2 then
+          begin
+          di := ppx2;
+          d := z;
+          end;
+        end;
+
         snapvalue := FSnapOptions.seSnapTolerance.Value;
         distancelimit := FSnapOptions.seDistanceLimit.Value;
 
@@ -343,28 +366,13 @@ begin
             floor[sfloor].Monster[selected].Pos_X:=px3;
             floor[sfloor].Monster[selected].Pos_Y:=py3;
 
-            // Find closest section
-            d := -1;
-            di := $FFFFFF;
-            for z := 0 to 25566 do
-            if MidPU[z] then
-              begin
-              // Find the distance
-              ppx2 := rayOrigin.x - (MidP[z].x * zoom);
-              ppy2 := -rayOrigin.z - (MidP[z].y * zoom);
-              ppx2 := (ppx2 * ppx2) + (ppy2 * ppy2);
-              // Save if nearest
-              if di > ppx2 then
-              begin
-                di := ppx2;
-                d := z;
-              end;
+            if autoadjust then
+            begin
+              floor[sfloor].Monster[selected].map_section := d;
+              pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
+              pz2 := pz2 - miz[d] * zoom;
+              floor[sfloor].Monster[selected].Pos_Z := pz2;
             end;
-
-            floor[sfloor].Monster[selected].map_section := d;
-            pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
-            pz2 := pz2 - miz[d] * zoom;
-            floor[sfloor].Monster[selected].Pos_Z := pz2;
 
             if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
             begin
@@ -389,6 +397,12 @@ begin
                           // Match monster's rotations if enabled
                           if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Monster[selected].Direction := floor[sfloor].Monster[j].Direction;
+                          // Match monster's Y value if enabled
+                          if (FSnapOptions.chkSnapYValue.Checked) then
+                          begin
+                            floor[sfloor].Monster[selected].Pos_Z := floor[sfloor].Monster[j].Pos_Z;
+                            mymonst[selected].PositionY := mymonst[j].PositionY;
+                          end;
                           if (diff < diffmin) and (j <> selected) then
                           begin
                             diffmin := diff;
@@ -426,6 +440,11 @@ begin
                           mymonst[selected].PositionZ := mymonst[j].PositionZ;
                           if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Monster[selected].Direction := floor[sfloor].Monster[j].Direction;
+                          if (FSnapOptions.chkSnapYValue.Checked) then
+                          begin
+                            floor[sfloor].Monster[selected].Pos_Z := floor[sfloor].Monster[j].Pos_Z;
+                            mymonst[selected].PositionY := mymonst[j].PositionY;
+                          end;
                           if (diff < diffmin) and (j <> selected) then
                           begin
                             diffmin := diff;
@@ -458,28 +477,13 @@ begin
             floor[sfloor].Obj[selected].Pos_X:=px3;
             floor[sfloor].Obj[selected].Pos_Y:=py3;
 
-            // Find closest section
-            d := -1;
-            di := $FFFFFF;
-            for z := 0 to 25566 do
-            if MidPU[z] then
-              begin
-              // Find the distance
-              ppx2 := rayOrigin.x - (MidP[z].x * zoom);
-              ppy2 := -rayOrigin.z - (MidP[z].y * zoom);
-              ppx2 := (ppx2 * ppx2) + (ppy2 * ppy2);
-              // Save if nearest
-              if di > ppx2 then
-              begin
-                di := ppx2;
-                d := z;
-              end;
+            if autoadjust then
+            begin
+              floor[sfloor].Obj[selected].map_section := d;
+              pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
+              pz2 := pz2 - miz[d] * zoom;
+              floor[sfloor].Obj[selected].Pos_Z := pz2;
             end;
-
-            floor[sfloor].Obj[selected].map_section := d;
-            pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
-            pz2 := pz2 - miz[d] * zoom;
-            floor[sfloor].Obj[selected].Pos_Z := pz2;
 
             if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
             begin
@@ -504,6 +508,12 @@ begin
                           // Match object's rotations if enabled
                           if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                          // Match object's Y value if enabled
+                          if (FSnapOptions.chkSnapYValue.Checked) then
+                          begin
+                            floor[sfloor].Obj[selected].Pos_Z := floor[sfloor].Obj[j].Pos_Z;
+                            myobj[selected].PositionY := myobj[j].PositionY;
+                          end;
                           if (diff < diffmin) and (j <> selected) then
                           begin
                             diffmin := diff;
@@ -542,6 +552,11 @@ begin
                           myobj[selected].PositionZ := myobj[j].PositionZ;
                           if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                          if (FSnapOptions.chkSnapYValue.Checked) then
+                          begin
+                            floor[sfloor].Obj[selected].Pos_Z := floor[sfloor].Obj[j].Pos_Z;
+                            myobj[selected].PositionY := myobj[j].PositionY;
+                          end;
                           if (diff < diffmin) and (j <> selected) then
                           begin
                             diffmin := diff;
@@ -794,6 +809,7 @@ end;
 
 procedure TForm13.FormKeyPress(Sender: TObject; var Key: Char);
 begin
+    if key = 'e' then autoadjust := not autoadjust;
     if key = 'd' then dta:=dta xor 1;
     if key = 'f' then fog:=fog xor 1;
     // Auto-rotate monster/object 45 degrees

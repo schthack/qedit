@@ -4,8 +4,8 @@ object FSnapOptions: TFSnapOptions
   ActiveControl = btnSave
   BorderStyle = bsDialog
   Caption = 'Snap Options'
-  ClientHeight = 234
-  ClientWidth = 177
+  ClientHeight = 226
+  ClientWidth = 185
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -17,19 +17,19 @@ object FSnapOptions: TFSnapOptions
   TextHeight = 13
   object Label8: TLabel
     Left = 12
-    Top = 136
+    Top = 130
     Width = 106
     Height = 13
     Caption = 'Snap tolerance (units):'
   end
   object btnSave: TButton
     Left = 50
-    Top = 165
+    Top = 158
     Width = 75
     Height = 25
     Caption = 'Save'
     Default = True
-    TabOrder = 6
+    TabOrder = 7
     OnClick = btnSaveClick
   end
   object chkDistancelimit: TCheckBox
@@ -38,23 +38,23 @@ object FSnapOptions: TFSnapOptions
     Width = 118
     Height = 17
     Caption = 'Anchor limit (units):'
-    TabOrder = 3
+    TabOrder = 4
     OnClick = chkDistancelimitClick
   end
   object seDistanceLimit: TSpinEdit
-    Left = 124
+    Left = 128
     Top = 102
     Width = 41
     Height = 22
     Enabled = False
     MaxValue = 0
     MinValue = 0
-    TabOrder = 4
+    TabOrder = 5
     Value = 0
   end
   object chkSnapDistance: TCheckBox
     Left = 12
-    Top = 42
+    Top = 35
     Width = 98
     Height = 17
     Caption = 'Match distance'
@@ -62,7 +62,7 @@ object FSnapOptions: TFSnapOptions
   end
   object chkSnapRotate: TCheckBox
     Left = 12
-    Top = 73
+    Top = 58
     Width = 98
     Height = 17
     Caption = 'Match rotation'
@@ -70,21 +70,21 @@ object FSnapOptions: TFSnapOptions
   end
   object btnReset: TButton
     Left = 50
-    Top = 196
+    Top = 189
     Width = 75
     Height = 25
     Caption = 'Defaults'
-    TabOrder = 7
+    TabOrder = 8
     OnClick = btnResetClick
   end
   object seSnapTolerance: TSpinEdit
-    Left = 124
-    Top = 133
+    Left = 128
+    Top = 127
     Width = 41
     Height = 22
     MaxValue = 0
     MinValue = 0
-    TabOrder = 5
+    TabOrder = 6
     Value = 0
   end
   object chkSnap: TCheckBox
@@ -95,5 +95,13 @@ object FSnapOptions: TFSnapOptions
     Caption = 'Snap alignment'
     TabOrder = 0
     OnClick = chkSnapClick
+  end
+  object chkSnapYValue: TCheckBox
+    Left = 12
+    Top = 81
+    Width = 97
+    Height = 17
+    Caption = 'Match Y value'
+    TabOrder = 3
   end
 end

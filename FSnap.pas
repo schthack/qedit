@@ -17,6 +17,7 @@ type
     seSnapTolerance: TSpinEdit;
     Label8: TLabel;
     chkSnap: TCheckBox;
+    chkSnapYValue: TCheckBox;
     procedure btnSaveClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnResetClick(Sender: TObject);
@@ -45,6 +46,7 @@ begin
   seDistanceLimit.Enabled := false;
   chkDistanceLimit.Checked := false;
   chkSnapRotate.Checked := false;
+  chkSnapYValue.Checked := false;
   chkSnapDistance.Checked := false;
 end;
 
@@ -60,6 +62,7 @@ begin
       Reg.WriteInteger('SnapValue', seSnapTolerance.Value);
       Reg.WriteInteger('DistanceLimit', seDistanceLimit.Value);
       Reg.WriteBool('SnapRotate', chkSnapRotate.Checked);
+      Reg.WriteBool('SnapYValue', chkSnapYValue.Checked);
       Reg.WriteBool('SnapDistance', chkSnapDistance.Checked);
       Reg.WriteBool('AnchorEnabled', chkDistanceLimit.Checked);
       Reg.CloseKey;
@@ -82,6 +85,7 @@ var
 begin
   chkSnapDistance.Enabled := chkSnap.Checked;
   chkSnapRotate.Enabled := chkSnap.Checked;
+  chkSnapYValue.Enabled := chkSnap.Checked;
   chkDistanceLimit.Enabled := chkSnap.Checked;
   seSnapTolerance.Enabled := chkSnap.Checked;
   if chkDistanceLimit.Checked then
