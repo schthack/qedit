@@ -220,9 +220,9 @@ begin
         end;
 
         if autoadjust then
-          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: ON (E = Toggle)',rect(0,15,640,30),$FFFFFFFF,1)
+          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: ON (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1)
         else
-          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: OFF (E = Toggle)',rect(0,15,640,30),$FFFFFFFF,1);
+          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: OFF (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1);
 
         if ini > 0 then begin
             dec(ini);
