@@ -331,20 +331,23 @@ begin
         end;
 
         // Find closest section
-        d := -1;
-        di := $FFFFFF;
-        for z := 0 to 25566 do
-        if MidPU[z] then
+        if autoadjust then
         begin
-          // Find the distance
-          ppx2 := rayOrigin.x - (MidP[z].x * zoom);
-          ppy2 := -rayOrigin.z - (MidP[z].y * zoom);
-          ppx2 := (ppx2 * ppx2) + (ppy2 * ppy2);
-          // Save if nearest
-          if di > ppx2 then
+          d := -1;
+          di := $FFFFFF;
+          for z := 0 to 25566 do
+          if MidPU[z] then
           begin
-          di := ppx2;
-          d := z;
+            // Find the distance
+            ppx2 := rayOrigin.x - (MidP[z].x * zoom);
+            ppy2 := -rayOrigin.z - (MidP[z].y * zoom);
+            ppx2 := (ppx2 * ppx2) + (ppy2 * ppy2);
+            // Save if nearest
+            if di > ppx2 then
+            begin
+            di := ppx2;
+            d := z;
+            end;
           end;
         end;
 
@@ -372,6 +375,7 @@ begin
               pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
               pz2 := pz2 - miz[d] * zoom;
               floor[sfloor].Monster[selected].Pos_Z := pz2;
+              GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
             end;
 
             if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
@@ -483,6 +487,8 @@ begin
               pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
               pz2 := pz2 - miz[d] * zoom;
               floor[sfloor].Obj[selected].Pos_Z := pz2;
+              myobj[selected].Free;
+              Generateobj(floor[sfloor].obj[selected],selected);
             end;
 
             if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
