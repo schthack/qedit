@@ -5015,6 +5015,7 @@ var
   qtmp: array [0 .. 99] of pansichar;
   qtmpsize, qtmppos: array [0 .. 99] of integer;
   mh: ansistring;
+  fsuccess: Boolean;
 begin
 
   SaveDialog1.Filter :=
@@ -5677,8 +5678,8 @@ begin
 
       // Avoid issue with PSO quest download stuck at 100%
       // If the final compressed file size is divisible by 1024, write one extra byte
-      GetFileSizeEx(f, finalsize);
-      if ((finalsize mod 1024) = 0) then
+      fsuccess := GetFileSizeEx(f, finalsize);
+      if (fsuccess <> false) and ((finalsize mod 1024) = 0) then
       begin
         zerobyte := 0;
         filewrite(f, zerobyte, 1);
