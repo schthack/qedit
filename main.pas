@@ -5002,6 +5002,8 @@ end;
 procedure TForm1.Save1Click(Sender: TObject);
 var
   x, y, f, o, j, i, F2, F1, s1, s2, z, bl, dl: integer;
+  zerobyte: byte;
+  finalsize: int64;
   d: dword;
   txt: array [0 .. 1] of ansichar;
   h: TNPCGroupeHeader;
@@ -5670,6 +5672,16 @@ begin
             end;
           end;
       end;
+
+      // Avoid issue with PSO quest download stuck at 100%
+      // If the final compressed file size is divisible by 1024, write one extra byte
+      GetFileSizeEx(f, finalsize);
+      if ((finalsize mod 1024) = 0) then
+      begin
+        zerobyte := 0;
+        filewrite(f, zerobyte, 1);
+      end;
+
       fileclose(f);
       for x := 0 to qstfilecount - 1 do
         freemem(qtmp[x]);
