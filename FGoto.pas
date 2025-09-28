@@ -35,24 +35,33 @@ var
   i: integer;
   labelfound: Boolean;
 begin
-  labelfound := false;
-
-  with fmScriptTE.TextEdit do
+  if Caption = 'Go To Line' then
   begin
-    for i := 0 to Lines.Count do
+    fmScriptTE.TextEdit.GoToLineAndSetPosition(SpinEdit1.Value,
+    length(fmScriptTE.TextEdit.Lines[SpinEdit1.Value]) + 1);
+    Close
+  end
+  else
+  begin
+    labelfound := false;
+
+    with fmScriptTE.TextEdit do
     begin
-      if Lines[i].StartsWith(SpinEdit1.Text + ':') then
+      for i := 0 to Lines.Count do
       begin
-        labelfound := true;
-        // Move caret to end of line
-        GoToLineAndSetPosition(i,length(Lines[i]) + 1);
+        if Lines[i].StartsWith(SpinEdit1.Text + ':') then
+        begin
+          labelfound := true;
+          // Move caret to end of line
+          GoToLineAndSetPosition(i,length(Lines[i]) + 1);
+        end;
       end;
     end;
-  end;
 
-  if not labelfound then
-    MessageDlg('Label not found.', mtInformation,[mbOk], 0)
-  else fmGoto.Close;
+    if not labelfound then
+      MessageDlg('Label not found.', mtInformation,[mbOk], 0)
+    else fmGoto.Close;
+  end;
 end;
 
 procedure TfmGoto.Button1Click(Sender: TObject);

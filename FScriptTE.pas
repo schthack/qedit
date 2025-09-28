@@ -117,6 +117,9 @@ type
     Functions1: TMenuItem;
     N6: TMenuItem;
     About1: TMenuItem;
+    GotoLine1: TMenuItem;
+    N11: TMenuItem;
+    AddSTRcomment1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -172,6 +175,8 @@ type
     procedure ReservedRegisters1Click(Sender: TObject);
     procedure Functions1Click(Sender: TObject);
     procedure About1Click(Sender: TObject);
+    procedure GotoLine1Click(Sender: TObject);
+    procedure AddSTRcomment1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -454,6 +459,12 @@ begin
   Newregister1Click(nil);
 end;
 
+procedure TfmScriptTE.AddSTRcomment1Click(Sender: TObject);
+begin
+  NewLabel1Click(nil);
+  TextEdit.InsertText('STR: ');
+end;
+
 procedure TfmScriptTE.ChangeTheme(Sender: TObject);
 var
   lastcaret: integer;
@@ -688,6 +699,8 @@ var
   JSONOpcodeList, JSONRegisterList: String;
   JSONStrings: TStringList;
 begin
+    if not AddArgs1.Enabled then
+      AddArgs1.Checked := false;
     textEdited := false;
     TextEdit.CompletionProposal.Snippets.Items.Clear;
 
@@ -853,7 +866,14 @@ end;
 
 procedure TfmScriptTE.GoToLabel1Click(Sender: TObject);
 begin
+  fmGoTo.Caption := 'Go To Label';
   fmGoto.ShowModal;
+end;
+
+procedure TfmScriptTE.GotoLine1Click(Sender: TObject);
+begin
+  fmGoTo.Caption := 'Go To Line';
+  fmGoTo.ShowModal;
 end;
 
 procedure TfmScriptTE.Hex1Click(Sender: TObject);
@@ -1491,7 +1511,7 @@ begin
         end;
 
         // Add register arguments
-        if (AddArgs1.Checked) and (argstrings.count > 0)
+        if (AddArgs1.Checked) and (AddArgs1.Enabled) and (argstrings.count > 0)
         and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
         and (opcodestr <> 'Unknow_Opcode') then
         begin

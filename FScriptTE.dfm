@@ -2,7 +2,7 @@ object fmScriptTE: TfmScriptTE
   Left = 0
   Top = 0
   Caption = 'Script Text Editor'
-  ClientHeight = 573
+  ClientHeight = 601
   ClientWidth = 794
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -19,7 +19,7 @@ object fmScriptTE: TfmScriptTE
     Left = 0
     Top = 0
     Width = 794
-    Height = 533
+    Height = 561
     Align = alClient
     Colors.EditorStringForeground = clBlack
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
@@ -42,7 +42,7 @@ object fmScriptTE: TfmScriptTE
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 554
+    Top = 582
     Width = 794
     Height = 19
     Panels = <
@@ -59,7 +59,7 @@ object fmScriptTE: TfmScriptTE
   end
   object Edit2: TEdit
     Left = 0
-    Top = 533
+    Top = 561
     Width = 794
     Height = 21
     Align = alBottom
@@ -153,7 +153,7 @@ object fmScriptTE: TfmScriptTE
       Caption = '-'
     end
     object AddArgs1: TMenuItem
-      Caption = 'Automatically add register arguments'
+      Caption = 'Prepend leti/fleti arguments'
       OnClick = AddArgs1Click
     end
     object N3: TMenuItem
@@ -211,15 +211,15 @@ object fmScriptTE: TfmScriptTE
     Top = 24
     object File1: TMenuItem
       Caption = 'File'
+      object Openfromfile1: TMenuItem
+        Caption = 'Open from file'
+        ShortCut = 16463
+        OnClick = Openfromfile1Click
+      end
       object Savetofile1: TMenuItem
-        Caption = 'Export to file'
+        Caption = 'Save to file'
         ShortCut = 16467
         OnClick = Savetofile1Click
-      end
-      object Openfromfile1: TMenuItem
-        Caption = 'Import from file'
-        ShortCut = 16457
-        OnClick = Openfromfile1Click
       end
       object N9: TMenuItem
         Caption = '-'
@@ -231,8 +231,16 @@ object fmScriptTE: TfmScriptTE
     end
     object Edit1: TMenuItem
       Caption = 'Edit'
+      object AddSTRcomment1: TMenuItem
+        Caption = 'Add STR comment'
+        ShortCut = 32851
+        OnClick = AddSTRcomment1Click
+      end
+      object N11: TMenuItem
+        Caption = '-'
+      end
       object Find1: TMenuItem
-        Caption = 'Find'
+        Caption = 'Search'
         ShortCut = 16454
         OnClick = Find1Click
       end
@@ -285,6 +293,11 @@ object fmScriptTE: TfmScriptTE
         Caption = 'Go to label'
         ShortCut = 16455
         OnClick = GoToLabel1Click
+      end
+      object GotoLine1: TMenuItem
+        Caption = 'Go to line'
+        ShortCut = 32839
+        OnClick = GotoLine1Click
       end
       object Deleteselection1: TMenuItem
         Caption = 'Delete selection'

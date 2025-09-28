@@ -4385,28 +4385,30 @@ begin
       fl.LoadFromFile('asmargs.txt')
     else
     begin
-      flp.Clear;
-      PikaGetFile(flp, 'asmargs.txt', path + 'config.ppk', 'Build By Schthack');
-      fl.LoadFromStream(flp);
+      fmScriptTE.AddArgs1.Checked := false;
+      fmScriptTE.AddArgs1.Enabled := false;
     end;
 
     // Load asm argument list
-    x := 0;
-    arglist := TStringList.Create;
-    while x < fl.count do
+    if fmScriptTE.AddArgs1.Enabled then
     begin
-        arglist.StrictDelimiter := True;
-        arglist.Delimiter := ' ';
-        arglist.DelimitedText := fl.Strings[x];
-        if arglist.count > 2 then
-        begin
-          trystrtoint('$' + arglist[0],integer(asmarg[x].opcodeid));
-          asmarg[x].argtype := arglist[1];
-          trystrtoint(arglist[2],asmarg[x].argnum);
-        end;
-        inc(x);
+      x := 0;
+      arglist := TStringList.Create;
+      while x < fl.count do
+      begin
+          arglist.StrictDelimiter := True;
+          arglist.Delimiter := ' ';
+          arglist.DelimitedText := fl.Strings[x];
+          if arglist.count > 2 then
+          begin
+            trystrtoint('$' + arglist[0],integer(asmarg[x].opcodeid));
+            asmarg[x].argtype := arglist[1];
+            trystrtoint(arglist[2],asmarg[x].argnum);
+          end;
+          inc(x);
+      end;
+      arglist.Free;
     end;
-    arglist.Free;
 
     if fileexists('asm.txt') then
       fl.LoadFromFile('asm.txt')
