@@ -9112,6 +9112,8 @@ procedure TForm1.Cancelplacement1Click(Sender: TObject);
 begin
   if (have3d) and (form13.Focused) and (form13.BorderStyle = bsNone) then
     form13.close
+  else if fmScriptTE.Edit2.Focused then
+    fmScriptTE.Edit2.Hide
   else
   begin
     MoveSel := -1;
