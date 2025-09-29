@@ -5615,7 +5615,7 @@ begin
       while F2 < qstfilecount do
       begin
         for x := 0 to qstfilecount - 1 do
-          if qtmppos[x] < qtmpsize[x] then
+          if qtmppos[x] <= qtmpsize[x] then
           begin
             // make header
             setlength(b, $1C);
@@ -5661,10 +5661,11 @@ begin
             fillchar(b[1], 1024, 0);
             move(qtmp[x][qtmppos[x]], b[1], F1);
             filewrite(f, b[1], 1024);
-            inc(qtmppos[x], F1);
-            if qtmppos[x] >= qtmpsize[x] then
-              inc(F2);
+            inc(qtmppos[x], 1024);
+            if qtmppos[x] >= qtmpsize[x] then inc(F2);
             filewrite(f, F1, 4);
+            // pso bug
+
             if (SaveDialog1.FilterIndex = 5) then
             begin
               F1 := 0;
@@ -9100,8 +9101,6 @@ procedure TForm1.Cancelplacement1Click(Sender: TObject);
 begin
   if (have3d) and (form13.Focused) and (form13.BorderStyle = bsNone) then
     form13.close
-  else if fmScriptTE.Edit2.Focused then
-    fmScriptTE.Edit2.Hide
   else
   begin
     MoveSel := -1;
