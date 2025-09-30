@@ -5098,7 +5098,8 @@ begin
     if not DirectoryExists(path + 'notes') then
       CreateDir(path + 'notes');
     cleantitle := SanitizeFileName(title);
-    if (cleantitle <> '') and DirectoryExists(path + 'notes') then
+    if (cleantitle <> '') and DirectoryExists(path + 'notes')
+    and (fmScriptTE.txtNotes.Lines.Count > 0) then
       fmScriptTE.txtNotes.Lines.SaveToFile('notes\' + cleantitle + ' notes' + '.txt');
 
     lsatsaveformat := SaveDialog1.FilterIndex;
