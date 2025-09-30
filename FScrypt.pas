@@ -464,6 +464,8 @@ end;
 Procedure AddDataRef(l:integer);
 var x,i:integer;
 begin
+    // Prevents access violation errors in case label 0 is not a reference
+    AddLabel(0);
     for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
     datablock[i] := l;
     datablockT[i] := T_DATA;
@@ -484,6 +486,8 @@ end;
 Procedure AddStrRef(l:integer);
 var x,i:integer;
 begin
+    // Prevents access violation errors in case label 0 is not a reference
+    AddLabel(0);
     for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
     datablock[i] := l;
     datablockT[i] := T_STRDATA;
