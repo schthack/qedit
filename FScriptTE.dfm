@@ -15,10 +15,20 @@ object fmScriptTE: TfmScriptTE
   OnClose = FormClose
   OnShow = FormShow
   TextHeight = 13
+  object Splitter1: TSplitter
+    Left = 606
+    Top = 0
+    Height = 561
+    Align = alRight
+    Visible = False
+    ExplicitLeft = 448
+    ExplicitTop = 320
+    ExplicitHeight = 100
+  end
   object TextEdit: TTextEditor
     Left = 0
     Top = 0
-    Width = 794
+    Width = 606
     Height = 561
     Align = alClient
     Colors.EditorStringForeground = clBlack
@@ -76,6 +86,49 @@ object fmScriptTE: TfmScriptTE
     Default = True
     TabOrder = 3
     OnClick = btnSearchClick
+  end
+  object NotesPanel: TPanel
+    Left = 609
+    Top = 0
+    Width = 185
+    Height = 561
+    Align = alRight
+    ParentBackground = False
+    TabOrder = 4
+    Visible = False
+    object Panel2: TPanel
+      Left = 1
+      Top = 1
+      Width = 183
+      Height = 18
+      Align = alTop
+      Caption = 'Notes'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 0
+    end
+    object txtNotes: TMemo
+      Left = 1
+      Top = 19
+      Width = 183
+      Height = 541
+      Align = alClient
+      BorderStyle = bsNone
+      Color = clGhostwhite
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      ScrollBars = ssVertical
+      TabOrder = 1
+    end
   end
   object PopupMenu1: TPopupMenu
     Left = 344
@@ -232,7 +285,7 @@ object fmScriptTE: TfmScriptTE
     object Edit1: TMenuItem
       Caption = 'Edit'
       object AddSTRcomment1: TMenuItem
-        Caption = 'Add STR comment'
+        Caption = 'Add string comment'
         ShortCut = 32851
         OnClick = AddSTRcomment1Click
       end
@@ -453,6 +506,11 @@ object fmScriptTE: TfmScriptTE
     end
     object View1: TMenuItem
       Caption = 'View'
+      object Notes1: TMenuItem
+        Caption = 'Notes'
+        ShortCut = 16462
+        OnClick = Notes1Click
+      end
       object Zoom1: TMenuItem
         Caption = 'Zoom'
         object Z100: TMenuItem

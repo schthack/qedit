@@ -477,6 +477,7 @@ procedure HideIndicator();
 procedure AdjustDistanceX(target: integer);
 procedure AdjustDistanceY(target: integer);
 procedure CalculateWarpOffsets(rotation: dword);
+function SanitizeFileName(const AFileName: string): string;
 
 var
   Form1: TForm1;
@@ -2072,7 +2073,7 @@ var
   unp: array [0 .. $8FF] of byte;
   tmp: ansistring;
   tmp2: widestring;
-  fn, g: ansistring;
+  fn, g, cleantitle: ansistring;
   si, ln, eb1, eb2: dword;
   di, da, db: pansichar;
 begin
@@ -2425,6 +2426,12 @@ begin
         move(qstfile[f].data[labelseg + x], datablockT[i], 1);
         inc(x, 1);
       end;
+
+      // Load quest notes file based on quest name if they exist
+      fmScriptTE.txtNotes.Clear;
+      cleantitle := SanitizeFileName(title);
+      if (cleantitle <> '') and FileExists('notes\' + cleantitle + ' notes'+ '.txt') then
+        fmScriptTE.txtNotes.Lines.LoadFromFile('notes\' + cleantitle + ' notes'+ '.txt');
 
       if pos('_f.', fn) > 0 then
         language := 3;
@@ -3072,6 +3079,41 @@ begin
   end;
 end;
 
+function SanitizeFileName(const AFileName: string): string;
+const
+  InvalidChars: set of Char = ['\', '/', ':', '*', '?', '"', '<', '>', '|'];
+var
+  I: Integer;
+  ResultFileName: string;
+begin
+  ResultFileName := '';
+  for I := 1 to Length(AFileName) do
+  begin
+    if not (AFileName[I] in InvalidChars) and (Ord(AFileName[I]) >= 32) then // Exclude control characters and invalid chars
+    begin
+      ResultFileName := ResultFileName + AFileName[I];
+    end;
+  end;
+
+  // Handle trailing periods/spaces for Windows compatibility
+  while (Length(ResultFileName) > 0) and (ResultFileName[Length(ResultFileName)] in ['.', ' ']) do
+  begin
+    SetLength(ResultFileName, Length(ResultFileName) - 1);
+  end;
+
+  // Truncate to a maximum of 249 characters to allow room for ' notes' suffix
+  if Length(ResultFileName) > 249 then
+  begin
+    SetLength(ResultFileName, 249);
+  end;
+
+  // Ensure a non-empty filename, if all characters were invalid
+  if ResultFileName = '' then
+    ResultFileName := 'Untitled';
+
+  Result := ResultFileName;
+end;
+
 procedure TForm1.CheckListBox1Click(Sender: TObject);
 var
   x: integer;
@@ -3319,12 +3361,15 @@ end;
 
 procedure TForm1.Delete1Click(Sender: TObject);
 begin
-  if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused then
+  if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
+  and not fmScriptTE.txtNotes.Focused then
     Button3Click(nil)
   else if form4.edit1.Focused then
     form4.edit1.Clear
   else if fmScriptTE.TextEdit.Focused then
-    fmScriptTE.TextEdit.DeleteSelection;
+    fmScriptTE.TextEdit.DeleteSelection
+  else if fmScriptTE.txtNotes.Focused then
+    fmScriptTE.txtNotes.SelText := '';
 end;
 
 procedure TForm1.Description1Click(Sender: TObject);
@@ -3943,14 +3988,16 @@ end;
 procedure TForm1.Copymonster1Click(Sender: TObject);
 begin
   if Copylastmonster1.Enabled and not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
-  and not fmScriptTE.Edit2.Focused then
+  and not fmScriptTE.Edit2.Focused and not fmScriptTE.txtNotes.Focused then
     Copylastmonster1Click(nil)
   else if form4.edit1.Focused then
     form4.edit1.CopyToClipboard
   else if fmScriptTE.TextEdit.Focused then
     fmScriptTE.TextEdit.CopyToClipboard(false)
   else if fmScriptTE.Edit2.Focused then
-    fmScriptTE.Edit2.CopyToClipboard;
+    fmScriptTE.Edit2.CopyToClipboard
+  else if fmScriptTE.txtNotes.Focused then
+    fmScriptTE.txtNotes.CopyToClipboard
 end;
 
 procedure TForm1.ViewScrypt1Click(Sender: TObject);
@@ -5012,7 +5059,7 @@ var
   di, da, db: pansichar;
   qtmp: array [0 .. 99] of pansichar;
   qtmpsize, qtmppos: array [0 .. 99] of integer;
-  mh: ansistring;
+  mh, cleantitle: ansistring;
 begin
 
   SaveDialog1.Filter :=
@@ -5024,6 +5071,13 @@ begin
   SaveDialog1.FilterIndex := lsatsaveformat;
   if SaveDialog1.Execute then
   begin
+    // Save quest notes
+    if not DirectoryExists(path + 'notes') then
+      CreateDir(path + 'notes');
+    cleantitle := SanitizeFileName(title);
+    if (cleantitle <> '') and DirectoryExists(path + 'notes') then
+      fmScriptTE.txtNotes.Lines.SaveToFile('notes\' + cleantitle + ' notes' + '.txt');
+
     lsatsaveformat := SaveDialog1.FilterIndex;
     isedited := false;
     ClearShadow;
@@ -6844,6 +6898,7 @@ begin
   TsFnc.Clear;
   TsReg.Clear;
   Tsopc.Clear;
+  fmScriptTE.txtNotes.Clear;
   for x := 0 to 30 do
   begin
     Floor[x].MonsterCount := 0;
@@ -6905,6 +6960,7 @@ begin
   TsFnc.Clear;
   TsReg.Clear;
   Tsopc.Clear;
+  fmScriptTE.txtNotes.Clear;
   for x := 0 to 30 do
   begin
     Floor[x].MonsterCount := 0;
@@ -6967,6 +7023,7 @@ begin
   TsFnc.Clear;
   TsReg.Clear;
   Tsopc.Clear;
+  fmScriptTE.txtNotes.Clear;
   for x := 0 to 30 do
   begin
     Floor[x].MonsterCount := 0;
@@ -7905,7 +7962,9 @@ end;
 
 procedure TForm1.Newmonster1Click(Sender: TObject);
 begin
-  Button9Click(nil);
+  if fmScriptTE.Focused then
+    fmScriptTE.Notes1Click(nil)
+  else Button9Click(nil);
 end;
 
 procedure TForm1.smNewItemClick(Sender: TObject);
@@ -8265,6 +8324,8 @@ begin
     fmScriptTE.TextEdit.CutToClipboard
    else if fmScriptTE.Edit2.Focused then
     fmScriptTE.Edit2.CutToClipboard
+   else if fmScriptTE.txtNotes.Focused then
+    fmScriptTE.txtNotes.CutToClipboard
    else if (have3d) and (form13.BorderStyle = bsNone) and (not form13.Focused) then
     Form1.WindowState := wsMinimized
    else if (have3d) and (form13.BorderStyle = bsNone) and (form13.Focused) then
@@ -9101,6 +9162,13 @@ procedure TForm1.Cancelplacement1Click(Sender: TObject);
 begin
   if (have3d) and (form13.Focused) and (form13.BorderStyle = bsNone) then
     form13.close
+  else if fmScriptTE.Edit2.Focused then
+  begin
+    fmScriptTE.Edit2.Hide;
+    fmScriptTE.TextEdit.ClearSelection
+  end
+  else if fmScriptTE.txtNotes.Focused then
+    fmScriptTE.Notes1Click(nil)
   else
   begin
     MoveSel := -1;
@@ -9122,14 +9190,16 @@ end;
 procedure TForm1.Undo1Click(Sender: TObject);
 begin
   if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
-  and not fmScriptTE.Edit2.Focused then
+  and not fmScriptTE.Edit2.Focused and not fmScriptTE.txtNotes.Focused then
     Button11Click(nil)
   else if form4.edit1.Focused then
     form4.edit1.Undo
   else if fmScriptTE.TextEdit.Focused then
     fmScriptTE.TextEdit.DoUndo
   else if fmScriptTE.Edit2.focused then
-    fmScriptTE.Edit2.Undo;
+    fmScriptTE.Edit2.Undo
+  else if fmScriptTE.txtNotes.focused then
+    fmScriptTE.txtNotes.Undo;
 end;
 
 procedure TForm1.English1Click(Sender: TObject);

@@ -120,6 +120,11 @@ type
     GotoLine1: TMenuItem;
     N11: TMenuItem;
     AddSTRcomment1: TMenuItem;
+    NotesPanel: TPanel;
+    Panel2: TPanel;
+    txtNotes: TMemo;
+    Splitter1: TSplitter;
+    Notes1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -177,6 +182,7 @@ type
     procedure About1Click(Sender: TObject);
     procedure GotoLine1Click(Sender: TObject);
     procedure AddSTRcomment1Click(Sender: TObject);
+    procedure Notes1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -614,7 +620,9 @@ end;
 
 procedure TfmScriptTE.Deleteselection1Click(Sender: TObject);
 begin
-  fmScriptTE.TextEdit.DeleteSelection;
+  if fmScriptTE.txtNotes.Focused then
+    fmScriptTE.txtNotes.SelText := ''
+  else fmScriptTE.TextEdit.DeleteSelection;
 end;
 
 procedure TfmScriptTE.Edit2Exit(Sender: TObject);
@@ -971,6 +979,15 @@ end;
 procedure TfmScriptTE.Normal1Click(Sender: TObject);
 begin
   SetSearchEngine(0);
+end;
+
+procedure TfmScriptTE.Notes1Click(Sender: TObject);
+begin
+  Notes1.Checked := not Notes1.Checked;
+  NotesPanel.Visible := not NotesPanel.Visible;
+  Splitter1.Visible := not Splitter1.Visible;
+  if NotesPanel.Visible then
+    txtNotes.SetFocus;
 end;
 
 procedure TfmScriptTE.Openfromfile1Click(Sender: TObject);
