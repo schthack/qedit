@@ -13,6 +13,7 @@ object fmScriptTE: TfmScriptTE
   Menu = MainMenu1
   Position = poMainFormCenter
   OnClose = FormClose
+  OnHide = FormHide
   OnShow = FormShow
   TextHeight = 13
   object Splitter1: TSplitter
@@ -128,6 +129,7 @@ object fmScriptTE: TfmScriptTE
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 1
+      OnChange = txtNotesChange
     end
   end
   object PopupMenu1: TPopupMenu
@@ -507,7 +509,7 @@ object fmScriptTE: TfmScriptTE
     object View1: TMenuItem
       Caption = 'View'
       object Notes1: TMenuItem
-        Caption = 'Notes'
+        Caption = 'Show notes panel'
         ShortCut = 16462
         OnClick = Notes1Click
       end

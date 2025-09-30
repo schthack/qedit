@@ -587,6 +587,10 @@ var
   DefaultY: single = 0.0;
   DefaultZ: single = 0.0;
   warpx, warpz: single;
+  TEHeight: integer = 673;
+  TEWidth: integer = 810;
+  NotesWidth: integer = 183;
+  NotesVisible: Boolean = false;
 
 implementation
 
@@ -4747,6 +4751,14 @@ begin
           movespeed := Reg.ReadInteger('3DMoveSpeed');
         if Reg.ValueExists('3DAutoAdjust') then
           autoadjust := Reg.ReadBool('3DAutoAdjust');
+        if Reg.ValueExists('TEHeight') then
+          TEHeight := Reg.ReadInteger('TEHeight');
+        if Reg.ValueExists('TEWidth') then
+          TEWidth := Reg.ReadInteger('TEWidth');
+        if Reg.ValueExists('NotesWidth') then
+          NotesWidth := Reg.ReadInteger('NotesWidth');
+        if Reg.ValueExists('NotesVisible') then
+          NotesVisible := Reg.ReadBool('NotesVisible');
         Reg.CloseKey;
       end;
       Reg.Free;
@@ -4925,6 +4937,17 @@ begin
     fmScriptTE.Matchcase1.Checked := searchmatchcase;
     SetSearchEngine(searchengine);
     fmReplace.Selectiononly1.Checked := replaceselectiononly;
+    fmScriptTE.Height := TEHeight;
+    fmScriptTE.Width := TEWidth;
+
+    // Work around to avoid misalignment of search bar after resizing text editor
+    fmScriptTE.Edit2.Show;
+    fmScriptTE.Edit2.Hide;
+
+    fmScriptTE.NotesPanel.Width := NotesWidth;
+    fmScriptTE.Splitter1.Left := fmScriptTE.NotesPanel.Left;
+    if NotesVisible then
+      fmScriptTE.Notes1Click(nil);
 
     flp.Position := 0;
     LanguageString.LoadFromStream(flp);

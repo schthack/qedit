@@ -183,6 +183,8 @@ type
     procedure GotoLine1Click(Sender: TObject);
     procedure AddSTRcomment1Click(Sender: TObject);
     procedure Notes1Click(Sender: TObject);
+    procedure FormHide(Sender: TObject);
+    procedure txtNotesChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -701,6 +703,26 @@ begin
   end;
 end;
 
+procedure TfmScriptTE.FormHide(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('TEHeight', Height);
+      Reg.WriteInteger('TEWidth', Width);
+      Reg.WriteInteger('NotesWidth', NotesPanel.Width);
+      Reg.WriteBool('NotesVisible', Notes1.Checked);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+end;
+
 procedure TfmScriptTE.FormShow(Sender: TObject);
 var
   i: integer;
@@ -986,7 +1008,7 @@ begin
   Notes1.Checked := not Notes1.Checked;
   NotesPanel.Visible := not NotesPanel.Visible;
   Splitter1.Visible := not Splitter1.Visible;
-  if NotesPanel.Visible then
+  if fmScriptTE.Visible and NotesPanel.Visible then
     txtNotes.SetFocus;
 end;
 
@@ -1711,6 +1733,11 @@ procedure TfmScriptTE.TextEditMouseDown(Sender: TObject; Button: TMouseButton;
 begin
   if Button = mbRight then
     PopupMenu1.Popup(mouse.CursorPos.X, mouse.CursorPos.Y);
+end;
+
+procedure TfmScriptTE.txtNotesChange(Sender: TObject);
+begin
+  isedited := true;
 end;
 
 procedure TfmScriptTE.Undo1Click(Sender: TObject);
