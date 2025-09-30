@@ -30,15 +30,19 @@ object fmScriptTE: TfmScriptTE
     Left = 0
     Top = 0
     Width = 606
-    Height = 561
+    Height = 574
     Align = alClient
     Colors.EditorStringForeground = clBlack
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
     HighlightLine.Items = <
       item
       end>
-    LeftMargin.Visible = False
-    LeftMargin.Width = 0
+    LeftMargin.Bookmarks.Visible = False
+    LeftMargin.LineNumbers.Visible = False
+    LeftMargin.LineState.Visible = False
+    LeftMargin.Marks.Visible = False
+    LeftMargin.MarksPanel.Visible = False
+    LeftMargin.Width = 3
     OnCaretChanged = TextEditCaretChanged
     OnChange = TextEditChange
     OnClick = TextEditClick
@@ -48,6 +52,7 @@ object fmScriptTE: TfmScriptTE
     RightMargin.Visible = False
     Search.Options = [soBeepIfStringNotFound, soHighlightResults, soSearchOnTyping, soShowSearchMatchNotFound, soWrapAround]
     ShowHint = True
+    SyncEdit.Active = False
     TabOrder = 0
     Tabs.Options = [toColumns, toSelectedBlockIndent, toTabsToSpaces]
   end
@@ -67,6 +72,7 @@ object fmScriptTE: TfmScriptTE
       item
         Width = 100
       end>
+    ExplicitTop = 595
   end
   object Edit2: TEdit
     Left = 0
@@ -97,6 +103,7 @@ object fmScriptTE: TfmScriptTE
     ParentBackground = False
     TabOrder = 4
     Visible = False
+    ExplicitHeight = 574
     object Panel2: TPanel
       Left = 1
       Top = 1
