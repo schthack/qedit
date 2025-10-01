@@ -1225,7 +1225,7 @@ end;
 procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
   AOffset: Integer);
 var
-  i,j,j2,k,x,y,x3,y3,g,d,labelnum,opcodepos,argpos: integer;
+  i,j,j2,k,x,y,x3,y3,g,d,oldsize,newsize,labelnum,opcodepos,argpos: integer;
   reftype,trimline,labelstr,opcodestr,whitespace,s,o,fullargs: widestring;
   argarray: TArray<string>;
   argstrings: TStringList;
@@ -1243,6 +1243,8 @@ begin
       i := changeline
     else
       i := editline;
+
+    oldsize := length(TextEdit.Lines[i]);
 
     linechanged := false;
 
@@ -1545,6 +1547,11 @@ begin
           if j <> argstrings.count - 1 then
             Lines[i] := Lines[i] + ', ';
         end;
+
+        // Move to end of line if autocomplete was invoked
+        newsize := length(TextEdit.Lines[i]);
+        if newsize > oldsize then
+          GoToLineAndSetPosition(i, length(Lines[i]) + 1);
 
         // Add register arguments
         if (AddArgs1.Checked) and (AddArgs1.Enabled) and (argstrings.count > 0)
