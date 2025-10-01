@@ -865,8 +865,8 @@ begin
         Generateobj(floor[sfloor].obj[selected],selected);
       end;
       // Increment for next rotation
-      if rtinc <= 57344 then
-        rtinc := rtinc + 8192
+      if rtinc <= 61440 then
+        rtinc := rtinc + 4096
       else rtinc := 0;
     end;
 end;
