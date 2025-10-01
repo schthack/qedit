@@ -86,6 +86,21 @@ begin
     myscreen.SetView(ppx,ppy,ppz,vr,vz);
 end;
 
+procedure AutoRotate;
+begin
+  if sType = 1 then
+  begin
+    floor[sfloor].Monster[selected].Direction := rtinc;
+    GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
+  end;
+  if sType = 2 then
+  begin
+    floor[sfloor].Obj[selected].unknow6 := rtinc;
+    myobj[selected].Free;
+    Generateobj(floor[sfloor].obj[selected],selected);
+  end;
+end;
+
 procedure TForm13.Timer1Timer(Sender: TObject);
 var d1,d2,d3:dword;
     f1,f2,f3:double;
@@ -226,7 +241,7 @@ begin
 
         if ini > 0 then begin
             dec(ini);
-            myscreen.TextOut('Q = Forward, A = Backward, D = Toggle data format, F = Toggle fog effect, R = Auto-rotate',rect(0,form13.Height-65,640,form13.Height-49),$FFFFFFFF,1);
+            myscreen.TextOut('Q = Forward, A = Backward, D = Toggle data format, F = Toggle fog effect, R/L = Auto-rotate',rect(0,form13.Height-65,640,form13.Height-49),$FFFFFFFF,1);
             myscreen.TextOut('Edit: Hold click + CTRL = Move, + SHIFT = Up/down, + right-click = Rotate, CTRL + S = Snap',rect(0,form13.Height-50,640,form13.Height-34),$FFFFFFFF,1);
             if borderStyle = bsNone then
               myscreen.TextOut('ESC = Exit, CTRL + X = Show/hide the main window (Click outside of window to return to 3D)',rect(0,form13.Height-35,640,form13.Height-19),$FFFFFFFF,1);
@@ -850,24 +865,25 @@ begin
     end;
     if key = 'd' then dta:=dta xor 1;
     if key = 'f' then fog:=fog xor 1;
-    // Auto-rotate monster/object 45 degrees
+
+    // Auto-rotate monster/object clockwise 22.5 degrees
     if (key = 'r') and (selected > -1) then
     begin
-      if sType = 1 then
-      begin
-        floor[sfloor].Monster[selected].Direction := rtinc;
-        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
-      end;
-      if sType = 2 then
-      begin
-        floor[sfloor].Obj[selected].unknow6 := rtinc;
-        myobj[selected].Free;
-        Generateobj(floor[sfloor].obj[selected],selected);
-      end;
       // Increment for next rotation
-      if rtinc <= 61440 then
+      if rtinc < 61440 then
         rtinc := rtinc + 4096
       else rtinc := 0;
+      AutoRotate;
+    end;
+
+    // Auto-rotate monster/object counter-clockwise 22.5 degrees
+    if (key = 'l') and (selected > -1) then
+    begin
+      // Decrement for next rotation
+      if rtinc > 0 then
+        rtinc := rtinc - 4096
+      else rtinc := 61440;
+      AutoRotate;
     end;
 end;
 
