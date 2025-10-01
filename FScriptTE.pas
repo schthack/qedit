@@ -1550,7 +1550,7 @@ begin
 
         // Move to end of line if autocomplete was invoked
         newsize := length(TextEdit.Lines[i]);
-        if newsize > oldsize then
+        if (newsize > oldsize) and (argstrings.Count > 0) then
           GoToLineAndSetPosition(i, length(Lines[i]) + 1);
 
         // Add register arguments
