@@ -936,7 +936,7 @@ end;
 
 procedure TfmScriptTE.Newlabel1Click(Sender: TObject);
 var
-  i, j, lastline, lastcaret, labellength: integer;
+  i, j, lastline, prevline, lastcaret, labellength: integer;
   found: Boolean;
   whitespace: string;
 begin
@@ -959,8 +959,18 @@ begin
         labellength := 6 - length(inttostr(i));
         for j := 0 to labellength do
           whitespace := whitespace + ' ';
-        InsertLine(lastline + 2, inttostr(i) + ':' + whitespace);
-        GoToLineAndSetPosition(lastline + 1,length(Lines[lastline + 1]) + 1);
+        if Trim(Lines[lastline]) = '' then
+        begin
+          prevline := TextEdit.TopLine;
+          GoToLineAndSetPosition(lastline,0);
+          InsertText(inttostr(i) + ':' + whitespace);
+          TextEdit.TopLine := prevline;
+        end
+        else
+        begin
+          InsertLine(lastline + 2, inttostr(i) + ':' + whitespace);
+          GoToLineAndSetPosition(lastline + 1,length(Lines[lastline + 1]) + 1);
+        end;
         break;
       end;
     end;
@@ -1225,7 +1235,7 @@ end;
 procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
   AOffset: Integer);
 var
-  i,j,j2,k,x,y,x3,y3,g,d,oldsize,newsize,labelnum,opcodepos,argpos: integer;
+  i,j,j2,k,x,y,x3,y3,g,d,oldsize,newsize,prevline,labelnum,opcodepos,argpos: integer;
   reftype,trimline,labelstr,opcodestr,whitespace,s,o,fullargs: widestring;
   argarray: TArray<string>;
   argstrings: TStringList;
@@ -1551,7 +1561,12 @@ begin
         // Move to end of line if autocomplete was invoked
         newsize := length(TextEdit.Lines[i]);
         if (newsize > oldsize) and (argstrings.Count > 0) then
+        begin
+          // Save old scroll position
+          prevline := TextEdit.TopLine;
           GoToLineAndSetPosition(i, length(Lines[i]) + 1);
+          TextEdit.TopLine := prevline;
+        end;
 
         // Add register arguments
         if (AddArgs1.Checked) and (AddArgs1.Enabled) and (argstrings.count > 0)
@@ -1587,6 +1602,14 @@ begin
             end;
           end;
         end;
+
+        // Clean up empty lines
+        if (newsize > oldsize) and (argstrings.Count > 0) then
+          DeleteEmptyLines;
+
+        // Leave and re-focus the text area to prevent issues with scrolling
+        Statusbar1.SetFocus;
+        TextEdit.SetFocus;
 
         // Update maps
         try

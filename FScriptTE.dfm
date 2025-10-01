@@ -30,7 +30,7 @@ object fmScriptTE: TfmScriptTE
     Left = 0
     Top = 0
     Width = 606
-    Height = 574
+    Height = 561
     Align = alClient
     Colors.EditorStringForeground = clBlack
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
@@ -51,6 +51,7 @@ object fmScriptTE: TfmScriptTE
     ParentShowHint = False
     RightMargin.Visible = False
     Search.Options = [soBeepIfStringNotFound, soHighlightResults, soSearchOnTyping, soShowSearchMatchNotFound, soWrapAround]
+    Selection.Options = [soTermsCaseSensitive]
     ShowHint = True
     SyncEdit.Active = False
     TabOrder = 0
@@ -72,7 +73,6 @@ object fmScriptTE: TfmScriptTE
       item
         Width = 100
       end>
-    ExplicitTop = 595
   end
   object Edit2: TEdit
     Left = 0
@@ -103,7 +103,6 @@ object fmScriptTE: TfmScriptTE
     ParentBackground = False
     TabOrder = 4
     Visible = False
-    ExplicitHeight = 574
     object Panel2: TPanel
       Left = 1
       Top = 1
