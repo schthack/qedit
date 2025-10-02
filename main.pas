@@ -8363,6 +8363,8 @@ begin
    begin
     Form1.WindowState := wsNormal;
     Form1.BringToFront;
+    if form4.Visible then form4.BringToFront;
+    if fmScriptTE.Visible then fmScriptTE.BringToFront;
    end;
 end;
 
