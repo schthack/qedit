@@ -507,7 +507,16 @@ begin
 
         if (z >= $48) and (z <= $4E) and (not inva) then
         begin
+          // Re-parse the script if the AsmMode changed and the quest was loaded as a .bin
+          if (AsmMode <> 2) and ((lastloadformat = 1) or (lastloadformat = 2)) then
+          begin
+            AsmMode := 2;
+            QuestDisam(@AsmData, AsmRef, CodeLength, RefCount);
+          end;
+
+          // This technically shouldn't be needed, but kept in to avoid risk of breaking things in rare cases
           AsmMode := 2;
+
           // stackb:=0;
           Stack[StackP].DataType := z - $48;
           if (z = $48) or (z = $4A) then

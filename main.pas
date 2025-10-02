@@ -2466,10 +2466,10 @@ begin
       if pos('.qst.cn', fn) > 0 then
         language := 0;
 
-      if OpenDialog1.FilterIndex = 2 then begin
-        // detect asm mode
-        form34.showmodal;
-      end;
+//      if OpenDialog1.FilterIndex = 2 then begin
+//        // detect asm mode
+//        form34.showmodal;
+//      end;
       QuestDisam(@AsmData, AsmRef, seg[1] - seg[0], (seg[2] - seg[1]) div 4);
     except
       MessageDlg(GetLanguageString(63), mtInformation, [mbOk], 0);
@@ -5115,13 +5115,20 @@ begin
     // clear the ref data
 
     AsmMode := 0;
-    if SaveDialog1.FilterIndex >= 3 then
-      isdc := true;
-    if SaveDialog1.FilterIndex < 3 then
+    if (SaveDialog1.FilterIndex < 3)
+    then
       isdc := false;
-    if SaveDialog1.FilterIndex >= 4 then
+    if (SaveDialog1.FilterIndex >= 3)
+    or ((SaveDialog1.FilterIndex = 1) and (FFilter = 0))
+    then
+      isdc := true;
+    if (SaveDialog1.FilterIndex >= 4)
+    or ((SaveDialog1.FilterIndex = 1) and (FFilter >= 2))
+    then
       AsmMode := 2;
-    if SaveDialog1.FilterIndex = 5 then
+    if (SaveDialog1.FilterIndex = 5)
+    or ((SaveDialog1.FilterIndex = 1) and (FFilter >= 2))
+    then
       isdc := false;
     if SaveDialog1.FilterIndex = 7 then
       isdc := false;
