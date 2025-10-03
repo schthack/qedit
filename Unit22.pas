@@ -149,6 +149,44 @@ type
     'So Dimenian'
         );
 
+    Ep4Name:array[0..35] of string = ('Boota',
+    'Ze Boota',
+    'Ba Boota',
+    'Sand Rappy (Crater)',
+    'Del Rappy (Crater)',
+    'Zu (Crater)',
+    'Pazuzu (Crater)',
+    'Astark',
+    'Satellite Lizard (Crater)',
+    'Yowie (Crater)',
+    'Dorphon',
+    'Dorphon Eclair',
+    'Goran',
+    'Pyro Goran',
+    'Goran Detonator',
+    'Sand Rappy (Desert)',
+    'Del Rappy (Desert)',
+    'Merissa A',
+    'Merissa AA',
+    'Zu (Desert)',
+    'Pazuzu (Desert)',
+    'Satellite Lizard (Desert)',
+    'Yowie (Desert)',
+    'Girtablulu',
+    'Saint-Milion (Phase 1)',
+    'Saint-Milion (Phase 1 Spinner)',
+    'Saint-Milion (Phase 2)',
+    'Saint-Milion (Phase 2 Spinner)',
+    'Shambertin (Phase 1)',
+    'Shambertin (Phase 1 Spinner)',
+    'Shambertin (Phase 2)',
+    'Shambertin (Phase 2 Spinner)',
+    'Kondrieu (Phase 1)',
+    'Kondrieu (Phase 1 Spinner)',
+    'Kondrieu (Phase 2)',
+    'Kondrieu (Phase 2 Spinner)'
+    );
+
     Ep1PhysID:array[0..58] of byte = (0,1,2,3,4,5,6,7,8,9,$0a,$0b,$0c,$0d,$0e,$0f,$10,$11,$12,$13
         ,$18,$19,$1a,$1b,$1c,$1d,$1e,$1f,$20,$21,$22,$23,$24,$25,$26
         ,$30,$31,$32,$33,$34,$35,$36,$37,$38,$39
@@ -158,16 +196,20 @@ type
     43,44,45,46,48,49,50,51,58,59,60,61,64,65,66,67,68,69,70,73,74,75,76,78,79,80,82,83,84,85
         );
 
+    Ep4PhysID:array[0..35] of byte = (0,1,3,5,6,7,8,9,$0d,$0e,$0f,$10,$11,$12,$13,$17,$18,$19,$1a,$1b,$1c,$1d,$1e,$1f,
+    $20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$2a,$2b
+        );
+
 var
   Form22: TForm22;
   SelDBSTAT:TEnemyStat;
   SelDBRes:TEnemyELD;
   SelDBAtt:TEnemySection3;
   SelDBMov:TEnemySection4;
-  DBSTAT:array[0..5,0..3,0..95] of TEnemyStat;
-  DBs3:array[0..5,0..3,0..95] of TEnemySection3;
-  DBs4:array[0..5,0..3,0..95] of TEnemySection4;
-  DBs2:array[0..5,0..3,0..95] of TEnemyELD;
+  DBSTAT:array[0..7,0..3,0..95] of TEnemyStat;
+  DBs3:array[0..7,0..3,0..95] of TEnemySection3;
+  DBs4:array[0..7,0..3,0..95] of TEnemySection4;
+  DBs2:array[0..7,0..3,0..95] of TEnemyELD;
   DBinit:byte=0;
 implementation
 
@@ -243,6 +285,18 @@ begin
         fileread(x,dbs2[5],sizeof(dbs2[0]));
         fileread(x,dbs4[5],sizeof(dbs4[0]));
         fileclose(x);
+        x:=fileopen(path+'4_off.dat',$40);
+        fileread(x,DBSTAT[6],$d80*4);
+        fileread(x,dbs3[6],sizeof(dbs3[0]));
+        fileread(x,dbs2[6],sizeof(dbs2[0]));
+        fileread(x,dbs4[6],sizeof(dbs4[0]));
+        fileclose(x);
+        x:=fileopen(path+'4_on.dat',$40);
+        fileread(x,DBSTAT[7],$d80*4);
+        fileread(x,dbs3[7],sizeof(dbs3[0]));
+        fileread(x,dbs2[7],sizeof(dbs2[0]));
+        fileread(x,dbs4[7],sizeof(dbs4[0]));
+        fileclose(x);
         ComboBox1Change(self);
     end;
 
@@ -256,12 +310,18 @@ begin
         for x:=0 to 58 do
             combobox3.Items.Add(Ep1Name[x]);
         combobox3.ItemIndex:=0;
-    end else begin
+    end else if (combobox1.ItemIndex >= 4)
+    and (combobox1.ItemIndex < 6) then begin
         combobox3.Clear;
         for x:=0 to 58 do
             combobox3.Items.Add(Ep2Name[x]);
         combobox3.ItemIndex:=0;
-    end;
+    end else begin
+      combobox3.Clear;
+      for x:=0 to 35 do
+          combobox3.Items.Add(Ep4Name[x]);
+          combobox3.ItemIndex:=0;
+    end
 end;
 
 procedure TForm22.Button1Click(Sender: TObject);
@@ -277,18 +337,33 @@ begin
         if (combobox1.ItemIndex < 4)
         and (Ep1Name[z] = combobox3.Text) then break;
         if (combobox1.ItemIndex >= 4)
+        and (combobox1.ItemIndex < 6)
         and (Ep2Name[z] = combobox3.Text) then break;
+        if z <= 35 then
+        begin
+          if (combobox1.ItemIndex >= 6)
+          and (Ep4Name[z] = combobox3.Text) then break;
+        end;
     end;
     if combobox1.ItemIndex < 4 then begin
         move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep1PhysID[z]],SelDBSTAT,36);
         move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep1PhysID[z]], SelDBRes,sizeof(SelDBRes));
         move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep1PhysID[z]], SelDBAtt,sizeof(SelDBAtt));
         move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep1PhysID[z]], SelDBMov,sizeof(SelDBMov));
-    end else begin
+    end else if (combobox1.ItemIndex >= 4)
+    and (combobox1.ItemIndex < 6) then
+    begin
         move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep2PhysID[z]],SelDBSTAT,36);
         move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep2PhysID[z]], SelDBRes,sizeof(SelDBRes));
         move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep2PhysID[z]], SelDBAtt,sizeof(SelDBAtt));
         move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep2PhysID[z]], SelDBMov,sizeof(SelDBMov));
+    end
+    else
+    begin
+        move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep4PhysID[z]],SelDBSTAT,36);
+        move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep4PhysID[z]], SelDBRes,sizeof(SelDBRes));
+        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep4PhysID[z]], SelDBAtt,sizeof(SelDBAtt));
+        move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep4PhysID[z]], SelDBMov,sizeof(SelDBMov));
     end;
     modalresult:=1;
 end;

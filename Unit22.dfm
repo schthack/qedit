@@ -11,10 +11,8 @@ object Form22: TForm22
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 10
@@ -53,7 +51,9 @@ object Form22: TForm22
       'V3 Ep1 Offline '
       'V3 Ep1 Online '
       'V3 Ep2 Offline '
-      'V3 Ep2 Online ')
+      'V3 Ep2 Online '
+      'V4 Ep4 Offline'
+      'V4 Ep4 Online')
   end
   object ComboBox2: TComboBox
     Left = 70

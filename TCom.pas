@@ -720,8 +720,8 @@ begin
          i:=form4.ListBox1.ItemIndex;
          if (lowercase(combobox1.Text) = lowercase(GetOpcodeName($f891))) then begin
             c:=getepisode;
-            if c = 2 then begin
-                Showmessage(getlanguagestring(227));
+            if c >= 3 then begin
+                Showmessage('Invalid episode number.');
             end else begin
                 form23.tag:=c;
                 if form23.showmodal = 1 then UnicodeStringGrid1.Cells[1,0]:=inttohex(form23.myresult,8);

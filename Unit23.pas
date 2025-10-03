@@ -44,10 +44,15 @@ begin
         for x:=0 to 58 do
             combobox1.Items.Add(Ep1Name[x]);
         combobox1.ItemIndex:=0;
-    end else begin
+    end else if tag = 1 then begin
         combobox1.Clear;
         for x:=0 to 58 do
             combobox1.Items.Add(Ep2Name[x]);
+        combobox1.ItemIndex:=0;
+    end else begin
+        combobox1.Clear;
+        for x:=0 to 35 do
+            combobox1.Items.Add(Ep4Name[x]);
         combobox1.ItemIndex:=0;
     end;
 end;
@@ -60,10 +65,13 @@ begin
         and (Ep1Name[z] = combobox1.Text) then break;
         if (tag = 1)
         and (Ep2Name[z] = combobox1.Text) then break;
+        if (tag = 2) and (z <= 35)
+        and (Ep4Name[z] = combobox1.Text) then break;
     end;
     if tag = 0 then
         myresult:=Ep1PhysID[z]
-    else myresult:=Ep2PhysID[z];
+    else if tag = 1 then myresult:=Ep2PhysID[z]
+    else myresult:=Ep4PhysID[z];
     modalresult:=1;
 end;
 

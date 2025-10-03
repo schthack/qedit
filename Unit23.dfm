@@ -11,10 +11,8 @@ object Form23: TForm23
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object Button1: TButton
     Left = 100
