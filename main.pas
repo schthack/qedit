@@ -5088,8 +5088,8 @@ begin
   SaveDialog1.Filter :=
     'Quest file|*.bin|Server Quest file(PC)|*.qst|Server Quest file(DC)|*.qst|Server Quest file(GC)|*.qst|Server Quest file(BB)'
     + '|*.qst|Download Quest file(DC)|*.qst|Download Quest file(PC)|*.qst|Download Quest file(GC)|*.qst|Download Quest file(Xbox)|*.qst'
-    + '|Kohle basic format(PC)|*.bin|Kohle basic format(DC)|*.bin|Kohle basic format(GC)|*.bin|Kohle basic format(BB)|*.bin'
-    + '|Uncompressed quest(PC)|*.bin|Uncompressed quest(DC)|*.bin|Uncompressed quest(GC)|*.bin|Uncompressed quest(BB)|*.bin'
+    + '|Compressed Quest file(PC)|*.bin|Compressed Quest file(DC)|*.bin|Compressed Quest file(GC)|*.bin|Compressed Quest file(BB)|*.bin'
+    + '|Uncompressed Quest file(PC)|*.bin|Uncompressed Quest file(DC)|*.bin|Uncompressed Quest file(GC)|*.bin|Uncompressed Quest file(BB)|*.bin'
     + '|Quest project|*.qprj';
 
   SaveDialog1.FilterIndex := lsatsaveformat;
