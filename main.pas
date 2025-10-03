@@ -1046,7 +1046,7 @@ begin
   s := inttohex(crc32ofstring(FullQuestFile), 8);
   unDumpQuest(path + 'temp\_' + s);
 
-  tmp2 := 'Quest Editor V 1.1c Public - ' + Title;
+  tmp2 := 'Quest Editor V 1.2c Public - ' + Title;
 
   Form1.Caption := unitochar(tmp2, 1000);
   curepi := GetEpisode;
@@ -2118,7 +2118,7 @@ begin
       if (OpenDialog1.FilterIndex = 6) then
       begin
         unDumpQuest(fn);
-        tmp2 := 'Quest Editor V 1.1c Public - ' + Title;
+        tmp2 := 'Quest Editor V 1.2c Public - ' + Title;
 
         Form1.Caption := unitochar(tmp2, 1000);
         curepi := GetEpisode;
@@ -2516,7 +2516,7 @@ begin
     CheckListBox1.ItemIndex := 0;
     CheckListBox1Click(Form1);
     // Form1.Caption:='Quest Editor V 1.6d - '+Title;
-    tmp2 := 'Quest Editor V 1.1c Public - ' + Title;
+    tmp2 := 'Quest Editor V 1.2c Public - ' + Title;
     { if isdc then Form1.Caption:=Form1.Caption+' (DreamCast ASCII Format)'
       else Form1.Caption:=Form1.Caption+' (PC Unicode Format)';
       if curepi = 0 then  Form1.Caption:=Form1.Caption+' - Episode 1';
@@ -5089,6 +5089,7 @@ begin
     'Quest file|*.bin|Server Quest file(PC)|*.qst|Server Quest file(DC)|*.qst|Server Quest file(GC)|*.qst|Server Quest file(BB)'
     + '|*.qst|Download Quest file(DC)|*.qst|Download Quest file(PC)|*.qst|Download Quest file(GC)|*.qst|Download Quest file(Xbox)|*.qst'
     + '|Kohle basic format(PC)|*.bin|Kohle basic format(DC)|*.bin|Kohle basic format(GC)|*.bin|Kohle basic format(BB)|*.bin'
+    + '|Uncompressed quest(PC)|*.bin|Uncompressed quest(DC)|*.bin|Uncompressed quest(GC)|*.bin|Uncompressed quest(BB)|*.bin'
     + '|Quest project|*.qprj';
 
   SaveDialog1.FilterIndex := lsatsaveformat;
@@ -5106,7 +5107,7 @@ begin
     isedited := false;
     ClearShadow;
     FullQuestFile := SaveDialog1.filename;
-    if SaveDialog1.FilterIndex = 13 then
+    if SaveDialog1.FilterIndex = 18 then
     begin
       DumpQuest(changefileext(SaveDialog1.filename, '.qprj'));
       exit;
@@ -5115,20 +5116,13 @@ begin
     // clear the ref data
 
     AsmMode := 0;
-    if (SaveDialog1.FilterIndex < 3)
-    then
-      isdc := false;
-    if (SaveDialog1.FilterIndex >= 3)
-    or ((SaveDialog1.FilterIndex = 1) and (FFilter = 0))
-    then
+    if SaveDialog1.FilterIndex >= 3 then
       isdc := true;
-    if (SaveDialog1.FilterIndex >= 4)
-    or ((SaveDialog1.FilterIndex = 1) and (FFilter >= 2))
-    then
+    if SaveDialog1.FilterIndex < 3 then
+      isdc := false;
+    if SaveDialog1.FilterIndex >= 4 then
       AsmMode := 2;
-    if (SaveDialog1.FilterIndex = 5)
-    or ((SaveDialog1.FilterIndex = 1) and (FFilter >= 2))
-    then
+    if SaveDialog1.FilterIndex = 5 then
       isdc := false;
     if SaveDialog1.FilterIndex = 7 then
       isdc := false;
@@ -5137,22 +5131,22 @@ begin
     if SaveDialog1.FilterIndex = 7 then
       AsmMode := 0;
 
-    if SaveDialog1.FilterIndex = 10 then
+    if (SaveDialog1.FilterIndex = 10) or (SaveDialog1.FilterIndex = 14) then
     begin
       AsmMode := 0;
       isdc := false;
     end;
-    if SaveDialog1.FilterIndex = 11 then
+    if (SaveDialog1.FilterIndex = 11) or (SaveDialog1.FilterIndex = 15) then
     begin
       AsmMode := 0;
       isdc := true;
     end;
-    if SaveDialog1.FilterIndex = 12 then
+    if (SaveDialog1.FilterIndex = 12) or (SaveDialog1.FilterIndex = 16) then
     begin
       AsmMode := 2;
-      isdc := true;
+      isdc := false;
     end;
-    if SaveDialog1.FilterIndex = 13 then
+    if (SaveDialog1.FilterIndex = 13) or (SaveDialog1.FilterIndex = 17) then
     begin
       AsmMode := 2;
       isdc := false;

@@ -293,7 +293,7 @@ object fmScriptTE: TfmScriptTE
     object Edit1: TMenuItem
       Caption = 'Edit'
       object AddSTRcomment1: TMenuItem
-        Caption = 'Add string comment'
+        Caption = 'Add STR comment'
         ShortCut = 32851
         OnClick = AddSTRcomment1Click
       end

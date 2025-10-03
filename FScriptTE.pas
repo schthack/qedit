@@ -1169,7 +1169,7 @@ end;
 
 procedure TfmScriptTE.About1Click(Sender: TObject);
 begin
-  Application.MessageBox('    Script Text Editor and version 1.0-1.1c updates by Alisaryn.'
+  Application.MessageBox('    Script Text Editor and version 1.0-1.2c updates by Alisaryn.'
   + #13#10 + '    Contact through Discord for any feature requests or issues.', 'About', 0);
 end;
 
