@@ -265,9 +265,9 @@ begin
         end;
 
         if autoadjust then
-          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: On (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1)
+          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/Y-value adjustment: On (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1)
         else
-          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: Off (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1);
+          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/Y-value adjustment: Off (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1);
 
         if ini > 0 then begin
             dec(ini);
@@ -894,8 +894,23 @@ begin
         end;
     end;
 
-    if key = 'd' then dta:=dta + 1;
-    if dta = 3 then dta := 0;
+    if key = 'd' then
+    begin
+     dta:=dta + 1;
+     if dta = 3 then dta := 0;
+     // Save data format setting to the registry
+     Reg := TRegistry.Create;
+     try
+         Reg.RootKey := HKEY_CURRENT_USER;
+         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+         begin
+           Reg.WriteInteger('DataDisplay', dta);
+           Reg.CloseKey;
+         end;
+     finally
+       Reg.Free;
+     end;
+    end;
 
     if key = 'f' then fog:=fog xor 1;
 

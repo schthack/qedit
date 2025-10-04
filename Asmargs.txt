@@ -29,7 +29,9 @@ cd leti 4 // particle_id
 ce leti 7 // npc_crptalk_id
 d1 leti 4 // pl_chk_item2
 d4 leti 14 // npc_param
+de leti 6 // delete_bank_item
 e2 leti 6 // pcam_param
+ec leti 3 // sw_send
 f1 leti 6 // leti_fixed_camera
 f801 leti 5 // set_chat_callback
 f80d leti 5 // mag_designate_ex
@@ -37,11 +39,14 @@ f825 leti 3 // exp_multiplication
 f828 leti 1 // go_floor
 f82d leti 1 // if_switch_not_pressed
 f82e leti 2 // if_switch_pressed
+f851 leti 2 // ba_set_trap_count
 f85a leti 4 // equip_item
 f868 leti 3 // set_cmode_rank
 f86a leti 6 // item_create_cmode
+f87b leti 2 // take_slot_meseta
 f883 leti 2 // players_in_range
 f88f leti 20 // set_cmode_grave_rates
+f89a leti 2 // get_random
 f8a5 leti 5 // chat_detect
 f8a6 leti 10 // symbol_chat_create
 f8a7 leti 4 // set_shrink_size
@@ -58,5 +63,9 @@ f8f3 fleti 3 // particle2
 f901 leti 1 // dec2float
 f902 fleti 1 // float2dec
 f911 leti 4 // get_stackable_item_count
+f924 leti 3 // get_coord_player_detect
+f927 leti 4 // item_check_bank
+f933 leti 7 // item_create_multi_cm
 f94b leti 5 // particle3
 f94c leti 4 // particle3f_id
+f94d leti 2 // give_or_take_card

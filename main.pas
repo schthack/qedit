@@ -4749,6 +4749,8 @@ begin
           replaceselectiononly := Reg.ReadBool('ReplaceSelectionOnly');
         if Reg.ValueExists('3DMoveSpeed') then
           movespeed := Reg.ReadInteger('3DMoveSpeed');
+        if Reg.ValueExists('DataDisplay') then
+          dta := Reg.ReadInteger('DataDisplay');
         if Reg.ValueExists('3DAutoAdjust') then
           autoadjust := Reg.ReadBool('3DAutoAdjust');
         if Reg.ValueExists('TEHeight') then
