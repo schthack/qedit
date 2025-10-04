@@ -241,6 +241,49 @@ type
     $26, $27, $28, $29, $2A, $2B
   );
 
+  Ep1AttackID: array[0..58] of Byte = (
+    $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E,
+    $0F, $10, $11, $12, $13, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $20, $21,
+    $22, $23, $24, $25, $26, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39,
+    $FF, $48, $4B, $4E, $4F, $50, $51, $54, $55, $56, $57, $5A, $5B, $5C
+  );
+
+  Ep2AttackID: array[0..60] of Byte = (
+    $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E,
+    $0F, $10, $12, $47, $18, $19, $1A, $1B, $1C, $1D, $1E, $23, $24, $25, $26,
+    $2B, $2C, $2D, $2E, $30, $31, $32, $33, $3A, $3B, $3C, $3D, $40, $41, $42,
+    $43, $44, $45, $46, $FF, $48, $4B, $4E, $4F, $51, $54, $55, $57, $5A, $5B,
+    $5C
+  );
+
+  Ep4AttackID: array[0..35] of Byte = (
+    $00, $01, $03, $05, $06, $07, $08, $0A, $0D, $0E, $0F, $10, $11, $12, $13,
+    $17, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $20, $21, $22, $23, $24, $25,
+    $26, $27, $28, $29, $2A, $2B
+  );
+
+  const
+  Ep1MovementID: array[0..58] of Byte = (
+    $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E,
+    $0F, $FF, $11, $12, $10, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $20, $21,
+    $22, $23, $24, $25, $26, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39,
+    $FF, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54
+  );
+
+  Ep2MovementID: array[0..60] of Byte = (
+    $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E,
+    $0F, $FF, $12, $10, $18, $19, $1A, $1B, $1C, $1D, $1E, $23, $24, $25, $26,
+    $2B, $2C, $2D, $2E, $30, $31, $32, $33, $3A, $3B, $3C, $3D, $40, $41, $42,
+    $43, $44, $45, $46, $FF, $48, $49, $4A, $4B, $4D, $4E, $4F, $51, $52, $53,
+    $54
+  );
+
+  Ep4MovementID: array[0..35] of Byte = (
+    $00, $01, $03, $05, $06, $07, $08, $09, $0D, $0E, $0F, $10, $11, $12, $13,
+    $17, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $20, $21, $22, $23, $24, $25,
+    $26, $27, $28, $29, $2A, $2B
+  );
+
 var
   Form22: TForm22;
   SelDBSTAT:TEnemyStat;
@@ -392,22 +435,22 @@ begin
     if combobox1.ItemIndex < 4 then begin
         move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep1PhysID[z]],SelDBSTAT,36);
         move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep1ResistID[z]], SelDBRes,sizeof(SelDBRes));
-        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep1PhysID[z]], SelDBAtt,sizeof(SelDBAtt));
-        move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep1PhysID[z]], SelDBMov,sizeof(SelDBMov));
+        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep1AttackID[z]], SelDBAtt,sizeof(SelDBAtt));
+        move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep1MovementID[z]], SelDBMov,sizeof(SelDBMov));
     end else if (combobox1.ItemIndex >= 4)
     and (combobox1.ItemIndex < 6) then
     begin
         move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep2PhysID[z]],SelDBSTAT,36);
         move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep2ResistID[z]], SelDBRes,sizeof(SelDBRes));
-        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep2PhysID[z]], SelDBAtt,sizeof(SelDBAtt));
-        move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep2PhysID[z]], SelDBMov,sizeof(SelDBMov));
+        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep2AttackID[z]], SelDBAtt,sizeof(SelDBAtt));
+        move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep2MovementID[z]], SelDBMov,sizeof(SelDBMov));
     end
     else
     begin
         move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep4PhysID[z]],SelDBSTAT,36);
         move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep4ResistID[z]], SelDBRes,sizeof(SelDBRes));
-        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep4PhysID[z]], SelDBAtt,sizeof(SelDBAtt));
-        move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep4PhysID[z]], SelDBMov,sizeof(SelDBMov));
+        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep4AttackID[z]], SelDBAtt,sizeof(SelDBAtt));
+        move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep4MovementID[z]], SelDBMov,sizeof(SelDBMov));
     end;
     modalresult:=1;
 end;
