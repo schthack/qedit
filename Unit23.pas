@@ -46,7 +46,7 @@ begin
         combobox1.ItemIndex:=0;
     end else if tag = 1 then begin
         combobox1.Clear;
-        for x:=0 to 58 do
+        for x:=0 to 60 do
             combobox1.Items.Add(Ep2Name[x]);
         combobox1.ItemIndex:=0;
     end else begin
@@ -60,8 +60,8 @@ end;
 procedure TForm23.Button1Click(Sender: TObject);
 var z:integer;
 begin
-    for z:=0 to 58 do begin
-        if (tag = 0)
+    for z:=0 to 60 do begin
+        if (tag = 0) and (z <= 58)
         and (Ep1Name[z] = combobox1.Text) then break;
         if (tag = 1)
         and (Ep2Name[z] = combobox1.Text) then break;

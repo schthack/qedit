@@ -225,19 +225,49 @@ begin
         myscreen.TextOut('X: '+floattostrf(ppx,ffGeneral,6,2)+'  Y: '+floattostrf(ppy,ffGeneral,6,2)+
         '  Z: '+floattostrf(-ppz,ffGeneral,6,2)+'  Rotation: '+
         inttostr(round(vr*10430.37835047) and $ffff)+'/'+inttostr(round(vz*10430.37835047) and $ffff),rect(0,0,640,30),$FFFFFFFF,1)
-        else begin
+        else if dta = 1 then begin
         move(ppx,d1,4);
         move(ppy,d2,4);
         move(ppz,d3,4);
         myscreen.TextOut('X: '+inttohex(d1,8)+'  Y: '+inttohex(d2,8)+
         '  Z: '+inttohex(d3,8)+'  Rotation: '+
         inttohex(round(vr*10430.37835047) and $ffff,8)+'/'+inttohex(round(vz*10430.37835047) and $ffff,8),rect(0,0,640,30),$FFFFFFFF,1);
+        end
+        else
+        begin
+          if selected > -1 then
+          begin
+            if sType = 1 then
+              myscreen.TextOut(
+              'Map Section: ' +
+              inttostr(Floor[sfloor].Monster[Selected].map_section) +
+              ' Wave: ' + inttostr(Floor[sfloor].Monster[Selected].Unknow5) +
+              ' X: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_X)) +
+              ' Y: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_Z)) +
+              ' Z: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_Y)) +
+              ' Rotation: ' + inttostr((Floor[sfloor].Monster[Selected].Direction) and
+              $FFFF div 182) + '°',rect(0,0,640,30),$FFFFFFFF,1)
+            else if sType = 2 then
+              myscreen.TextOut(
+              'Map Section: ' +
+              inttostr(Floor[sfloor].Obj[Selected].map_section) +
+              ' Wave: ' + inttostr(Floor[sfloor].Obj[Selected].Unknow5) +
+              ' X: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_X)) +
+              ' Y: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Z)) +
+              ' Z: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Y)) +
+              ' Rotation: ' + inttostr((Floor[sfloor].Obj[Selected].unknow6) and
+              $FFFF div 182) + '°',rect(0,0,640,30),$FFFFFFFF,1)
+              else
+                myscreen.TextOut('X: Y: Z: Map Section: Wave: Rotation: ',rect(0,0,640,30),$FFFFFFFF,1);
+          end
+          else
+            myscreen.TextOut('X: Y: Z: Map Section: Wave: Rotation: ',rect(0,0,640,30),$FFFFFFFF,1);
         end;
 
         if autoadjust then
-          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: ON (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1)
+          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: On (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1)
         else
-          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: OFF (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1);
+          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/floor adjustment: Off (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1);
 
         if ini > 0 then begin
             dec(ini);
@@ -863,7 +893,10 @@ begin
           Reg.Free;
         end;
     end;
-    if key = 'd' then dta:=dta xor 1;
+
+    if key = 'd' then dta:=dta + 1;
+    if dta = 3 then dta := 0;
+
     if key = 'f' then fog:=fog xor 1;
 
     // Auto-rotate monster/object clockwise 22.5 degrees

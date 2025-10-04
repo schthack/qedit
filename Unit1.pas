@@ -511,7 +511,7 @@ begin
           if (AsmMode <> 2) and ((lastloadformat = 1) or (lastloadformat = 2)) then
           begin
             AsmMode := 2;
-            QuestDisam(@AsmCode, AsmRef, CodeLength, RefCount);
+            QuestDisam(code, ref, CodeLength, RefCount);
             exit;
           end;
 

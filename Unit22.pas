@@ -48,7 +48,7 @@ type
     'DRAGON',
     'Sinow Gold',
     'Rag Rappy',
-    'AI Rappy',
+    'Al Rappy',
     'Nano Dragon',
     'Dubchic',
     'Gillchic',
@@ -88,7 +88,7 @@ type
     'So Dimenian'
     );
 
-    Ep2Name:array[0..58] of string = (    'Mothmant',
+    Ep2Name:array[0..60] of string = (    'Mothmant',
     'Monest',
     'Savage Wolf',
     'Barbarous Wolf',
@@ -96,14 +96,15 @@ type
     'Nar Lily',
     'Sinow Berill',
     'Gee',
+    'Pig Ray',
+    'Ul Ray',
     'Chaos Sorceror',
     'Bee R',
     'Bee L',
     'Delbiter',
     'Dark Belra',
     'Barba Ray',
-    'Pig Ray',
-    'Ul Ray',
+    'Barba Ray Part',
     'Gol Dragon',
     'Sinow Spigell',
     'Rag Rappy',
@@ -136,6 +137,7 @@ type
     'Sinow Zele',
     'Merikle',
     'Mericus',
+    'Dubwitch',
     'Hildebear',
     'Hildeblue',
     'Merillia',
@@ -147,7 +149,7 @@ type
     'Dimenian',
     'La Dimenian',
     'So Dimenian'
-        );
+    );
 
     Ep4Name:array[0..35] of string = ('Boota',
     'Ze Boota',
@@ -187,18 +189,31 @@ type
     'Kondrieu (Phase 2 Spinner)'
     );
 
-    Ep1PhysID:array[0..58] of byte = (0,1,2,3,4,5,6,7,8,9,$0a,$0b,$0c,$0d,$0e,$0f,$10,$11,$12,$13
-        ,$18,$19,$1a,$1b,$1c,$1d,$1e,$1f,$20,$21,$22,$23,$24,$25,$26
-        ,$30,$31,$32,$33,$34,$35,$36,$37,$38,$39
-        ,$48,$49,$4a,$4b,$4c,$4d,$4e,$4f,$50,$51,$52,$53,$54,$55);
+  Ep1PhysID: array[0..58] of Byte = (
+    $00, $01, $02, $03, $04, $05, $06, $07, $08, $09,
+    $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $12, $13,
+    $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $20, $21,
+    $22, $23, $24, $25, $26, $30, $31, $32, $33, $34,
+    $35, $36, $37, $38, $39, $48, $49, $4A, $4B, $4C,
+    $4D, $4E, $4F, $50, $51, $52, $53, $54, $55
+  );
 
-    Ep2PhysID:array[0..58] of byte = (0,1,2,3,4,5,6,7,10,11,12,13,14,15,16,17,18,19,24,25,26,27,28,29,30,35,36,37,38,
-    43,44,45,46,48,49,50,51,58,59,60,61,64,65,66,67,68,69,70,73,74,75,76,78,79,80,82,83,84,85
-        );
+  Ep2PhysID: array[0..60] of Byte = (
+    $00, $01, $02, $03, $04, $05, $06, $07, $08, $09,
+    $0A, $0B, $0C, $0D, $0E, $0F, $10, $12, $13, $18,
+    $19, $1A, $1B, $1C, $1D, $1E, $23, $24, $25, $26,
+    $2B, $2C, $2D, $2E, $30, $31, $32, $33, $3A, $3B,
+    $3C, $3D, $40, $41, $42, $43, $44, $45, $46, $48,
+    $49, $4A, $4B, $4C, $4E, $4F, $50, $52, $53, $54,
+    $55
+  );
 
-    Ep4PhysID:array[0..35] of byte = (0,1,3,5,6,7,8,9,$0d,$0e,$0f,$10,$11,$12,$13,$17,$18,$19,$1a,$1b,$1c,$1d,$1e,$1f,
-    $20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$2a,$2b
-        );
+  Ep4PhysID: array[0..35] of Byte = (
+    $00, $01, $03, $05, $06, $07, $08, $09, $0D, $0E,
+    $0F, $10, $11, $12, $13, $17, $18, $19, $1A, $1B,
+    $1C, $1D, $1E, $1F, $20, $21, $22, $23, $24, $25,
+    $26, $27, $28, $29, $2A, $2B
+  );
 
 var
   Form22: TForm22;
@@ -313,7 +328,7 @@ begin
     end else if (combobox1.ItemIndex >= 4)
     and (combobox1.ItemIndex < 6) then begin
         combobox3.Clear;
-        for x:=0 to 58 do
+        for x:=0 to 60 do
             combobox3.Items.Add(Ep2Name[x]);
         combobox3.ItemIndex:=0;
     end else begin
@@ -333,9 +348,12 @@ end;
 procedure TForm22.Button2Click(Sender: TObject);
 var z:integer;
 begin
-    for z:=0 to 58 do begin
-        if (combobox1.ItemIndex < 4)
-        and (Ep1Name[z] = combobox3.Text) then break;
+    for z:=0 to 60 do begin
+        if z <= 58 then
+        begin
+          if (combobox1.ItemIndex < 4)
+          and (Ep1Name[z] = combobox3.Text) then break;
+        end;
         if (combobox1.ItemIndex >= 4)
         and (combobox1.ItemIndex < 6)
         and (Ep2Name[z] = combobox3.Text) then break;

@@ -1046,7 +1046,7 @@ begin
   s := inttohex(crc32ofstring(FullQuestFile), 8);
   unDumpQuest(path + 'temp\_' + s);
 
-  tmp2 := 'Quest Editor V 1.2c Public - ' + Title;
+  tmp2 := 'Quest Editor V 2.0a Public - ' + Title;
 
   Form1.Caption := unitochar(tmp2, 1000);
   curepi := GetEpisode;
@@ -2118,7 +2118,7 @@ begin
       if (OpenDialog1.FilterIndex = 6) then
       begin
         unDumpQuest(fn);
-        tmp2 := 'Quest Editor V 1.2c Public - ' + Title;
+        tmp2 := 'Quest Editor V 2.0a Public - ' + Title;
 
         Form1.Caption := unitochar(tmp2, 1000);
         curepi := GetEpisode;
@@ -2516,7 +2516,7 @@ begin
     CheckListBox1.ItemIndex := 0;
     CheckListBox1Click(Form1);
     // Form1.Caption:='Quest Editor V 1.6d - '+Title;
-    tmp2 := 'Quest Editor V 1.2c Public - ' + Title;
+    tmp2 := 'Quest Editor V 2.0a Public - ' + Title;
     { if isdc then Form1.Caption:=Form1.Caption+' (DreamCast ASCII Format)'
       else Form1.Caption:=Form1.Caption+' (PC Unicode Format)';
       if curepi = 0 then  Form1.Caption:=Form1.Caption+' - Episode 1';

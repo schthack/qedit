@@ -142,7 +142,7 @@ object fmScriptTE: TfmScriptTE
     Left = 344
     Top = 232
     object Addeditdata1: TMenuItem
-      Caption = 'Add or edit data'
+      Caption = 'Add/Edit data'
       object NPC1: TMenuItem
         Caption = 'NPC'
         OnClick = AddEditData
