@@ -59,9 +59,9 @@ type
     'Vol Opt (Phase 1 Core)',
     'Vol Opt (Phase 1 Pillar)',
     'Vol Opt (Phase 1 Monitor)',
-    'Vol Opt (Phase 1 Celing Amp)',
+    'Vol Opt (Phase 1 Spire)',
     'Vol Opt (Phase 2 Core)',
-    'Vol Opt (Phase 2 Floor Trap)',
+    'Vol Opt (Phase 2 Prison)',
     'Pofuilly Slime',
     'Pan Arms',
     'Hidoom',
@@ -176,17 +176,17 @@ type
     'Yowie (Desert)',
     'Girtablulu',
     'Saint-Milion (Phase 1)',
-    'Saint-Milion (Phase 1 Spinner)',
+    'Spinner (Saint-Milion 1)',
     'Saint-Milion (Phase 2)',
-    'Saint-Milion (Phase 2 Spinner)',
+    'Spinner (Saint-Milion 2)',
     'Shambertin (Phase 1)',
-    'Shambertin (Phase 1 Spinner)',
+    'Spinner (Shambertin 1)',
     'Shambertin (Phase 2)',
-    'Shambertin (Phase 2 Spinner)',
+    'Spinner (Shambertin 2)',
     'Kondrieu (Phase 1)',
-    'Kondrieu (Phase 1 Spinner)',
+    'Spinner (Kondrieu 1)',
     'Kondrieu (Phase 2)',
-    'Kondrieu (Phase 2 Spinner)'
+    'Spinner (Kondrieu 2)'
     );
 
   Ep1PhysID: array[0..58] of Byte = (
