@@ -239,7 +239,7 @@ begin
           begin
             if sType = 1 then
               myscreen.TextOut(
-              'Map Section: ' +
+              'Map section: ' +
               inttostr(Floor[sfloor].Monster[Selected].map_section) +
               ' Wave: ' + inttostr(Floor[sfloor].Monster[Selected].Unknow5) +
               ' X: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_X)) +
@@ -249,7 +249,7 @@ begin
               $FFFF div 182) + '°',rect(0,0,640,30),$FFFFFFFF,1)
             else if sType = 2 then
               myscreen.TextOut(
-              'Map Section: ' +
+              'Map section: ' +
               inttostr(Floor[sfloor].Obj[Selected].map_section) +
               ' Wave: ' + inttostr(Floor[sfloor].Obj[Selected].Unknow5) +
               ' X: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_X)) +
@@ -258,10 +258,10 @@ begin
               ' Rotation: ' + inttostr((Floor[sfloor].Obj[Selected].unknow6) and
               $FFFF div 182) + '°',rect(0,0,640,30),$FFFFFFFF,1)
               else
-                myscreen.TextOut('X: Y: Z: Map Section: Wave: Rotation: ',rect(0,0,640,30),$FFFFFFFF,1);
+                myscreen.TextOut('Map section:  Wave:  X:  Y:  Z:  Rotation:  ',rect(0,0,640,30),$FFFFFFFF,1);
           end
           else
-            myscreen.TextOut('X: Y: Z: Map Section: Wave: Rotation: ',rect(0,0,640,30),$FFFFFFFF,1);
+            myscreen.TextOut('Map section:  Wave:  X:  Y:  Z:  Rotation:  ',rect(0,0,640,30),$FFFFFFFF,1);
         end;
 
         if autoadjust then
