@@ -11,6 +11,7 @@ type
     Button1: TButton;
     Button2: TButton;
     ComboBox1: TComboBox;
+    cbIndexType: TComboBox;
     procedure Button2Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -68,10 +69,37 @@ begin
         if (tag = 2) and (z <= 35)
         and (Ep4Name[z] = combobox1.Text) then break;
     end;
-    if tag = 0 then
-        myresult:=Ep1PhysID[z]
-    else if tag = 1 then myresult:=Ep2PhysID[z]
-    else myresult:=Ep4PhysID[z];
+
+    // Load index type based on selection
+    if cbIndexType.ItemIndex = 2 then
+    begin
+      if tag = 0 then
+          myresult:=Ep1ResistID[z]
+      else if tag = 1 then myresult:=Ep2ResistID[z]
+      else myresult:=Ep4ResistID[z];
+    end
+    else if cbIndexType.ItemIndex = 3 then
+    begin
+      if tag = 0 then
+          myresult:=Ep1AttackID[z]
+      else if tag = 1 then myresult:=Ep2AttackID[z]
+      else myresult:=Ep4AttackID[z];
+    end
+    else if cbIndexType.ItemIndex = 4 then
+    begin
+      if tag = 0 then
+          myresult:=Ep1MovementID[z]
+      else if tag = 1 then myresult:=Ep2MovementID[z]
+      else myresult:=Ep4MovementID[z];
+    end
+    else
+    begin
+      if tag = 0 then
+          myresult:=Ep1PhysID[z]
+      else if tag = 1 then myresult:=Ep2PhysID[z]
+      else myresult:=Ep4PhysID[z];
+    end;
+
     modalresult:=1;
 end;
 
