@@ -20,7 +20,7 @@ object Form23: TForm23
     Width = 75
     Height = 25
     Caption = 'Ok'
-    TabOrder = 0
+    TabOrder = 2
     OnClick = Button1Click
   end
   object Button2: TButton
@@ -29,7 +29,7 @@ object Form23: TForm23
     Width = 75
     Height = 25
     Caption = 'Cancel'
-    TabOrder = 1
+    TabOrder = 3
     OnClick = Button2Click
   end
   object ComboBox1: TComboBox
@@ -37,7 +37,7 @@ object Form23: TForm23
     Top = 14
     Width = 159
     Height = 21
-    TabOrder = 2
+    TabOrder = 0
     Text = 'ComboBox1'
   end
   object cbIndexType: TComboBox
@@ -45,7 +45,7 @@ object Form23: TForm23
     Top = 44
     Width = 159
     Height = 21
-    TabOrder = 3
+    TabOrder = 1
     Text = 'Physical'
     Items.Strings = (
       'Physical'
