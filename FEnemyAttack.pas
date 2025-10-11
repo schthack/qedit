@@ -71,14 +71,14 @@ begin
     stringgrid2.Cells[1,1]:=inttostr(EnemyAttackData.v5);
     stringgrid2.Cells[1,2]:=inttostr(EnemyAttackData.v6);
     stringgrid2.Cells[1,3]:=floattostr(EnemyAttackData.f2);
-    stringgrid1.Cells[0,0]:='NNI1';
-    stringgrid1.Cells[0,1]:='NNI2';
-    stringgrid1.Cells[0,2]:='NNI3';
-    stringgrid1.Cells[0,3]:='NNI4';
-    stringgrid2.Cells[0,0]:='NNF1';
-    stringgrid2.Cells[0,1]:='NNI5';
-    stringgrid2.Cells[0,2]:='NNI6';
-    stringgrid2.Cells[0,3]:='NNF2';
+    stringgrid1.Cells[0,0]:='Bonus ATP';
+    stringgrid1.Cells[0,1]:='Max +ATP';
+    stringgrid1.Cells[0,2]:='Bonus ATA';
+    stringgrid1.Cells[0,3]:='Max +ATA';
+    stringgrid2.Cells[0,0]:='Range X';
+    stringgrid2.Cells[0,1]:='Angle';
+    stringgrid2.Cells[0,2]:='Unused';
+    stringgrid2.Cells[0,3]:='Range Y';
 end;
 
 end.

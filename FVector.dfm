@@ -10,6 +10,7 @@ object Form32: TForm32
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Position = poOwnerFormCenter
   OnShow = FormShow
   TextHeight = 13
   object StringGrid1: TStringGrid

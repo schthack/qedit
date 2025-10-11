@@ -4958,6 +4958,7 @@ begin
     begin
       form4.Past1.Caption := 'Paste';
       form4.Delete2.Caption := 'Delete chunk';
+      form26.Caption := 'Enemy Movement data';
     end;
     flp.Clear;
     CheckShadow;

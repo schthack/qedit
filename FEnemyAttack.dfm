@@ -1,18 +1,17 @@
 object Form25: TForm25
   Left = 306
   Top = 166
+  BorderStyle = bsToolWindow
   Caption = 'Enemy Attack data'
-  ClientHeight = 120
-  ClientWidth = 343
+  ClientHeight = 126
+  ClientWidth = 349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
-  PixelsPerInch = 96
   TextHeight = 13
   object StringGrid1: TStringGrid
     Left = 6

@@ -1,7 +1,7 @@
 object Form26: TForm26
   Left = 278
   Top = 194
-  BorderStyle = bsDialog
+  BorderStyle = bsToolWindow
   Caption = 'Enemy mouvement edit'
   ClientHeight = 164
   ClientWidth = 365
@@ -11,9 +11,7 @@ object Form26: TForm26
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
-  PixelsPerInch = 96
   TextHeight = 13
   object StringGrid1: TStringGrid
     Left = 10
