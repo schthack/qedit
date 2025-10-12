@@ -39,6 +39,7 @@ object Form23: TForm23
     Height = 21
     TabOrder = 0
     Text = 'ComboBox1'
+    OnChange = ComboBox1Change
   end
   object cbIndexType: TComboBox
     Left = 14

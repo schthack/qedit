@@ -35,6 +35,14 @@ object Form22: TForm22
     Height = 13
     Caption = 'Dificulty:'
   end
+  object lblAttack: TLabel
+    Left = 96
+    Top = -11
+    Width = 33
+    Height = 13
+    Caption = 'Table :'
+    Visible = False
+  end
   object ComboBox1: TComboBox
     Left = 70
     Top = 8
@@ -78,6 +86,7 @@ object Form22: TForm22
     Style = csOwnerDrawFixed
     Sorted = True
     TabOrder = 2
+    OnChange = ComboBox3Change
   end
   object Button1: TButton
     Left = 60
@@ -85,7 +94,7 @@ object Form22: TForm22
     Width = 75
     Height = 25
     Caption = 'Cancel'
-    TabOrder = 3
+    TabOrder = 5
     OnClick = Button1Click
   end
   object Button2: TButton
@@ -96,5 +105,16 @@ object Form22: TForm22
     Caption = 'Load'
     TabOrder = 4
     OnClick = Button2Click
+  end
+  object cbAttack: TComboBox
+    Left = 70
+    Top = -19
+    Width = 147
+    Height = 21
+    TabOrder = 3
+    Text = 'Attack'
+    Visible = False
+    Items.Strings = (
+      'Attack')
   end
 end

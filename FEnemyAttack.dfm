@@ -12,6 +12,7 @@ object Form25: TForm25
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   Position = poOwnerFormCenter
+  OnClose = FormClose
   TextHeight = 13
   object StringGrid1: TStringGrid
     Left = 6

@@ -17,10 +17,13 @@ type
     ComboBox3: TComboBox;
     Button1: TButton;
     Button2: TButton;
+    cbAttack: TComboBox;
+    lblAttack: TLabel;
     procedure FormShow(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure ComboBox3Change(Sender: TObject);
   private
     { Private declarations }
   public
@@ -78,7 +81,7 @@ type
     'Booma',
     'Gobooma',
     'Gigobooma',
-    'Grass Assasin',
+    'Grass Assassin',
     'Evil Shark',
     'Pal Shark',
     'Guil Shark',
@@ -284,6 +287,9 @@ type
     $26, $27, $28, $29, $2A, $2B
   );
 
+function GetAttackTables(name: string): TStringList;
+function GetAttackIndex(name: string; attack: string): integer;
+
 var
   Form22: TForm22;
   SelDBSTAT:TEnemyStat;
@@ -297,7 +303,7 @@ var
   DBinit:byte=0;
 implementation
 
-uses main;
+uses main, FEnemyAttack;
 
 
 {$R *.dfm}
@@ -328,6 +334,174 @@ C000 HARD
 D200 VHARD
 E400 ULT
 }
+
+function GetAttackTables(name: string): TStringList;
+begin
+  result := TStringList.Create;
+
+  result.Add('Attack');
+
+  // Belra
+  if (name = Ep1Name[14]) then
+  begin
+    result.Add('Attack (Fist)');
+  end;
+
+  // Hildebear/Hildeblue
+  if (name = Ep1Name[46]) or (name = Ep1Name[47]) then
+  begin
+    result.Add('Attack (Tech)');
+    result.Add('Attack (Jump)');
+  end;
+
+  // Grass Assassin
+  if (name = Ep1Name[51]) then
+  begin
+    result.Add('Attack (Charge)');
+    result.Add('Attack (Freeze)');
+  end;
+
+  // Delsaber
+  if (name = Ep1Name[55]) then
+  begin
+    result.Add('Attack (Shield)');
+    result.Add('Attack (Jump)');
+  end;
+
+  // Astark
+  if (name = Ep4Name[7]) then
+  begin
+    result.Add('Attack (Poison)');
+    result.Add('Attack (Jump)');
+  end;
+
+  // Morfos/Ze Boota/Ba Boota/Goran/Pyro Goran/Goran Detonator
+  if (name = Ep2Name[42]) or (name = Ep4Name[1]) or (name = Ep4Name[2])
+  or (name = Ep4Name[12]) or (name = Ep4Name[13]) or (name = Ep4Name[14]) then
+  begin
+    result.Add('Attack 2');
+  end;
+
+  // Barba Ray/Gibbles
+  if (name = Ep2Name[15]) or (name = Ep2Name[41]) then
+  begin
+    result.Add('Attack 2');
+    result.Add('Attack 3');
+  end;
+
+  // Ill Gill
+  if (name = Ep2Name[29]) then
+  begin
+    result.Add('Attack 2');
+    result.Add('Attack 3');
+    result.Add('Attack 4');
+  end;
+end;
+
+function GetAttackIndex(name: string; attack: string): integer;
+begin
+  result := -1;
+
+  // Belra
+  if (name = Ep1Name[14]) then
+  begin
+    if attack = 'Attack (Fist)' then result := $13;
+  end;
+
+  // Hildebear
+  if (name = Ep1Name[46]) then
+  begin
+    if attack = 'Attack (Tech)' then result := $49;
+    if attack = 'Attack (Jump)' then result := $4a;
+  end;
+
+  // Hildeblue
+  if (name = Ep1Name[47]) then
+  begin
+    if attack = 'Attack (Tech)' then result := $4c;
+    if attack = 'Attack (Jump)' then result := $4d;
+  end;
+
+  // Grass Assassin
+  if (name = Ep1Name[51]) then
+  begin
+    if attack = 'Attack (Charge)' then result := $52;
+    if attack = 'Attack (Freeze)' then result := $53;
+  end;
+
+  // Delsaber
+  if (name = Ep1Name[55]) then
+  begin
+    if attack = 'Attack (Shield)' then result := $58;
+    if attack = 'Attack (Jump)' then result := $59;
+  end;
+
+  // Barba Ray
+  if (name = Ep2Name[15]) then
+  begin
+    if attack = 'Attack 2' then result := $10;
+    if attack = 'Attack 3' then result := $11;
+  end;
+
+  // Ill Gill
+  if (name = Ep2Name[29]) then
+  begin
+     if attack = 'Attack 2' then result := $27;
+     if attack = 'Attack 3' then result := $28;
+     if attack = 'Attack 4' then result := $29;
+  end;
+
+  // Gibbles
+  if (name = Ep2Name[41]) then
+  begin
+     if attack = 'Attack 2' then result := $3e;
+     if attack = 'Attack 3' then result := $3f;
+  end;
+
+  // Morfos
+  if (name = Ep2Name[42]) then
+  begin
+    if attack = 'Attack 2' then result := $50;
+  end;
+
+  // Ze Boota
+  if (name = Ep4Name[1]) then
+  begin
+    if attack = 'Attack 2' then result := $2;
+  end;
+
+  // Ba Boota
+  if (name = Ep4Name[2]) then
+  begin
+    if attack = 'Attack 2' then result := $4;
+  end;
+
+  // Astark
+  if (name = Ep4Name[7]) then
+  begin
+    if attack = 'Attack (Poison)' then result := $b;
+    if attack = 'Attack (Jump)' then result := $c;
+  end;
+
+  // Goran
+  if (name = Ep4Name[12]) then
+  begin
+    if attack = 'Attack 2' then result := $14;
+  end;
+
+  // Pyro Goran
+  if (name = Ep4Name[13]) then
+  begin
+    if attack = 'Attack 2' then result := $15;
+  end;
+
+  // Goran Detonator
+  if (name = Ep4Name[14]) then
+  begin
+    if attack = 'Attack 2' then result := $16;
+  end;
+end;
+
 procedure TForm22.FormShow(Sender: TObject);
 var x:integer;
 begin
@@ -383,7 +557,7 @@ begin
         fileclose(x);
         ComboBox1Change(self);
     end;
-
+    ComboBox3Change(nil);
 end;
 
 procedure TForm22.ComboBox1Change(Sender: TObject);
@@ -405,7 +579,54 @@ begin
       for x:=0 to 35 do
           combobox3.Items.Add(Ep4Name[x]);
           combobox3.ItemIndex:=0;
-    end
+    end;
+    ComboBox3Change(nil);
+end;
+
+procedure TForm22.ComboBox3Change(Sender: TObject);
+var
+  i: integer;
+  attacktables: TStringList;
+begin
+  cbAttack.Clear;
+  attacktables := GetAttackTables(ComboBox3.Text);
+  if attacktables.Count > 0 then
+  begin
+    for i := 0 to attacktables.Count - 1 do
+      cbAttack.items.Add(attacktables[i]);
+  end;
+  cbAttack.Text := 'Attack';
+  if attacktables.Count > 1 then
+  begin
+    if not lblAttack.Visible then
+    begin
+      lblAttack.Left := Label2.Left;
+      lblAttack.Top := Label2.Top + 32;
+      cbAttack.Left := ComboBox3.Left;
+      cbAttack.Top := ComboBox3.Top + 32;
+      Button1.Top := Button1.Top + 32;
+      Button2.Top := Button2.Top + 32;
+      ClientHeight := ClientHeight + 32;
+
+      lblAttack.Visible := true;
+      cbAttack.Visible := true;
+    end;
+  end
+  else
+  begin
+    if lblAttack.Visible then
+    begin
+      lblAttack.Top := Label2.Top - 32;
+      cbAttack.Top := ComboBox3.Top - 32;
+      Button1.Top := Button1.Top - 32;
+      Button2.Top := Button2.Top - 32;
+      ClientHeight := ClientHeight - 32;
+
+      lblAttack.Visible := false;
+      cbAttack.Visible := false;
+    end;
+  end;
+  attacktables.Free;
 end;
 
 procedure TForm22.Button1Click(Sender: TObject);
@@ -415,8 +636,17 @@ begin
 end;
 
 procedure TForm22.Button2Click(Sender: TObject);
-var z:integer;
+var z,idx:integer;
 begin
+    // Find specific attack index
+    idx := GetAttackIndex(combobox3.Text, cbAttack.Text);
+    if (idx <> -1) and (lblAttack.Visible) then
+    begin
+      move(DBs3[combobox1.Itemindex,combobox2.Itemindex,idx], SelDBAtt,sizeof(SelDBAtt));
+      modalresult:=1;
+      exit;
+    end;
+
     for z:=0 to 60 do begin
         if z <= 58 then
         begin
