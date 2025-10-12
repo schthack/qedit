@@ -101,21 +101,21 @@ begin
     end;
 
     // Load index type based on selection
-    if cbIndexType.ItemIndex = 2 then
+    if cbIndexType.Text = 'Resist' then
     begin
       if tag = 0 then
           myresult:=Ep1ResistID[z]
       else if tag = 1 then myresult:=Ep2ResistID[z]
       else myresult:=Ep4ResistID[z];
     end
-    else if cbIndexType.ItemIndex = 3 then
+    else if cbIndexType.Text = 'Attack' then
     begin
       if tag = 0 then
           myresult:=Ep1AttackID[z]
       else if tag = 1 then myresult:=Ep2AttackID[z]
       else myresult:=Ep4AttackID[z];
     end
-    else if cbIndexType.ItemIndex = 4 then
+    else if cbIndexType.Text = 'Movement' then
     begin
       if tag = 0 then
           myresult:=Ep1MovementID[z]
