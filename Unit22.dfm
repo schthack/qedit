@@ -110,9 +110,9 @@ object Form22: TForm22
     Left = 70
     Top = -19
     Width = 147
-    Height = 21
+    Height = 22
+    Style = csOwnerDrawFixed
     TabOrder = 3
-    Text = 'Attack'
     Visible = False
     Items.Strings = (
       'Attack')

@@ -198,7 +198,10 @@ uses main;
 
 Procedure SetControl;
 begin
-    form20.label7.Caption:=getlanguagestring(196)+' '+inttostr(form20.npcdata.section_id+1)+'/10';
+    if form1.New1.Caption = 'New' then
+      form20.label7.Caption:='Section ID'+' '+inttostr(form20.npcdata.section_id+1)+'/10'
+    else
+      form20.label7.Caption:=getlanguagestring(196)+' '+inttostr(form20.npcdata.section_id+1)+'/10';
     if form20.npcdata.v2_flags = 0 then form20.label10.Caption:=getlanguagestring(197)
     else form20.label10.Caption:=getlanguagestring(198)+' '+NPC_Name[form20.npcdata.extra_model];
     form20.label2.Caption:=Class_name[form20.npcdata.char_class];

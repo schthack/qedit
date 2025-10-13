@@ -54,6 +54,7 @@ begin
   end;
   cbIndexType.items.Add('Movement');
   cbIndexType.Text := 'Physical';
+  cbIndexType.ItemIndex := 0;
   attacktables.Free;
 end;
 

@@ -87,13 +87,13 @@ begin
     stringgrid2.Cells[1,1]:=inttostr(EnemyAttackData.v5);
     stringgrid2.Cells[1,2]:=inttostr(EnemyAttackData.v6);
     stringgrid2.Cells[1,3]:=floattostr(EnemyAttackData.f2);
-    stringgrid1.Cells[0,0]:='Bonus ATP';
-    stringgrid1.Cells[0,1]:='Max +ATP';
-    stringgrid1.Cells[0,2]:='Bonus ATA';
-    stringgrid1.Cells[0,3]:='Max +ATA';
+    stringgrid1.Cells[0,0]:='Min. ATP';
+    stringgrid1.Cells[0,1]:='Max. ATP';
+    stringgrid1.Cells[0,2]:='Min. ATA';
+    stringgrid1.Cells[0,3]:='Max. ATA';
     stringgrid2.Cells[0,0]:='Range X';
     stringgrid2.Cells[0,1]:='Angle';
-    stringgrid2.Cells[0,2]:='Unknown';
+    stringgrid2.Cells[0,2]:='Unused';
     stringgrid2.Cells[0,3]:='Range Y';
 end;
 

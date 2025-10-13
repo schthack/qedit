@@ -191,7 +191,7 @@ object fmScriptTE: TfmScriptTE
       end
       object Symbolchat1: TMenuItem
         Tag = 8
-        Caption = 'Symbol chat'
+        Caption = 'Symbol Chat'
         OnClick = AddEditData
       end
       object Vector1: TMenuItem

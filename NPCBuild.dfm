@@ -11,10 +11,8 @@ object Form20: TForm20
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 12
@@ -92,9 +90,9 @@ object Form20: TForm20
     ParentFont = False
   end
   object Label6: TLabel
-    Left = 40
+    Left = 60
     Top = 246
-    Width = 113
+    Width = 97
     Height = 13
     Alignment = taCenter
     AutoSize = False

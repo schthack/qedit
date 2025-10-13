@@ -595,10 +595,9 @@ begin
     for i := 0 to attacktables.Count - 1 do
       cbAttack.items.Add(attacktables[i]);
   end;
-  cbAttack.Text := 'Attack';
   if attacktables.Count > 1 then
   begin
-    if not lblAttack.Visible then
+    if (not lblAttack.Visible) and (form25.Visible) then
     begin
       lblAttack.Left := Label2.Left;
       lblAttack.Top := Label2.Top + 32;
@@ -614,7 +613,7 @@ begin
   end
   else
   begin
-    if lblAttack.Visible then
+    if (lblAttack.Visible) and (form25.Visible) then
     begin
       lblAttack.Top := Label2.Top - 32;
       cbAttack.Top := ComboBox3.Top - 32;
@@ -626,6 +625,8 @@ begin
       cbAttack.Visible := false;
     end;
   end;
+  cbAttack.Text := 'Attack';
+  cbAttack.ItemIndex := 0;
   attacktables.Free;
 end;
 

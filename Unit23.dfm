@@ -36,18 +36,19 @@ object Form23: TForm23
     Left = 14
     Top = 14
     Width = 159
-    Height = 21
+    Height = 22
+    Style = csOwnerDrawFixed
+    Sorted = True
     TabOrder = 0
-    Text = 'ComboBox1'
     OnChange = ComboBox1Change
   end
   object cbIndexType: TComboBox
     Left = 14
     Top = 44
     Width = 159
-    Height = 21
+    Height = 22
+    Style = csOwnerDrawFixed
     TabOrder = 1
-    Text = 'Physical'
     Items.Strings = (
       'Physical'
       'Resist'
