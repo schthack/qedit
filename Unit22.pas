@@ -107,7 +107,7 @@ type
     'Delbiter',
     'Dark Belra',
     'Barba Ray',
-    'Barba Ray Part',
+    'Barba Ray (Shell)',
     'Gol Dragon',
     'Sinow Spigell',
     'Rag Rappy',
@@ -339,12 +339,16 @@ function GetAttackTables(name: string): TStringList;
 begin
   result := TStringList.Create;
 
-  result.Add('Attack');
+  // Belra and Morfos ranged attack
+  if name = Ep1Name[14] then result.Add('Attack (Arm)')
+  else if name = Ep2Name[42] then result.Add('Attack (Laser)')
+  // Standard attack (all other monsters)
+  else result.Add('Attack');
 
   // Belra
   if (name = Ep1Name[14]) then
   begin
-    result.Add('Attack (Fist)');
+    result.Add('Attack (Swipe)');
   end;
 
   // Hildebear/Hildeblue
@@ -368,6 +372,45 @@ begin
     result.Add('Attack (Jump)');
   end;
 
+  // Barba Ray
+  if (name = Ep2Name[15]) then
+  begin
+    result.Add('Attack (Spear)');
+  end;
+
+  // Ill Gill
+  if (name = Ep2Name[29]) then
+  begin
+    result.Add('Attack (Scythe)');
+    result.Add('Attack (Snare)');
+    result.Add('Attack (Charge)');
+  end;
+
+  // Gibbles
+  if (name = Ep2Name[41]) then
+  begin
+    result.Add('Attack (Pound)');
+    result.Add('Attack (Jump)');
+  end;
+
+  // Morfos
+  if (name = Ep2Name[42]) then
+  begin
+    result.Add('Attack (Push)');
+  end;
+
+  // Ze Boota
+  if (name = Ep4Name[1]) then
+  begin
+    result.Add('Attack (Charge)');
+  end;
+
+  // Ba Boota
+  if (name = Ep4Name[2]) then
+  begin
+    result.Add('Attack (Foie)');
+  end;
+
   // Astark
   if (name = Ep4Name[7]) then
   begin
@@ -375,26 +418,10 @@ begin
     result.Add('Attack (Jump)');
   end;
 
-  // Morfos/Ze Boota/Ba Boota/Goran/Pyro Goran/Goran Detonator
-  if (name = Ep2Name[42]) or (name = Ep4Name[1]) or (name = Ep4Name[2])
-  or (name = Ep4Name[12]) or (name = Ep4Name[13]) or (name = Ep4Name[14]) then
+  // Goran/Pyro Goran/Goran Detonator
+  if (name = Ep4Name[12]) or (name = Ep4Name[13]) or (name = Ep4Name[14]) then
   begin
-    result.Add('Attack 2');
-  end;
-
-  // Barba Ray/Gibbles
-  if (name = Ep2Name[15]) or (name = Ep2Name[41]) then
-  begin
-    result.Add('Attack 2');
-    result.Add('Attack 3');
-  end;
-
-  // Ill Gill
-  if (name = Ep2Name[29]) then
-  begin
-    result.Add('Attack 2');
-    result.Add('Attack 3');
-    result.Add('Attack 4');
+    result.Add('Attack (Teleport)');
   end;
 end;
 
@@ -405,7 +432,7 @@ begin
   // Belra
   if (name = Ep1Name[14]) then
   begin
-    if attack = 'Attack (Fist)' then result := $13;
+    if attack = 'Attack (Swipe)' then result := $13;
   end;
 
   // Hildebear
@@ -439,41 +466,40 @@ begin
   // Barba Ray
   if (name = Ep2Name[15]) then
   begin
-    if attack = 'Attack 2' then result := $10;
-    if attack = 'Attack 3' then result := $11;
+    if attack = 'Attack (Spear)' then result := $11;
   end;
 
   // Ill Gill
   if (name = Ep2Name[29]) then
   begin
-     if attack = 'Attack 2' then result := $27;
-     if attack = 'Attack 3' then result := $28;
-     if attack = 'Attack 4' then result := $29;
+     if attack = 'Attack (Scythe)' then result := $27;
+     if attack = 'Attack (Snare)' then result := $28;
+     if attack = 'Attack (Charge)' then result := $29;
   end;
 
   // Gibbles
   if (name = Ep2Name[41]) then
   begin
-     if attack = 'Attack 2' then result := $3e;
-     if attack = 'Attack 3' then result := $3f;
+     if attack = 'Attack (Pound)' then result := $3e;
+     if attack = 'Attack (Jump)' then result := $3f;
   end;
 
   // Morfos
   if (name = Ep2Name[42]) then
   begin
-    if attack = 'Attack 2' then result := $50;
+    if attack = 'Attack (Push)' then result := $50;
   end;
 
   // Ze Boota
   if (name = Ep4Name[1]) then
   begin
-    if attack = 'Attack 2' then result := $2;
+    if attack = 'Attack (Charge)' then result := $2;
   end;
 
   // Ba Boota
   if (name = Ep4Name[2]) then
   begin
-    if attack = 'Attack 2' then result := $4;
+    if attack = 'Attack (Foie)' then result := $4;
   end;
 
   // Astark
@@ -486,19 +512,19 @@ begin
   // Goran
   if (name = Ep4Name[12]) then
   begin
-    if attack = 'Attack 2' then result := $14;
+    if attack = 'Attack (Teleport)' then result := $14;
   end;
 
   // Pyro Goran
   if (name = Ep4Name[13]) then
   begin
-    if attack = 'Attack 2' then result := $15;
+    if attack = 'Attack (Teleport)' then result := $15;
   end;
 
   // Goran Detonator
   if (name = Ep4Name[14]) then
   begin
-    if attack = 'Attack 2' then result := $16;
+    if attack = 'Attack (Teleport)' then result := $16;
   end;
 end;
 
@@ -556,8 +582,8 @@ begin
         fileread(x,dbs4[7],sizeof(dbs4[0]));
         fileclose(x);
         ComboBox1Change(self);
+        ComboBox3Change(self);
     end;
-    ComboBox3Change(nil);
 end;
 
 procedure TForm22.ComboBox1Change(Sender: TObject);
@@ -580,7 +606,7 @@ begin
           combobox3.Items.Add(Ep4Name[x]);
           combobox3.ItemIndex:=0;
     end;
-    ComboBox3Change(nil);
+    ComboBox3Change(self);
 end;
 
 procedure TForm22.ComboBox3Change(Sender: TObject);
@@ -625,7 +651,6 @@ begin
       cbAttack.Visible := false;
     end;
   end;
-  cbAttack.Text := 'Attack';
   cbAttack.ItemIndex := 0;
   attacktables.Free;
 end;

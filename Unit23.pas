@@ -53,7 +53,6 @@ begin
       cbIndexType.items.Add(attacktables[i]);
   end;
   cbIndexType.items.Add('Movement');
-  cbIndexType.Text := 'Physical';
   cbIndexType.ItemIndex := 0;
   attacktables.Free;
 end;
@@ -77,7 +76,7 @@ begin
             combobox1.Items.Add(Ep4Name[x]);
         combobox1.ItemIndex:=0;
     end;
-    ComboBox1Change(nil);
+    ComboBox1Change(self);
 end;
 
 procedure TForm23.Button1Click(Sender: TObject);

@@ -337,6 +337,7 @@ type
     SnapOptions2: TMenuItem;
     Options2: TMenuItem;
     Texteditor1: TMenuItem;
+    SwitchScriptEditor1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -447,6 +448,7 @@ type
     procedure smSnapOptionsClick(Sender: TObject);
     procedure SnapOptions2Click(Sender: TObject);
     procedure Texteditor1Click(Sender: TObject);
+    procedure SwitchScriptEditor1Click(Sender: TObject);
 
 
   private
@@ -9530,6 +9532,12 @@ begin
   LanguageString.LoadFromStream(flp);
   SetInterfaceText;
   flp.Free;
+end;
+
+procedure TForm1.SwitchScriptEditor1Click(Sender: TObject);
+begin
+  if fmScriptTE.Visible then form4.Show
+  else if form4.Visible then fmScriptTE.Show;
 end;
 
 procedure TForm1.Floorfilter1Click(Sender: TObject);

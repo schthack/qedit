@@ -685,6 +685,11 @@ object Form1: TForm1
         ShortCut = 16472
         OnClick = Hidemainwindow1Click
       end
+      object SwitchScriptEditor1: TMenuItem
+        Caption = 'Switch Script Editor'
+        ShortCut = 8278
+        OnClick = SwitchScriptEditor1Click
+      end
     end
   end
   object OpenDialog1: TOpenDialog

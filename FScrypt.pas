@@ -1250,7 +1250,7 @@ end;
 procedure TForm4.Decimal1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice, lastcaret: integer;
+  choice, lastcaret, lastline: integer;
 begin
     if not Decimal1.Checked then
     begin
@@ -1267,6 +1267,7 @@ begin
         Reg := TRegistry.Create;
         choice := listbox1.ItemIndex;
         lastcaret := fmScriptTE.TextEdit.CaretIndex;
+        lastline := fmScriptTE.TextEdit.TopLine;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -1280,7 +1281,8 @@ begin
         try
           QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
           listbox1.ItemIndex := choice;
-          fmScriptTE.TextEdit.CaretIndex := lastcaret;
+          fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+          fmScriptTE.TextEdit.TopLine := lastline;
         except
           Showmessage('Error reloading quest data.');
         end;
@@ -2103,13 +2105,17 @@ end;
 procedure TForm4.FormShow(Sender: TObject);
 begin
   if fmScriptTE.Visible then
+  begin
     fmScriptTE.Close;
+    form4.listbox1.itemindex := fmScriptTE.TextEdit.TextPosition.Line;
+    form4.listbox1.TopIndex := fmScriptTE.TextEdit.TopLine - 1;
+  end;
 end;
 
 procedure TForm4.Hex1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice, lastcaret: integer;
+  choice, lastcaret, lastline: integer;
 begin
     if not Hex1.Checked then
     begin
@@ -2126,6 +2132,7 @@ begin
         Reg := TRegistry.Create;
         choice := listbox1.ItemIndex;
         lastcaret := fmScriptTE.TextEdit.CaretIndex;
+        lastline := fmScriptTE.TextEdit.TopLine;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -2140,7 +2147,8 @@ begin
       try
         QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
         listbox1.ItemIndex := choice;
-        fmScriptTE.TextEdit.CaretIndex := lastcaret;
+        fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+        fmScriptTE.TextEdit.TopLine := lastline;
       except
         Showmessage('Error reloading quest data.');
       end;
@@ -2150,7 +2158,7 @@ end;
 procedure TForm4.HideNOPs1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice, lastcaret: integer;
+  choice, lastcaret, lastline: integer;
 begin
       if isedited then
         choice := MessageDlg('Changing the NOP opcode display will cancel any unsaved changes, continue?',
@@ -2163,6 +2171,7 @@ begin
         Reg := TRegistry.Create;
         choice := listbox1.ItemIndex;
         lastcaret := fmScriptTE.TextEdit.CaretIndex;
+        lastline := fmScriptTE.TextEdit.TopLine;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -2177,7 +2186,8 @@ begin
       try
         QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
         listbox1.ItemIndex := choice;
-        fmScriptTE.TextEdit.CaretIndex := lastcaret;
+        fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+        fmScriptTE.TextEdit.TopLine := lastline;
       except
         Showmessage('Error reloading quest data.');
       end;

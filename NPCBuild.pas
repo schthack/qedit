@@ -236,6 +236,7 @@ begin
         form20.button8.Enabled:=false;
         form20.button5.Enabled:=false;
         form20.button6.Enabled:=false;
+        form20.Panel2.Hide;
     end else begin
         form20.Label8.Font.Color:=clsilver;
         form20.button13.Enabled:=false;
@@ -255,6 +256,7 @@ begin
         form20.button2.Enabled:=true;
         form20.button5.Enabled:=true;
         form20.button6.Enabled:=true;
+        form20.Panel2.Show;
     end;
     end else begin
         form20.Label8.Font.Color:=clsilver;
@@ -285,6 +287,7 @@ begin
         form20.button4.Enabled:=false;
         form20.button5.Enabled:=false;
         form20.button6.Enabled:=false;
+        form20.Panel2.Hide;
     end;
 end;
 

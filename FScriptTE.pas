@@ -3,7 +3,8 @@ unit FScriptTE;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, ShellApi, System.Generics.Collections, System.Generics.Defaults, System.RegularExpressions, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Windows, Winapi.Messages, ShellApi, System.Generics.Collections, System.StrUtils,
+  System.Generics.Defaults, System.RegularExpressions, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
   Vcl.ExtCtrls, main, Vcl.ComCtrls, Vcl.StdCtrls;
 
@@ -196,6 +197,7 @@ procedure UpdateTextRefs();
 procedure SetTextZoom(zoomvalue: integer);
 procedure SetSearchEngine(engine: integer);
 procedure SetTextColor(colortype: string);
+function IsWordInString(aString: PWideChar; aSearchString: string; aSearchOptions: TStringSearchOptions): Boolean;
 
 var
   fmScriptTE: TfmScriptTE;
@@ -292,8 +294,9 @@ begin
       // Update registers
       for j := 0 to 255 do
       begin
-        if fmScriptTE.TextEdit.Lines[i].Contains('R' + inttostr(j)) then
-          AddRegister(j);
+          if IsWordInString(PChar(fmScriptTE.TextEdit.Lines[i]),
+          'R'+inttostr(j),[soDown, soWholeWord, soMatchCase]) then
+            AddRegister(j);
       end;
 
       // Update functions used
@@ -417,12 +420,13 @@ end;
 procedure SetTextColor(colortype: string);
 var
   Reg: TRegistry;
-  lastcaret: integer;
+  lastcaret,lastline: integer;
 begin
     with fmScriptTE do
     begin
       // Save text position
       lastcaret := TextEdit.CaretIndex;
+      lastline := TextEdit.TopLine;
       // Set default color
       if colortype = 'TEValueColor' then
         colordialog1.Color := clBlue
@@ -453,8 +457,17 @@ begin
       Close;
       Show;
       // Reset to last caret position
-      TextEdit.CaretIndex := lastcaret;
+      TextEdit.CaretIndex := lastcaret - 1;
+      TextEdit.TopLine := lastline;
     end;
+end;
+
+function IsWordInString(aString: PWideChar; aSearchString: string; aSearchOptions: TStringSearchOptions): Boolean;
+var
+  Size: Integer;
+begin
+  Size := StrLen(aString);
+  Result := SearchBuf(aString, Size, 0, 0, aSearchString, aSearchOptions) <> nil;
 end;
 
 procedure TfmScriptTE.Addlabel1Click(Sender: TObject);
@@ -475,12 +488,13 @@ end;
 
 procedure TfmScriptTE.ChangeTheme(Sender: TObject);
 var
-  lastcaret: integer;
+  lastcaret,lastline: integer;
   selection: TMenuItem;
   themename: string;
   Reg: TRegistry;
 begin
   lastcaret := TextEdit.CaretIndex;
+  lastline := TextEdit.TopLine;
   Default1.Checked := false;
   Blue1.Checked := false;
   Classic1.Checked := false;
@@ -539,7 +553,8 @@ begin
   begin
     fmScriptTE.Close;
     fmScriptTE.Show;
-    TextEdit.CaretIndex := lastcaret;
+    TextEdit.CaretIndex := lastcaret - 1;
+    TextEdit.TopLine := lastline;
   end;
 end;
 
@@ -568,10 +583,11 @@ end;
 procedure TfmScriptTE.Changefont1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  lastcaret: integer;
+  lastcaret,lastline: integer;
 begin
     // Save text position
     lastcaret := TextEdit.CaretIndex;
+    lastline := TextEdit.TopLine;
     if fontdialog1.Execute then begin
         TextEdit.Fonts.Text:=fontdialog1.Font;
         Textedit.Fonts.Text.Pitch:=fpFixed;
@@ -597,7 +613,8 @@ begin
     fmScriptTE.Close;
     fmScriptTE.Show;
     // Reset to last caret position
-    TextEdit.CaretIndex := lastcaret;
+    TextEdit.CaretIndex := lastcaret - 1;
+    TextEdit.TopLine := lastline;
 end;
 
 procedure TfmScriptTE.Copy1Click(Sender: TObject);
@@ -675,11 +692,15 @@ end;
 
 procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);
 var
-  i: integer;
+  i,lastcaret,lastline: integer;
 begin
   if textEdited then
   begin
+    lastcaret := fmScriptTE.TextEdit.CaretIndex;
+    lastline := fmScriptTE.TextEdit.TopLine;
     fmScriptTE.TextEdit.MoveCaretToBeginning;
+    fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+    fmScriptTE.TextEdit.TopLine := lastline;
     fmScriptTE.Hide;
     UpdateTextRefs();
     form4.listbox1.Clear;
@@ -725,10 +746,11 @@ end;
 
 procedure TfmScriptTE.FormShow(Sender: TObject);
 var
-  i: integer;
+  i,lastline: integer;
   JSONOpcodeList, JSONRegisterList: String;
   JSONStrings: TStringList;
 begin
+    lastline := form4.listbox1.ItemIndex;
     if not AddArgs1.Enabled then
       AddArgs1.Checked := false;
     textEdited := false;
@@ -882,7 +904,12 @@ begin
       form14.Repaint;
       TextEdit.Lines.Add(Form4.ListBox1.items[i]);
     end;
-    TextEdit.MoveCaretToBeginning;
+    if lastline > -1 then
+    begin
+      TextEdit.GoToLineAndSetPosition(lastline, length(TextEdit.Lines[lastline])+1);
+      TextEdit.TopLine := form4.Listbox1.TopIndex + 1;
+    end
+    else TextEdit.MoveCaretToBeginning;
     form14.Hide;
     form14.Caption := '3D Processing';
     form14.ProgressBar1.Position := 1;
@@ -1115,7 +1142,7 @@ end;
 
 procedure TfmScriptTE.Setformattingdefaults1Click(Sender: TObject);
 var
-  choice, lastcaret: integer;
+  choice, lastcaret, lastline: integer;
   Reg: TRegistry;
 begin
     choice := MessageDlg('Font and color options will be reset back to their defaults, continue?',
@@ -1125,6 +1152,7 @@ begin
     begin
       // Save text position
       lastcaret := TextEdit.CaretIndex;
+      lastline := TextEdit.TopLine;
 
       // Reset font
       TextEdit.Fonts.Text.Size := 9;
@@ -1163,7 +1191,8 @@ begin
       fmScriptTE.Show;
 
       // Reset to last caret position
-      TextEdit.CaretIndex := lastcaret;
+      TextEdit.CaretIndex := lastcaret - 1;
+      TextEdit.TopLine := lastline;
     end;
 end;
 
@@ -1193,9 +1222,14 @@ end;
 
 procedure TfmScriptTE.AddEditData(Sender: TObject);
 var
-  i,lastcaret: integer;
+  i,lastcaret,lastline: integer;
+  temp: array [0 .. 1000] of integer;
 begin
+  // Save references
+  move(datablock[0], temp[0], sizeof(datablock));
+
   lastcaret := TextEdit.CaretIndex;
+  lastline := TextEdit.TopLine;
   form4.ListBox1.Clear;
   for i := 0 to TextEdit.Lines.Count - 1 do
     form4.ListBox1.Items.Add(TextEdit.Lines[i]);
@@ -1228,8 +1262,12 @@ begin
   for i := 0 to form4.ListBox1.Items.Count - 1 do
     TextEdit.Lines.Add(form4.Listbox1.Items[i]);
 
-  TextEdit.CaretIndex := lastcaret;
+  TextEdit.CaretIndex := lastcaret - 1;
+  TextEdit.TopLine := lastline;
   TextEdited := true;
+
+  // Re-add references
+  move(temp[0], datablock[0], sizeof(datablock));
 end;
 
 procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
