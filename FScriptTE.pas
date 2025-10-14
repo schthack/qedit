@@ -126,6 +126,7 @@ type
     txtNotes: TMemo;
     Splitter1: TSplitter;
     Notes1: TMenuItem;
+    Switcheditor1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -186,6 +187,7 @@ type
     procedure Notes1Click(Sender: TObject);
     procedure FormHide(Sender: TObject);
     procedure txtNotesChange(Sender: TObject);
+    procedure Switcheditor1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -1194,6 +1196,11 @@ begin
       TextEdit.CaretIndex := lastcaret - 1;
       TextEdit.TopLine := lastline;
     end;
+end;
+
+procedure TfmScriptTE.Switcheditor1Click(Sender: TObject);
+begin
+  form1.SwitchScriptEditor1Click(nil);
 end;
 
 procedure TfmScriptTE.About1Click(Sender: TObject);

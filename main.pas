@@ -9536,8 +9536,10 @@ end;
 
 procedure TForm1.SwitchScriptEditor1Click(Sender: TObject);
 begin
-  if fmScriptTE.Visible then form4.Show
-  else if form4.Visible then fmScriptTE.Show;
+  if fmScriptTE.Visible then
+    form4.Show
+  else if form4.Visible then
+    fmScriptTE.Show;
 end;
 
 procedure TForm1.Floorfilter1Click(Sender: TObject);

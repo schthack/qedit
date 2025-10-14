@@ -258,13 +258,18 @@ object fmScriptTE: TfmScriptTE
       ShortCut = 46
       OnClick = Delete1Click
     end
-    object N1: TMenuItem
-      Caption = '-'
-    end
     object Undo1: TMenuItem
       Caption = 'Undo'
       ShortCut = 16474
       OnClick = Undo1Click
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object Switcheditor1: TMenuItem
+      Caption = 'Switch editor'
+      ShortCut = 8278
+      OnClick = Switcheditor1Click
     end
   end
   object MainMenu1: TMainMenu

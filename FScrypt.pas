@@ -62,6 +62,8 @@ type
     Hex1: TMenuItem;
     btnEditText: TButton;
     HideNOPs1: TMenuItem;
+    N3: TMenuItem;
+    Switcheditors1: TMenuItem;
     procedure Button4Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -108,6 +110,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnEditTextClick(Sender: TObject);
     procedure HideNOPs1Click(Sender: TObject);
+    procedure Switcheditors1Click(Sender: TObject);
 
 
   private
@@ -1250,7 +1253,7 @@ end;
 procedure TForm4.Decimal1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice, lastcaret, lastline: integer;
+  choice, lastcaret, lastline, lastindex: integer;
 begin
     if not Decimal1.Checked then
     begin
@@ -1268,6 +1271,7 @@ begin
         choice := listbox1.ItemIndex;
         lastcaret := fmScriptTE.TextEdit.CaretIndex;
         lastline := fmScriptTE.TextEdit.TopLine;
+        lastindex := listbox1.TopIndex;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -1281,6 +1285,7 @@ begin
         try
           QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
           listbox1.ItemIndex := choice;
+          listbox1.TopIndex := lastindex;
           fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
           fmScriptTE.TextEdit.TopLine := lastline;
         except
@@ -1707,7 +1712,7 @@ begin
 end;
 
 procedure TForm4.Ascode1Click(Sender: TObject);
-var x,i,choice:integer;
+var x,i,choice,lastindex:integer;
 begin
     if isedited then
       choice := MessageDlg(getlanguagestring(188),
@@ -1723,9 +1728,11 @@ begin
           datablock[i]:=section1.Tag;
           datablockt[i]:=x;
       end;
+      lastindex := listbox1.TopIndex;
       try
       QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
       listbox1.ItemIndex := choice;
+      listbox1.TopIndex := lastindex;
       except
           Showmessage(getlanguagestring(189));
       end;
@@ -1786,6 +1793,11 @@ end;
 procedure TForm4.Splitter1Moved(Sender: TObject);
 begin
     form4.StatusBar1.Panels.Items[0].Width:=form4.TreeView1.Width+4;
+end;
+
+procedure TForm4.Switcheditors1Click(Sender: TObject);
+begin
+  form1.SwitchScriptEditor1Click(nil);
 end;
 
 procedure TForm4.ListBox1Click(Sender: TObject);
@@ -2115,7 +2127,7 @@ end;
 procedure TForm4.Hex1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice, lastcaret, lastline: integer;
+  choice, lastcaret, lastline, lastindex: integer;
 begin
     if not Hex1.Checked then
     begin
@@ -2133,6 +2145,7 @@ begin
         choice := listbox1.ItemIndex;
         lastcaret := fmScriptTE.TextEdit.CaretIndex;
         lastline := fmScriptTE.TextEdit.TopLine;
+        lastindex := listbox1.TopIndex;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -2147,6 +2160,7 @@ begin
       try
         QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
         listbox1.ItemIndex := choice;
+        listbox1.TopIndex := lastindex;
         fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
         fmScriptTE.TextEdit.TopLine := lastline;
       except
@@ -2158,7 +2172,7 @@ end;
 procedure TForm4.HideNOPs1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice, lastcaret, lastline: integer;
+  choice, lastcaret, lastline, lastindex: integer;
 begin
       if isedited then
         choice := MessageDlg('Changing the NOP opcode display will cancel any unsaved changes, continue?',
@@ -2172,6 +2186,7 @@ begin
         choice := listbox1.ItemIndex;
         lastcaret := fmScriptTE.TextEdit.CaretIndex;
         lastline := fmScriptTE.TextEdit.TopLine;
+        lastindex := listbox1.TopIndex;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -2186,6 +2201,7 @@ begin
       try
         QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
         listbox1.ItemIndex := choice;
+        listbox1.TopIndex := lastindex;
         fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
         fmScriptTE.TextEdit.TopLine := lastline;
       except

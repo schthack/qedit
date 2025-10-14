@@ -627,6 +627,14 @@ object Form4: TForm4
       Caption = 'Delete'
       OnClick = Button4Click
     end
+    object N3: TMenuItem
+      Caption = '-'
+    end
+    object Switcheditors1: TMenuItem
+      Caption = 'Switch editor'
+      ShortCut = 8278
+      OnClick = Switcheditors1Click
+    end
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = '*.pasm'
