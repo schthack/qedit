@@ -1603,16 +1603,6 @@ begin
             Lines[i] := Lines[i] + ', ';
         end;
 
-        // Move to end of line if autocomplete was invoked
-        newsize := length(TextEdit.Lines[i]);
-        if (newsize > oldsize) and (argstrings.Count > 0) then
-        begin
-          // Save old scroll position
-          prevline := TextEdit.TopLine;
-          GoToLineAndSetPosition(i, length(Lines[i]) + 1);
-          TextEdit.TopLine := prevline;
-        end;
-
         // Add register arguments
         if (AddArgs1.Checked) and (AddArgs1.Enabled) and (argstrings.count > 0)
         and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
@@ -1648,9 +1638,17 @@ begin
           end;
         end;
 
-        // Clean up empty lines
+        // Move to end of line if autocomplete was invoked
+        newsize := length(TextEdit.Lines[i]);
         if (newsize > oldsize) and (argstrings.Count > 0) then
+        begin
+          // Clean up empty lines
           DeleteEmptyLines;
+          // Save old scroll position
+          prevline := TextEdit.TopLine;
+          GoToLineAndSetPosition(i, length(Lines[i]) + 1);
+          TextEdit.TopLine := prevline;
+        end;
 
         // Leave and re-focus the text area to prevent issues with scrolling
         Statusbar1.SetFocus;
