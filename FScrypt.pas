@@ -981,7 +981,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form20.SpinEdit1.Value) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form20.SpinEdit1.Value) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1366,7 +1366,8 @@ begin
         inc(y);
         AddDataRef(form21.tag);
         if y < 0 then y:=0;
-        s:=inttostr(form21.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form21.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         for x:=0 to 15 do begin
@@ -1389,7 +1390,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form21.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form21.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1449,7 +1450,8 @@ begin
         inc(y);
         AddDataRef(form24.tag);
         if y < 0 then y:=0;
-        s:=inttostr(form24.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form24.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         for x:=0 to 15 do begin
@@ -1484,7 +1486,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form24.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form24.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1572,7 +1574,8 @@ begin
         AddDataRef(form25.tag);
         inc(y);
         if y < 0 then y:=0;
-        s:=inttostr(form25.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form25.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         for x:=0 to 15 do begin
@@ -1607,7 +1610,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form25.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form25.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1666,7 +1669,8 @@ begin
         AddDataRef(form26.tag);
         inc(y);
         if y < 0 then y:=0;
-        s:=inttostr(form26.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form26.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         for x:=0 to 15 do begin
@@ -1701,7 +1705,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form26.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form26.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1900,7 +1904,8 @@ begin
         AddDataRef(form28.tag);
         inc(y);
         if y < 0 then y:=0;
-        s:=inttostr(form28.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form28.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         i:=floatcount*4;
@@ -1926,7 +1931,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form28.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form28.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1987,7 +1992,8 @@ begin
         AddDataRef(form32.tag);
         inc(y);
         if y < 0 then y:=0;
-        s:=inttostr(form33.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form33.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         i:=sizeof(TSymbolData);
@@ -2013,7 +2019,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s + '00 00 00 00');
 
-        if GetReferenceType(form33.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form33.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -2075,7 +2081,8 @@ begin
         AddDataRef(form32.tag);
         inc(y);
         if y < 0 then y:=0;
-        s:=inttostr(form32.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form32.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         i:=form32.vectorCount*16;
@@ -2105,7 +2112,7 @@ begin
         inc(y);
         listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form32.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form32.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 

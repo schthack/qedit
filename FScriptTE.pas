@@ -209,6 +209,7 @@ var
   currentline: integer = 0;
   editline: integer = 0;
   nextline: integer = 0;
+  nextlabel: integer = 0;
   opcodelist: array [0 .. 1000] of TAsmFnc;
 
 implementation
@@ -1229,11 +1230,31 @@ end;
 
 procedure TfmScriptTE.AddEditData(Sender: TObject);
 var
-  i,lastcaret,lastline: integer;
+  i,j,lastcaret,lastline: integer;
   temp: array [0 .. 1000] of integer;
+  found: Boolean;
 begin
   // Save references
   move(datablock[0], temp[0], sizeof(datablock));
+
+  // Find and store the next unused label
+  with TextEdit do
+  begin
+    for i := 0 to 65535 do
+    begin
+      found := false;
+      for j := 0 to Lines.Count do
+      begin
+        if Lines[j].StartsWith(inttostr(i) + ':') then
+        found := true;
+      end;
+      if not found then
+      begin
+        nextlabel := i;
+        break;
+      end;
+    end;
+  end;
 
   lastcaret := TextEdit.CaretIndex;
   lastline := TextEdit.TopLine;
@@ -1645,9 +1666,11 @@ begin
           // Clean up empty lines
           DeleteEmptyLines;
           // Save old scroll position
+          TextEdit.BeginUpdate;
           prevline := TextEdit.TopLine;
           GoToLineAndSetPosition(i, length(Lines[i]) + 1);
           TextEdit.TopLine := prevline;
+          TextEdit.EndUpdate;
         end;
 
         // Leave and re-focus the text area to prevent issues with scrolling

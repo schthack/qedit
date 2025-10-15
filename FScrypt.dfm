@@ -557,7 +557,7 @@ object Form4: TForm4
         OnClick = EditFloatdata1Click
       end
       object Editsymbolechat1: TMenuItem
-        Caption = 'Edit symbol chat'
+        Caption = 'Edit Symbol Chat'
         OnClick = Editsymbolechat1Click
       end
       object EditVectordata1: TMenuItem
@@ -572,7 +572,7 @@ object Form4: TForm4
         OnClick = Delete2Click
       end
       object Addsymbolechat1: TMenuItem
-        Caption = 'Add symbol chat'
+        Caption = 'Add Symbol Chat'
         OnClick = Addsymbolechat1Click
       end
     end
