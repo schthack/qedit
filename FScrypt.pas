@@ -2156,15 +2156,15 @@ begin
         finally
           Reg.Free;
         end;
-      end;
-      try
-        QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
-        listbox1.ItemIndex := choice;
-        listbox1.TopIndex := lastindex;
-        fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
-        fmScriptTE.TextEdit.TopLine := lastline;
-      except
-        Showmessage('Error reloading quest data.');
+        try
+          QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+          listbox1.ItemIndex := choice;
+          listbox1.TopIndex := lastindex;
+          fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+          fmScriptTE.TextEdit.TopLine := lastline;
+        except
+          Showmessage('Error reloading quest data.');
+        end;
       end;
     end;
 end;
@@ -2197,15 +2197,15 @@ begin
         finally
           Reg.Free;
         end;
-      end;
-      try
-        QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
-        listbox1.ItemIndex := choice;
-        listbox1.TopIndex := lastindex;
-        fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
-        fmScriptTE.TextEdit.TopLine := lastline;
-      except
-        Showmessage('Error reloading quest data.');
+        try
+          QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+          listbox1.ItemIndex := choice;
+          listbox1.TopIndex := lastindex;
+          fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+          fmScriptTE.TextEdit.TopLine := lastline;
+        except
+          Showmessage('Error reloading quest data.');
+        end;
       end;
 end;
 
