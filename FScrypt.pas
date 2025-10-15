@@ -1474,7 +1474,7 @@ begin
         end;
         x:=0;
         while x < 4 do begin
-            if z = 17 then begin
+            if z = 16 then begin
                 listbox1.Items.Insert(y,s);
                 inc(y);
                 s:='        HEX: ';
@@ -1598,7 +1598,7 @@ begin
         end;
         x:=0;
         while x < 4 do begin
-            if z = 17 then begin
+            if z = 16 then begin
                 listbox1.Items.Insert(y,s);
                 inc(y);
                 s:='        HEX: ';

@@ -724,7 +724,12 @@ begin
                 Showmessage('Invalid episode number.');
             end else begin
                 form23.tag:=c;
-                if form23.showmodal = 1 then UnicodeStringGrid1.Cells[1,0]:=inttohex(form23.myresult,8);
+                if form23.showmodal = 1 then
+                begin
+                  if tabcontrol1.TabIndex = 1 then UnicodeStringGrid1.Cells[1,0]:=Format('%.8d', [form23.myresult])
+                  else
+                    UnicodeStringGrid1.Cells[1,0]:=inttohex(form23.myresult,8);
+                end;
             end;
          end;
 
