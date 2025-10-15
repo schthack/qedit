@@ -54,7 +54,7 @@ object Form25: TForm25
   object Button1: TButton
     Left = 8
     Top = 94
-    Width = 75
+    Width = 81
     Height = 25
     Caption = 'Load template'
     TabOrder = 2

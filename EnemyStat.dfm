@@ -110,7 +110,7 @@ object Form21: TForm21
   object Button1: TButton
     Left = 6
     Top = 156
-    Width = 75
+    Width = 83
     Height = 25
     Caption = 'Load template'
     TabOrder = 4

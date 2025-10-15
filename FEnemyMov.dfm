@@ -80,7 +80,7 @@ object Form26: TForm26
   object Button3: TButton
     Left = 10
     Top = 130
-    Width = 75
+    Width = 79
     Height = 25
     Caption = 'Load template'
     TabOrder = 4
