@@ -467,10 +467,10 @@ end;
 
 function IsWordInString(aString: PWideChar; aSearchString: string; aSearchOptions: TStringSearchOptions): Boolean;
 var
-  Size: Integer;
+  size: Integer;
 begin
-  Size := StrLen(aString);
-  Result := SearchBuf(aString, Size, 0, 0, aSearchString, aSearchOptions) <> nil;
+  size := strLen(aString);
+  result := SearchBuf(aString, size, 0, 0, aSearchString, aSearchOptions) <> nil;
 end;
 
 procedure TfmScriptTE.Addlabel1Click(Sender: TObject);
@@ -979,7 +979,7 @@ begin
     for i := 0 to 65535 do
     begin
       found := false;
-      for j := 0 to Lines.Count do
+      for j := 0 to Lines.Count - 1 do
       begin
         if Lines[j].StartsWith(inttostr(i) + ':') then
         found := true;
@@ -1238,20 +1238,23 @@ begin
   move(datablock[0], temp[0], sizeof(datablock));
 
   // Find and store the next unused label
-  with TextEdit do
+  if tmenuitem(sender).Tag <> 0 then
   begin
-    for i := 0 to 65535 do
+    with TextEdit do
     begin
-      found := false;
-      for j := 0 to Lines.Count do
+      for i := 0 to 65535 do
       begin
-        if Lines[j].StartsWith(inttostr(i) + ':') then
-        found := true;
-      end;
-      if not found then
-      begin
-        nextlabel := i;
-        break;
+        found := false;
+        for j := 0 to Lines.Count - 1 do
+        begin
+          if Lines[j].StartsWith(inttostr(i) + ':') then
+          found := true;
+        end;
+        if not found then
+        begin
+          nextlabel := i;
+          break;
+        end;
       end;
     end;
   end;

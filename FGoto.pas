@@ -47,7 +47,7 @@ begin
 
     with fmScriptTE.TextEdit do
     begin
-      for i := 0 to Lines.Count do
+      for i := 0 to Lines.Count - 1 do
       begin
         if Lines[i].StartsWith(SpinEdit1.Text + ':') then
         begin
