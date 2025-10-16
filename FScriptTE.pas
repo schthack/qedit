@@ -1656,7 +1656,11 @@ begin
                 end;
                 inc(g);
               end;
+              // Clean up empty lines
+              DeleteEmptyLines;
+              TextEdit.BeginUpdate;
               GoToLineAndSetPosition(i, length(Lines[i]) + 1);
+              TextEdit.EndUpdate;
               break;
             end;
           end;
