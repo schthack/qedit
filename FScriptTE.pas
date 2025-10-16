@@ -225,7 +225,7 @@ var
   reftype,currentline,labelstr: widestring;
   opcodestr: string;
 begin
-  form14.Caption := 'Clearing References';
+  form14.Caption := 'Adding References';
   form14.Label1.Hide;
   form14.Show;
   form14.ProgressBar1.max := fmScriptTE.TextEdit.Lines.Count - 1;
@@ -235,15 +235,6 @@ begin
 
   // Clear data references
   for i := 0 to 1000 do datablock[i]:=-1;
-  for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
-  begin
-    try
-      form14.ProgressBar1.Position := i;
-      form14.Repaint;
-      RemoveRef(AnsiString(fmScriptTE.TextEdit.Lines[i]));
-    except // New or imported file with no references to delete, catch exception
-    end;
-  end;
 
    // Clear and re-initialize the treeview
   form4.TreeView1.Items.Clear;
@@ -268,7 +259,6 @@ begin
   TsReg.Clear;
   Tsopc.Clear;
 
-  form14.Caption := 'Adding New References';
   for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
   begin
     form14.ProgressBar1.Position := i;
