@@ -289,6 +289,8 @@ type
 
 function GetAttackTables(name: string): TStringList;
 function GetAttackIndex(name: string; attack: string): integer;
+procedure HideAttackTables();
+procedure ShowAttackTables();
 
 var
   Form22: TForm22;
@@ -528,8 +530,35 @@ begin
   end;
 end;
 
+procedure HideAttackTables();
+begin
+  form22.lblAttack.Top := form22.Label2.Top - 32;
+  form22.cbAttack.Top := form22.ComboBox3.Top - 32;
+  form22.Button1.Top := form22.Button1.Top - 32;
+  form22.Button2.Top := form22.Button2.Top - 32;
+  form22.ClientHeight := form22.ClientHeight - 32;
+
+  form22.lblAttack.Visible := false;
+  form22.cbAttack.Visible := false;
+end;
+
+procedure ShowAttackTables();
+begin
+  form22.lblAttack.Left := form22.Label2.Left;
+  form22.lblAttack.Top := form22.Label2.Top + 32;
+  form22.cbAttack.Left := form22.ComboBox3.Left;
+  form22.cbAttack.Top := form22.ComboBox3.Top + 32;
+  form22.Button1.Top := form22.Button1.Top + 32;
+  form22.Button2.Top := form22.Button2.Top + 32;
+  form22.ClientHeight := form22.ClientHeight + 32;
+
+  form22.lblAttack.Visible := true;
+  form22.cbAttack.Visible := true;
+end;
+
 procedure TForm22.FormShow(Sender: TObject);
 var x:integer;
+attacktables: TStringList;
 begin
     if DBinit = 0 then begin
         DBinit:=1;
@@ -584,6 +613,22 @@ begin
         ComboBox1Change(self);
         ComboBox3Change(self);
     end;
+    attacktables := GetAttackTables(ComboBox3.Text);
+    if attacktables.Count > 1 then
+    begin
+      if (not lblAttack.Visible) and (form25.Visible) then
+      begin
+        ShowAttackTables;
+      end;
+    end
+    else
+    begin
+      if (lblAttack.Visible) and (form25.Visible) then
+      begin
+        HideAttackTables;
+      end;
+    end;
+    attacktables.Free;
 end;
 
 procedure TForm22.ComboBox1Change(Sender: TObject);
@@ -625,30 +670,14 @@ begin
   begin
     if (not lblAttack.Visible) and (form25.Visible) then
     begin
-      lblAttack.Left := Label2.Left;
-      lblAttack.Top := Label2.Top + 32;
-      cbAttack.Left := ComboBox3.Left;
-      cbAttack.Top := ComboBox3.Top + 32;
-      Button1.Top := Button1.Top + 32;
-      Button2.Top := Button2.Top + 32;
-      ClientHeight := ClientHeight + 32;
-
-      lblAttack.Visible := true;
-      cbAttack.Visible := true;
+      ShowAttackTables;
     end;
   end
   else
   begin
     if (lblAttack.Visible) and (form25.Visible) then
     begin
-      lblAttack.Top := Label2.Top - 32;
-      cbAttack.Top := ComboBox3.Top - 32;
-      Button1.Top := Button1.Top - 32;
-      Button2.Top := Button2.Top - 32;
-      ClientHeight := ClientHeight - 32;
-
-      lblAttack.Visible := false;
-      cbAttack.Visible := false;
+      HideAttackTables;
     end;
   end;
   cbAttack.ItemIndex := 0;

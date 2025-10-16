@@ -66,14 +66,7 @@ procedure TForm25.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     if form22.lblAttack.Visible then
     begin
-      form22.lblAttack.Top := form22.Label2.Top - 32;
-      form22.cbAttack.Top := form22.ComboBox3.Top - 32;
-      form22.Button1.Top := form22.Button1.Top - 32;
-      form22.Button2.Top := form22.Button2.Top - 32;
-      form22.ClientHeight := form22.ClientHeight - 32;
-
-      form22.lblAttack.Visible := false;
-      form22.cbAttack.Visible := false;
+      HideAttackTables;
     end;
 end;
 
