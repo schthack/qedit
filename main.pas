@@ -4962,6 +4962,7 @@ begin
       form4.Delete2.Caption := 'Delete chunk';
       form25.Caption := 'Enemy attack data';
       form26.Caption := 'Enemy movement data';
+      form22.Label3.Caption := 'Difficulty : ';
     end;
     flp.Clear;
     CheckShadow;
