@@ -687,7 +687,7 @@ object Form1: TForm1
       end
       object SwitchScriptEditor1: TMenuItem
         Caption = 'Switch Script Editor'
-        ShortCut = 8278
+        ShortCut = 32856
         OnClick = SwitchScriptEditor1Click
       end
     end

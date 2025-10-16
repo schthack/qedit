@@ -268,7 +268,7 @@ object fmScriptTE: TfmScriptTE
     end
     object Switcheditor1: TMenuItem
       Caption = 'Switch editor'
-      ShortCut = 8278
+      ShortCut = 32856
       OnClick = Switcheditor1Click
     end
   end

@@ -632,7 +632,7 @@ object Form4: TForm4
     end
     object Switcheditors1: TMenuItem
       Caption = 'Switch editor'
-      ShortCut = 8278
+      ShortCut = 32856
       OnClick = Switcheditors1Click
     end
   end
