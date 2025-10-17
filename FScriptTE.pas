@@ -200,6 +200,7 @@ procedure SetTextZoom(zoomvalue: integer);
 procedure SetSearchEngine(engine: integer);
 procedure SetTextColor(colortype: string);
 function IsWordInString(aString: PWideChar; aSearchString: string; aSearchOptions: TStringSearchOptions): Boolean;
+function ReplaceApostrophes(const s: string): string;
 
 var
   fmScriptTE: TfmScriptTE;
@@ -207,7 +208,7 @@ var
   linechanged: Boolean = false;
   changeline: integer = 0;
   currentline: integer = 0;
-  editline: integer = 0;
+  editline: integer = -1;
   nextline: integer = 0;
   nextlabel: integer = 0;
   opcodelist: array [0 .. 1000] of TAsmFnc;
@@ -463,6 +464,32 @@ begin
   result := SearchBuf(aString, size, 0, 0, aSearchString, aSearchOptions) <> nil;
 end;
 
+function ReplaceApostrophes(const s: string): string;
+var
+  len: integer;
+begin
+  result := s;
+  len := length(s);
+
+  if len >= 4 then
+  begin
+    var i: integer := 1;
+    while i <= length(result) - 1 do // -1 because we're looking for ' '
+    begin
+      if (result[i] = '''') and (result[i+1] = '''') then
+      begin
+        // Check if this ' ' is not at the very beginning or end
+        if (i > 1) and (i + 1 < length(result)) then
+        begin
+          // Replace ' ' with a single '
+          delete(result, i + 1, 1); // Delete the second apostrophe
+        end;
+      end;
+      inc(i);
+    end;
+  end;
+end;
+
 procedure TfmScriptTE.Addlabel1Click(Sender: TObject);
 begin
   Newlabel1Click(nil);
@@ -475,8 +502,10 @@ end;
 
 procedure TfmScriptTE.AddSTRcomment1Click(Sender: TObject);
 begin
+  TextEdit.BeginUndoBlock;
   NewLabel1Click(nil);
   TextEdit.InsertText('STR: ');
+  TextEdit.EndUndoBlock;
 end;
 
 procedure TfmScriptTE.ChangeTheme(Sender: TObject);
@@ -1295,7 +1324,7 @@ procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
   AOffset: Integer);
 var
   i,j,j2,k,x,y,x3,y3,g,d,oldsize,newsize,prevline,labelnum,opcodepos,argpos: integer;
-  reftype,trimline,labelstr,opcodestr,whitespace,s,o,fullargs: widestring;
+  reftype,trimline,labelstr,opcodestr,whitespace,s,o,fullargs,constructline: widestring;
   argarray: TArray<string>;
   argstrings: TStringList;
   invalidswitch: Boolean;
@@ -1304,7 +1333,7 @@ var
 begin
   TextEditClick(nil);
   nextline := TextEdit.TextPosition.Line;
-  if (nextline <> editline) or linechanged then
+  if (editline <> -1) and ((nextline <> editline) or linechanged) then
   begin
     argstrings := TStringList.Create;
 
@@ -1315,6 +1344,7 @@ begin
 
     oldsize := length(TextEdit.Lines[i]);
 
+    editline := -1;
     linechanged := false;
 
     trimline := Trim(fmScriptTE.TextEdit.Lines[i]);
@@ -1339,7 +1369,6 @@ begin
 
       // Get opcode if it exists
       opcodestr := '';
-      TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
       for j := 0 to Length(opcodelist) - 1 do
       begin
         if (opcodelist[j].name <> '') and (fmScriptTE.TextEdit.Lines[i].Contains(opcodelist[j].name)) then
@@ -1441,6 +1470,7 @@ begin
               s:=''''+s;
              if s[length(s)] <> '''' then
              s:=s+'''';
+             s:=ReplaceApostrophes(s);
           end else
           if (opcodelist[j].arg[x] = T_BYTE) then begin
              if not showdecimal then
@@ -1589,33 +1619,35 @@ begin
       with fmScriptTE.TextEdit do
         begin
         // Reconstruct the line
-        Lines[i] := '';
+        constructline := '';
         whitespace := '        ';
 
         // Label/whitespace
         if labelstr <> '' then
         begin
-          Lines[i] := labelstr + ':';
+          constructline := labelstr + ':';
           for j := 1 to length(labelstr) + 1 do
           SetLength(whitespace,length(whitespace)-1);
         end;
-        Lines[i] := Lines[i] + whitespace;
+        constructline := constructline + whitespace;
 
         // Opcode
         if (argstrings.Count > 0) and ((opcodestr = 'STR:') or (opcodestr = 'HEX:'))
         and (argstrings.Strings[0][1] = ' ') then
-          Lines[i] := Lines[i] + opcodestr
-        else Lines[i] := Lines[i] + opcodestr + ' ';
+          constructline := constructline + opcodestr
+        else constructline := constructline + opcodestr + ' ';
 
         // Arguments
         for j := 0 to argstrings.count - 1 do
         begin
-          Lines[i] := Lines[i] + argstrings.Strings[j];
+          constructline := constructline + argstrings.Strings[j];
           if (j = 0) and (opcodestr = 'Unknow_Opcode') then
             break;
           if j <> argstrings.count - 1 then
-            Lines[i] := Lines[i] + ', ';
+            constructline := constructline + ', ';
         end;
+
+        if Lines[i] <> constructline then ReplaceLine(i+1,constructline, []);
 
         // Add register arguments
         if (AddArgs1.Checked) and (AddArgs1.Enabled) and (argstrings.count > 0)
@@ -1635,6 +1667,7 @@ begin
               s := copy(argstrings.Strings[g],2,Length(argstrings.Strings[g]) - 1);
               g := 0;
               trystrtoint(s,g);
+              BeginUndoBlock;
               for k := 0 to asmarg[j].argnum - 1 do
               begin
                 if g <= 255 then
@@ -1648,9 +1681,10 @@ begin
               end;
               // Clean up empty lines
               DeleteEmptyLines;
-              TextEdit.BeginUpdate;
+              BeginUpdate;
               GoToLineAndSetPosition(i, length(Lines[i]) + 1);
-              TextEdit.EndUpdate;
+              EndUpdate;
+              EndUndoBlock;
               break;
             end;
           end;
@@ -1748,10 +1782,13 @@ begin
   // The script is blank or end of line was reached; catch the exception
   except end;
 
+  TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
+
   for i := 0 to Length(opcodelist) - 1 do
   begin
     if  (opcodelist[i].name <> '') and (opcode.StartsWith(opcodelist[i].name)) then
     begin
+      TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,false);
       // Create argument list
       v := 0;
       while opcodelist[i].arg[v] <> T_NONE do
@@ -1833,6 +1870,8 @@ end;
 procedure TfmScriptTE.Undo1Click(Sender: TObject);
 begin
   TextEdit.DoUndo;
+  editline := -1;
+  linechanged := false;
 end;
 
 procedure TfmScriptTE.Z100Click(Sender: TObject);

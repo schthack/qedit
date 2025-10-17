@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls, ExtCtrls,
+  StrUtils, Dialogs, StdCtrls, ComCtrls, ExtCtrls, Generics.Collections, Generics.Defaults,
   ImgList, Menus, shellapi, WSDLIntf, Registry, System.ImageList;
 
 type
@@ -132,7 +132,7 @@ type
     function CompareLabel(List: TStringList; Index1, Index2: Integer): Integer;
     function CompareStr(List: TStringList; Index1, Index2: Integer): Integer;
     Procedure ScanForMap;
-
+    procedure UpdateScriptRefs;
 
 var
   Form4: TForm4;
@@ -144,7 +144,8 @@ var
 implementation
 
 uses TCom, main, Unit1, NPCBuild, PikaPackage, EnemyStat, Unit22,
-  FEnemyResist, FEnemyAttack, FEnemyMov, FFloatEdit, FVector, FSymbolChat, FScriptTE;
+  FEnemyResist, FEnemyAttack, FEnemyMov, FFloatEdit, FVector, FSymbolChat, FScriptTE,
+  Unit14;
 
 {$R *.dfm}
 
@@ -625,6 +626,107 @@ begin
     end;
 end;
 
+procedure UpdateScriptRefs();
+var
+  i,j,x,labelnum: integer;
+  reftype,currentline,labelstr: widestring;
+  opcodestr: string;
+begin
+  // Sort opcode list by name string length (highest to lowest)
+  for i := 0 to Length(asmcode) - 1 do
+    opcodelist[i] := asmcode[i];
+    TArray.Sort<TAsmFnc>(opcodelist,TDelegatedComparer<TAsmFnc>.Construct(
+  function(const Right, Left: TAsmFnc): Integer
+  begin
+    Result := Length(Left.name) - Length(Right.name);
+  end
+  ));
+
+  form14.Caption := 'Adding References';
+  form14.Label1.Hide;
+  form14.Show;
+  form14.ProgressBar1.max := form4.Listbox1.Items.Count - 1;
+
+  // Clear data references
+  for i := 0 to 1000 do datablock[i]:=-1;
+
+   // Clear and re-initialize the treeview
+  form4.TreeView1.Items.Clear;
+  TrFnc := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Function');
+  TrData := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Data/Str');
+  TrReg := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Register');
+  Tropc := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Opcode');
+  TrData.Text := getlanguagestring(133);
+  TrFnc.Text := getlanguagestring(132);
+  TrReg.Text := getlanguagestring(134);
+  Tropc.Text := getlanguagestring(135);
+  TrFnc.ImageIndex := 2;
+  TrFnc.SelectedIndex := 2;
+  TrData.ImageIndex := 2;
+  TrData.SelectedIndex := 2;
+  TrReg.ImageIndex := 2;
+  TrReg.SelectedIndex := 2;
+  Tropc.ImageIndex := 2;
+  Tropc.SelectedIndex := 2;
+  TsData.Clear;
+  TsFnc.Clear;
+  TsReg.Clear;
+  Tsopc.Clear;
+
+  for i := 0 to form4.Listbox1.Items.Count - 1 do
+  begin
+    form14.ProgressBar1.Position := i;
+    form14.Repaint;
+    currentline := form4.Listbox1.Items[i];
+    if currentline <> '' then
+    begin
+      // Update all label flag data references
+      x := pos(':',form4.Listbox1.Items[i]);
+      if (x <= 6) and (x <> 0) then
+      begin
+        labelstr := copy(currentline, 0, x-1);
+        currentline := copy(currentline, x+1, length(currentline));
+        currentline := TrimLeft(currentline);
+        reftype := copy(currentline, 0, 4);
+        if TryStrToInt(labelstr, labelnum) then
+        begin
+          if reftype = 'STR:' then
+            AddStrRef(labelnum)
+          else if reftype = 'HEX:' then
+            AddDataRef(labelnum)
+          else AddLabel(labelnum);
+      end;
+      end;
+
+      // Update registers
+      for j := 0 to 255 do
+      begin
+          if IsWordInString(PChar(form4.Listbox1.Items[i]),
+          'R'+inttostr(j),[soDown, soWholeWord, soMatchCase]) then
+            AddRegister(j);
+      end;
+
+      // Update functions used
+      opcodestr := '';
+      try
+        opcodestr := copy(form4.Listbox1.Items[i], 9, form4.Listbox1.Items[i].Length);
+      except end; // End of line was reached; catch the exception
+      for j := 0 to length(opcodelist) - 1 do
+      begin
+        if (opcodelist[j].name <> '') and (opcodestr.StartsWith(opcodelist[j].name)) then
+        begin
+          AddFunctionUsed(AnsiString(opcodelist[j].name));
+          break;
+        end;
+      end;
+    end;
+  end;
+  form14.Hide;
+  form14.Caption := '3D Processing';
+  form14.ProgressBar1.Position := 1;
+  form14.Label1.Show;
+end;
+
 procedure TForm4.Button3Click(Sender: TObject);
 begin
     form5.Tag:=0;
@@ -792,7 +894,8 @@ begin
     if fmScriptTE.Visible then
       form4.Show;
     if opendialog1.Execute then begin
-    listbox1.Items.LoadFromFile(opendialog1.FileName);
+        listbox1.Items.LoadFromFile(opendialog1.FileName);
+        UpdateScriptRefs;
         isedited:=true;
     end;
 end;

@@ -4963,6 +4963,7 @@ begin
       form25.Caption := 'Enemy attack data';
       form26.Caption := 'Enemy movement data';
       form22.Label3.Caption := 'Difficulty : ';
+      form4.Section1.Caption := 'Change label flag';
     end;
     flp.Clear;
     CheckShadow;
@@ -9231,7 +9232,7 @@ begin
   else if form4.edit1.Focused then
     form4.edit1.Undo
   else if fmScriptTE.TextEdit.Focused then
-    fmScriptTE.TextEdit.DoUndo
+    fmScriptTE.Undo1Click(nil)
   else if fmScriptTE.Edit2.focused then
     fmScriptTE.Edit2.Undo
   else if fmScriptTE.txtNotes.focused then
