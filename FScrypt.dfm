@@ -156,6 +156,7 @@ object Form4: TForm4
         Top = 379
         Width = 75
         Height = 25
+        Anchors = [akRight, akBottom]
         Caption = 'Edit text'
         TabOrder = 8
         OnClick = btnEditTextClick
