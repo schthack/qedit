@@ -1311,8 +1311,9 @@ begin
   TextEdit.BeginUndoBlock;
   TextEdit.SelectAll;
   TextEdit.DeleteSelection;
-  for i := 1 to form4.ListBox1.Items.Count - 1 do
+  for i := 0 to form4.ListBox1.Items.Count - 1 do
     TextEdit.InsertLine(i+1,form4.Listbox1.Items[i]);
+  TextEdit.DeleteLines(i+1,1);
   TextEdit.EndUndoBlock;
   TextEdit.EndUpdate;
 
