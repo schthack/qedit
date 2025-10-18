@@ -2227,8 +2227,9 @@ end;
 procedure TForm4.FormShow(Sender: TObject);
 begin
   if fmScriptTE.Visible then
-  begin
     fmScriptTE.Close;
+  if fmScriptTE.TextEdit.TextPosition.Line > -1 then
+  begin
     form4.listbox1.itemindex := fmScriptTE.TextEdit.TextPosition.Line;
     form4.listbox1.TopIndex := fmScriptTE.TextEdit.TopLine - 1;
   end;

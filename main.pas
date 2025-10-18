@@ -5032,7 +5032,7 @@ procedure TForm1.Button7Click(Sender: TObject);
 var // h:TNPCGroupeHeader;
   f: integer;
 begin
-  SaveDialog1.Filter := 'All chunk|*.*|Object only|*o.dat|Monster only|*e.dat|Event only|*.evt';
+  SaveDialog1.Filter := 'All chunk|*.*|Objects only|*o.dat|Monsters only|*e.dat|Events only|*.evt';
   if CheckListBox1.ItemIndex > -1 then
     if SaveDialog1.Execute then
     begin
@@ -5927,10 +5927,11 @@ end;
 
 procedure TForm1.Button8Click(Sender: TObject);
 var
-  x, y, f: integer;
+  x, y, z, f: integer;
   h: TNPCGroupeHeader;
 begin
-  OpenDialog1.Filter := 'Object only|*o.dat;*d.dat|Monster only|*e.dat|Event only|*.evt';
+  OpenDialog1.Filter := 'Objects|*o.dat;*d.dat|Monsters|*e.dat|Events|*.evt' +
+                        '|Append objects|*o.dat;*d.dat|Append monsters|*e.dat';
   if OpenDialog1.Execute then
   begin
     isedited := true;
@@ -5961,7 +5962,28 @@ begin
       fileread(f, Floor[x].Unknow[0], Floor[x].UnknowCount);
       fileclose(f);
     end;
-
+    if OpenDialog1.FilterIndex = 4 then
+    begin
+      f := fileopen(OpenDialog1.filename, $40);
+      y := fileseek(f, 0, 2) div $44;
+      z := Floor[x].ObjCount;
+      inc(Floor[x].ObjCount,y);
+      fileseek(f, 0, 0);
+      fileread(f, Floor[x].Obj[z], y * $44);
+      fileclose(f);
+      CheckListBox1Click(Form1);
+    end;
+    if OpenDialog1.FilterIndex = 5 then
+    begin
+      f := fileopen(OpenDialog1.filename, $40);
+      y := fileseek(f, 0, 2) div $48;
+      z := Floor[x].MonsterCount;
+      inc(Floor[x].MonsterCount,y);
+      fileseek(f, 0, 0);
+      fileread(f, Floor[x].Monster[z], y * $48);
+      fileclose(f);
+      CheckListBox1Click(Form1);
+    end;
   end;
 end;
 

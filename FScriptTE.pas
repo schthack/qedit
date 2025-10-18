@@ -1225,8 +1225,7 @@ end;
 
 procedure TfmScriptTE.About1Click(Sender: TObject);
 begin
-  Application.MessageBox('Script Text Editor and version 1.0c-2.0a updates by Alisaryn.'
-  + #13#10 + 'Contact through Discord for any feature requests or issues.', 'About', MB_OK or MB_ICONINFORMATION);
+  Application.MessageBox('Script Text Editor and version 1.0c-2.0a updates by Alisaryn.', 'About', MB_OK or MB_ICONINFORMATION);
 end;
 
 procedure TfmScriptTE.AddArgs1Click(Sender: TObject);
@@ -1307,10 +1306,15 @@ begin
   else if tmenuitem(sender).Tag = 9 then
     form4.EditVectordata1Click(fmScriptTE);
 
-  TextEdit.Lines.Clear;
-
-  for i := 0 to form4.ListBox1.Items.Count - 1 do
-    TextEdit.Lines.Add(form4.Listbox1.Items[i]);
+  // Clear manually to avoid losing undo stack
+  TextEdit.BeginUpdate;
+  TextEdit.BeginUndoBlock;
+  TextEdit.SelectAll;
+  TextEdit.DeleteSelection;
+  for i := 1 to form4.ListBox1.Items.Count - 1 do
+    TextEdit.InsertLine(i+1,form4.Listbox1.Items[i]);
+  TextEdit.EndUndoBlock;
+  TextEdit.EndUpdate;
 
   TextEdit.CaretIndex := lastcaret - 1;
   TextEdit.TopLine := lastline;
