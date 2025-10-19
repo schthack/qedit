@@ -1073,6 +1073,9 @@ begin
   if opendialog1.Execute then
   begin
     Textedit.LoadFromFile(opendialog1.FileName);
+    importscan := true;
+    ScanForMap;
+    importscan := false;
     textedited:=true;
     isedited:=true;
   end;

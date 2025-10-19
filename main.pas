@@ -595,6 +595,7 @@ var
   NotesVisible: Boolean = false;
   scriptline: integer = 0;
   scriptindex: integer = 0;
+  importscan: Boolean = false;
 
 implementation
 

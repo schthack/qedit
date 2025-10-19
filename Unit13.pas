@@ -241,27 +241,27 @@ begin
               myscreen.TextOut(
               'Map section: ' +
               inttostr(Floor[sfloor].Monster[Selected].map_section) +
-              ' Wave: ' + inttostr(Floor[sfloor].Monster[Selected].Unknow5) +
-              ' X: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_X)) +
-              ' Y: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_Z)) +
-              ' Z: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_Y)) +
-              ' Rotation: ' + inttostr((Floor[sfloor].Monster[Selected].Direction) and
+              ' | Wave: ' + inttostr(Floor[sfloor].Monster[Selected].Unknow5) +
+              ' | X: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_X)) +
+              ' | Y: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_Z)) +
+              ' | Z: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_Y)) +
+              ' | Rotation: ' + inttostr((Floor[sfloor].Monster[Selected].Direction) and
               $FFFF div 182) + '°',rect(0,0,640,30),$FFFFFFFF,1)
             else if sType = 2 then
               myscreen.TextOut(
               'Map section: ' +
               inttostr(Floor[sfloor].Obj[Selected].map_section) +
-              ' Wave: ' + inttostr(Floor[sfloor].Obj[Selected].Unknow5) +
-              ' X: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_X)) +
-              ' Y: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Z)) +
-              ' Z: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Y)) +
-              ' Rotation: ' + inttostr((Floor[sfloor].Obj[Selected].unknow6) and
+              ' | Wave: ' + inttostr(Floor[sfloor].Obj[Selected].Unknow5) +
+              ' | X: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_X)) +
+              ' | Y: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Z)) +
+              ' | Z: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Y)) +
+              ' | Rotation: ' + inttostr((Floor[sfloor].Obj[Selected].unknow6) and
               $FFFF div 182) + '°',rect(0,0,640,30),$FFFFFFFF,1)
               else
-                myscreen.TextOut('Map section:  Wave:  X:  Y:  Z:  Rotation:  ',rect(0,0,640,30),$FFFFFFFF,1);
+                myscreen.TextOut('Map section: - Wave: - X: - Y: - Z: - Rotation: - ',rect(0,0,640,30),$FFFFFFFF,1);
           end
           else
-            myscreen.TextOut('Map section:  Wave:  X:  Y:  Z:  Rotation:  ',rect(0,0,640,30),$FFFFFFFF,1);
+            myscreen.TextOut('Map section: - Wave: - X: - Y: - Z: - Rotation: - ',rect(0,0,640,30),$FFFFFFFF,1);
         end;
 
         if autoadjust then

@@ -547,14 +547,15 @@ begin
 end;
 
 Procedure ScanForMap;
-var x,i,y:integer;
+var x,i,y,x3,y3,g:integer;
     mappc,mapgc,mapbb,s:ansistring;
     tmpreg:array[0..256] of dword;
 begin
     mappc:=GetOpcodeName($c4)+' ';
     mapgc:=GetOpcodeName($f80d)+' ';
-    //mapbb:=GetOpcodeName($f951);
-    if form4.Visible then
+    mapbb:=GetOpcodeName($f951)+' ';
+
+    if not fmScriptTE.Visible then
     begin
       for x:=0 to form4.ListBox1.Items.Count-1 do begin
           if copy(form4.ListBox1.Items.Strings[x],9,6) = 'leti R' then begin
@@ -576,6 +577,28 @@ begin
               floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
               Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
               end;
+          end;
+          if (copy(form4.ListBox1.Items.Strings[x],9,length(mapbb)) = mapbb) and importscan then begin
+               s:=form4.Listbox1.Items.Strings[x];
+               delete(s,1,9+length(GetOpcodeName($f951)));
+               if not showdecimal then
+               begin
+                 x3:=hextoint(copy(s,1,2));
+                 g:=hextoint(copy(s,5,4));
+                 y3:=hextoint(copy(s,11,2));
+               end
+               else
+               begin
+                 x3:=strtoint(copy(s,1,2));
+                 g:=strtoint(copy(s,5,4));
+                 y3:=strtoint(copy(s,11,2));
+               end;
+               if x < 30 then begin
+               mapxvmfile[x3]:=path+'map\xvm\'+mapxvmname[mapid[g]+y3];
+               mapfile[x3]:=path+'map\'+mapfilename[mapid[g]+y3];
+               floor[x3].floorid:=MapArea[mapid[g]+y3];
+               Form1.CheckListBox1.Items.Strings[x3]:=mapname[mapid[g]+y3];
+             end;
           end;
           if copy(form4.ListBox1.Items.Strings[x],9,length(mappc)) = mappc then begin
               s:=copy(form4.ListBox1.Items.Strings[x],10+length(mappc),3);  //the reg
@@ -612,6 +635,28 @@ begin
               floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
               Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
               end;
+          end;
+         if (copy(fmScriptTE.TextEdit.Lines[x],9,length(mapbb)) = mapbb) and importscan then begin
+               s:=fmScriptTE.TextEdit.Lines[x];
+               delete(s,1,9+length(GetOpcodeName($f951)));
+               if not showdecimal then
+               begin
+                 x3:=hextoint(copy(s,1,2));
+                 g:=hextoint(copy(s,5,4));
+                 y3:=hextoint(copy(s,11,2));
+               end
+               else
+               begin
+                 x3:=strtoint(copy(s,1,2));
+                 g:=strtoint(copy(s,5,4));
+                 y3:=strtoint(copy(s,11,2));
+               end;
+               if x < 30 then begin
+               mapxvmfile[x3]:=path+'map\xvm\'+mapxvmname[mapid[g]+y3];
+               mapfile[x3]:=path+'map\'+mapfilename[mapid[g]+y3];
+               floor[x3].floorid:=MapArea[mapid[g]+y3];
+               Form1.CheckListBox1.Items.Strings[x3]:=mapname[mapid[g]+y3];
+             end;
           end;
           if copy(fmScriptTE.TextEdit.Lines[x],9,length(mappc)) = mappc then begin
               s:=copy(fmScriptTE.TextEdit.Lines[x],10+length(mappc),3);  //the reg
@@ -898,6 +943,9 @@ begin
     if opendialog1.Execute then begin
         listbox1.Items.LoadFromFile(opendialog1.FileName);
         UpdateScriptRefs;
+        importscan := true;
+        ScanForMap;
+        importscan := false;
         isedited:=true;
     end;
 end;
