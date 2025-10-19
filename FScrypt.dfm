@@ -11,7 +11,9 @@ object Form4: TForm4
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   Position = poMainFormCenter
+  OnClose = FormClose
   OnCreate = FormCreate
+  OnHide = FormHide
   OnShow = FormShow
   TextHeight = 13
   object Splitter1: TSplitter

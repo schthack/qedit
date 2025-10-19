@@ -593,6 +593,8 @@ var
   TEWidth: integer = 810;
   NotesWidth: integer = 183;
   NotesVisible: Boolean = false;
+  scriptline: integer = 0;
+  scriptindex: integer = 0;
 
 implementation
 

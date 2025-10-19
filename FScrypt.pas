@@ -111,6 +111,8 @@ type
     procedure btnEditTextClick(Sender: TObject);
     procedure HideNOPs1Click(Sender: TObject);
     procedure Switcheditors1Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormHide(Sender: TObject);
 
 
   private
@@ -2219,20 +2221,30 @@ begin
     end;
 end;
 
+procedure TForm4.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+   scriptline := form4.listbox1.itemindex;
+   scriptindex := form4.listbox1.TopIndex;
+end;
+
 procedure TForm4.FormCreate(Sender: TObject);
 begin
    // listbox1:=TMyNewUnicode.create;
+end;
+
+procedure TForm4.FormHide(Sender: TObject);
+begin
+   scriptline := form4.listbox1.itemindex;
+   scriptindex := form4.listbox1.TopIndex;
 end;
 
 procedure TForm4.FormShow(Sender: TObject);
 begin
   if fmScriptTE.Visible then
     fmScriptTE.Close;
-  if fmScriptTE.TextEdit.TextPosition.Line > -1 then
-  begin
-    form4.listbox1.itemindex := fmScriptTE.TextEdit.TextPosition.Line;
-    form4.listbox1.TopIndex := fmScriptTE.TextEdit.TopLine - 1;
-  end;
+
+  form4.listbox1.itemindex := scriptline;
+  form4.listbox1.TopIndex := scriptindex;
 end;
 
 procedure TForm4.Hex1Click(Sender: TObject);

@@ -714,15 +714,16 @@ end;
 
 procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);
 var
-  i,lastcaret,lastline: integer;
+  i,lastcaret: integer;
 begin
+  scriptline := fmScriptTE.TextEdit.TextPosition.Line;
+  scriptindex := fmScriptTE.TextEdit.TopLine - 1;
   if textEdited then
   begin
     lastcaret := fmScriptTE.TextEdit.CaretIndex;
-    lastline := fmScriptTE.TextEdit.TopLine;
     fmScriptTE.TextEdit.MoveCaretToBeginning;
     fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
-    fmScriptTE.TextEdit.TopLine := lastline;
+    fmScriptTE.TextEdit.TopLine := scriptindex;
     fmScriptTE.Hide;
     UpdateTextRefs();
     form4.listbox1.Clear;
@@ -768,11 +769,10 @@ end;
 
 procedure TfmScriptTE.FormShow(Sender: TObject);
 var
-  i,lastline: integer;
+  i: integer;
   JSONOpcodeList, JSONRegisterList: String;
   JSONStrings: TStringList;
 begin
-    lastline := form4.listbox1.ItemIndex;
     if not AddArgs1.Enabled then
       AddArgs1.Checked := false;
     textEdited := false;
@@ -926,12 +926,9 @@ begin
       form14.Repaint;
       TextEdit.Lines.Add(Form4.ListBox1.items[i]);
     end;
-    if lastline > -1 then
-    begin
-      TextEdit.GoToLineAndSetPosition(lastline, length(TextEdit.Lines[lastline])+1);
-      TextEdit.TopLine := form4.Listbox1.TopIndex + 1;
-    end
-    else TextEdit.MoveCaretToBeginning;
+    if scriptline > -1 then
+      TextEdit.GoToLineAndSetPosition(scriptline, length(TextEdit.Lines[scriptline])+1);
+    TextEdit.TopLine := scriptindex + 1;
     form14.Hide;
     form14.Caption := '3D Processing';
     form14.ProgressBar1.Position := 1;
