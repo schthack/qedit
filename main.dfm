@@ -1652,16 +1652,16 @@ object Form1: TForm1
     Left = 418
     Top = 11
     object Smallfont1: TMenuItem
-      Caption = 'Small font'
+      Caption = '100%'
       Checked = True
       OnClick = Smallfont1Click
     end
     object Mediumfont1: TMenuItem
-      Caption = 'Medium font'
+      Caption = '125%'
       OnClick = Mediumfont1Click
     end
     object Largefont1: TMenuItem
-      Caption = 'Large font'
+      Caption = '150%'
       OnClick = Largefont1Click
     end
   end
