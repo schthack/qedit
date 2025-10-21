@@ -54,7 +54,8 @@ var
   fogstep:single;
   Keys:array[0..256] of boolean;
   movespeed: integer = 3;
-  autoadjust: Boolean = false;
+  autoadjustsect: Boolean = false;
+  autoadjustY: Boolean = false;
 
 implementation
 
@@ -106,6 +107,7 @@ var d1,d2,d3:dword;
     f1,f2,f3:double;
     r,g,b,r1,b1,g1:integer;
     x,i:integer;
+    s: string;
 begin
     if have3d then
     if myscreen <> nil then begin
@@ -264,14 +266,21 @@ begin
             myscreen.TextOut('Map section: - Wave: - X: - Y: - Z: - Rotation: - ',rect(0,0,640,30),$FFFFFFFF,1);
         end;
 
-        if autoadjust then
-          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/Y-value adjustment: On (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1)
+        s := 'Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ';
+        if autoadjustsect then
+          s := s + 'Auto-section: On, '
         else
-          myscreen.TextOut('Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ' + 'Auto-section/Y-value adjustment: Off (E = Toggle)',rect(0,15,640,45),$FFFFFFFF,1);
+          s := s + 'Auto-section: Off, ';
+        if autoadjustY then
+          s := s + 'Auto-Y: On'
+        else
+          s := s + 'Auto-Y: Off';
+        myscreen.TextOut(s,rect(0,15,640,45),$FFFFFFFF,1);
 
         if ini > 0 then begin
             dec(ini);
-            myscreen.TextOut('Q = Forward, A = Backward, D = Toggle data format, F = Toggle fog effect, L/R = Auto-rotate',rect(0,form13.Height-65,640,form13.Height-49),$FFFFFFFF,1);
+            myscreen.TextOut('Q = Forward, A = Backward, D = Toggle data format, F = Toggle fog effect, L/R = Auto-rotate',rect(0,form13.Height-80,640,form13.Height-64),$FFFFFFFF,1);
+            myscreen.TextOut('Scroll = Change movement speed, E = Toggle auto-section adjust, C = Toggle auto-Y adjust',rect(0,form13.Height-65,640,form13.Height-49),$FFFFFFFF,1);
             myscreen.TextOut('Edit: Hold click + CTRL = Move, + SHIFT = Up/down, + right-click = Rotate, CTRL + S = Snap',rect(0,form13.Height-50,640,form13.Height-34),$FFFFFFFF,1);
             if borderStyle = bsNone then
               myscreen.TextOut('ESC = Exit, CTRL + X = Show/hide the main window (Click outside of window to return to 3D)',rect(0,form13.Height-35,640,form13.Height-19),$FFFFFFFF,1);
@@ -376,7 +385,7 @@ begin
         end;
 
         // Find closest section
-        if autoadjust then
+        if autoadjustsect or autoadjustY then
         begin
           d := -1;
           di := $FFFFFF;
@@ -414,14 +423,16 @@ begin
             floor[sfloor].Monster[selected].Pos_X:=px3;
             floor[sfloor].Monster[selected].Pos_Y:=py3;
 
-            if autoadjust then
-            begin
+            if autoadjustsect then
               floor[sfloor].Monster[selected].map_section := d;
+            if autoadjustY then
+            begin
               pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
               pz2 := pz2 - miz[d] * zoom;
               floor[sfloor].Monster[selected].Pos_Z := pz2;
-              GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
             end;
+            if autoadjustsect or autoadjustY then
+              GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
 
             if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
             begin
@@ -526,12 +537,16 @@ begin
             floor[sfloor].Obj[selected].Pos_X:=px3;
             floor[sfloor].Obj[selected].Pos_Y:=py3;
 
-            if autoadjust then
-            begin
+            if autoadjustsect then
               floor[sfloor].Obj[selected].map_section := d;
+            if autoadjustY then
+            begin
               pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
               pz2 := pz2 - miz[d] * zoom;
               floor[sfloor].Obj[selected].Pos_Z := pz2;
+            end;
+            if autoadjustsect or autoadjustY then
+            begin
               myobj[selected].Free;
               Generateobj(floor[sfloor].obj[selected],selected);
             end;
@@ -877,16 +892,31 @@ procedure TForm13.FormKeyPress(Sender: TObject; var Key: Char);
 var
   Reg: TRegistry;
 begin
+    // Change and save auto-adjust settings to the registry
     if key = 'e' then
     begin
-        autoadjust := not autoadjust;
-        // Save auto-adjust setting to the registry
+        autoadjustsect := not autoadjustsect;
         Reg := TRegistry.Create;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
           if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
           begin
-            Reg.WriteBool('3DAutoAdjust', autoadjust);
+            Reg.WriteBool('3DAutoAdjustSect', autoadjustsect);
+            Reg.CloseKey;
+          end;
+        finally
+          Reg.Free;
+        end;
+    end;
+    if key = 'c' then
+    begin
+        autoadjustY := not autoadjustY;
+        Reg := TRegistry.Create;
+        try
+          Reg.RootKey := HKEY_CURRENT_USER;
+          if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+          begin
+            Reg.WriteBool('3DAutoAdjustY', autoadjustY);
             Reg.CloseKey;
           end;
         finally

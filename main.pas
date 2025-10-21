@@ -338,6 +338,10 @@ type
     Options2: TMenuItem;
     Texteditor1: TMenuItem;
     SwitchScriptEditor1: TMenuItem;
+    PopupMenu4: TPopupMenu;
+    Smallfont1: TMenuItem;
+    Largefont1: TMenuItem;
+    Mediumfont1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -449,6 +453,11 @@ type
     procedure SnapOptions2Click(Sender: TObject);
     procedure Texteditor1Click(Sender: TObject);
     procedure SwitchScriptEditor1Click(Sender: TObject);
+    procedure Label5MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure Smallfont1Click(Sender: TObject);
+    procedure Largefont1Click(Sender: TObject);
+    procedure Mediumfont1Click(Sender: TObject);
 
 
   private
@@ -480,6 +489,7 @@ procedure AdjustDistanceX(target: integer);
 procedure AdjustDistanceY(target: integer);
 procedure CalculateWarpOffsets(rotation: dword);
 function SanitizeFileName(const AFileName: string): string;
+procedure SetCoordSize(size: integer);
 
 var
   Form1: TForm1;
@@ -596,6 +606,7 @@ var
   scriptline: integer = 0;
   scriptindex: integer = 0;
   importscan: Boolean = false;
+  coordsize: integer = 0;
 
 implementation
 
@@ -3123,6 +3134,76 @@ begin
   Result := ResultFileName;
 end;
 
+procedure SetCoordSize(size: integer);
+var
+  Reg: TRegistry;
+begin
+  form1.Smallfont1.Checked := false;
+  form1.Mediumfont1.Checked := false;
+  form1.Largefont1.Checked := false;
+
+  if size = 1 then
+  begin
+    form1.label5.Left := 386;
+    form1.label5.Top := 225;
+    form1.label5.Width := 11;
+    form1.label5.Height := 16;
+    form1.label5.Font.Size := 10;
+    form1.Mediumfont1.Checked := true;
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('CoordSize', 1);
+      Reg.CloseKey;
+    end;
+    finally
+      Reg.Free;
+    end;
+  end
+  else if size = 2 then
+  begin
+    form1.label5.Left := 387;
+    form1.label5.Top := 222;
+    form1.label5.Width := 10;
+    form1.label5.Height := 20;
+    form1.label5.Font.Size := 12;
+    form1.Largefont1.Checked := true;
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('CoordSize', 2);
+      Reg.CloseKey;
+    end;
+    finally
+      Reg.Free;
+    end;
+  end
+  else
+  begin
+    form1.label5.Left := 384;
+    form1.label5.Top := 228;
+    form1.label5.Width := 6;
+    form1.label5.Height := 13;
+    form1.label5.Font.Size := 8;
+    form1.Smallfont1.Checked := true;
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('CoordSize', 0);
+      Reg.CloseKey;
+    end;
+    finally
+      Reg.Free;
+    end;
+  end;
+end;
+
 procedure TForm1.CheckListBox1Click(Sender: TObject);
 var
   x: integer;
@@ -4756,8 +4837,10 @@ begin
           movespeed := Reg.ReadInteger('3DMoveSpeed');
         if Reg.ValueExists('DataDisplay') then
           dta := Reg.ReadInteger('DataDisplay');
-        if Reg.ValueExists('3DAutoAdjust') then
-          autoadjust := Reg.ReadBool('3DAutoAdjust');
+        if Reg.ValueExists('3DAutoAdjustSect') then
+          autoadjustsect := Reg.ReadBool('3DAutoAdjustSect');
+        if Reg.ValueExists('3DAutoAdjustY') then
+          autoadjustY := Reg.ReadBool('3DAutoAdjustY');
         if Reg.ValueExists('TEHeight') then
           TEHeight := Reg.ReadInteger('TEHeight');
         if Reg.ValueExists('TEWidth') then
@@ -4766,6 +4849,8 @@ begin
           NotesWidth := Reg.ReadInteger('NotesWidth');
         if Reg.ValueExists('NotesVisible') then
           NotesVisible := Reg.ReadBool('NotesVisible');
+        if Reg.ValueExists('CoordSize') then
+          coordsize := Reg.ReadInteger('CoordSize');
         Reg.CloseKey;
       end;
       Reg.Free;
@@ -4955,6 +5040,8 @@ begin
     fmScriptTE.Splitter1.Left := fmScriptTE.NotesPanel.Left;
     if NotesVisible then
       fmScriptTE.Notes1Click(nil);
+
+    SetCoordSize(coordsize);
 
     flp.Position := 0;
     LanguageString.LoadFromStream(flp);
@@ -7160,6 +7247,11 @@ begin
   // Form1.CheckListBox1Click(form1);
 end;
 
+procedure TForm1.Smallfont1Click(Sender: TObject);
+begin
+  SetCoordSize(0);
+end;
+
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   HideIndicator();
@@ -7648,6 +7740,11 @@ end;
 procedure TForm1.DrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
 begin
   MenueDrawItem(Sender, ACanvas, ARect, Selected);
+end;
+
+procedure TForm1.Mediumfont1Click(Sender: TObject);
+begin
+  SetCoordSIze(1);
 end;
 
 procedure TForm1.MenueDrawItemX(xMenu: TMenu);
@@ -8881,6 +8978,18 @@ begin
     tm.OnClick := Layout11Click;
     PopupMenu2.Items.Add(tm);
   end;
+end;
+
+procedure TForm1.Label5MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+    if (Button = mbRight) and (mdown = 0) then
+      PopupMenu4.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
+end;
+
+procedure TForm1.Largefont1Click(Sender: TObject);
+begin
+  SetCoordSize(2);
 end;
 
 procedure TForm1.Layout11Click(Sender: TObject);

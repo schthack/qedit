@@ -55,6 +55,7 @@ object Form1: TForm1
     Width = 6
     Height = 13
     Caption = '--'
+    OnMouseUp = Label5MouseUp
   end
   object Label7: TLabel
     Left = 591
@@ -1645,6 +1646,23 @@ object Form1: TForm1
     object smDisableIndicator: TMenuItem
       Caption = 'Disable placement indicator'
       OnClick = smDisableIndicatorClick
+    end
+  end
+  object PopupMenu4: TPopupMenu
+    Left = 418
+    Top = 11
+    object Smallfont1: TMenuItem
+      Caption = 'Small font'
+      Checked = True
+      OnClick = Smallfont1Click
+    end
+    object Mediumfont1: TMenuItem
+      Caption = 'Medium font'
+      OnClick = Mediumfont1Click
+    end
+    object Largefont1: TMenuItem
+      Caption = 'Large font'
+      OnClick = Largefont1Click
     end
   end
 end
