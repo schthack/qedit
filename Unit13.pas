@@ -253,7 +253,6 @@ begin
               myscreen.TextOut(
               'Map section: ' +
               inttostr(Floor[sfloor].Obj[Selected].map_section) +
-              ' | Wave: ' + inttostr(Floor[sfloor].Obj[Selected].Unknow5) +
               ' | X: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_X)) +
               ' | Y: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Z)) +
               ' | Z: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Y)) +
