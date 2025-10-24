@@ -32,7 +32,6 @@ object fmScriptTE: TfmScriptTE
     Width = 606
     Height = 561
     Align = alClient
-    Colors.EditorStringForeground = clBlack
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
     HighlightLine.Items = <
       item
@@ -273,17 +272,20 @@ object fmScriptTE: TfmScriptTE
     end
   end
   object MainMenu1: TMainMenu
+    Images = Form1.ImageList1
     Left = 24
     Top = 24
     object File1: TMenuItem
       Caption = 'File'
       object Openfromfile1: TMenuItem
         Caption = 'Open from file'
+        ImageIndex = 2
         ShortCut = 16463
         OnClick = Openfromfile1Click
       end
       object Savetofile1: TMenuItem
         Caption = 'Save to file'
+        ImageIndex = 3
         ShortCut = 16467
         OnClick = Savetofile1Click
       end
@@ -299,6 +301,7 @@ object fmScriptTE: TfmScriptTE
       Caption = 'Edit'
       object AddSTRcomment1: TMenuItem
         Caption = 'Add STR comment'
+        ImageIndex = 20
         ShortCut = 32851
         OnClick = AddSTRcomment1Click
       end
@@ -307,11 +310,13 @@ object fmScriptTE: TfmScriptTE
       end
       object Find1: TMenuItem
         Caption = 'Search'
+        ImageIndex = 25
         ShortCut = 16454
         OnClick = Find1Click
       end
       object Replace1: TMenuItem
         Caption = 'Replace'
+        ImageIndex = 26
         ShortCut = 16456
         OnClick = Replace1Click
       end
@@ -357,11 +362,13 @@ object fmScriptTE: TfmScriptTE
       end
       object GoToLabel1: TMenuItem
         Caption = 'Go to label'
+        ImageIndex = 13
         ShortCut = 16455
         OnClick = GoToLabel1Click
       end
       object GotoLine1: TMenuItem
         Caption = 'Go to line'
+        ImageIndex = 13
         ShortCut = 32839
         OnClick = GotoLine1Click
       end
@@ -376,10 +383,16 @@ object fmScriptTE: TfmScriptTE
       Caption = 'Format'
       object Changefont1: TMenuItem
         Caption = 'Change font'
+        ImageIndex = 22
         OnClick = Changefont1Click
       end
       object Changetextcolor1: TMenuItem
         Caption = 'Change text color'
+        ImageIndex = 23
+        object Label1: TMenuItem
+          Caption = 'Label'
+          OnClick = Label1Click
+        end
         object Opcodes1: TMenuItem
           Caption = 'Opcode'
           OnClick = Opcodes1Click
@@ -389,13 +402,22 @@ object fmScriptTE: TfmScriptTE
           OnClick = Registers1Click
         end
         object Values1: TMenuItem
-          Caption = 'Number'
+          Caption = 'Value'
           OnClick = Values1Click
+        end
+        object StringSTR1: TMenuItem
+          Caption = 'String (STR)'
+          OnClick = StringSTR1Click
+        end
+        object StringArgument1: TMenuItem
+          Caption = 'String (Argument)'
+          OnClick = StringArgument1Click
         end
       end
       object Changetheme1: TMenuItem
         Caption = 'Change theme'
         Enabled = False
+        ImageIndex = 24
         object Default1: TMenuItem
           Tag = -1
           Caption = 'Default'
@@ -519,13 +541,16 @@ object fmScriptTE: TfmScriptTE
     end
     object View1: TMenuItem
       Caption = 'View'
+      ImageIndex = 22
       object Notes1: TMenuItem
-        Caption = 'Show notes panel'
+        Caption = 'Show notes'
+        ImageIndex = 4
         ShortCut = 16462
         OnClick = Notes1Click
       end
       object Zoom1: TMenuItem
         Caption = 'Zoom'
+        ImageIndex = 21
         object Z100: TMenuItem
           Caption = '100 %'
           OnClick = Z100Click
@@ -553,14 +578,17 @@ object fmScriptTE: TfmScriptTE
       Caption = 'Help'
       object Opcodes2: TMenuItem
         Caption = 'Opcode list'
+        ImageIndex = 1
         OnClick = Opcodes2Click
       end
       object ReservedRegisters1: TMenuItem
         Caption = 'Typical register uses'
+        ImageIndex = 1
         OnClick = ReservedRegisters1Click
       end
       object Functions1: TMenuItem
         Caption = 'Common functions'
+        ImageIndex = 1
         OnClick = Functions1Click
       end
       object N6: TMenuItem
@@ -568,6 +596,7 @@ object fmScriptTE: TfmScriptTE
       end
       object About1: TMenuItem
         Caption = 'About'
+        ImageIndex = 15
         OnClick = About1Click
       end
     end

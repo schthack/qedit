@@ -607,6 +607,7 @@ var
   scriptindex: integer = 0;
   importscan: Boolean = false;
   coordsize: integer = 0;
+  thememodified: Boolean = false;
 
 implementation
 
@@ -1062,7 +1063,7 @@ begin
   s := inttohex(crc32ofstring(FullQuestFile), 8);
   unDumpQuest(path + 'temp\_' + s);
 
-  tmp2 := 'Quest Editor V 2.0a Public - ' + Title;
+  tmp2 := 'Quest Editor V 2.0b Public - ' + Title;
 
   Form1.Caption := unitochar(tmp2, 1000);
   curepi := GetEpisode;
@@ -2134,7 +2135,7 @@ begin
       if (OpenDialog1.FilterIndex = 6) then
       begin
         unDumpQuest(fn);
-        tmp2 := 'Quest Editor V 2.0a Public - ' + Title;
+        tmp2 := 'Quest Editor V 2.0b Public - ' + Title;
 
         Form1.Caption := unitochar(tmp2, 1000);
         curepi := GetEpisode;
@@ -2532,7 +2533,7 @@ begin
     CheckListBox1.ItemIndex := 0;
     CheckListBox1Click(Form1);
     // Form1.Caption:='Quest Editor V 1.6d - '+Title;
-    tmp2 := 'Quest Editor V 2.0a Public - ' + Title;
+    tmp2 := 'Quest Editor V 2.0b Public - ' + Title;
     { if isdc then Form1.Caption:=Form1.Caption+' (DreamCast ASCII Format)'
       else Form1.Caption:=Form1.Caption+' (PC Unicode Format)';
       if curepi = 0 then  Form1.Caption:=Form1.Caption+' - Episode 1';
@@ -4101,8 +4102,8 @@ var
 begin
   mpcx := x;
   mpcy := y;
-  Label5.Caption := 'X:' + inttostr(round(((x - mmx) - (mpx / Zoom)) * Zoom)) + '  Y:' +
-    inttostr(round(YFromBBRELFile(((x - mmx) - (mpx / Zoom)) * Zoom, ((y - mmy) - (mpy / Zoom)) * Zoom))) + '  Z:' +
+  Label5.Caption := 'X: ' + inttostr(round(((x - mmx) - (mpx / Zoom)) * Zoom)) + '  Y: ' +
+    inttostr(round(YFromBBRELFile(((x - mmx) - (mpx / Zoom)) * Zoom, ((y - mmy) - (mpy / Zoom)) * Zoom))) + '  Z: ' +
     inttostr(round(((y - mmy) - (mpy / Zoom)) * Zoom));
   if mdown >= 1 then
   begin
@@ -4693,39 +4694,14 @@ begin
         if Reg.ValueExists('FontStyle') then
           form4.ListBox1.Font.Style := Tfontstyles(byte(Reg.ReadInteger('FontStyle')));
         form4.ListBox1.Font.Pitch := fpFixed;
-        if Reg.ValueExists('TEFontName') then
-          fmScriptTE.TextEdit.Fonts.Text.name := Reg.ReadString('TEFontName');
-        if Reg.ValueExists('TEFontSize') then
-          fmScriptTE.TextEdit.Fonts.Text.size := Reg.ReadInteger('TEFontSize');
-        if Reg.ValueExists('TEFontStyle') then
-          fmScriptTE.TextEdit.Fonts.Text.Style := Tfontstyles(byte(Reg.ReadInteger('TEFontStyle')));
-        fmScriptTE.TextEdit.Fonts.Text.Pitch := fpFixed;
-        // Set theme and text editor colors
-        if Reg.ValueExists('TEOpcodeColor') then
-          fmScriptTE.TextEdit.Colors.EditorReservedWordForeground := Reg.ReadInteger('TEOpcodeColor');
-        if Reg.ValueExists('TERegisterColor') then
-          fmScriptTE.TextEdit.Colors.EditorSymbolForeground := Reg.ReadInteger('TERegisterColor');
-        if Reg.ValueExists('TEValueColor') then
-        begin
-          fmScriptTE.TextEdit.Colors.EditorNumberForeground := Reg.ReadInteger('TEValueColor');
-          fmScriptTE.TextEdit.Colors.EditorHexNumberForeground := Reg.ReadInteger('TEValueColor');
-        end;
+        if Reg.ValueExists('ThemeModified') then
+          thememodified := Reg.ReadBool('ThemeModified');
         if Reg.ValueExists('TETheme') then
           texttheme := Reg.ReadInteger('TETheme');
         if DirectoryExists('Text editor\Themes') then
         begin
           with fmScriptTE do
           begin
-            if texttheme = -1 then
-            begin
-              Changetextcolor1.Enabled := true;
-              Changefont1.Enabled := true
-            end
-            else
-            begin
-              Changetextcolor1.Enabled := false;
-              Changefont1.Enabled := false;
-            end;
             Changetheme1.Enabled := true;
             if texttheme = -1 then
               ChangeTheme(Default1)
@@ -4772,6 +4748,34 @@ begin
             else if texttheme = 20 then
               ChangeTheme(Windows11Dark1);
           end;
+        end;
+        if thememodified then
+        begin
+          Reg.WriteBool('ThemeModified',thememodified);
+          UncheckThemes;
+          if Reg.ValueExists('TEFontName') then
+            fmScriptTE.TextEdit.Fonts.Text.name := Reg.ReadString('TEFontName');
+          if Reg.ValueExists('TEFontSize') then
+            fmScriptTE.TextEdit.Fonts.Text.size := Reg.ReadInteger('TEFontSize');
+          if Reg.ValueExists('TEFontStyle') then
+            fmScriptTE.TextEdit.Fonts.Text.Style := Tfontstyles(byte(Reg.ReadInteger('TEFontStyle')));
+          fmScriptTE.TextEdit.Fonts.Text.Pitch := fpFixed;
+          // Set theme and text editor colors
+          if Reg.ValueExists('TELabelColor') then
+            fmScriptTE.TextEdit.Colors.EditorMethodNameForeground := Reg.ReadInteger('TELabelColor');
+          if Reg.ValueExists('TEOpcodeColor') then
+            fmScriptTE.TextEdit.Colors.EditorReservedWordForeground := Reg.ReadInteger('TEOpcodeColor');
+          if Reg.ValueExists('TERegisterColor') then
+            fmScriptTE.TextEdit.Colors.EditorSymbolForeground := Reg.ReadInteger('TERegisterColor');
+          if Reg.ValueExists('TEValueColor') then
+          begin
+            fmScriptTE.TextEdit.Colors.EditorNumberForeground := Reg.ReadInteger('TEValueColor');
+            fmScriptTE.TextEdit.Colors.EditorHexNumberForeground := Reg.ReadInteger('TEValueColor');
+          end;
+          if Reg.ValueExists('TESTRColor') then
+            fmScriptTE.TextEdit.Colors.EditorCommentForeground := Reg.ReadInteger('TESTRColor');
+          if Reg.ValueExists('TEStringColor') then
+            fmScriptTE.TextEdit.Colors.EditorStringForeground := Reg.ReadInteger('TEStringColor');
         end;
         if Reg.ValueExists('Lang') then
           mylang := Reg.ReadInteger('Lang');
@@ -5054,6 +5058,8 @@ begin
       form26.Caption := 'Enemy movement data';
       form22.Label3.Caption := 'Difficulty : ';
       form4.Section1.Caption := 'Change label flag';
+      form8.Caption := 'Map events';
+      form1.Button10.Caption := 'View map events';
     end;
     flp.Clear;
     CheckShadow;
@@ -5122,7 +5128,7 @@ procedure TForm1.Button7Click(Sender: TObject);
 var // h:TNPCGroupeHeader;
   f: integer;
 begin
-  SaveDialog1.Filter := 'All chunk|*.*|Objects only|*o.dat|Monsters only|*e.dat|Events only|*.evt';
+  SaveDialog1.Filter := 'All chunks|*.*|Objects only|*o.dat|Monsters only|*e.dat|Events only|*.evt';
   if CheckListBox1.ItemIndex > -1 then
     if SaveDialog1.Execute then
     begin

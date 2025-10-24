@@ -127,6 +127,9 @@ type
     Splitter1: TSplitter;
     Notes1: TMenuItem;
     Switcheditor1: TMenuItem;
+    Label1: TMenuItem;
+    StringSTR1: TMenuItem;
+    StringArgument1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -188,6 +191,9 @@ type
     procedure FormHide(Sender: TObject);
     procedure txtNotesChange(Sender: TObject);
     procedure Switcheditor1Click(Sender: TObject);
+    procedure Label1Click(Sender: TObject);
+    procedure StringSTR1Click(Sender: TObject);
+    procedure StringArgument1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -201,6 +207,7 @@ procedure SetSearchEngine(engine: integer);
 procedure SetTextColor(colortype: string);
 function IsWordInString(aString: PWideChar; aSearchString: string; aSearchOptions: TStringSearchOptions): Boolean;
 function ReplaceApostrophes(const s: string): string;
+procedure UncheckThemes;
 
 var
   fmScriptTE: TfmScriptTE;
@@ -219,6 +226,35 @@ uses TCom, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.Completion
   NPCBuild, EnemyStat, FEnemyResist, FEnemyMov, FEnemyAttack, FVector;
 
 {$R *.dfm}
+
+procedure UncheckThemes;
+begin
+  with fmScriptTE do
+  begin
+    Default1.Checked := false;
+    Blue1.Checked := false;
+    Classic1.Checked := false;
+    Darcula1.Checked := false;
+    DarkIcon1.Checked := false;
+    Dark1.Checked := false;
+    Darker1.Checked := false;
+    Dracula1.Checked := false;
+    FluentNight1.Checked := false;
+    GitHubDark1.Checked := false;
+    MonoKaiDistilled1.Checked := false;
+    Monokai1.Checked := false;
+    Oblivion1.Checked := false;
+    Obsid1.Checked := false;
+    Ocean1.Checked := false;
+    Oceanic1.Checked := false;
+    Okaidia1.Checked := false;
+    Purple1.Checked := false;
+    Twilight1.Checked := false;
+    VisualStudioDark1.Checked := false;
+    VisualStudio1.Checked := false;
+    Windows11Dark1.Checked := false;
+  end;
+end;
 
 procedure UpdateTextRefs();
 var
@@ -421,12 +457,26 @@ begin
       // Save text position
       lastcaret := TextEdit.CaretIndex;
       lastline := TextEdit.TopLine;
+
       // Set default color
-      if colortype = 'TEValueColor' then
-        colordialog1.Color := clBlue
-      else colordialog1.Color := clNavy;
+      if colortype = 'TELabelColor' then
+        colordialog1.Color := TextEdit.Colors.EditorMethodNameForeground
+      else if colortype = 'TEOpcodeColor' then
+        colordialog1.Color := TextEdit.Colors.EditorReservedWordForeground
+      else if colortype = 'TERegisterColor' then
+        colordialog1.Color := TextEdit.Colors.EditorSymbolForeground
+      else if colortype = 'TEValueColor' then
+        colordialog1.Color := TextEdit.Colors.EditorNumberForeground
+      else if colortype = 'TESTRColor' then
+        colordialog1.Color := TextEdit.Colors.EditorCommentForeground
+      else if colortype = 'TEStringColor' then
+        colordialog1.Color := TextEdit.Colors.EditorStringForeground;
+
       if colordialog1.Execute then begin
-          if colortype = 'TEOpcodeColor' then
+          UncheckThemes;
+          if colortype = 'TELabelColor' then
+            TextEdit.Colors.EditorMethodNameForeground:=colordialog1.Color
+          else if colortype = 'TEOpcodeColor' then
             TextEdit.Colors.EditorReservedWordForeground:=colordialog1.Color
           else if colortype = 'TERegisterColor' then
             TextEdit.Colors.EditorSymbolForeground:=colordialog1.Color
@@ -434,25 +484,39 @@ begin
           begin
             TextEdit.Colors.EditorNumberForeground:=colordialog1.Color;
             TextEdit.Colors.EditorHexNumberForeground:=colordialog1.Color;
-          end;
+          end
+          else if colortype = 'TESTRColor' then
+            TextEdit.Colors.EditorCommentForeground:=colordialog1.Color
+          else if colortype = 'TEStringColor' then
+            TextEdit.Colors.EditorStringForeground:=colordialog1.Color;
 
           Reg := TRegistry.Create;
           try
-              Reg.RootKey := HKEY_CURRENT_USER;
-              if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+          Reg.RootKey := HKEY_CURRENT_USER;
+          if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
           begin
-              Reg.WriteInteger(colortype,colordialog1.Color);
+              Reg.WriteInteger('TEFontSize',TextEdit.Fonts.Text.Size);
+              Reg.WriteString('TEFontName',TextEdit.Fonts.Text.Name);
+              Reg.WriteInteger('TEFontStyle',byte(TextEdit.Fonts.Text.Style));
+              Reg.WriteInteger('TELabelColor',TextEdit.Colors.EditorMethodNameForeground);
+              Reg.WriteInteger('TEOpcodeColor',TextEdit.Colors.EditorReservedWordForeground);
+              Reg.WriteInteger('TERegisterColor',TextEdit.Colors.EditorSymbolForeground);
+              Reg.WriteInteger('TEValueColor',TextEdit.Colors.EditorNumberForeground);
+              Reg.WriteInteger('TESTRColor',TextEdit.Colors.EditorCommentForeground);
+              Reg.WriteInteger('TEStringColor',TextEdit.Colors.EditorStringForeground);
+              Reg.WriteBool('ThemeModified',true);
               Reg.CloseKey;
-              end;
+          end;
           finally
               Reg.Free;
           end;
+
+        Close;
+        Show;
+        // Reset to last caret position
+        TextEdit.CaretIndex := lastcaret - 1;
+        TextEdit.TopLine := lastline;
       end;
-      Close;
-      Show;
-      // Reset to last caret position
-      TextEdit.CaretIndex := lastcaret - 1;
-      TextEdit.TopLine := lastline;
     end;
 end;
 
@@ -517,28 +581,7 @@ var
 begin
   lastcaret := TextEdit.CaretIndex;
   lastline := TextEdit.TopLine;
-  Default1.Checked := false;
-  Blue1.Checked := false;
-  Classic1.Checked := false;
-  Darcula1.Checked := false;
-  DarkIcon1.Checked := false;
-  Dark1.Checked := false;
-  Darker1.Checked := false;
-  Dracula1.Checked := false;
-  FluentNight1.Checked := false;
-  GitHubDark1.Checked := false;
-  MonoKaiDistilled1.Checked := false;
-  Monokai1.Checked := false;
-  Oblivion1.Checked := false;
-  Obsid1.Checked := false;
-  Ocean1.Checked := false;
-  Oceanic1.Checked := false;
-  Okaidia1.Checked := false;
-  Purple1.Checked := false;
-  Twilight1.Checked := false;
-  VisualStudioDark1.Checked := false;
-  VisualStudio1.Checked := false;
-  Windows11Dark1.Checked := false;
+  UncheckThemes;
 
   selection := TMenuItem(Sender);
   themename := StringReplace(selection.Caption, '&', '', [rfReplaceAll]);
@@ -551,25 +594,12 @@ begin
   if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
   begin
     Reg.WriteInteger('TETheme',selection.Tag);
+    Reg.WriteBool('ThemeModified',false);
     Reg.CloseKey;
   end;
   finally
     Reg.Free;
   end;
-
-  if Sender = Default1 then
-  begin
-    Changetextcolor1.Enabled := true;
-    Changefont1.Enabled := true
-  end
-  else
-  begin
-    Changetextcolor1.Enabled := false;
-    Changefont1.Enabled := false;
-  end;
-
-  // Set string color
-  TextEdit.Colors.EditorStringForeground := TextEdit.Colors.EditorForeground;
 
   if fmScriptTE.Visible then
   begin
@@ -610,7 +640,12 @@ begin
     // Save text position
     lastcaret := TextEdit.CaretIndex;
     lastline := TextEdit.TopLine;
+
+    // Set default font
+    fontdialog1.font := TextEdit.Fonts.Text;
+
     if fontdialog1.Execute then begin
+        UncheckThemes;
         TextEdit.Fonts.Text:=fontdialog1.Font;
         Textedit.Fonts.Text.Pitch:=fpFixed;
         Reg := TRegistry.Create;
@@ -618,25 +653,31 @@ begin
             Reg.RootKey := HKEY_CURRENT_USER;
             if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
         begin
-            Reg.WriteInteger('TEFontSize',fontdialog1.Font.Size);
-            Reg.WriteString('TEFontName',fontdialog1.Font.Name);
-            Reg.WriteInteger('TEFontStyle',byte(fontdialog1.Font.Style));
+            Reg.WriteInteger('TEFontSize',TextEdit.Fonts.Text.Size);
+            Reg.WriteString('TEFontName',TextEdit.Fonts.Text.Name);
+            Reg.WriteInteger('TEFontStyle',byte(TextEdit.Fonts.Text.Style));
+            Reg.WriteInteger('TELabelColor',TextEdit.Colors.EditorMethodNameForeground);
+            Reg.WriteInteger('TEOpcodeColor',TextEdit.Colors.EditorReservedWordForeground);
+            Reg.WriteInteger('TERegisterColor',TextEdit.Colors.EditorSymbolForeground);
+            Reg.WriteInteger('TEValueColor',TextEdit.Colors.EditorNumberForeground);
+            Reg.WriteInteger('TESTRColor',TextEdit.Colors.EditorCommentForeground);
+            Reg.WriteInteger('TEStringColor',TextEdit.Colors.EditorStringForeground);
+            Reg.WriteBool('ThemeModified',true);
             Reg.CloseKey;
             end;
         finally
             Reg.Free;
         end;
+        // Set zoom down to 100 if a non-default font was chosen, in case it's a bigger font
+        if fontdialog1.Font.Name <> 'Courier New' then
+          SetTextZoom(100);
+
+        fmScriptTE.Close;
+        fmScriptTE.Show;
+        // Reset to last caret position
+        TextEdit.CaretIndex := lastcaret - 1;
+        TextEdit.TopLine := lastline;
     end;
-
-    // Set zoom down to 100 if a non-default font was chosen, in case it's a bigger font
-    if fontdialog1.Font.Name <> 'Courier New' then
-      SetTextZoom(100);
-
-    fmScriptTE.Close;
-    fmScriptTE.Show;
-    // Reset to last caret position
-    TextEdit.CaretIndex := lastcaret - 1;
-    TextEdit.TopLine := lastline;
 end;
 
 procedure TfmScriptTE.Copy1Click(Sender: TObject);
@@ -962,6 +1003,11 @@ begin
   form4.HideNOPs1Click(nil);
 end;
 
+procedure TfmScriptTE.Label1Click(Sender: TObject);
+begin
+  SetTextColor('TELabelColor');
+end;
+
 procedure TfmScriptTE.Matchcase1Click(Sender: TObject);
 var
   Reg: TRegistry;
@@ -1182,14 +1228,20 @@ begin
       TextEdit.Fonts.Text.Style := [];
 
       // Reset text colors
+      TextEdit.Colors.EditorMethodNameForeground:=clBlack;
       TextEdit.Colors.EditorReservedWordForeground:=clNavy;
       TextEdit.Colors.EditorSymbolForeground:=clNavy;
       TextEdit.Colors.EditorNumberForeground:=clBlue;
       TextEdit.Colors.EditorHexNumberForeground:=clBlue;
+      TextEdit.Colors.EditorCommentForeground:=clGreen;
+      TextEdit.Colors.EditorStringForeground:=clBlue;
 
       // Reset theme
       if DirectoryExists('Text editor\themes') then
         ChangeTheme(Default1);
+
+      // Reset zoom
+      SetTextZoom(125);
 
       Reg := TRegistry.Create;
       try
@@ -1199,10 +1251,13 @@ begin
           Reg.WriteInteger('TEFontSize',9);
           Reg.WriteString('TEFontName','Courier New');
           Reg.WriteInteger('TEFontStyle',0);
+          Reg.WriteInteger('TELabelColor',clBlack);
           Reg.WriteInteger('TEOpcodeColor',clNavy);
           Reg.WriteInteger('TERegisterColor',clNavy);
           Reg.WriteInteger('TEValueColor',clBlue);
-          Reg.WriteInteger('TETheme',-1);
+          Reg.WriteInteger('TESTRColor',clGreen);
+          Reg.WriteInteger('TEStringColor',clBlue);
+          Reg.WriteBool('ThemeModified',false);
           Reg.CloseKey;
       end;
       finally
@@ -1218,6 +1273,16 @@ begin
     end;
 end;
 
+procedure TfmScriptTE.StringArgument1Click(Sender: TObject);
+begin
+  SetTextColor('TEStringColor');
+end;
+
+procedure TfmScriptTE.StringSTR1Click(Sender: TObject);
+begin
+  SetTextColor('TESTRColor');
+end;
+
 procedure TfmScriptTE.Switcheditor1Click(Sender: TObject);
 begin
   form1.SwitchScriptEditor1Click(nil);
@@ -1225,7 +1290,7 @@ end;
 
 procedure TfmScriptTE.About1Click(Sender: TObject);
 begin
-  Application.MessageBox('Script Text Editor and version 1.0c-2.0a updates by Alisaryn.', 'About', MB_OK or MB_ICONINFORMATION);
+  Application.MessageBox('Script Text Editor and version 1.0c-2.0b updates by Alisaryn.', 'About', MB_OK or MB_ICONINFORMATION);
 end;
 
 procedure TfmScriptTE.AddArgs1Click(Sender: TObject);

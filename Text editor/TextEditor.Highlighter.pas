@@ -53,6 +53,7 @@ type
     FTemporaryTokens: TList;
     FToken: TTextEditorToken;
     FTokenPosition: Integer;
+    FCharacterCount: Integer;
     function GetLoad: TFileName;
     procedure AddAllAttributes(const ARange: TTextEditorRange);
     procedure AddKeywords(const AKeywords: TStringList);
@@ -299,6 +300,7 @@ begin
   FPreviousEndOfLine := False;
   FRightToLeftToken := False;
   FToken := nil;
+  FCharacterCount := 0;
 
   Next;
 end;
@@ -492,6 +494,8 @@ begin
 
   if FLine[FRunPosition] = TControlCharacters.Null then
     FPreviousEndOfLine := True;
+
+  Inc(FCharacterCount, TokenLength);
 end;
 
 function TTextEditorHighlighter.RangeAttribute: TTextEditorHighlighterAttribute;
@@ -503,7 +507,29 @@ begin
 end;
 
 function TTextEditorHighlighter.TokenAttribute: TTextEditorHighlighterAttribute;
+var
+  LElement: TTextEditorHighlighterElement;
+  LAttribute: TTextEditorHighlighterAttribute;
 begin
+  // Check if we're in the first 5 characters
+  if FCharacterCount < 5 then
+  begin
+    // Try to get the Directive element from the theme
+    if FColors.Elements.TryGetValue('MethodName', LElement) then
+    begin
+      // Create a temporary attribute with those colors
+      LAttribute := TTextEditorHighlighterAttribute.Create('Label');
+      LAttribute.Foreground := LElement.Foreground;
+      LAttribute.Background := LElement.Background;
+      Result := LAttribute;
+    end
+    else
+    if Assigned(FToken) then
+      Result := FToken.Attribute
+    else
+      Result := nil;
+  end
+  else
   if Assigned(FToken) then
     Result := FToken.Attribute
   else
