@@ -512,9 +512,9 @@ var
   LAttribute: TTextEditorHighlighterAttribute;
 begin
   // Check if we're in the first 5 characters
-  if FCharacterCount < 5 then
+  if FCharacterCount < 6 then
   begin
-    // Try to get the Directive element from the theme
+    // Try to get the MethodName element from the theme
     if FColors.Elements.TryGetValue('MethodName', LElement) then
     begin
       // Create a temporary attribute with those colors

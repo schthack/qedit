@@ -779,15 +779,9 @@ begin
     form5.Tag:=0;
     form5.Edit5.Text:='';
     if showdecimal then
-    begin
-      lastmode:=1;
-      form5.TabControl1.TabIndex := 1;
-    end
+      lastmode:=1
     else
-    begin
       lastmode:=0;
-      form5.TabControl1.TabIndex := 0;
-    end;
     form5.TabControl1Change(form5);
     Form5.ShowModal;
 end;
@@ -838,15 +832,9 @@ begin
         inc(x);
         end;
         if showdecimal then
-        begin
-          lastmode:=1;
-          form5.TabControl1.TabIndex := 1;
-        end
+          lastmode:=1
         else
-        begin
           lastmode:=0;
-          form5.TabControl1.TabIndex := 0;
-        end;
         form5.TabControl1Change(form5);
         Form5.ShowModal;
     end;
