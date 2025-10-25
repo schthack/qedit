@@ -54,6 +54,7 @@ type
     FToken: TTextEditorToken;
     FTokenPosition: Integer;
     FCharacterCount: Integer;
+    FLabelAttribute: TTextEditorHighlighterAttribute;
     function GetLoad: TFileName;
     procedure AddAllAttributes(const ARange: TTextEditorRange);
     procedure AddKeywords(const AKeywords: TStringList);
@@ -187,6 +188,7 @@ begin
 
   FMatchingPairs := TList.Create;
   FTemporaryTokens := TList.Create;
+  FLabelAttribute := TTextEditorHighlighterAttribute.Create('Label');
 end;
 
 destructor TTextEditorHighlighter.Destroy;
@@ -199,6 +201,7 @@ begin
   FCompletionProposalSkipRegions.Free;
   FMatchingPairs.Free;
   FColors.Free;
+  FLabelAttribute.Free;
 
   FreeTemporaryTokens;
 
@@ -507,28 +510,10 @@ begin
 end;
 
 function TTextEditorHighlighter.TokenAttribute: TTextEditorHighlighterAttribute;
-var
-  LElement: TTextEditorHighlighterElement;
-  LAttribute: TTextEditorHighlighterAttribute;
 begin
   // Check if we're in the first 5 characters
   if FCharacterCount < 6 then
-  begin
-    // Try to get the MethodName element from the theme
-    if FColors.Elements.TryGetValue('MethodName', LElement) then
-    begin
-      // Create a temporary attribute with those colors
-      LAttribute := TTextEditorHighlighterAttribute.Create('Label');
-      LAttribute.Foreground := LElement.Foreground;
-      LAttribute.Background := LElement.Background;
-      Result := LAttribute;
-    end
-    else
-    if Assigned(FToken) then
-      Result := FToken.Attribute
-    else
-      Result := nil;
-  end
+    Result := FLabelAttribute
   else
   if Assigned(FToken) then
     Result := FToken.Attribute
@@ -721,8 +706,19 @@ begin
 end;
 
 procedure TTextEditorHighlighter.UpdateAttributes;
+var
+  LElement: TTextEditorHighlighterElement;
 begin
   UpdateAttributes(MainRules, nil);
+
+  // Update the label attribute
+  if Assigned(FLabelAttribute) and
+     FColors.Elements.TryGetValue('MethodName', LElement) then
+  begin
+    FLabelAttribute.Foreground := LElement.Foreground;
+    FLabelAttribute.Background := LElement.Background;
+    FLabelAttribute.FontStyles := LElement.FontStyles;
+  end;
 end;
 
 procedure TTextEditorHighlighter.PrepareYAMLHighlighter;
