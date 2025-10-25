@@ -194,6 +194,7 @@ type
     procedure Label1Click(Sender: TObject);
     procedure StringSTR1Click(Sender: TObject);
     procedure StringArgument1Click(Sender: TObject);
+    procedure TextEditKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   private
     { Private declarations }
@@ -1923,6 +1924,22 @@ begin
     linechanged := true;
     changeline := TextEdit.TextPosition.Line;
   end;
+end;
+
+procedure TfmScriptTE.TextEditKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var s:string;
+    x:integer;
+begin
+    if key = VK_F1 then begin
+        if (TextEdit.Lines.Count > 0) and (TextEdit.TextPosition.Line>-1) then begin
+            s:= TextEdit.Lines[TextEdit.TextPosition.Line];
+            delete(s,1,8);
+            x:=pos(' ',s);
+            if x > 0 then s:=copy(s,1,x-1);
+            shellexecute(0,'open',pchar('http://qedit.info/index.php?title='+s),'','',0);
+        end;
+    end;
 end;
 
 procedure TfmScriptTE.TextEditMouseDown(Sender: TObject; Button: TMouseButton;

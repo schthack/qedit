@@ -46,6 +46,7 @@ object fmScriptTE: TfmScriptTE
     OnChange = TextEditChange
     OnClick = TextEditClick
     OnKeyDown = TextEditKeyDown
+    OnKeyUp = TextEditKeyUp
     OnMouseDown = TextEditMouseDown
     ParentShowHint = False
     RightMargin.Visible = False

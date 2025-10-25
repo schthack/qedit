@@ -1978,7 +1978,7 @@ begin
             delete(s,1,8);
             x:=pos(' ',s);
             if x > 0 then s:=copy(s,1,x-1);
-            shellexecute(0,'open',pchar('http://qedit.schtserv.com/index.php?title='+s),'','',0);
+            shellexecute(0,'open',pchar('http://qedit.info/index.php?title='+s),'','',0);
         end;
     end;
 end;
