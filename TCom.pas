@@ -190,9 +190,12 @@ begin
            (AsmCode[ComboBox1.ItemIndex].arg[x] = T_RREG) then begin
            if (AsmCode[ComboBox1.ItemIndex].order = T_Args) and
             ((length(s) = 8) or (lowercase(copy(s,1,1))<> 'r')) then begin
-           if not showdecimal or (TabControl1.TabIndex = 0) then
+           if not showdecimal then
             y:=hextoint(s)
-           else trystrtoint64(s,y);
+           else
+           begin
+            if not trystrtoint64(s,y) then y:=HexToSignedInt(s,31);
+           end;
            if y = -1 then begin
                 MessageDlg(getlanguagestring(211), mtInformation,[mbOk], 0);
                 exit;
@@ -218,9 +221,12 @@ begin
            s:=''''+s+'''';
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_BYTE) then begin
-           if not showdecimal or (TabControl1.TabIndex = 0) then
+           if not showdecimal then
             y:=hextoint(s)
-           else trystrtoint64(s,y);
+           else
+           begin
+            if not trystrtoint64(s,y) then y:=HexToSignedInt(s,7);
+           end;
            if y = -1 then begin
                 MessageDlg(getlanguagestring(214), mtInformation,[mbOk], 0);
                 exit;
@@ -232,9 +238,12 @@ begin
            s:=GetDisplayValue(y,2);
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_WORD) then begin
-           if not showdecimal or (TabControl1.TabIndex = 0) then
+           if not showdecimal then
             y:=hextoint(s)
-           else trystrtoint64(s,y);
+           else
+           begin
+            if not trystrtoint64(s,y) then y:=HexToSignedInt(s,15);
+           end;
            if y = -1 then begin
                 MessageDlg(getlanguagestring(216), mtInformation,[mbOk], 0);
                 exit;
@@ -246,9 +255,12 @@ begin
            s:=GetDisplayValue(y,4);
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_PFLAG) then begin
-           if not showdecimal or (TabControl1.TabIndex = 0) then
+           if not showdecimal then
             y:=hextoint(s)
-           else trystrtoint64(s,y);
+           else
+           begin
+            if not trystrtoint64(s,y) then y:=HexToSignedInt(s,15);
+           end;
            if y = -1 then begin
                 MessageDlg(getlanguagestring(218), mtInformation,[mbOk], 0);
                 exit;
@@ -649,7 +661,16 @@ begin
     if copy(unicodestringgrid1.Cells[1,i],1,1) <> 'R' then begin
     s:=unicodestringgrid1.Cells[1,i];
     if lastmode = 0 then y:=hextoint(s);
-    if lastmode = 1 then y:=strtoint(s);
+    if lastmode = 1 then
+    begin
+      if not showdecimal then
+        y:=strtoint(s)
+      else
+      begin
+        if not trystrtoint(s,integer(y)) then
+          y:=0;
+      end;
+    end;
     if lastmode = 2 then begin
         y:=0;
         if s = 'NAN' then y:=dwval[i]

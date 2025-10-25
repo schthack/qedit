@@ -5060,6 +5060,7 @@ begin
       form4.Section1.Caption := 'Change label flag';
       form8.Caption := 'Map events';
       form1.Button10.Caption := 'View map events';
+      form10.Caption := 'Add Object';
     end;
     flp.Clear;
     CheckShadow;

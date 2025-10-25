@@ -1660,7 +1660,7 @@ object Form1: TForm1
       Caption = 'Enemy wave'
     end
     object Itemsgroupe1: TMenuItem
-      Caption = 'Items group'
+      Caption = 'Item group'
     end
     object N10: TMenuItem
       Caption = '-'

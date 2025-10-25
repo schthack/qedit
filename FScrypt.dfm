@@ -58,6 +58,7 @@ object Form4: TForm4
         Height = 21
         Anchors = [akTop, akRight]
         Caption = 'Search'
+        Default = True
         TabOrder = 1
         OnClick = Button6Click
       end

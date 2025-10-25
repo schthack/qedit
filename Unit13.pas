@@ -253,6 +253,7 @@ begin
               myscreen.TextOut(
               'Map section: ' +
               inttostr(Floor[sfloor].Obj[Selected].map_section) +
+              ' | Group: ' + inttostr(Floor[sfloor].Obj[Selected].grp) +
               ' | X: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_X)) +
               ' | Y: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Z)) +
               ' | Z: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Y)) +
