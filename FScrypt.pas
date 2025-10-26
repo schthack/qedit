@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   StrUtils, Dialogs, StdCtrls, ComCtrls, ExtCtrls, Generics.Collections, Generics.Defaults,
-  ImgList, Menus, shellapi, WSDLIntf, Registry, System.ImageList;
+  ImgList, Menus, shellapi, WSDLIntf, Registry, System.ImageList, System.RegularExpressions;
 
 type
   TForm4 = class(TForm)
@@ -141,7 +141,7 @@ var
   CopyedData:widestring = '';
   ScriptTest:tstrings=nil;
   refname:array[0..9] of ansistring = ('unused','NPC data','Code','Image data','String data','Enemy physical data','Enemy Resist data','Enemy attack data','Enemy movement data','Float data');
-
+  treesearch: Boolean = false;
 
 implementation
 
@@ -778,10 +778,6 @@ procedure TForm4.Button3Click(Sender: TObject);
 begin
     form5.Tag:=0;
     form5.Edit5.Text:='';
-    if showdecimal then
-      lastmode:=1
-    else
-      lastmode:=0;
     form5.TabControl1Change(form5);
     Form5.ShowModal;
 end;
@@ -877,9 +873,20 @@ begin
     while i = 0 do begin
         inc(x);
         if x = listbox1.Items.count then x:=0;
-        if pos(lowercase(edit1.Text),lowercase(listbox1.Items.Strings[x]))>0 then begin
-            i:=1;
-            break;
+        if treesearch and (pos(' ',edit1.Text) = 0) then
+        begin
+          if TRegEx.IsMatch(listbox1.Items.Strings[x],'\b'+edit1.Text+'\b') then
+          begin
+              i:=1;
+              break;
+          end;
+        end
+        else
+        begin
+          if pos(lowercase(edit1.Text),lowercase(listbox1.Items.Strings[x]))>0 then begin
+              i:=1;
+              break;
+          end;
         end;
         if x = y then break;
     end;
@@ -1008,7 +1015,9 @@ begin
     if copy(treeview1.Selected.Text,1,2) = 'F_' then begin s:=copy(treeview1.Selected.Text,3,length(treeview1.Selected.Text)-2)+':'+copy('        ',1,9-length(treeview1.Selected.Text)); listbox1.ItemIndex:=0; end;
     if copy(treeview1.Selected.Text,1,2) = 'S_' then begin s:=copy(treeview1.Selected.Text,3,length(treeview1.Selected.Text)-2)+':'+copy('        ',1,9-length(treeview1.Selected.Text)); listbox1.ItemIndex:=0; end;
     edit1.Text:=s;
+    treesearch := true;
     button6click(self);
+    treesearch := false;
     end;
 end;
 

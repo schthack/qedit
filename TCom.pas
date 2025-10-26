@@ -366,6 +366,11 @@ begin
            if TabControl1.TabIndex = 0 then y:=hextoint(s);
            if TabControl1.TabIndex = 1 then y:=dword(strtoint(s));
            if TabControl1.TabIndex = 2 then begin
+                if lowercase(s) = 'nan' then
+                begin
+                  MessageDlg('Floating point value cannot be NAN.', mtInformation,[mbOk], 0);
+                  exit;
+                end;
                 y:=0;
                 f:=strtofloat(s);
                 move(f,y,4);
@@ -603,6 +608,12 @@ begin
          Form1.CheckListBox1.Items.Strings[x]:=mapname[mapid[g]+y];
          end;
      end;
+
+    if showdecimal then
+      lastmode := 1
+    else
+      lastmode := 0;
+
     form4.ListBox1.Repaint;
     close;
 end;
@@ -661,19 +672,10 @@ begin
     if copy(unicodestringgrid1.Cells[1,i],1,1) <> 'R' then begin
     s:=unicodestringgrid1.Cells[1,i];
     if lastmode = 0 then y:=hextoint(s);
-    if lastmode = 1 then
-    begin
-      if not showdecimal then
-        y:=strtoint(s)
-      else
-      begin
-        if not trystrtoint(s,integer(y)) then
-          y:=0;
-      end;
-    end;
+    if lastmode = 1 then y:=strtoint(s);
     if lastmode = 2 then begin
         y:=0;
-        if s = 'NAN' then y:=dwval[i]
+        if lowercase(s) = 'nan' then y:=dwval[i]
         else begin
         f:=strtofloat(s);
         move(f,y,4);
@@ -684,7 +686,7 @@ begin
     if tabcontrol1.TabIndex = 2 then begin
         move(y,f,4);
         s:=floattostr(f);
-        if s = 'NAN' then dwval[i]:=y;
+        if lowercase(s) = 'nan' then dwval[i]:=y;
     end;
 
     unicodestringgrid1.Cells[1,i]:=s;

@@ -1968,10 +1968,15 @@ begin
 end;
 
 procedure TForm1.Quit1Click(Sender: TObject);
+var
+  s: ansistring;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before quitting?'
+  else s:=GetLanguageString(55);
+
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(55), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -2094,13 +2099,15 @@ var
   unp: array [0 .. $8FF] of byte;
   tmp: ansistring;
   tmp2: widestring;
-  fn, g, cleantitle: ansistring;
+  fn, g, s, cleantitle: ansistring;
   si, ln, eb1, eb2: dword;
   di, da, db: pansichar;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before opening a new one?'
+  else s:=GetLanguageString(56);
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(56), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -7025,10 +7032,13 @@ end;
 procedure TForm1.Episode11Click(Sender: TObject);
 var
   x: integer;
+  s: ansistring;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
+  else s:=GetLanguageString(79);
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(79), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -7087,10 +7097,13 @@ end;
 procedure TForm1.Episode21Click(Sender: TObject);
 var
   x: integer;
+  s: ansistring;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
+  else s:=GetLanguageString(79);
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(79), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -7150,10 +7163,13 @@ end;
 procedure TForm1.Episode41Click(Sender: TObject);
 var
   x: integer;
+  s: ansistring;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
+  else s:=GetLanguageString(79);
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(79), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -8614,7 +8630,10 @@ procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   Reg: TRegistry;
   flp: TMemoryStream;
+  s: ansistring;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before quitting?'
+  else s:=GetLanguageString(55);
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;
@@ -8630,7 +8649,7 @@ begin
   end;
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(55), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then

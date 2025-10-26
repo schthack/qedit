@@ -311,13 +311,11 @@ object fmScriptTE: TfmScriptTE
       end
       object Find1: TMenuItem
         Caption = 'Search'
-        ImageIndex = 25
         ShortCut = 16454
         OnClick = Find1Click
       end
       object Replace1: TMenuItem
         Caption = 'Replace'
-        ImageIndex = 26
         ShortCut = 16456
         OnClick = Replace1Click
       end
