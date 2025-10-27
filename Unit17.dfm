@@ -4,7 +4,7 @@ object Form17: TForm17
   BorderStyle = bsDialog
   Caption = '3D Settings'
   ClientHeight = 274
-  ClientWidth = 180
+  ClientWidth = 177
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -39,7 +39,8 @@ object Form17: TForm17
     Left = 16
     Top = 32
     Width = 145
-    Height = 21
+    Height = 22
+    Style = csOwnerDrawFixed
     ItemIndex = 0
     TabOrder = 0
     Text = '320x240'
@@ -58,7 +59,8 @@ object Form17: TForm17
     Left = 16
     Top = 80
     Width = 145
-    Height = 21
+    Height = 22
+    Style = csOwnerDrawFixed
     ItemIndex = 0
     TabOrder = 1
     Text = '0'
@@ -82,7 +84,8 @@ object Form17: TForm17
     Left = 16
     Top = 128
     Width = 145
-    Height = 21
+    Height = 22
+    Style = csOwnerDrawFixed
     ItemIndex = 0
     TabOrder = 2
     Text = 'Close'

@@ -540,9 +540,16 @@ begin
         Listbox1.Items.Delete(listbox1.ItemIndex);
         RemoveRef(s);
         if x < listbox1.Items.Count then begin
-        listbox1.ItemIndex:=x;
+        listbox1.ItemIndex:=x
         //listbox1.Selected[x]:=true;
+        end
+        else if x > 0 then
+        begin
+          listbox1.ItemIndex := x - 1;
+          listbox1.TopIndex := listbox1.TopIndex + 1;
         end;
+        if x > 0 then
+        listbox1Click(nil);
     end;
 end;
 
@@ -780,6 +787,8 @@ begin
     form5.Edit5.Text:='';
     form5.TabControl1Change(form5);
     Form5.ShowModal;
+    if listbox1.ItemIndex > -1 then
+      listbox1Click(nil);
 end;
 
 procedure TForm4.Button5Click(Sender: TObject);
@@ -846,6 +855,7 @@ begin
             listbox1.Items.Strings[listbox1.ItemIndex-1];
         listbox1.Items.Strings[listbox1.ItemIndex-1]:=s;
         Listbox1.ItemIndex:=ListBox1.ItemIndex-1;
+        listbox1Click(nil);
     end;
 end;
 
@@ -859,6 +869,7 @@ begin
             listbox1.Items.Strings[listbox1.ItemIndex+1];
         listbox1.Items.Strings[listbox1.ItemIndex+1]:=s;
         Listbox1.ItemIndex:=ListBox1.ItemIndex+1;
+        listbox1Click(nil);
     end;
 end;
 
@@ -875,7 +886,8 @@ begin
         if x = listbox1.Items.count then x:=0;
         if treesearch and (pos(' ',edit1.Text) = 0) then
         begin
-          if TRegEx.IsMatch(listbox1.Items.Strings[x],'\b'+edit1.Text+'\b') then
+          if TRegEx.IsMatch(listbox1.Items.Strings[x],
+          '(?<![a-zA-Z0-9_<>=!])'+edit1.Text+'(?![a-zA-Z0-9_<>=!])') then
           begin
               i:=1;
               break;
@@ -890,7 +902,11 @@ begin
         end;
         if x = y then break;
     end;
-    if i=1 then listbox1.ItemIndex:=x
+    if i=1 then
+    begin
+      listbox1.ItemIndex:=x;
+      listbox1Click(nil);
+    end
     else MessageDlg(getlanguagestring(177), mtInformation,
       [mbOk], 0);
 

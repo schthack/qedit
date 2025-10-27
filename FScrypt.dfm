@@ -203,6 +203,7 @@ object Form4: TForm4
       Align = alClient
       Images = ImageList1
       Indent = 19
+      ReadOnly = True
       TabOrder = 0
       OnCompare = TreeView1Compare
       OnDblClick = TreeView1DblClick
