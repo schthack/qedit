@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ComCtrls,  ImgList, ExtCtrls,
-   shellapi, System.ImageList, Vcl.Grids;
+   shellapi, System.ImageList, Vcl.Grids, System.Actions, Vcl.ActnList;
 
 type
   TForm5 = class(TForm)
@@ -20,6 +20,9 @@ type
     UnicodeStringGrid1: TStringGrid;
     TabControl1: TTabControl;
     ImageList2: TImageList;
+    ActionList1: TActionList;
+    AddNewLabel: TAction;
+    AddNewRegister: TAction;
     procedure ComboBox1Change(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -42,6 +45,8 @@ type
     procedure UnicodeStringGrid1Exit(Sender: TObject);
     procedure UnicodeStringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
+    procedure AddNewLabelExecute(Sender: TObject);
+    procedure AddNewRegisterExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -147,6 +152,70 @@ begin
     for x:=0 to form4.ListBox1.Items.Count-1 do
         if copy(form4.ListBox1.Items.Strings[x],1,length(s)+1) = s+':' then
         if copy(form4.ListBox1.Items.Strings[x],9,4) = 'HEX:' then result:=1;
+end;
+
+procedure TForm5.AddNewLabelExecute(Sender: TObject);
+var
+  found: boolean;
+  i,j,newlabel: integer;
+begin
+  if ActiveControl is TEdit then
+  begin
+      for i := 0 to 65535 do
+      begin
+        found := false;
+        for j := 0 to form4.ListBox1.Items.Count - 1 do
+        begin
+          if form4.listbox1.items[j].StartsWith(inttostr(i) + ':') then
+            found := true;
+        end;
+        if not found then
+        begin
+          newlabel := i;
+          break;
+        end;
+      end;
+    TEdit(ActiveControl).Text := inttostr(newlabel);
+    TEdit(ActiveControl).SelectAll;
+  end;
+end;
+
+procedure TForm5.AddNewRegisterExecute(Sender: TObject);
+var
+  found: boolean;
+  i,j: integer;
+begin
+  if ActiveControl is TStringGrid then
+  begin
+    for i := 0 to 255 do
+    begin
+      found := false;
+      for j := 0 to form4.Listbox1.Items.Count - 1 do
+      begin
+        if form4.Listbox1.items[j].Contains('R' + inttostr(i)) then
+          found := true;
+      end;
+      for j := 0 to TStringGrid(ActiveControl).RowCount - 1 do
+      begin
+        if lowercase(TStringGrid(ActiveControl).Cells[1, j]) = 'r' +
+        inttostr(i) then found := true;
+      end;
+      if not found
+      // Exclude all reserved registers
+      and (i <> 74) and (i <> 75)
+      and (i <> 76) and (i <> 77)
+      and (i <> 78) and (i <> 79)
+      and (i <> 253) and (i <> 255)
+      then
+      begin
+        with TStringGrid(ActiveControl) do
+        begin
+          Cells[Col, Row] := 'R' + inttostr(i);
+          break;
+        end;
+      end;
+    end;
+  end;
 end;
 
 procedure TForm5.Button1Click(Sender: TObject);

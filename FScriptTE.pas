@@ -116,8 +116,6 @@ type
     Opcodes2: TMenuItem;
     ReservedRegisters1: TMenuItem;
     Functions1: TMenuItem;
-    N6: TMenuItem;
-    About1: TMenuItem;
     GotoLine1: TMenuItem;
     N11: TMenuItem;
     AddSTRcomment1: TMenuItem;
@@ -184,7 +182,6 @@ type
     procedure Opcodes2Click(Sender: TObject);
     procedure ReservedRegisters1Click(Sender: TObject);
     procedure Functions1Click(Sender: TObject);
-    procedure About1Click(Sender: TObject);
     procedure GotoLine1Click(Sender: TObject);
     procedure AddSTRcomment1Click(Sender: TObject);
     procedure Notes1Click(Sender: TObject);
@@ -1081,7 +1078,7 @@ begin
     for i := 0 to 255 do
     begin
       found := false;
-      for j := 0 to Lines.Count do
+      for j := 0 to Lines.Count - 1 do
       begin
         if Lines[j].Contains('R' + inttostr(i)) then
           found := true;
@@ -1287,11 +1284,6 @@ end;
 procedure TfmScriptTE.Switcheditor1Click(Sender: TObject);
 begin
   form1.SwitchScriptEditor1Click(nil);
-end;
-
-procedure TfmScriptTE.About1Click(Sender: TObject);
-begin
-  Application.MessageBox('Script Text Editor and version 1.0c-2.0b updates by Alisaryn.', 'About', MB_OK or MB_ICONINFORMATION);
 end;
 
 procedure TfmScriptTE.AddArgs1Click(Sender: TObject);

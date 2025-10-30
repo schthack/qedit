@@ -56,6 +56,7 @@ var
   movespeed: integer = 3;
   autoadjustsect: Boolean = false;
   autoadjustY: Boolean = false;
+  lastclick: integer = 0;
 
 implementation
 
@@ -787,6 +788,8 @@ begin
                     stype:=1;
                     form1.ListBox1.ItemIndex:=i;
                     form1.drawmap;
+                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
+                      form1.Button2Click(nil);
                     break;
                 end;
         end;
@@ -806,13 +809,16 @@ begin
                     stype:=2;
                     form1.ListBox2.ItemIndex:=i;
                     form1.drawmap;
+                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
+                      form1.Button2Click(nil);
                     break;
                 end;
         end;
         if i < floor[sfloor].ObjCount then break;
         
     end;
-
+    if not (ssRight in Shift) then
+      lastclick := gettickcount();
 end;
 
 

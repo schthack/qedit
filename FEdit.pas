@@ -18,6 +18,7 @@ type
     Image2: TImage;
     chkAutoAxis: TCheckBox;
     btnToggleData: TButton;
+    Button2: TButton;
     procedure Button1Click(Sender: TObject);
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
@@ -36,6 +37,7 @@ type
     procedure chkAutoAxisMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure btnToggleDataClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -112,10 +114,52 @@ begin
                     StringGrid1.Cells[1,y]:=floattostrf(EObjData.unknow10,ffFixed,10,4);
                 end;
 
-                if x = 6 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.obj_id));
-                if x = 7 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.action));
-                if x = 8 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow13));
-                if x = 9 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow14));
+                // Forest door
+                if EObjData.Skin = 128 then
+                begin
+                  if x = 6 then StringGrid1.Cells[1,y]:=inttostr(((EObjData.obj_id shr 8) and $FF) mod $0A);
+                  if x = 7 then StringGrid1.Cells[1,y]:=inttostr(EObjData.obj_id and $FF);
+                  if x = 8 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.action));
+                  if x = 9 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow13));
+                  if x = 10 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow14));
+                end
+                // Door Color Bar
+                else if EObjData.Skin = 39 then
+                begin
+                  if x = 6 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.obj_id));
+                  if x = 7 then StringGrid1.Cells[1,y]:=inttostr((EObjData.action shr 16) and $FFFF);
+                  if x = 8 then StringGrid1.Cells[1,y]:=inttostr(EObjData.action and $FFFF);
+                  if x = 9 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow13));
+                  if x = 10 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow14));
+                end
+                // Floor Panel 2, Saw, Ep2 Laser Detect
+                else if (EObjData.Skin = 222) or (EObjData.Skin = 527) or (EObjData.Skin = 528) then
+                begin
+                  if x = 6 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.obj_id));
+                  if x = 7 then StringGrid1.Cells[1,y]:=inttostr((EObjData.action shr 16) and $FFFF);
+                  if x = 8 then StringGrid1.Cells[1,y]:=inttostr(EObjData.action and $FFFF);
+                  if x = 9 then StringGrid1.Cells[1,y]:=inttostr((EObjData.unknow13 shr 16) and $FFFF);
+                  if x = 10 then StringGrid1.Cells[1,y]:=inttostr(EObjData.unknow13 and $FFFF);
+                  if x = 11 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow14));
+                end
+                // Symbol Chat Object, Count Down Object
+                else if (EObjData.Skin = 33) or (EObjData.Skin = 37) then
+                begin
+                  if x = 6 then StringGrid1.Cells[1,y]:=inttostr((EObjData.obj_id shr 16) and $FFFF);
+                  if x = 7 then StringGrid1.Cells[1,y]:=inttostr(EObjData.obj_id and $FFFF);
+                  if x = 8 then StringGrid1.Cells[1,y]:=inttostr((EObjData.action shr 16) and $FFFF);
+                  if x = 9 then StringGrid1.Cells[1,y]:=inttostr(EObjData.action and $FFFF);
+                  if x = 10 then StringGrid1.Cells[1,y]:=inttostr((EObjData.unknow13 shr 16) and $FFFF);
+                  if x = 11 then StringGrid1.Cells[1,y]:=inttostr(EObjData.unknow13 and $FFFF);
+                  if x = 12 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow14));
+                end
+                else
+                begin
+                  if x = 6 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.obj_id));
+                  if x = 7 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.action));
+                  if x = 8 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow13));
+                  if x = 9 then StringGrid1.Cells[1,y]:=inttostr(integer(EObjData.unknow14));
+                end;
                 inc(y);
             end;
         end;
@@ -306,6 +350,11 @@ begin
     close;
 end;
 
+procedure TForm7.Button2Click(Sender: TObject);
+begin
+  Close;
+end;
+
 procedure TForm7.StringGrid1Enter(Sender: TObject);
 begin
     editcol:=-1;
@@ -481,12 +530,52 @@ begin
                     EObjData.unknow10:=strtofloat(StringGrid1.Cells[1,y]);
                 end;
 
-                if x = 6 then EObjData.obj_id:=strtoint64(StringGrid1.Cells[1,y]);
-                if x = 7 then EObjData.action:=strtoint(StringGrid1.Cells[1,y]);
-                if x = 8 then EObjData.unknow13:=strtoint64(StringGrid1.Cells[1,y]);
-                if x = 9 then EObjData.unknow14:=strtoint64(StringGrid1.Cells[1,y]);
-
-
+                // Forest door
+                if EObjData.Skin = 128 then
+                begin
+                  if x = 6 then EObjData.obj_id:=(EObjData.obj_id and $000000FF) or (strtoint64(StringGrid1.Cells[1,y]) shl 8);
+                  if x = 7 then EObjData.obj_id:=(EObjData.obj_id and $FFFFFF00) or (strtoint64(StringGrid1.Cells[1,y]) and $FF);
+                  if x = 8 then EObjData.action:=strtoint(StringGrid1.Cells[1,y]);
+                  if x = 9 then EObjData.unknow13:=strtoint64(StringGrid1.Cells[1,y]);
+                  if x = 10 then EObjData.unknow14:=strtoint64(StringGrid1.Cells[1,y]);
+                end
+                // Door Color Bar
+                else if EObjData.Skin = 39 then
+                begin
+                  if x = 6 then EObjData.obj_id:=strtoint64(StringGrid1.Cells[1,y]);
+                  if x = 7 then EObjData.action:=(EObjData.action and $0000FFFF) or (strtoint(StringGrid1.Cells[1,y]) shl 16);
+                  if x = 8 then EObjData.action:=(EObjData.action and $FFFF0000) or (strtoint(StringGrid1.Cells[1,y]) and $FFFF);
+                  if x = 9 then EObjData.unknow13:=strtoint64(StringGrid1.Cells[1,y]);
+                  if x = 10 then EObjData.unknow14:=strtoint64(StringGrid1.Cells[1,y]);
+                end
+                // Floor Panel 2, Saw, Ep2 Laser Detect
+                else if (EObjData.Skin = 222) or (EObjData.Skin = 527) or (EObjData.Skin = 528) then
+                begin
+                  if x = 6 then EObjData.obj_id:=strtoint64(StringGrid1.Cells[1,y]);
+                  if x = 7 then EObjData.action:=(EObjData.action and $0000FFFF) or (strtoint(StringGrid1.Cells[1,y]) shl 16);
+                  if x = 8 then EObjData.action:=(EObjData.action and $FFFF0000) or (strtoint(StringGrid1.Cells[1,y]) and $FFFF);
+                  if x = 9 then EObjData.unknow13:=(EObjData.unknow13 and $0000FFFF) or (strtoint64(StringGrid1.Cells[1,y]) shl 16);
+                  if x = 10 then EObjData.unknow13:=(EObjData.unknow13 and $FFFF0000) or (strtoint64(StringGrid1.Cells[1,y]) and $FFFF);
+                  if x = 11 then EObjData.unknow14:=strtoint64(StringGrid1.Cells[1,y]);
+                end
+                // Symbol Chat Object, Count Down Object
+                else if (EObjData.Skin = 33) or (EObjData.Skin = 37) then
+                begin
+                  if x = 6 then EObjData.obj_id:=(EObjData.obj_id and $0000FFFF) or (strtoint64(StringGrid1.Cells[1,y]) shl 16);
+                  if x = 7 then EObjData.obj_id:=(EObjData.obj_id and $FFFF0000) or (strtoint64(StringGrid1.Cells[1,y]) and $FFFF);
+                  if x = 8 then EObjData.action:=(EObjData.action and $0000FFFF) or (strtoint(StringGrid1.Cells[1,y]) shl 16);
+                  if x = 9 then EObjData.action:=(EObjData.action and $FFFF0000) or (strtoint(StringGrid1.Cells[1,y]) and $FFFF);
+                  if x = 10 then EObjData.unknow13:=(EObjData.unknow13 and $0000FFFF) or (strtoint64(StringGrid1.Cells[1,y]) shl 16);
+                  if x = 11 then EObjData.unknow13:=(EObjData.unknow13 and $FFFF0000) or (strtoint64(StringGrid1.Cells[1,y]) and $FFFF);
+                  if x = 12 then EObjData.unknow14:=strtoint64(StringGrid1.Cells[1,y]);
+                end
+                else
+                begin
+                  if x = 6 then EObjData.obj_id:=strtoint64(StringGrid1.Cells[1,y]);
+                  if x = 7 then EObjData.action:=strtoint(StringGrid1.Cells[1,y]);
+                  if x = 8 then EObjData.unknow13:=strtoint64(StringGrid1.Cells[1,y]);
+                  if x = 9 then EObjData.unknow14:=strtoint64(StringGrid1.Cells[1,y]);
+                end;
                 if x = 1 then DrawRotation(-(EObjData.unknow6+rev[EObjData.Map_Section]));
                 end;
                 inc(y);

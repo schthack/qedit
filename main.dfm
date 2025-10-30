@@ -42,7 +42,7 @@ object Form1: TForm1
     Caption = 'Visual Map'
   end
   object Label6: TLabel
-    Left = 613
+    Left = 628
     Top = 228
     Width = 56
     Height = 13
@@ -536,6 +536,10 @@ object Form1: TForm1
           object byRoom2: TMenuItem
             Caption = 'by Room'
             OnClick = byRoom2Click
+          end
+          object byGroup1: TMenuItem
+            Caption = 'by Group'
+            OnClick = byGroup1Click
           end
           object byType2: TMenuItem
             Caption = 'by Type'

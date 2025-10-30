@@ -342,6 +342,7 @@ type
     Smallfont1: TMenuItem;
     Largefont1: TMenuItem;
     Mediumfont1: TMenuItem;
+    byGroup1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -458,6 +459,7 @@ type
     procedure Smallfont1Click(Sender: TObject);
     procedure Largefont1Click(Sender: TObject);
     procedure Mediumfont1Click(Sender: TObject);
+    procedure byGroup1Click(Sender: TObject);
 
 
   private
@@ -2658,6 +2660,33 @@ begin
     delete(a, 1, y);
     y := pos(#9, a);
     result.Add(copy(a, 1, y - 1));
+    if (id = 39) or (id = 128) then
+    begin
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+    end;
+    if (id = 222) or (id = 527) or (id = 528) then
+    begin
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+    end;
+    if (id = 33) or (id = 37) then
+    begin
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+    end;
     delete(a, 1, y);
     result.Add(a);
   end
@@ -5068,6 +5097,9 @@ begin
       form8.Caption := 'Map events';
       form1.Button10.Caption := 'View map events';
       form10.Caption := 'Add Object';
+      form16.Memo1.Lines.Add('');
+      form16.Memo1.Lines.Add('1.0c-2.0b updates:');
+      form16.Memo1.Lines.Add('Alisaryn');
     end;
     flp.Clear;
     CheckShadow;
@@ -6350,6 +6382,29 @@ begin
       HideIndicator();
     end;
   end;
+end;
+
+procedure TForm1.byGroup1Click(Sender: TObject);
+var
+  x, i, v: integer;
+  m: array [0 .. 1000] of TObj;
+begin
+  // sort
+  i := 0;
+  v := 0;
+  // for x:=0 to Floor[sfloor].MonsterCount-1 do if v < Floor[sfloor].Monster[x].map_section
+  while i < Floor[sfloor].ObjCount do
+  begin
+    for x := 0 to Floor[sfloor].ObjCount - 1 do
+      if Floor[sfloor].Obj[x].grp = v then
+      begin
+        move(Floor[sfloor].Obj[x], m[i], sizeof(TObj));
+        inc(i);
+      end;
+    inc(v);
+  end;
+  move(m[0], Floor[sfloor].Obj[0], sizeof(TObj) * Floor[sfloor].ObjCount);
+  CheckListBox1Click(Form1);
 end;
 
 procedure TForm1.Byroom1Click(Sender: TObject);

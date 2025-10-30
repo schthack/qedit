@@ -1298,4 +1298,18 @@ object Form5: TForm5
       000300040000000000030004000000000003FFFC000000000000000000000000
       0000000000000000000000000000}
   end
+  object ActionList1: TActionList
+    Left = 208
+    Top = 48
+    object AddNewLabel: TAction
+      Caption = 'New label'
+      ShortCut = 16460
+      OnExecute = AddNewLabelExecute
+    end
+    object AddNewRegister: TAction
+      Caption = 'New register'
+      ShortCut = 16466
+      OnExecute = AddNewRegisterExecute
+    end
+  end
 end

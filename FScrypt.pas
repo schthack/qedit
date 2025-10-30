@@ -135,6 +135,7 @@ type
     function CompareStr(List: TStringList; Index1, Index2: Integer): Integer;
     Procedure ScanForMap;
     procedure UpdateScriptRefs;
+    Procedure DelOpcode (s:ansistring);
 
 var
   Form4: TForm4;
@@ -1990,6 +1991,8 @@ begin
     dec(y);
     listbox1.ItemIndex:=y;
     isedited:=true;
+    if listbox1.ItemIndex > -1 then
+      listbox1Click(nil);
 end;
 
 procedure TForm4.ListBox1KeyUp(Sender: TObject; var Key: Word;

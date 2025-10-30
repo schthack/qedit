@@ -590,14 +590,6 @@ object fmScriptTE: TfmScriptTE
         ImageIndex = 1
         OnClick = Functions1Click
       end
-      object N6: TMenuItem
-        Caption = '-'
-      end
-      object About1: TMenuItem
-        Caption = 'About'
-        ImageIndex = 15
-        OnClick = About1Click
-      end
     end
     object Hotkeys1: TMenuItem
       Caption = '[Hotkeys]'

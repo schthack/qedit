@@ -350,14 +350,14 @@ end;
 
 Function QuestDisam(code: pansichar; ref: array of dword; CodeLength, RefCount: integer): boolean;
 var
-  x, y, v, i, px, dlength, ll: integer;
-  s, b: ansistring;
+  x, x2, y, v, i, px, dlength, ll: integer;
+  s, b, opc: ansistring;
   z, r60, r62, lr: dword;
   m: single;
   p: pansichar;
   StackP, stackb: integer;
   Stack: array [0 .. 400] of TPSOStack;
-  inva: boolean;
+  inva, hasargr, hasargl, hasargb, hasargw, hasarga, hasargo, hasargs: boolean;
 
 begin
   // init the treeview
@@ -1165,11 +1165,45 @@ begin
   // Clean up remaining nops if the option is enabled
   if hidenops then
   begin
+    DelOpcode(GetOpcodeName($0));
     for i := form4.Listbox1.items.count - 1 downto 0 do
     begin
-      if form4.Listbox1.items[i].contains('        nop') then
-        form4.ListBox1.Items.Delete(i);
+      if form4.Listbox1.items[i].StartsWith('        '+GetOpcodeName(0)+ ' ')
+      then form4.ListBox1.Items.Delete(i);
     end;
+  end;
+
+  // Clean up opcode references for script mode 2 quests
+  if asmmode = 2 then
+  begin
+    hasargr := false;
+    hasargl := false;
+    hasargb := false;
+    hasargw := false;
+    hasarga := false;
+    hasargo := false;
+    hasargs := false;
+    for i := 0 to form4.Listbox1.items.count - 1 do
+    begin
+      opc:= form4.listbox1.Items.Strings[i];
+      delete(opc,1,8);
+      x2:=pos(' ',opc);
+      if x2 > 0 then opc:=copy(opc,1,x2-1);
+      if (opc + ' ') = (GetOpcodeName($48) + ' ') then hasargr := true;
+      if (opc + ' ') = (GetOpcodeName($49) + ' ') then hasargl := true;
+      if (opc + ' ') = (GetOpcodeName($4a) + ' ') then hasargb := true;
+      if (opc + ' ') = (GetOpcodeName($4b) + ' ') then hasargw := true;
+      if (opc + ' ') = (GetOpcodeName($4c) + ' ') then hasarga := true;
+      if (opc + ' ') = (GetOpcodeName($4d) + ' ') then hasargo := true;
+      if (opc + ' ') = (GetOpcodeName($4e) + ' ') then hasargs := true;
+    end;
+    if not hasargr then DelOpcode(GetOpcodeName($48));
+    if not hasargl then DelOpcode(GetOpcodeName($49));
+    if not hasargb then DelOpcode(GetOpcodeName($4a));
+    if not hasargw then DelOpcode(GetOpcodeName($4b));
+    if not hasarga then DelOpcode(GetOpcodeName($4c));
+    if not hasargo then DelOpcode(GetOpcodeName($4d));
+    if not hasargs then DelOpcode(GetOpcodeName($4e));
   end;
 
   // Insert script lines into text editor if visible

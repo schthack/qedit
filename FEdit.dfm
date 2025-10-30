@@ -118,4 +118,15 @@ object Form7: TForm7
     Visible = False
     OnClick = btnToggleDataClick
   end
+  object Button2: TButton
+    Left = 744
+    Top = 144
+    Width = 75
+    Height = 25
+    Cancel = True
+    Caption = 'Close'
+    TabOrder = 5
+    TabStop = False
+    OnClick = Button2Click
+  end
 end
