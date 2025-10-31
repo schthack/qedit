@@ -2559,7 +2559,12 @@ begin
     if isdc then
       tmp2 := tmp2 + GetLanguageString(64)
     else
-      tmp2 := tmp2 + GetLanguageString(65);
+    begin
+      if form1.New1.Caption.Contains('New') then
+        tmp2 := tmp2 + ' (Unicode Format)'
+      else
+        tmp2 := tmp2 + GetLanguageString(65);
+    end;
     if curepi = 0 then
       tmp2 := tmp2 + GetLanguageString(66);
     if curepi = 1 then
