@@ -3299,14 +3299,8 @@ begin
     else
       Button12.Enabled := true;
     DrawMap;
-    ppx := 0;
-    ppy := YFromBBRELFile(0,0) + 15;
-    ppz := 0;
     if have3d then
-    begin
       load3d;
-      myscreen.SetView(ppx,ppy,ppz,vr,vz);
-    end;
   end;
 end;
 
