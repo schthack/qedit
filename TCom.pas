@@ -167,7 +167,10 @@ begin
         for j := 0 to form4.ListBox1.Items.Count - 1 do
         begin
           if form4.listbox1.items[j].StartsWith(inttostr(i) + ':') then
+          begin
             found := true;
+            break;
+          end;
         end;
         if not found then
         begin
@@ -193,12 +196,19 @@ begin
       for j := 0 to form4.Listbox1.Items.Count - 1 do
       begin
         if form4.Listbox1.items[j].Contains('R' + inttostr(i)) then
+        begin
           found := true;
+          break;
+        end;
       end;
       for j := 0 to TStringGrid(ActiveControl).RowCount - 1 do
       begin
         if lowercase(TStringGrid(ActiveControl).Cells[1, j]) = 'r' +
-        inttostr(i) then found := true;
+        inttostr(i) then
+        begin
+          found := true;
+          break;
+        end;
       end;
       if not found
       // Exclude all reserved registers

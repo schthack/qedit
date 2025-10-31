@@ -1042,7 +1042,10 @@ begin
       for j := 0 to Lines.Count - 1 do
       begin
         if Lines[j].StartsWith(inttostr(i) + ':') then
-        found := true;
+        begin
+          found := true;
+          break;
+        end;
       end;
       if not found then
       begin
@@ -1081,7 +1084,10 @@ begin
       for j := 0 to Lines.Count - 1 do
       begin
         if Lines[j].Contains('R' + inttostr(i)) then
+        begin
           found := true;
+          break;
+        end;
       end;
       if not found
       // Exclude all reserved registers
@@ -1324,7 +1330,10 @@ begin
         for j := 0 to Lines.Count - 1 do
         begin
           if Lines[j].StartsWith(inttostr(i) + ':') then
-          found := true;
+          begin
+            found := true;
+            break;
+          end;
         end;
         if not found then
         begin

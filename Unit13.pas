@@ -560,7 +560,7 @@ begin
                 for i := 0 to snapvalue do
                 begin
                     if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[selected].map_section) and
-                    ((Floor[sfloor].Obj[j].Unknow5 = showwave) or (showwave = -1)) then
+                    ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
                     begin
                       if ((round(Floor[sfloor].Obj[j].Pos_X + i)) = round(px3))
                       or ((round(Floor[sfloor].Obj[j].Pos_X - i)) = round(px3)) then
@@ -605,7 +605,7 @@ begin
                 for i := 0 to snapvalue do
                 begin
                     if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[selected].map_section) and
-                    ((Floor[sfloor].Obj[j].Unknow5 = showwave) or (showwave = -1)) then
+                    ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
                     begin
                       if ((round(Floor[sfloor].Obj[j].Pos_Y + i)) = round(py3))
                       or ((round(Floor[sfloor].Obj[j].Pos_Y - i)) = round(py3)) then
@@ -743,6 +743,7 @@ var v,rayOrigin,rayDir:TD3DXVECTOR3;
     m,n:TD3DXMATRIX;
     i,c,u1,u2,d1,d2:integer;
 begin
+    inedit := false;
     lmx:=x;
     lmy:=y;
 
@@ -789,7 +790,10 @@ begin
                     form1.ListBox1.ItemIndex:=i;
                     form1.drawmap;
                     if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
+                    begin
                       form1.Button2Click(nil);
+                      inedit := true;
+                    end;
                     break;
                 end;
         end;
@@ -810,14 +814,17 @@ begin
                     form1.ListBox2.ItemIndex:=i;
                     form1.drawmap;
                     if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
+                    begin
                       form1.Button2Click(nil);
+                      inedit := true;
+                    end;
                     break;
                 end;
         end;
         if i < floor[sfloor].ObjCount then break;
         
     end;
-    if not (ssRight in Shift) then
+    if not (ssRight in Shift) and not inedit then
       lastclick := gettickcount();
 end;
 

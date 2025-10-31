@@ -54,6 +54,7 @@ begin
           labelfound := true;
           // Move caret to end of line
           GoToLineAndSetPosition(i,length(Lines[i]) + 1);
+          break;
         end;
       end;
     end;

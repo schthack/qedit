@@ -610,6 +610,7 @@ var
   importscan: Boolean = false;
   coordsize: integer = 0;
   thememodified: Boolean = false;
+  inedit: Boolean = false;
 
 implementation
 
@@ -1680,7 +1681,7 @@ end;
 Procedure TForm1.DrawMap;
 Var
   px, py, px2, py2, px3, py3: double;
-  ppx, ppy: Single;
+  ppx, ppy, rad: Single;
   x, i, z: integer;
   rt: word;
   tpt: array [0 .. 2] of TPoint;
@@ -1856,11 +1857,15 @@ begin
               break;
           if i < 13 then
           begin
+            if Floor[sfloor].Obj[x].Skin = 14 then
+              rad := (Floor[sfloor].Obj[x].unknow8 * 10) + 30
+            else
+              rad := Floor[sfloor].Obj[x].unknow8;
             BBRelBmp.Canvas.Brush.Style := bsclear;
             BBRelBmp.Canvas.Pen.Color := ClOlive;
-            BBRelBmp.Canvas.Ellipse(round(px - (Floor[sfloor].Obj[x].unknow8 / Zoom)),
-              round(py - (Floor[sfloor].Obj[x].unknow8 / Zoom)), round(px + (Floor[sfloor].Obj[x].unknow8 / Zoom)),
-              round(py + (Floor[sfloor].Obj[x].unknow8 / Zoom)));
+            BBRelBmp.Canvas.Ellipse(round(px - (rad / Zoom)),
+              round(py - (rad / Zoom)), round(px + (rad / Zoom)),
+              round(py + (rad / Zoom)));
             BBRelBmp.Canvas.Brush.Style := bssolid;
             BBRelBmp.Canvas.Pen.Color := clblack;
           end;
@@ -2937,7 +2942,7 @@ begin
           for i := 0 to Floor[sfloor].ObjCount - 1 do
           begin
             if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
-              ((Floor[sfloor].Obj[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Obj[i].Pos_X > targetX)
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_X > targetX)
               and (round(Floor[sfloor].Obj[i].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
               and (i <> target) and (i <> selectionidx) then
               begin
@@ -2962,7 +2967,7 @@ begin
           for i := 0 to Floor[sfloor].ObjCount - 1 do
           begin
             if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
-              ((Floor[sfloor].Obj[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Obj[i].Pos_X < targetX)
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_X < targetX)
               and (round(Floor[sfloor].Obj[i].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
               and (i <> target) and (i <> selectionidx) then
               begin
@@ -3070,7 +3075,7 @@ begin
           for i := 0 to Floor[sfloor].ObjCount - 1 do
           begin
             if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
-              ((Floor[sfloor].Obj[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Obj[i].Pos_Y > targetY)
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_Y > targetY)
               and (round(Floor[sfloor].Obj[i].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
               and (i <> target) and (i <> selectionidx) then
               begin
@@ -3095,7 +3100,7 @@ begin
           for i := 0 to Floor[sfloor].ObjCount - 1 do
           begin
             if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
-              ((Floor[sfloor].Obj[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Obj[i].Pos_Y < targetY)
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_Y < targetY)
               and (round(Floor[sfloor].Obj[i].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
               and (i <> target) and (i <> selectionidx) then
               begin
@@ -3289,8 +3294,14 @@ begin
     else
       Button12.Enabled := true;
     DrawMap;
+    ppx := 0;
+    ppy := YFromBBRELFile(0,0) + 15;
+    ppz := 0;
     if have3d then
+    begin
       load3d;
+      myscreen.SetView(ppx,ppy,ppz,vr,vz);
+    end;
   end;
 end;
 
@@ -4161,6 +4172,7 @@ var
   z, l: Integer;
   px, px2, py, py2: Double;
 begin
+  inedit := false;
   // Start of mouse drag
   if (Button = mbleft) and (smDrag.checked) then
   begin
@@ -4204,10 +4216,14 @@ begin
             if gettickcount() - lastimgclick > 500 then
               l := -1;
             if l = ListBox1.ItemIndex then
+            begin
+              inedit := true;
               Form1.ListBox1DblClick(Form1)
+            end
             else
               Form1.ListBox1Click(Form1);
-              lastimgclick := gettickcount();
+              if not inedit then
+                lastimgclick := gettickcount();
               mdrag := 1;
             end;
       end;
@@ -4250,10 +4266,14 @@ begin
             if gettickcount() - lastimgclick > 500 then
               l := -1;
             if l = ListBox2.ItemIndex then
+            begin
+              inedit := true;
               Form1.ListBox1DblClick(Form1)
+            end
             else
               Form1.ListBox2Click(Form1);
-              lastimgclick := gettickcount();
+              if not inedit then
+                lastimgclick := gettickcount();
               mdrag := 1;
             end;
       end;
@@ -6757,7 +6777,7 @@ begin
           begin
               // Make sure both are visible and sections are the same
               if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[MoveSel].map_section) and
-              ((Floor[sfloor].Obj[j].Unknow5 = showwave) or (showwave = -1)) then
+              ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
               begin
                 if ((round(Floor[sfloor].Obj[j].Pos_X + i)) = round(px))
                 or ((round(Floor[sfloor].Obj[j].Pos_X - i)) = round(px)) then
@@ -6797,7 +6817,7 @@ begin
           begin
               // Make sure both are visible and sections are the same
               if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[MoveSel].map_section) and
-              ((Floor[sfloor].Obj[j].Unknow5 = showwave) or (showwave = -1)) then
+              ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
               begin
                 if ((round(Floor[sfloor].Obj[j].Pos_Y + i)) = round(py))
                 or ((round(Floor[sfloor].Obj[j].Pos_Y - i)) = round(py)) then
