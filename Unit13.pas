@@ -366,7 +366,7 @@ var v,rayOrigin,rayDir:TD3DXVECTOR3;
     i,z,c,d,j,closest:integer;
     rt:dword;
     px2,px3,py2,py3:single;
-    di,diff,diffmin,ppx2,ppy2,pz2:double;
+    di,diff,diffx,diffz,diffh,diffmin,ppx2,ppy2,pz2:double;
 begin
     if (shift = [ssleft]) and (not rtx) and (not rty) and (not rtz) then begin
         vz:=vz+((lmy-y)/120);
@@ -552,15 +552,10 @@ begin
                     if (Floor[sfloor].Monster[j].map_section = Floor[sfloor].Monster[selected].map_section) and
                     ((Floor[sfloor].Monster[j].Unknow5 = showwave) or (showwave = -1)) then
                     begin
-                      if (((round(Floor[sfloor].Monster[j].Pos_X + i)) = round(px3))
-                      and ((round(Floor[sfloor].Monster[j].Pos_Y + i)) = round(py3)))
-                      or (((round(Floor[sfloor].Monster[j].Pos_X - i)) = round(px3))
-                      and ((round(Floor[sfloor].Monster[j].Pos_Y - i)) = round(py3)))
-                      or (((round(Floor[sfloor].Monster[j].Pos_X + i)) = round(px3))
-                      and ((round(Floor[sfloor].Monster[j].Pos_Y - i)) = round(py3)))
-                      or (((round(Floor[sfloor].Monster[j].Pos_X - i)) = round(px3))
-                      and ((round(Floor[sfloor].Monster[j].Pos_Y + i)) = round(py3)))
-                      then
+                      diffx := Floor[sfloor].Monster[selected].Pos_X - Floor[sfloor].Monster[j].Pos_X;
+                      diffz := Floor[sfloor].Monster[selected].Pos_Y - Floor[sfloor].Monster[j].Pos_Y;
+                      diffh := sqrt(diffx * diffx + diffz * diffz);
+                      if diffh <= snapvalue then
                       begin
                         // Save closest snap target
                         diff := abs(Floor[sfloor].Monster[selected].Pos_Z - Floor[sfloor].Monster[j].Pos_Z);
@@ -723,15 +718,10 @@ begin
                     if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[selected].map_section) and
                     ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
                     begin
-                      if (((round(Floor[sfloor].Obj[j].Pos_X + i)) = round(px3))
-                      and ((round(Floor[sfloor].Obj[j].Pos_Y + i)) = round(py3)))
-                      or (((round(Floor[sfloor].Obj[j].Pos_X - i)) = round(px3))
-                      and ((round(Floor[sfloor].Obj[j].Pos_Y - i)) = round(py3)))
-                      or (((round(Floor[sfloor].Obj[j].Pos_X + i)) = round(px3))
-                      and ((round(Floor[sfloor].Obj[j].Pos_Y - i)) = round(py3)))
-                      or (((round(Floor[sfloor].Obj[j].Pos_X - i)) = round(px3))
-                      and ((round(Floor[sfloor].Obj[j].Pos_Y + i)) = round(py3)))
-                      then
+                      diffx := Floor[sfloor].Obj[selected].Pos_X - Floor[sfloor].Obj[j].Pos_X;
+                      diffz := Floor[sfloor].Obj[selected].Pos_Y - Floor[sfloor].Obj[j].Pos_Y;
+                      diffh := sqrt(diffx * diffx + diffz * diffz);
+                      if diffh <= snapvalue then
                       begin
                         // Save closest snap target
                         diff := abs(Floor[sfloor].Obj[selected].Pos_Z - Floor[sfloor].Obj[j].Pos_Z);
