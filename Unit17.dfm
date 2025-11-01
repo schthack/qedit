@@ -3,7 +3,7 @@ object Form17: TForm17
   Top = 196
   BorderStyle = bsDialog
   Caption = '3D Settings'
-  ClientHeight = 274
+  ClientHeight = 302
   ClientWidth = 177
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -72,12 +72,12 @@ object Form17: TForm17
   end
   object Button1: TButton
     Left = 54
-    Top = 235
+    Top = 261
     Width = 75
     Height = 25
     Caption = 'Save'
     Default = True
-    TabOrder = 6
+    TabOrder = 7
     OnClick = Button1Click
   end
   object ComboBox4: TComboBox
@@ -119,5 +119,13 @@ object Form17: TForm17
     Caption = 'Fullscreen'
     TabOrder = 5
     OnClick = chkFullscreenClick
+  end
+  object chkFollow: TCheckBox
+    Left = 16
+    Top = 230
+    Width = 97
+    Height = 17
+    Caption = 'Follow selection'
+    TabOrder = 6
   end
 end

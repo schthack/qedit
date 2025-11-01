@@ -60,7 +60,7 @@ var
 
 implementation
 
-uses main, Unit1, MyConst, FSnap;
+uses main, Unit1, MyConst, FSnap, Unit17;
 
 {$R *.dfm}
 
@@ -329,6 +329,27 @@ var i:integer;
 begin
     timer1.Enabled:=true;
     for i:=0 to 255 do Keys[i]:=false;
+    if (selected > -1) and form17.chkFollow.Checked then
+    begin
+      if sType = 1 then
+      begin
+        ppx := midpz[Floor[sfloor].Monster[selected].map_section].x;
+        ppy := Floor[sfloor].Monster[selected].Pos_Z + 15;
+        ppz := -midpz[Floor[sfloor].Monster[selected].map_section].y;
+        vr := 0;
+        vz := 0;
+        myscreen.SetView(ppx, ppy, ppz, vr, vz);
+      end;
+      if sType = 2 then
+      begin
+        ppx := midpz[Floor[sfloor].Obj[selected].map_section].x;
+        ppy := Floor[sfloor].Obj[selected].Pos_Z + 15;
+        ppz := -midpz[Floor[sfloor].Obj[selected].map_section].y;
+        vr := 0;
+        vz := 0;
+        myscreen.SetView(ppx, ppy, ppz, vr, vz);
+      end;
+    end;
 end;
 
 procedure TForm13.FormHide(Sender: TObject);
@@ -519,6 +540,52 @@ begin
               end;
               if closest > -1 then
                 AdjustDistanceX(closest);
+
+              diffmin := Double.MaxValue;
+              closest := -1;
+
+              // 3D Y axis snap for monsters
+              for j := 0 to Floor[sfloor].MonsterCount - 1 do
+              begin
+                for i := 0 to snapvalue do
+                begin
+                    if (Floor[sfloor].Monster[j].map_section = Floor[sfloor].Monster[selected].map_section) and
+                    ((Floor[sfloor].Monster[j].Unknow5 = showwave) or (showwave = -1)) then
+                    begin
+                      if (((round(Floor[sfloor].Monster[j].Pos_X + i)) = round(px3))
+                      and ((round(Floor[sfloor].Monster[j].Pos_Y + i)) = round(py3)))
+                      or (((round(Floor[sfloor].Monster[j].Pos_X - i)) = round(px3))
+                      and ((round(Floor[sfloor].Monster[j].Pos_Y - i)) = round(py3)))
+                      or (((round(Floor[sfloor].Monster[j].Pos_X + i)) = round(px3))
+                      and ((round(Floor[sfloor].Monster[j].Pos_Y - i)) = round(py3)))
+                      or (((round(Floor[sfloor].Monster[j].Pos_X - i)) = round(px3))
+                      and ((round(Floor[sfloor].Monster[j].Pos_Y + i)) = round(py3)))
+                      then
+                      begin
+                        // Save closest snap target
+                        diff := abs(Floor[sfloor].Monster[selected].Pos_Z - Floor[sfloor].Monster[j].Pos_Z);
+                        if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                        or (not FSnapOptions.chkDistancelimit.Checked) then
+                        begin
+                          floor[sfloor].Monster[selected].Pos_X := floor[sfloor].Monster[j].Pos_X;
+                          floor[sfloor].Monster[selected].Pos_Y := floor[sfloor].Monster[j].Pos_Y;
+                          mymonst[selected].PositionX := mymonst[j].PositionX;
+                          mymonst[selected].PositionZ := mymonst[j].PositionZ;
+                          if (FSnapOptions.chkSnapRotate.Checked) then
+                            floor[sfloor].Monster[selected].Direction := floor[sfloor].Monster[j].Direction;
+                          if (diff < diffmin) and (j <> selected) then
+                          begin
+                            diffmin := diff;
+                            if j <> selected then
+                              closest := j;
+                          end;
+                        end;
+                      end;
+                    end;
+                end;
+              end;
+              if closest > -1 then
+                AdjustDistanceZ(closest);
               GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
             end;
 
@@ -574,7 +641,11 @@ begin
                           myobj[selected].PositionX := myobj[j].PositionX;
                           // Match object's rotations if enabled
                           if (FSnapOptions.chkSnapRotate.Checked) then
+                          begin
+                            floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
                             floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                            floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
+                          end;
                           // Match object's Y value if enabled
                           if (FSnapOptions.chkSnapYValue.Checked) then
                           begin
@@ -592,7 +663,6 @@ begin
                     end;
                 end;
               end;
-
               if closest > -1 then
                 AdjustDistanceY(closest);
 
@@ -618,7 +688,11 @@ begin
                           floor[sfloor].Obj[selected].Pos_Y := floor[sfloor].Obj[j].Pos_Y;
                           myobj[selected].PositionZ := myobj[j].PositionZ;
                           if (FSnapOptions.chkSnapRotate.Checked) then
+                          begin
+                            floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
                             floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                            floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
+                          end;
                           if (FSnapOptions.chkSnapYValue.Checked) then
                           begin
                             floor[sfloor].Obj[selected].Pos_Z := floor[sfloor].Obj[j].Pos_Z;
@@ -637,6 +711,56 @@ begin
               end;
               if closest > -1 then
                 AdjustDistanceX(closest);
+
+              diffmin := Double.MaxValue;
+              closest := -1;
+
+              // 3D Y axis snap for objects
+              for j := 0 to Floor[sfloor].ObjCount - 1 do
+              begin
+                for i := 0 to snapvalue do
+                begin
+                    if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[selected].map_section) and
+                    ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
+                    begin
+                      if (((round(Floor[sfloor].Obj[j].Pos_X + i)) = round(px3))
+                      and ((round(Floor[sfloor].Obj[j].Pos_Y + i)) = round(py3)))
+                      or (((round(Floor[sfloor].Obj[j].Pos_X - i)) = round(px3))
+                      and ((round(Floor[sfloor].Obj[j].Pos_Y - i)) = round(py3)))
+                      or (((round(Floor[sfloor].Obj[j].Pos_X + i)) = round(px3))
+                      and ((round(Floor[sfloor].Obj[j].Pos_Y - i)) = round(py3)))
+                      or (((round(Floor[sfloor].Obj[j].Pos_X - i)) = round(px3))
+                      and ((round(Floor[sfloor].Obj[j].Pos_Y + i)) = round(py3)))
+                      then
+                      begin
+                        // Save closest snap target
+                        diff := abs(Floor[sfloor].Obj[selected].Pos_Z - Floor[sfloor].Obj[j].Pos_Z);
+                        if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                        or (not FSnapOptions.chkDistancelimit.Checked) then
+                        begin
+                          floor[sfloor].Obj[selected].Pos_X := floor[sfloor].Obj[j].Pos_X;
+                          floor[sfloor].Obj[selected].Pos_Y := floor[sfloor].Obj[j].Pos_Y;
+                          myobj[selected].PositionX := myobj[j].PositionX;
+                          myobj[selected].PositionZ := myobj[j].PositionZ;
+                          if (FSnapOptions.chkSnapRotate.Checked) then
+                          begin
+                            floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
+                            floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                            floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
+                          end;
+                          if (diff < diffmin) and (j <> selected) then
+                          begin
+                            diffmin := diff;
+                            if j <> selected then
+                              closest := j;
+                          end;
+                        end;
+                      end;
+                    end;
+                end;
+              end;
+              if closest > -1 then
+                AdjustDistanceZ(closest);
               myobj[selected].Free;
               Generateobj(floor[sfloor].obj[selected],selected);
             end;

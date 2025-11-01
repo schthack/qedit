@@ -18,6 +18,7 @@ type
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     chkFullscreen: TCheckBox;
+    chkFollow: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure chkFullscreenClick(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
@@ -52,6 +53,7 @@ begin
       Reg.WriteInteger('Dist',combobox4.ItemIndex);
       Reg.WriteInteger('SkyDome',dword(checkbox2.checked));
       Reg.WriteBool('Fullscreen3D',chkFullscreen.Checked);
+      Reg.WriteBool('Follow3D',chkFollow.Checked);
       Reg.CloseKey;
     end;
   finally

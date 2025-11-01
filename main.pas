@@ -489,6 +489,7 @@ procedure ShowIndicator();
 procedure HideIndicator();
 procedure AdjustDistanceX(target: integer);
 procedure AdjustDistanceY(target: integer);
+procedure AdjustDistanceZ(target: integer);
 procedure CalculateWarpOffsets(rotation: dword);
 function SanitizeFileName(const AFileName: string): string;
 procedure SetCoordSize(size: integer);
@@ -585,6 +586,7 @@ var
   anchorenabled: Boolean = false;
   disableindicator: Boolean = false;
   fullscreen: Boolean = false;
+  follow3D: Boolean = false;
   showdata: Boolean = false;
   showdecimal: Boolean = false;
   addargs: Boolean = false;
@@ -3128,6 +3130,138 @@ begin
   end;
 end;
 
+procedure AdjustDistanceZ(target: integer);
+var
+  i,closest: integer;
+  selectionZ,targetZ: single;
+  diff,diffmin: double;
+begin
+  if FSnapOptions.chkSnapDistance.Checked then
+  begin
+    diff := 0;
+    diffmin := Double.MaxValue;
+    closest := -1;
+
+    if sType = 1 then
+    begin
+      selectionZ := Floor[sfloor].Monster[selected].Pos_Z;
+      targetZ := Floor[sfloor].Monster[target].Pos_Z;
+
+      if selectionZ < targetZ then
+      begin
+          // First find the next closest from the target in the opposite direction
+          for i := 0 to Floor[sfloor].MonsterCount - 1 do
+          begin
+            if (Floor[sfloor].Monster[i].map_section = Floor[sfloor].Monster[target].map_section) and
+              ((Floor[sfloor].Monster[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Monster[i].Pos_Z > targetZ)
+              and (round(Floor[sfloor].Monster[i].Pos_X) = round(Floor[sfloor].Monster[target].Pos_X))
+              and (round(Floor[sfloor].Monster[i].Pos_Y) = round(Floor[sfloor].Monster[target].Pos_Y))
+              and (i <> target) and (i <> selected) then
+              begin
+                diff := abs(targetZ - Floor[sfloor].Monster[i].Pos_Z);
+                if diff < diffmin then
+                begin
+                  diffmin := diff;
+                  closest := i;
+                end;
+              end;
+          end;
+          // Find the difference
+          if closest <> -1 then
+            diff := abs(targetZ - Floor[sfloor].Monster[closest].Pos_Z);
+         // Offset the selection by the difference
+         if diff <> 0 then
+          Floor[sfloor].Monster[selected].Pos_Z := targetZ - diff;
+      end
+      else if selectionZ > targetZ then
+      begin
+          // First find the next closest from the target in the opposite direction
+          for i := 0 to Floor[sfloor].MonsterCount - 1 do
+          begin
+            if (Floor[sfloor].Monster[i].map_section = Floor[sfloor].Monster[target].map_section) and
+              ((Floor[sfloor].Monster[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Monster[i].Pos_Z < targetZ)
+              and (round(Floor[sfloor].Monster[i].Pos_X) = round(Floor[sfloor].Monster[target].Pos_X))
+              and (round(Floor[sfloor].Monster[i].Pos_Y) = round(Floor[sfloor].Monster[target].Pos_Y))
+              and (i <> target) and (i <> selected) then
+              begin
+                diff := abs(targetZ - Floor[sfloor].Monster[i].Pos_Z);
+                if diff < diffmin then
+                begin
+                  diffmin := diff;
+                  closest := i;
+                end;
+              end;
+          end;
+          // Find the difference
+          if closest <> -1 then
+            diff := abs(targetZ - Floor[sfloor].Monster[closest].Pos_Z);
+         // Offset the selection by the difference
+         if diff <> 0 then
+          Floor[sfloor].Monster[selected].Pos_Z := targetZ + diff;
+      end
+    end;
+
+    if sType = 2 then
+    begin
+      selectionZ := Floor[sfloor].obj[selected].Pos_Z;
+      targetZ := Floor[sfloor].obj[target].Pos_Z;
+
+      if selectionZ < targetZ then
+      begin
+          // First find the next closest from the target in the opposite direction
+          for i := 0 to Floor[sfloor].ObjCount - 1 do
+          begin
+            if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_Z > targetZ)
+              and (round(Floor[sfloor].Obj[i].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
+              and (round(Floor[sfloor].Obj[i].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
+              and (i <> target) and (i <> selected) then
+              begin
+                diff := abs(targetZ - Floor[sfloor].Obj[i].Pos_Z);
+                if diff < diffmin then
+                begin
+                  diffmin := diff;
+                  closest := i;
+                end;
+              end;
+          end;
+          // Find the difference
+          if closest <> -1 then
+            diff := abs(targetZ - Floor[sfloor].Obj[closest].Pos_Z);
+         // Offset the selection by the difference
+         if diff <> 0 then
+          Floor[sfloor].Obj[selected].Pos_Z := targetZ - diff;
+      end
+      else if selectionZ > targetZ then
+      begin
+          // First find the next closest from the target in the opposite direction
+          for i := 0 to Floor[sfloor].ObjCount - 1 do
+          begin
+            if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_Z < targetZ)
+              and (round(Floor[sfloor].Obj[i].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
+              and (round(Floor[sfloor].Obj[i].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
+              and (i <> target) and (i <> selected) then
+              begin
+                diff := abs(targetZ - Floor[sfloor].Obj[i].Pos_Z);
+                if diff < diffmin then
+                begin
+                  diffmin := diff;
+                  closest := i;
+                end;
+              end;
+          end;
+          // Find the difference
+          if closest <> -1 then
+            diff := abs(targetZ - Floor[sfloor].Obj[closest].Pos_Z);
+         // Offset the selection by the difference
+         if diff <> 0 then
+          Floor[sfloor].Obj[selected].Pos_Z := targetZ + diff;
+      end
+    end;
+  end;
+end;
+
 procedure CalculateWarpOffsets(rotation: dword);
 var
   angle: single;
@@ -3299,8 +3433,20 @@ begin
     else
       Button12.Enabled := true;
     DrawMap;
+    if form17.chkFollow.Checked then
+    begin
+      ppx := 0;
+      ppy := YFromBBRELFile(0,0) + 15;
+      ppz := 0;
+      vr := 0;
+      vz := 0;
+    end;
     if have3d then
+    begin
       load3d;
+      if form17.chkFollow.Checked then
+        myscreen.SetView(ppx,ppy,ppz,vr,vz);
+    end;
   end;
 end;
 
@@ -3398,6 +3544,15 @@ begin
       $FFFF div 182) + '°');
 
     bm.Free;
+    if have3d and form17.chkFollow.Checked then
+    begin
+      ppx := midpz[Floor[sfloor].Monster[selected].map_section].x;
+      ppy := Floor[sfloor].Monster[selected].Pos_Z + 15;
+      ppz := -midpz[Floor[sfloor].Monster[selected].map_section].y;
+      vr := 0;
+      vz := 0;
+      myscreen.SetView(ppx, ppy, ppz, vr, vz);
+    end;
   end;
 end;
 
@@ -3487,6 +3642,15 @@ begin
     Image1.Canvas.TextOut(260, 4, 'Direction : ' + inttostr((Floor[sfloor].Obj[Selected].unknow6 and $FFFF)
       div 182) + '°');
     bm.Free;
+    if have3d and form17.chkFollow.Checked then
+    begin
+      ppx := midpz[Floor[sfloor].Obj[selected].map_section].x;
+      ppy := Floor[sfloor].Obj[selected].Pos_Z + 15;
+      ppz := -midpz[Floor[sfloor].Obj[selected].map_section].y;
+      vr := 0;
+      vz := 0;
+      myscreen.SetView(ppx, ppy, ppz, vr, vz);
+    end;
   end;
 end;
 
@@ -4876,6 +5040,8 @@ begin
           disableindicator := Reg.ReadBool('DisableIndicator');
         if Reg.ValueExists('Fullscreen3D') then
           fullscreen := Reg.ReadBool('Fullscreen3D');
+        if Reg.ValueExists('Follow3D') then
+          follow3D := Reg.ReadBool('Follow3D');
         if Reg.ValueExists('ShowData') then
           showdata := Reg.ReadBool('ShowData');
         if Reg.ValueExists('ShowDecimal') then
@@ -5049,6 +5215,7 @@ begin
 
     smDisableIndicator.Checked := disableindicator;
     form17.chkFullscreen.Checked := fullscreen;
+    form17.chkFollow.Checked := follow3D;
 
     if showdata then
       form7.btnToggleData.Caption := 'Hide data'
@@ -5119,6 +5286,7 @@ begin
       form16.Memo1.Lines.Add('');
       form16.Memo1.Lines.Add('1.0c-2.0b updates:');
       form16.Memo1.Lines.Add('Alisaryn');
+      form6.Caption := 'Common settings';
     end;
     flp.Clear;
     CheckShadow;
@@ -6789,7 +6957,11 @@ begin
                     Floor[sfloor].Obj[MoveSel].Pos_X := Floor[sfloor].Obj[j].Pos_X;
                     // Match object's rotations if enabled
                     if FSnapOptions.chkSnapRotate.Checked then
+                    begin
+                      Floor[sfloor].Obj[MoveSel].unknow5 := Floor[sfloor].Obj[j].unknow5;
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
+                      Floor[sfloor].Obj[MoveSel].unknow7 := Floor[sfloor].Obj[j].unknow7;
+                    end;
                     // Match object's Y value if enabled
                     if FSnapOptions.chkSnapYValue.Checked and not altdw then
                       Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sfloor].Obj[j].Pos_Z;
@@ -6828,7 +7000,11 @@ begin
                   begin
                     Floor[sfloor].Obj[MoveSel].Pos_Y := Floor[sfloor].Obj[j].Pos_Y;
                     if FSnapOptions.chkSnapRotate.Checked then
+                    begin
+                      Floor[sfloor].Obj[MoveSel].unknow5 := Floor[sfloor].Obj[j].unknow5;
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
+                      Floor[sfloor].Obj[MoveSel].unknow7 := Floor[sfloor].Obj[j].unknow7;
+                    end;
                     if FSnapOptions.chkSnapYValue.Checked and not altdw then
                       Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sfloor].Obj[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
