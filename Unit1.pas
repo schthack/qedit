@@ -1232,7 +1232,7 @@ Function QuestBuild(code: pansichar): dword;
 var
   b, cmd, o: widestring;
   s, v: widestring;
-  x, p, y, z, i, j, g, d, ll, kkk, oldval, um, lastsection: integer;
+  x, p, y, z, i, j, g, d, ll, kkk, oldval, um, lastsection, lastcaret, lastindex: integer;
   m: single;
   a: ansistring;
   dw: dword;
@@ -1240,6 +1240,11 @@ begin
   // Copy text editor lines if visible
   if fmScriptTE.Visible then
   begin
+    lastcaret := fmScriptTE.TextEdit.CaretIndex;
+    lastindex := fmScriptTE.TextEdit.TopLine;
+    fmScriptTE.TextEdit.MoveCaretToBeginning;
+    fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+    fmScriptTE.TextEdit.TopLine := lastindex;
     UpdateTextRefs();
     isEdited := false;
     Form4.Listbox1.Clear;
@@ -1247,9 +1252,8 @@ begin
     begin
     if fmScriptTE.TextEdit.Lines[i] <> '' then
       begin
-        s := fmScriptTE.TextEdit.Lines[i];
-        // Replace tabs with spaces when adding back to listbox
-        s := StringReplace(s, #9, '  ', [rfReplaceAll]);
+        // Replace first 8 character tabs with spaces when adding back to listbox
+        s := replacetabs(fmScriptTE.TextEdit.Lines[i]);
         form4.ListBox1.items.add(s);
       end;
     end;

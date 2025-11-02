@@ -55,7 +55,6 @@ object fmScriptTE: TfmScriptTE
     ShowHint = True
     SyncEdit.Active = False
     TabOrder = 0
-    Tabs.Options = [toColumns, toSelectedBlockIndent, toTabsToSpaces]
   end
   object StatusBar1: TStatusBar
     Left = 0

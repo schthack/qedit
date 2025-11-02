@@ -754,6 +754,7 @@ end;
 procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   i,lastcaret: integer;
+  s: string;
 begin
   scriptline := fmScriptTE.TextEdit.TextPosition.Line;
   scriptindex := fmScriptTE.TextEdit.TopLine - 1;
@@ -776,7 +777,8 @@ begin
       begin
         form14.ProgressBar1.Position := i;
         form14.Repaint;
-        form4.ListBox1.items.add(TextEdit.Lines[i]);
+        s := replacetabs(TextEdit.Lines[i]);
+        form4.ListBox1.items.add(s);
       end;
     end;
     form14.Hide;

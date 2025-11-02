@@ -493,6 +493,7 @@ procedure AdjustDistanceZ(target: integer);
 procedure CalculateWarpOffsets(rotation: dword);
 function SanitizeFileName(const AFileName: string): string;
 procedure SetCoordSize(size: integer);
+function ReplaceTabs(const S: string): string;
 
 var
   Form1: TForm1;
@@ -3385,6 +3386,18 @@ begin
   end;
 end;
 
+function ReplaceTabs(const S: string): string;
+var
+  First8, Rest: string;
+begin
+  First8 := Copy(S, 1, 8);
+  Rest := Copy(S, 9, MaxInt);
+
+  First8 := StringReplace(First8, #9, '  ', [rfReplaceAll]);
+
+  Result := First8 + Rest;
+end;
+
 procedure TForm1.CheckListBox1Click(Sender: TObject);
 var
   x: integer;
@@ -5287,6 +5300,7 @@ begin
       form16.Memo1.Lines.Add('1.0c-2.0b updates:');
       form16.Memo1.Lines.Add('Alisaryn');
       form6.Caption := 'Common settings';
+      form17.CheckBox2.Caption := 'Use skydome';
     end;
     flp.Clear;
     CheckShadow;
