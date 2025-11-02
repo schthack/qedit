@@ -6973,7 +6973,7 @@ begin
                   or (not FSnapOptions.chkDistancelimit.Checked) then
                   begin
                     Floor[sfloor].Obj[MoveSel].Pos_X := Floor[sfloor].Obj[j].Pos_X;
-                    // Match object's rotation if enabled
+                    // Match object's rotations if enabled
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
                     // Match object's Y value if enabled

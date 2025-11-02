@@ -634,7 +634,7 @@ begin
                         begin
                           floor[sfloor].Obj[selected].Pos_X := floor[sfloor].Obj[j].Pos_X;
                           myobj[selected].PositionX := myobj[j].PositionX;
-                          // Match object's rotation if enabled
+                          // Match object's rotations if enabled
                           if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                           // Match object's Y value if enabled
@@ -725,11 +725,7 @@ begin
                           myobj[selected].PositionX := myobj[j].PositionX;
                           myobj[selected].PositionZ := myobj[j].PositionZ;
                           if (FSnapOptions.chkSnapRotate.Checked) then
-                          begin
-                            floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
                             floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
-                            floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
-                          end;
                           if (diff < diffmin) and (j <> selected) then
                           begin
                             diffmin := diff;
