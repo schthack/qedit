@@ -1827,6 +1827,7 @@ begin
   isEdited := true;
   textEdited := true;
   editline := TextEdit.TextPosition.Line;
+  TextEdit.Lines[editline] := replacetabs(TextEdit.Lines[editline]);
   // Update autocomplete invoke status
   if fmScriptTE.Visible then
   begin
