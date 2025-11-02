@@ -614,6 +614,8 @@ var
   coordsize: integer = 0;
   thememodified: Boolean = false;
   inedit: Boolean = false;
+  inundo: Boolean = false;
+  indelete: Boolean = false;
 
 implementation
 
@@ -3446,7 +3448,7 @@ begin
     else
       Button12.Enabled := true;
     DrawMap;
-    if form17.chkFollow.Checked then
+    if form17.chkFollow.Checked and not inundo and not indelete then
     begin
       ppx := 0;
       ppy := YFromBBRELFile(0,0) + 15;
@@ -3457,7 +3459,7 @@ begin
     if have3d then
     begin
       load3d;
-      if form17.chkFollow.Checked then
+      if form17.chkFollow.Checked and not inundo and not indelete then
         myscreen.SetView(ppx,ppy,ppz,vr,vz);
     end;
   end;
@@ -6373,7 +6375,9 @@ begin
     end;
     ctrldw := true;
     //
+    indelete := true;
     CheckListBox1Click(Form1);
+    indelete := false;
     if stype = 1 then
     begin
       if s < Form1.ListBox1.count then
@@ -7514,7 +7518,9 @@ begin
   isedited := true;
   move(FloorUn[undocount], Floor[0], sizeof(TFloor) * 40);
   ctrldw := true;
+  inundo := true;
   Form1.CheckListBox1Click(Form1);
+  inundo := false;
   ctrldw := false;
 end;
 
