@@ -6973,13 +6973,9 @@ begin
                   or (not FSnapOptions.chkDistancelimit.Checked) then
                   begin
                     Floor[sfloor].Obj[MoveSel].Pos_X := Floor[sfloor].Obj[j].Pos_X;
-                    // Match object's rotations if enabled
+                    // Match object's rotation if enabled
                     if FSnapOptions.chkSnapRotate.Checked then
-                    begin
-                      Floor[sfloor].Obj[MoveSel].unknow5 := Floor[sfloor].Obj[j].unknow5;
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
-                      Floor[sfloor].Obj[MoveSel].unknow7 := Floor[sfloor].Obj[j].unknow7;
-                    end;
                     // Match object's Y value if enabled
                     if FSnapOptions.chkSnapYValue.Checked and not altdw then
                       Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sfloor].Obj[j].Pos_Z;
@@ -7018,11 +7014,7 @@ begin
                   begin
                     Floor[sfloor].Obj[MoveSel].Pos_Y := Floor[sfloor].Obj[j].Pos_Y;
                     if FSnapOptions.chkSnapRotate.Checked then
-                    begin
-                      Floor[sfloor].Obj[MoveSel].unknow5 := Floor[sfloor].Obj[j].unknow5;
                       Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
-                      Floor[sfloor].Obj[MoveSel].unknow7 := Floor[sfloor].Obj[j].unknow7;
-                    end;
                     if FSnapOptions.chkSnapYValue.Checked and not altdw then
                       Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sfloor].Obj[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
