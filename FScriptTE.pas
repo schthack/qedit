@@ -1805,7 +1805,7 @@ begin
              g:=strtoint(copy(s,5,4));
              y3:=strtoint(copy(s,11,2));
            end;
-           if x < 30 then begin
+           if x3 < 30 then begin
            mapxvmfile[x3]:=path+'map\xvm\'+mapxvmname[mapid[g]+y3];
            mapfile[x3]:=path+'map\'+mapfilename[mapid[g]+y3];
            floor[x3].floorid:=MapArea[mapid[g]+y3];

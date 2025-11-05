@@ -1888,6 +1888,10 @@ begin
         MessageDlg('Build error at line ' + inttostr(x) + #13#10 + E.Message, mtInformation, [mbOk], 0);
         form4.Show;
         form4.ListBox1.ItemIndex := x;
+        if not directoryexists(path + 'error backup') then
+          CreateDir(path + 'error backup');
+        form4.listbox1.Items.SaveToFile('error backup\' +
+        FormatDateTime('yyyy-mm-dd_hh-nn-ss', Now) + '.pasm');
         break;
       end;
     end;

@@ -494,6 +494,7 @@ procedure CalculateWarpOffsets(rotation: dword);
 function SanitizeFileName(const AFileName: string): string;
 procedure SetCoordSize(size: integer);
 function ReplaceTabs(const S: string): string;
+procedure UpdateWindowTitle;
 
 var
   Form1: TForm1;
@@ -953,6 +954,9 @@ begin
     move(Tsopc.Strings[x][1], ch[0], length(Tsopc.Strings[x]));
     filewrite(f, ch[0], 16);
   end;
+  // Window title information
+  filewrite(f, isdc, 1);
+  filewrite(f, asmmode, 2);
   fileclose(f);
 end;
 
@@ -971,6 +975,7 @@ var
   ch: array [0 .. 2047] of byte;
   x, y, i, f: integer;
   TrTmp: ttreenode;
+  cleantitle: widestring;
 begin
 
   f := fileopen(fn, $40);
@@ -1058,23 +1063,57 @@ begin
     TrTmp.ImageIndex := 5;
     TrTmp.SelectedIndex := 5;
   end;
+
+  // Window title information
+  isdc := false;
+  fileread(f, isdc, 1);
+  asmmode := 0;
+  fileread(f, asmmode, 2);
+
   fileclose(f);
+
+  curepi := GetEpisode;
+  UpdateWindowTitle;
+
+  // Clear and update map strings
+  for x := 0 to 30 do
+    form1.CheckListBox1.Items.Strings[x] := '';
+  if curepi < 2 then
+  begin
+    for x := 0 to 17 do
+      form1.CheckListBox1.Items.Strings[x] := mapname[mapid[x + EPMap[curepi]]];
+  end
+  else
+  begin
+    x := 10;
+    form1.CheckListBox1.Items.Strings[0] := mapname[mapid[x + EPMap[2]]];
+    for x := 0 to 8 do
+      form1.CheckListBox1.Items.Strings[x + 1] := mapname[mapid[x + EPMap[2]]];
+  end;
+  UpdateScriptRefs;
+  importscan := true;
+  ScanForMap;
+  importscan := false;
+  form1.CheckListBox1.ItemIndex := 0;
+  form1.CheckListBox1Click(Form1);
+
+  // Load quest notes file based on quest name if they exist
+  fmScriptTE.txtNotes.Clear;
+  cleantitle := SanitizeFileName(title);
+  if (cleantitle <> '') and FileExists('notes\' + cleantitle + ' notes'+ '.txt') then
+    fmScriptTE.txtNotes.Lines.LoadFromFile('notes\' + cleantitle + ' notes'+ '.txt');
 end;
 
 Procedure LoadShadow;
 var
   s: ansistring;
-  tmp2: widestring;
 begin
+  if fmScriptTE.Visible then
+    form4.Show;
   if not directoryexists(path + 'temp') then
     CreateDir(path + 'temp');
   s := inttohex(crc32ofstring(FullQuestFile), 8);
   unDumpQuest(path + 'temp\_' + s);
-
-  tmp2 := 'Quest Editor V 2.0b Public - ' + Title;
-
-  Form1.Caption := unitochar(tmp2, 1000);
-  curepi := GetEpisode;
 end;
 
 Procedure CheckShadow;
@@ -2110,8 +2149,8 @@ var
   txt: array [0 .. $137F] of byte;
   unp: array [0 .. $8FF] of byte;
   tmp: ansistring;
-  tmp2: widestring;
-  fn, g, s, cleantitle: ansistring;
+  tmp2, cleantitle: widestring;
+  fn, g, s: ansistring;
   si, ln, eb1, eb2: dword;
   di, da, db: pansichar;
 begin
@@ -2154,10 +2193,6 @@ begin
       if (OpenDialog1.FilterIndex = 6) then
       begin
         unDumpQuest(fn);
-        tmp2 := 'Quest Editor V 2.0b Public - ' + Title;
-
-        Form1.Caption := unitochar(tmp2, 1000);
-        curepi := GetEpisode;
         exit;
       end;
       if (OpenDialog1.FilterIndex = 1) or (OpenDialog1.FilterIndex = 2) then
@@ -2552,7 +2587,6 @@ begin
     CheckListBox1.ItemIndex := 0;
     CheckListBox1Click(Form1);
     // Form1.Caption:='Quest Editor V 1.6d - '+Title;
-    tmp2 := 'Quest Editor V 2.0b Public - ' + Title;
     { if isdc then Form1.Caption:=Form1.Caption+' (DreamCast ASCII Format)'
       else Form1.Caption:=Form1.Caption+' (PC Unicode Format)';
       if curepi = 0 then  Form1.Caption:=Form1.Caption+' - Episode 1';
@@ -2561,31 +2595,13 @@ begin
       if asmmode = 2 then
       Form1.Caption:=Form1.Caption+' - Scrypt Mode 2'; }
 
-    if isdc then
-      tmp2 := tmp2 + GetLanguageString(64)
-    else
-    begin
-      if form1.New1.Caption.Contains('New') then
-        tmp2 := tmp2 + ' (Unicode Format)'
-      else
-        tmp2 := tmp2 + GetLanguageString(65);
-    end;
-    if curepi = 0 then
-      tmp2 := tmp2 + GetLanguageString(66);
-    if curepi = 1 then
-      tmp2 := tmp2 + GetLanguageString(67);
-    if curepi = 2 then
-      tmp2 := tmp2 + GetLanguageString(68);
-    if AsmMode = 2 then
-      tmp2 := tmp2 + GetLanguageString(69);
-    tmp2 := tmp2 + #0#0;
+    UpdateWindowTitle;
+
     FFilter := 1;
     if AsmMode = 2 then
       FFilter := 3;
     if isdc and (AsmMode = 2) then
       FFilter := 2;
-    // SetWindowTextW(form1.Handle,@tmp2[1]);
-    Form1.Caption := unitochar(tmp2, 1000);
     CheckShadow;
   end;
 end;
@@ -3398,6 +3414,36 @@ begin
   First8 := StringReplace(First8, #9, '  ', [rfReplaceAll]);
 
   Result := First8 + Rest;
+end;
+
+procedure UpdateWindowTitle;
+var
+  tmp2: widestring;
+begin
+  tmp2 := 'Quest Editor V 2.0b Public - ' + Title;
+
+  if isdc then
+    tmp2 := tmp2 + GetLanguageString(64)
+  else
+  begin
+    if form1.New1.Caption.Contains('New') then
+      tmp2 := tmp2 + ' (Unicode Format)'
+    else
+      tmp2 := tmp2 + GetLanguageString(65);
+  end;
+  if curepi = 0 then
+    tmp2 := tmp2 + GetLanguageString(66);
+  if curepi = 1 then
+    tmp2 := tmp2 + GetLanguageString(67);
+  if curepi = 2 then
+    tmp2 := tmp2 + GetLanguageString(68);
+  if AsmMode = 2 then
+    tmp2 := tmp2 + GetLanguageString(69);
+  tmp2 := tmp2 + #0#0;
+  if isdc then
+    Form1.Caption := unitochar(tmp2, 1000)
+  else
+    Form1.Caption := tmp2;
 end;
 
 procedure TForm1.CheckListBox1Click(Sender: TObject);
@@ -5302,6 +5348,8 @@ begin
       form16.Memo1.Lines.Add('1.0c-2.0b updates:');
       form16.Memo1.Lines.Add('Alisaryn');
       form6.Caption := 'Common settings';
+      form17.Label2.Caption := 'Frame skip:';
+      form17.Label4.Caption := 'Distance:';
       form17.CheckBox2.Caption := 'Use skydome';
     end;
     flp.Clear;
@@ -5429,7 +5477,8 @@ var
   di, da, db: pansichar;
   qtmp: array [0 .. 99] of pansichar;
   qtmpsize, qtmppos: array [0 .. 99] of integer;
-  mh, cleantitle: ansistring;
+  mh: ansistring;
+  cleantitle: widestring;
 begin
 
   SaveDialog1.Filter :=
@@ -7352,6 +7401,7 @@ begin
   end;
   curepi := 0;
 
+  UpdateWindowTitle;
 end;
 
 procedure TForm1.Episode21Click(Sender: TObject);
@@ -7418,6 +7468,7 @@ begin
     Floor[x].floorid := maparea[mapid[x + EPMap[1]]];
   end;
   curepi := 1;
+  UpdateWindowTitle;
 end;
 
 procedure TForm1.Episode41Click(Sender: TObject);
@@ -7493,6 +7544,7 @@ begin
     Floor[x + 1].floorid := maparea[mapid[x + EPMap[2]]];
   end;
   curepi := 2;
+  UpdateWindowTitle;
 end;
 
 procedure TForm1.Button11Click(Sender: TObject);
