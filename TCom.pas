@@ -642,6 +642,7 @@ begin
         if x = 0 then begin
             Form4.ListBox1.ItemIndex:=Form4.ListBox1.Items.Count-1;
             form32.Tag:=strtoint(UnicodeStringGrid1.Cells[1,5]);
+            form32.chkBezier.Checked := true;
             form4.EditVectordata1Click(form5);
         end;
        // if g > 0 then Form4.ListBox1.wideItems.Strings[y]:=copy(s,1,24)+inttohex(g,8)+', '+UnicodeStringGrid1.Cells[1,1];
@@ -653,6 +654,7 @@ begin
         if x = 0 then begin
             Form4.ListBox1.ItemIndex:=Form4.ListBox1.Items.Count-1;
             form32.Tag:=strtoint(UnicodeStringGrid1.Cells[1,5]);
+            form32.chkBezier.Checked := false;
             form4.EditVectordata1Click(form5);
         end;
     end;
@@ -940,6 +942,7 @@ begin
             if c = 1 then begin//find it
                 GoToLabel(UnicodeStringGrid1.Cells[1,5]);
                 form32.Tag:=0;
+                form32.chkBezier.Checked := true;
                 form4.EditVectordata1Click(form5);
             end;
             if c = 0 then begin
@@ -956,6 +959,7 @@ begin
             if c = 1 then begin//find it
                 GoToLabel(UnicodeStringGrid1.Cells[1,5]);
                 form32.Tag:=0;
+                form32.chkBezier.Checked := false;
                 form4.EditVectordata1Click(form5);
             end;
             if c = 0 then begin

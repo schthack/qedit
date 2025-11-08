@@ -41,7 +41,7 @@ object Form32: TForm32
       24)
   end
   object Button1: TButton
-    Left = 8
+    Left = 16
     Top = 335
     Width = 57
     Height = 25
@@ -50,7 +50,7 @@ object Form32: TForm32
     OnClick = Button1Click
   end
   object Button2: TButton
-    Left = 71
+    Left = 79
     Top = 335
     Width = 57
     Height = 25
@@ -77,7 +77,7 @@ object Form32: TForm32
     OnClick = Button4Click
   end
   object Button5: TButton
-    Left = 570
+    Left = 579
     Top = 368
     Width = 75
     Height = 25
@@ -86,12 +86,21 @@ object Form32: TForm32
     OnClick = Button5Click
   end
   object Button6: TButton
-    Left = 480
+    Left = 489
     Top = 368
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 6
     OnClick = Button6Click
+  end
+  object chkBezier: TCheckBox
+    Left = 577
+    Top = 339
+    Width = 97
+    Height = 17
+    Caption = 'Bezier curve'
+    TabOrder = 7
   end
 end

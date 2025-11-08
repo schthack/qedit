@@ -296,6 +296,7 @@ type
         Function LoadFromRel(filename,TexName:ansistring):boolean;
         Function LoadFromObj(filename:ansistring):boolean;
         Function SetVertexList(vertex: array of T3DVertex): boolean;
+        Function SetBezierCurve(controlPoints: array of T3DVertex): boolean;
     end;
 
     TPikaSurface = Class//(tthread)
@@ -8549,7 +8550,192 @@ begin
     self.rdy := true;
 end;
 
+function T3DItem.SetBezierCurve(controlPoints: array of T3DVertex): boolean;
+var
+  i, c, totalPoints, segments: integer;
+  t, step: single;
+  curvePoints: array of T3DVertex;
+  pp: pointer;
+  n: integer;
+  ribbonWidth: single;
+  curveLength, accumulatedLength: single;
+  segmentLengths: array of single;
 
+  function CalculateBezierPoint(position: single): T3DVertex;
+  var
+    point: T3DVertex;
+    kk, ii: integer;
+    blend2, coeff2: single;
+  begin
+    point.px := 0;
+    point.py := 0;
+    point.pz := 0;
 
+    for kk := 0 to n do
+    begin
+      coeff2 := 1;
+      for ii := 1 to kk do
+        coeff2 := coeff2 * (n - kk + ii) / ii;
+
+      blend2 := coeff2 * Power(position, kk) * Power(1 - position, n - kk);
+
+      point.px := point.px + blend2 * controlPoints[kk].px;
+      point.py := point.py + blend2 * controlPoints[kk].py;
+      point.pz := point.pz + blend2 * controlPoints[kk].pz;
+
+      if kk = 0 then
+        point.color := controlPoints[kk].color;
+    end;
+
+    Result := point;
+  end;
+
+var
+  center, nextPt, tangent, side, leftV, rightV, up, normal: TD3DXVECTOR3;
+  ribbonPoints: array of T3DVertex;
+  idx: integer;
+  dx, dy, dz: single;
+begin
+  Result := False;
+  n := Length(controlPoints) - 1;
+  if n < 1 then Exit;
+
+  // Generate more segments for smoother curve
+  segments := (n + 1) * 10;
+  totalPoints := segments + 1;
+  SetLength(curvePoints, totalPoints);
+  SetLength(segmentLengths, totalPoints);
+  step := 1.0 / segments;
+
+  for i := 0 to segments do
+  begin
+    t := i * step;
+    curvePoints[i] := CalculateBezierPoint(t);
+  end;
+
+  // Calculate cumulative length along curve for texture mapping
+  curveLength := 0;
+  segmentLengths[0] := 0;
+  for i := 1 to totalPoints - 1 do
+  begin
+    dx := curvePoints[i].px - curvePoints[i-1].px;
+    dy := curvePoints[i].py - curvePoints[i-1].py;
+    dz := curvePoints[i].pz - curvePoints[i-1].pz;
+    curveLength := curveLength + Sqrt(dx*dx + dy*dy + dz*dz);
+    segmentLengths[i] := curveLength;
+  end;
+
+  // Ribbon thickness
+  ribbonWidth := 3.0;
+
+  // Build ribbon vertices (two per curve point)
+  SetLength(ribbonPoints, totalPoints * 2);
+
+  for i := 0 to totalPoints - 1 do
+  begin
+    center := D3DXVector3(curvePoints[i].px, curvePoints[i].py, curvePoints[i].pz);
+
+    if i < totalPoints - 1 then
+      nextPt := D3DXVector3(curvePoints[i + 1].px, curvePoints[i + 1].py, curvePoints[i + 1].pz)
+    else
+      nextPt := center;
+
+    // tangent = direction of curve
+    D3DXVec3Subtract(tangent, nextPt, center);
+    D3DXVec3Normalize(tangent, tangent);
+
+    up := D3DXVector3(0, 1, 0);
+    D3DXVec3Cross(normal, tangent, up);
+
+    // If tangent is parallel to up (vertical), use X axis as fallback
+    if D3DXVec3LengthSq(normal) < 1e-6 then
+    begin
+      up := D3DXVector3(1, 0, 0);
+      D3DXVec3Cross(normal, tangent, up);
+    end;
+
+    D3DXVec3Normalize(normal, normal);
+    D3DXVec3Scale(normal, normal, ribbonWidth * 0.5);
+
+    // Maintain consistent side direction to avoid flipping at U-turns
+    if i > 0 then
+    begin
+      // Dot product of current and previous side
+      if D3DXVec3Dot(normal, side) < 0 then
+        D3DXVec3Scale(normal, normal, -1.0);
+    end;
+
+    side := normal;
+
+    // left/right positions
+    D3DXVec3Subtract(leftV, center, side);
+    D3DXVec3Add(rightV, center, side);
+
+    // Calculate texture V coordinate based on curve length
+    accumulatedLength := 0;
+    if curveLength > 0 then
+      accumulatedLength := segmentLengths[i] / curveLength;
+
+    // Left vertex
+    ribbonPoints[i * 2] := curvePoints[i];
+    ribbonPoints[i * 2].px := leftV.x;
+    ribbonPoints[i * 2].py := leftV.y;
+    ribbonPoints[i * 2].pz := leftV.z;
+    ribbonPoints[i * 2].tu := 0.0;
+    ribbonPoints[i * 2].tv := accumulatedLength;
+
+    // Right vertex
+    ribbonPoints[i * 2 + 1] := curvePoints[i];
+    ribbonPoints[i * 2 + 1].px := rightV.x;
+    ribbonPoints[i * 2 + 1].py := rightV.y;
+    ribbonPoints[i * 2 + 1].pz := rightV.z;
+    ribbonPoints[i * 2 + 1].tu := 1.0;
+    ribbonPoints[i * 2 + 1].tv := accumulatedLength;
+  end;
+
+  // Use generated ribbon vertices
+  c := Length(ribbonPoints);
+  self.FrameCount := 1;
+  SetLength(self.frame, 1);
+  self.TextureCount := 0;
+  self.Frame[0].SectionCount := 1;
+  SetLength(self.Frame[0].Section, 1);
+  self.Frame[0].Section[0].VertexCount := c;
+  self.Frame[0].Section[0].VertexOff := 0;
+  self.Frame[0].Section[0].SurfaceType := D3DPT_TRIANGLESTRIP;
+  SetLength(self.Frame[0].Section[0].VertexOrg, c);
+
+  for i := 0 to c - 1 do
+    self.Frame[0].Section[0].VertexOrg[i] := ribbonPoints[i];
+
+  // Index buffer
+  self.Frame[0].Section[0].IndexListCount := 1;
+  SetLength(self.Frame[0].Section[0].Indexs, 1);
+  self.Frame[0].Section[0].Indexs[0].IndexCount := c;
+  self.Frame[0].Section[0].Indexs[0].SurfaceCount := c - 2;
+  self.Frame[0].Section[0].Indexs[0].TextureID := 10;
+  self.Frame[0].Section[0].Indexs[0].SType := D3DPT_TRIANGLESTRIP;
+  self.frame[0].section[0].Indexs[0].AlphaSrc := 4;
+  self.frame[0].section[0].Indexs[0].AlphaDst := 5;
+
+  if Failed(self.g_pd3dDevice.CreateIndexBuffer(
+    self.frame[0].section[0].Indexs[0].IndexCount * 4, 0, D3DFMT_INDEX32,
+    D3DPOOL_DEFAULT, self.frame[0].section[0].Indexs[0].g_pIB, nil)) then
+    Exit;
+
+  self.frame[0].section[0].Indexs[0].g_pIB.Lock(
+    0, self.frame[0].section[0].Indexs[0].IndexCount * 4, pp, 0);
+
+  for idx := 0 to self.frame[0].section[0].Indexs[0].IndexCount - 1 do
+    Move(idx, PAnsiChar(pp)[idx * 4], 4);
+
+  self.frame[0].section[0].Indexs[0].g_pIB.Unlock;
+
+  alwaysDraw := True;
+  self.RemapVertex;
+  self.rdy := True;
+
+  Result := True;
+end;
 
 end.

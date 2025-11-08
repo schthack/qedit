@@ -19,6 +19,7 @@ type
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
+    chkBezier: TCheckBox;
     procedure FormShow(Sender: TObject);
     procedure StringGrid1SetEditText(Sender: TObject; ACol, ARow: Integer; const Value: string);
     procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer; var CanSelect: Boolean);
@@ -173,31 +174,46 @@ begin
     refreshDps();
     inEditMode := false;
 
-    if have3d then begin
-      setlength(vertexs,vectorCount*2);
-      for x:=0 to vectorCount-1 do begin
-          vertexs[(x*2)].px:=vectors[x].x-10;
-          vertexs[(x*2)].py:=vectors[x].y;
-          vertexs[(x*2)].pz:=-vectors[x].z;
-          vertexs[(x*2)].color := $FFFFFFFF;
-          vertexs[(x*2)].tu := 0.1;
-          vertexs[(x*2)].tv := 0.1;
+  if have3d then begin
+    mapItem := T3DItem.Create(myscreen);
 
-          vertexs[(x*2)+1].px:=vectors[x].x+10;
-          vertexs[(x*2)+1].py:=vectors[x].y+10;
-          vertexs[(x*2)+1].pz:=-vectors[x].z;
-          vertexs[(x*2)+1].color := $FFFFFFFF;
-          vertexs[(x*2)+1].tu := 0.2;
-          vertexs[(x*2)+1].tv := 0.2;
+    if chkBezier.Checked then begin
+      // Pass centerline points only
+      setlength(vertexs, vectorCount);
+      for x := 0 to vectorCount-1 do begin
+        vertexs[x].px := vectors[x].x;
+        vertexs[x].py := vectors[x].y;
+        vertexs[x].pz := -vectors[x].z;
+        vertexs[x].color := $FFFFFFFF;
+        vertexs[x].tu := 0.1;
+        vertexs[x].tv := 0.1;
       end;
-
-      mapItem := T3DItem.Create(myscreen);
+      mapItem.SetBezierCurve(vertexs);
+    end
+    else begin
+      setlength(vertexs, vectorCount*2);
+      for x := 0 to vectorCount-1 do begin
+        vertexs[(x*2)].px := vectors[x].x-10;
+        vertexs[(x*2)].py := vectors[x].y;
+        vertexs[(x*2)].pz := -vectors[x].z;
+        vertexs[(x*2)].color := $FFFFFFFF;
+        vertexs[(x*2)].tu := 0.1;
+        vertexs[(x*2)].tv := 0.1;
+        vertexs[(x*2)+1].px := vectors[x].x+10;
+        vertexs[(x*2)+1].py := vectors[x].y+10;
+        vertexs[(x*2)+1].pz := -vectors[x].z;
+        vertexs[(x*2)+1].color := $FFFFFFFF;
+        vertexs[(x*2)+1].tu := 0.2;
+        vertexs[(x*2)+1].tv := 0.2;
+      end;
       mapItem.SetVertexList(vertexs);
-      mapItem.Visible := true;
-      ppx := vectors[0].x;
-      ppy := vectors[0].y;
-      ppz := -vectors[0].z;
     end;
+
+    mapItem.Visible := true;
+    ppx := vectors[0].x;
+    ppy := vectors[0].y;
+    ppz := -vectors[0].z;
+  end;
 end;
 
 procedure TForm32.StringGrid1KeyPress(Sender: TObject; var Key: Char);

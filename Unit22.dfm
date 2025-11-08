@@ -93,6 +93,7 @@ object Form22: TForm22
     Top = 108
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 5
     OnClick = Button1Click

@@ -11,9 +11,7 @@ object Form28: TForm28
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
-  PixelsPerInch = 96
   TextHeight = 13
   object StringGrid1: TStringGrid
     Left = 10
@@ -35,6 +33,7 @@ object Form28: TForm28
     Top = 264
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 1
     OnClick = Button1Click

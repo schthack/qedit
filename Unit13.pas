@@ -363,7 +363,7 @@ procedure TForm13.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
 
 var v,rayOrigin,rayDir:TD3DXVECTOR3;
     m,n:TD3DXMATRIX;
-    i,z,c,d,j,closest:integer;
+    i,z,c,d,j,k,closest:integer;
     rt:dword;
     px2,px3,py2,py3:single;
     di,diff,diffx,diffz,diffh,diffmin,ppx2,ppy2,pz2:double;
@@ -547,36 +547,33 @@ begin
               // 3D Y axis snap for monsters
               for j := 0 to Floor[sfloor].MonsterCount - 1 do
               begin
-                for i := 0 to snapvalue do
+                if (Floor[sfloor].Monster[j].map_section = Floor[sfloor].Monster[selected].map_section) and
+                ((Floor[sfloor].Monster[j].Unknow5 = showwave) or (showwave = -1)) then
                 begin
-                    if (Floor[sfloor].Monster[j].map_section = Floor[sfloor].Monster[selected].map_section) and
-                    ((Floor[sfloor].Monster[j].Unknow5 = showwave) or (showwave = -1)) then
+                  diffx := Floor[sfloor].Monster[selected].Pos_X - Floor[sfloor].Monster[j].Pos_X;
+                  diffz := Floor[sfloor].Monster[selected].Pos_Y - Floor[sfloor].Monster[j].Pos_Y;
+                  diffh := sqrt(diffx * diffx + diffz * diffz);
+                  if diffh <= snapvalue then
+                  begin
+                    // Save closest snap target
+                    diff := abs(Floor[sfloor].Monster[selected].Pos_Z - Floor[sfloor].Monster[j].Pos_Z);
+                    if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                    or (not FSnapOptions.chkDistancelimit.Checked) then
                     begin
-                      diffx := Floor[sfloor].Monster[selected].Pos_X - Floor[sfloor].Monster[j].Pos_X;
-                      diffz := Floor[sfloor].Monster[selected].Pos_Y - Floor[sfloor].Monster[j].Pos_Y;
-                      diffh := sqrt(diffx * diffx + diffz * diffz);
-                      if diffh <= snapvalue then
+                      floor[sfloor].Monster[selected].Pos_X := floor[sfloor].Monster[j].Pos_X;
+                      floor[sfloor].Monster[selected].Pos_Y := floor[sfloor].Monster[j].Pos_Y;
+                      mymonst[selected].PositionX := mymonst[j].PositionX;
+                      mymonst[selected].PositionZ := mymonst[j].PositionZ;
+                      if (FSnapOptions.chkSnapRotate.Checked) then
+                        floor[sfloor].Monster[selected].Direction := floor[sfloor].Monster[j].Direction;
+                      if (diff < diffmin) and (j <> selected) then
                       begin
-                        // Save closest snap target
-                        diff := abs(Floor[sfloor].Monster[selected].Pos_Z - Floor[sfloor].Monster[j].Pos_Z);
-                        if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
-                        or (not FSnapOptions.chkDistancelimit.Checked) then
-                        begin
-                          floor[sfloor].Monster[selected].Pos_X := floor[sfloor].Monster[j].Pos_X;
-                          floor[sfloor].Monster[selected].Pos_Y := floor[sfloor].Monster[j].Pos_Y;
-                          mymonst[selected].PositionX := mymonst[j].PositionX;
-                          mymonst[selected].PositionZ := mymonst[j].PositionZ;
-                          if (FSnapOptions.chkSnapRotate.Checked) then
-                            floor[sfloor].Monster[selected].Direction := floor[sfloor].Monster[j].Direction;
-                          if (diff < diffmin) and (j <> selected) then
-                          begin
-                            diffmin := diff;
-                            if j <> selected then
-                              closest := j;
-                          end;
-                        end;
+                        diffmin := diff;
+                        if j <> selected then
+                          closest := j;
                       end;
                     end;
+                  end;
                 end;
               end;
               if closest > -1 then
@@ -636,7 +633,17 @@ begin
                           myobj[selected].PositionX := myobj[j].PositionX;
                           // Match object's rotations if enabled
                           if (FSnapOptions.chkSnapRotate.Checked) then
+                          begin
                             floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                            for k := 0 to RotateCount - 1 do
+                              if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
+                                break;
+                            if (k < RotateCount) then
+                            begin
+                              floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
+                              floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
+                            end;
+                          end;
                           // Match object's Y value if enabled
                           if (FSnapOptions.chkSnapYValue.Checked) then
                           begin
@@ -679,7 +686,17 @@ begin
                           floor[sfloor].Obj[selected].Pos_Y := floor[sfloor].Obj[j].Pos_Y;
                           myobj[selected].PositionZ := myobj[j].PositionZ;
                           if (FSnapOptions.chkSnapRotate.Checked) then
+                          begin
                             floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                            for k := 0 to RotateCount - 1 do
+                              if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
+                                break;
+                            if (k < RotateCount) then
+                            begin
+                              floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
+                              floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
+                            end;
+                          end;
                           if (FSnapOptions.chkSnapYValue.Checked) then
                           begin
                             floor[sfloor].Obj[selected].Pos_Z := floor[sfloor].Obj[j].Pos_Z;
@@ -705,36 +722,43 @@ begin
               // 3D Y axis snap for objects
               for j := 0 to Floor[sfloor].ObjCount - 1 do
               begin
-                for i := 0 to snapvalue do
+                if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[selected].map_section) and
+                ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
                 begin
-                    if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[selected].map_section) and
-                    ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
+                  diffx := Floor[sfloor].Obj[selected].Pos_X - Floor[sfloor].Obj[j].Pos_X;
+                  diffz := Floor[sfloor].Obj[selected].Pos_Y - Floor[sfloor].Obj[j].Pos_Y;
+                  diffh := sqrt(diffx * diffx + diffz * diffz);
+                  if diffh <= snapvalue then
+                  begin
+                    // Save closest snap target
+                    diff := abs(Floor[sfloor].Obj[selected].Pos_Z - Floor[sfloor].Obj[j].Pos_Z);
+                    if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                    or (not FSnapOptions.chkDistancelimit.Checked) then
                     begin
-                      diffx := Floor[sfloor].Obj[selected].Pos_X - Floor[sfloor].Obj[j].Pos_X;
-                      diffz := Floor[sfloor].Obj[selected].Pos_Y - Floor[sfloor].Obj[j].Pos_Y;
-                      diffh := sqrt(diffx * diffx + diffz * diffz);
-                      if diffh <= snapvalue then
+                      floor[sfloor].Obj[selected].Pos_X := floor[sfloor].Obj[j].Pos_X;
+                      floor[sfloor].Obj[selected].Pos_Y := floor[sfloor].Obj[j].Pos_Y;
+                      myobj[selected].PositionX := myobj[j].PositionX;
+                      myobj[selected].PositionZ := myobj[j].PositionZ;
+                      if (FSnapOptions.chkSnapRotate.Checked) then
                       begin
-                        // Save closest snap target
-                        diff := abs(Floor[sfloor].Obj[selected].Pos_Z - Floor[sfloor].Obj[j].Pos_Z);
-                        if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
-                        or (not FSnapOptions.chkDistancelimit.Checked) then
+                        floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                        for k := 0 to RotateCount - 1 do
+                          if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
+                            break;
+                        if (k < RotateCount) then
                         begin
-                          floor[sfloor].Obj[selected].Pos_X := floor[sfloor].Obj[j].Pos_X;
-                          floor[sfloor].Obj[selected].Pos_Y := floor[sfloor].Obj[j].Pos_Y;
-                          myobj[selected].PositionX := myobj[j].PositionX;
-                          myobj[selected].PositionZ := myobj[j].PositionZ;
-                          if (FSnapOptions.chkSnapRotate.Checked) then
-                            floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
-                          if (diff < diffmin) and (j <> selected) then
-                          begin
-                            diffmin := diff;
-                            if j <> selected then
-                              closest := j;
-                          end;
+                          floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
+                          floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
                         end;
                       end;
+                      if (diff < diffmin) and (j <> selected) then
+                      begin
+                        diffmin := diff;
+                        if j <> selected then
+                          closest := j;
+                      end;
                     end;
+                  end;
                 end;
               end;
               if closest > -1 then

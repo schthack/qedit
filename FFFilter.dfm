@@ -50,6 +50,7 @@ object Form30: TForm30
     Top = 62
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 2
     OnClick = Button2Click

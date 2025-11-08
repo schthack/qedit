@@ -355,6 +355,7 @@ object Form20: TForm20
     Top = 286
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 18
     OnClick = Button16Click

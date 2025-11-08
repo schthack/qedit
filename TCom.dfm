@@ -47,6 +47,7 @@ object Form5: TForm5
     Top = 222
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 1
     OnClick = Button2Click

@@ -1030,7 +1030,7 @@ procedure TfmScriptTE.Newlabel1Click(Sender: TObject);
 var
   i, j, lastline, prevline, lastcaret, labellength: integer;
   found: Boolean;
-  whitespace: string;
+  whitespace, s: string;
 begin
   lastline := TextEdit.TextPosition.Line;
   lastcaret := TextEdit.CaretIndex;
@@ -1060,6 +1060,11 @@ begin
           GoToLineAndSetPosition(lastline,0);
           InsertText(inttostr(i) + ':' + whitespace);
           TextEdit.TopLine := prevline;
+        end
+        else if Lines[lastline].StartsWith('        ') then
+        begin
+          s := inttostr(i) + ':' + whitespace + TrimLeft(Lines[lastline]);
+          ReplaceLine(lastline+1, s , []);
         end
         else
         begin

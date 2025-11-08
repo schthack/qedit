@@ -130,6 +130,7 @@ object Form21: TForm21
     Top = 156
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 6
     OnClick = Button3Click

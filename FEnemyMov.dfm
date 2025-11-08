@@ -73,6 +73,7 @@ object Form26: TForm26
     Top = 130
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 3
     OnClick = Button2Click

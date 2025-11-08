@@ -28,6 +28,7 @@ object Form23: TForm23
     Top = 78
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 3
     OnClick = Button2Click

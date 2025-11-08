@@ -777,6 +777,7 @@ object Form33: TForm33
     Top = 360
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 17
     OnClick = Button2Click
