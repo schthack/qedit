@@ -192,6 +192,7 @@ type
     procedure StringSTR1Click(Sender: TObject);
     procedure StringArgument1Click(Sender: TObject);
     procedure TextEditKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormDeactivate(Sender: TObject);
 
   private
     { Private declarations }
@@ -786,6 +787,15 @@ begin
     form14.ProgressBar1.Position := 1;
     form14.Label1.Show;
   end;
+end;
+
+procedure TfmScriptTE.FormDeactivate(Sender: TObject);
+begin
+  // Format the current line when leaving the window
+  linechanged := true;
+  changeline := TextEdit.TextPosition.Line;
+  editline := changeline;
+  TextEditCaretChanged(nil, 0, 0, 0);
 end;
 
 procedure TfmScriptTE.FormHide(Sender: TObject);
@@ -1783,9 +1793,12 @@ begin
           TextEdit.EndUpdate;
         end;
 
-        // Leave and re-focus the text area to prevent issues with scrolling
-        Statusbar1.SetFocus;
-        TextEdit.SetFocus;
+        // Re-focus the text area
+        if TextEdit.Focused then
+        begin
+          Statusbar1.SetFocus;
+          TextEdit.SetFocus;
+        end;
 
         // Update maps
         try
