@@ -13,7 +13,6 @@ object fmScriptTE: TfmScriptTE
   Menu = MainMenu1
   Position = poMainFormCenter
   OnClose = FormClose
-  OnDeactivate = FormDeactivate
   OnHide = FormHide
   OnShow = FormShow
   TextHeight = 13
