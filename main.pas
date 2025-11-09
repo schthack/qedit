@@ -1341,7 +1341,7 @@ begin
         MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
           (-(m.Unknow5 and $FFFF) / 182.04444), (-(m.unknow7 and $FFFF) / 182.04444));
       end
-      else if m.Skin = 222 then
+      else if (m.Skin = 192) or (m.Skin = 222) or (m.Skin = 257) or (m.Skin = 323) then
       begin
         MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
           (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444));
