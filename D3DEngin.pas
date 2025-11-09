@@ -4395,7 +4395,7 @@ begin
         D3DXMatrixMultiply(ma,ma,matRotZ);
         D3DXMatrixMultiply(ma,ma,matRotX);
     end
-    else begin
+    else if rotationseq = 5 then begin
         D3DXMatrixMultiply(ma,matScale,matRotX);
         D3DXMatrixMultiply(ma,ma,matRotZ);
         D3DXMatrixMultiply(ma,ma,matRotY);
