@@ -638,7 +638,7 @@ begin
                             for k := 0 to RotateCount - 1 do
                               if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
                                 break;
-                            if (k < RotateCount) then
+                            if (k < RotateCount) and (floor[sfloor].Obj[selected].Skin = floor[sfloor].Obj[j].Skin) then
                             begin
                               floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
                               floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
@@ -691,7 +691,7 @@ begin
                             for k := 0 to RotateCount - 1 do
                               if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
                                 break;
-                            if (k < RotateCount) then
+                            if (k < RotateCount) and (floor[sfloor].Obj[selected].Skin = floor[sfloor].Obj[j].Skin) then
                             begin
                               floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
                               floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
@@ -745,7 +745,7 @@ begin
                         for k := 0 to RotateCount - 1 do
                           if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
                             break;
-                        if (k < RotateCount) then
+                        if (k < RotateCount) and (floor[sfloor].Obj[selected].Skin = floor[sfloor].Obj[j].Skin) then
                         begin
                           floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
                           floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;

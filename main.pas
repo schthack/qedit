@@ -1333,22 +1333,22 @@ begin
       begin
         MyObj[x].rotationseq := 3;
         MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
-          (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444))
+          (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444));
       end
       else if m.Skin = 140 then
       begin
         MyObj[x].rotationseq := 3;
         MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
-          (-(m.Unknow5 and $FFFF) / 182.04444), (-(m.unknow7 and $FFFF) / 182.04444))
+          (-(m.Unknow5 and $FFFF) / 182.04444), (-(m.unknow7 and $FFFF) / 182.04444));
       end
       else if m.Skin = 222 then
       begin
         MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
-          (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444))
+          (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444));
       end
       else
         MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
-          (-(m.Unknow5 and $FFFF) / 182.04444), (-(m.unknow7 and $FFFF) / 182.04444))
+          (-(m.Unknow5 and $FFFF) / 182.04444), (-(m.unknow7 and $FFFF) / 182.04444));
     end
     else
       MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444, 0, 0);
@@ -3437,7 +3437,7 @@ procedure UpdateWindowTitle;
 var
   tmp2: widestring;
 begin
-  tmp2 := 'Quest Editor V 2.0b Public - ' + Title;
+  tmp2 := 'Quest Editor V 2.0c Public - ' + Title;
 
   if isdc then
     tmp2 := tmp2 + GetLanguageString(64)
@@ -5362,7 +5362,7 @@ begin
       form1.Button10.Caption := 'View map events';
       form10.Caption := 'Add Object';
       form16.Memo1.Lines.Add('');
-      form16.Memo1.Lines.Add('1.0c-2.0b updates:');
+      form16.Memo1.Lines.Add('1.0c-2.0c updates:');
       form16.Memo1.Lines.Add('Alisaryn');
       form6.Caption := 'Common settings';
       form17.Label2.Caption := 'Frame skip:';
@@ -7046,7 +7046,7 @@ begin
                       for k := 0 to RotateCount - 1 do
                         if floor[sfloor].Obj[MoveSel].Skin = RotateItm[k] then
                           break;
-                      if (k < RotateCount) then
+                      if (k < RotateCount) and (floor[sfloor].Obj[MoveSel].Skin = floor[sfloor].Obj[j].Skin) then
                       begin
                         floor[sfloor].Obj[MoveSel].unknow5 := floor[sfloor].Obj[j].unknow5;
                         floor[sfloor].Obj[MoveSel].unknow7 := floor[sfloor].Obj[j].unknow7;
@@ -7095,7 +7095,7 @@ begin
                       for k := 0 to RotateCount - 1 do
                         if floor[sfloor].Obj[MoveSel].Skin = RotateItm[k] then
                           break;
-                      if (k < RotateCount) then
+                      if (k < RotateCount) and (floor[sfloor].Obj[MoveSel].Skin = floor[sfloor].Obj[j].Skin) then
                       begin
                         floor[sfloor].Obj[MoveSel].unknow5 := floor[sfloor].Obj[j].unknow5;
                         floor[sfloor].Obj[MoveSel].unknow7 := floor[sfloor].Obj[j].unknow7;

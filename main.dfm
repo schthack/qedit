@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 195
   Top = 115
-  Caption = 'Quest Editor V 2.0b Public'
+  Caption = 'Quest Editor V 2.0c Public'
   ClientHeight = 481
   ClientWidth = 723
   Color = clBtnFace
