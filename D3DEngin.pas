@@ -4371,14 +4371,34 @@ begin
     //ma:=(matRotX*matRotY*matRotZ)*matTrans;
 
     if rotationseq = 0 then begin
-    D3DXMatrixMultiply(ma,matScale,matRotX);
-    D3DXMatrixMultiply(ma,ma,matRotY);
-    D3DXMatrixMultiply(ma,ma,matRotz);
-    end;
-    if rotationseq = 1 then begin
-    D3DXMatrixMultiply(ma,matScale,matRoty);
-    D3DXMatrixMultiply(ma,ma,matRotx);
-    D3DXMatrixMultiply(ma,ma,matRotz);
+        D3DXMatrixMultiply(ma,matScale,matRotX);
+        D3DXMatrixMultiply(ma,ma,matRotY);
+        D3DXMatrixMultiply(ma,ma,matRotZ);
+    end
+    else if rotationseq = 1 then begin
+        D3DXMatrixMultiply(ma,matScale,matRotY);
+        D3DXMatrixMultiply(ma,ma,matRotX);
+        D3DXMatrixMultiply(ma,ma,matRotZ);
+    end
+    else if rotationseq = 2 then begin
+        D3DXMatrixMultiply(ma,matScale,matRotZ);
+        D3DXMatrixMultiply(ma,ma,matRotY);
+        D3DXMatrixMultiply(ma,ma,matRotX);
+    end
+    else if rotationseq = 3 then begin
+        D3DXMatrixMultiply(ma,matScale,matRotZ);
+        D3DXMatrixMultiply(ma,ma,matRotX);
+        D3DXMatrixMultiply(ma,ma,matRotY);
+    end
+    else if rotationseq = 4 then begin
+        D3DXMatrixMultiply(ma,matScale,matRotY);
+        D3DXMatrixMultiply(ma,ma,matRotZ);
+        D3DXMatrixMultiply(ma,ma,matRotX);
+    end
+    else begin
+        D3DXMatrixMultiply(ma,matScale,matRotX);
+        D3DXMatrixMultiply(ma,ma,matRotZ);
+        D3DXMatrixMultiply(ma,ma,matRotY);
     end;
     D3DXMatrixMultiply(ma,ma,matTrans);
 

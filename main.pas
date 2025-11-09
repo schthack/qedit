@@ -1329,6 +1329,23 @@ begin
         MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
           (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444));
       end
+      else if m.Skin = 135 then
+      begin
+        MyObj[x].rotationseq := 3;
+        MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
+          (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444))
+      end
+      else if m.Skin = 140 then
+      begin
+        MyObj[x].rotationseq := 3;
+        MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
+          (-(m.Unknow5 and $FFFF) / 182.04444), (-(m.unknow7 and $FFFF) / 182.04444))
+      end
+      else if m.Skin = 222 then
+      begin
+        MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
+          (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444))
+      end
       else
         MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
           (-(m.Unknow5 and $FFFF) / 182.04444), (-(m.unknow7 and $FFFF) / 182.04444))
