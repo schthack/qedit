@@ -107,7 +107,7 @@ procedure TForm13.Timer1Timer(Sender: TObject);
 var d1,d2,d3:dword;
     f1,f2,f3:double;
     r,g,b,r1,b1,g1:integer;
-    x,i:integer;
+    x,i,j:integer;
     s: string;
 begin
     if have3d then
@@ -251,6 +251,25 @@ begin
               ' | Rotation: ' + inttostr((Floor[sfloor].Monster[Selected].Direction) and
               $FFFF div 182) + '°',rect(0,0,640,30),$FFFFFFFF,1)
             else if sType = 2 then
+            begin
+              for j := 0 to RotateCount - 1 do
+                if Floor[sfloor].Obj[Selected].Skin = RotateItm[j] then break;
+              if j < RotateCount then
+                 myscreen.TextOut(
+              'Map section: ' +
+              inttostr(Floor[sfloor].Obj[Selected].map_section) +
+              ' | Group: ' + inttostr(Floor[sfloor].Obj[Selected].grp) +
+              ' | X: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_X)) +
+              ' | Y: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Z)) +
+              ' | Z: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Y)) +
+              ' | Rotation X: ' + inttostr((Floor[sfloor].Obj[Selected].unknow5) and
+              $FFFF div 182) + '°' +
+              ' | Rotation Y: ' + inttostr((Floor[sfloor].Obj[Selected].unknow6) and
+              $FFFF div 182) + '°' +
+              ' | Rotation Z: ' + inttostr((Floor[sfloor].Obj[Selected].unknow7) and
+              $FFFF div 182) + '°'
+              ,rect(0,0,1000,30),$FFFFFFFF,1)
+              else
               myscreen.TextOut(
               'Map section: ' +
               inttostr(Floor[sfloor].Obj[Selected].map_section) +
@@ -260,6 +279,7 @@ begin
               ' | Z: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Y)) +
               ' | Rotation: ' + inttostr((Floor[sfloor].Obj[Selected].unknow6) and
               $FFFF div 182) + '°',rect(0,0,640,30),$FFFFFFFF,1)
+            end
               else
                 myscreen.TextOut('Map section: - Wave: - X: - Y: - Z: - Rotation: - ',rect(0,0,640,30),$FFFFFFFF,1);
           end
