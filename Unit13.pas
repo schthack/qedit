@@ -268,7 +268,7 @@ begin
               $FFFF div 182) + '°' +
               ' | Rotation Z: ' + inttostr((Floor[sfloor].Obj[Selected].unknow7) and
               $FFFF div 182) + '°'
-              ,rect(0,0,1000,30),$FFFFFFFF,1)
+              ,rect(0,0,1280,30),$FFFFFFFF,1)
               else
               myscreen.TextOut(
               'Map section: ' +
@@ -654,13 +654,15 @@ begin
                           // Match object's rotations if enabled
                           if (FSnapOptions.chkSnapRotate.Checked) then
                           begin
-                            floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                             for k := 0 to RotateCount - 1 do
                               if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
                                 break;
+                            if k >= RotateCount then
+                              floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                             if (k < RotateCount) and (floor[sfloor].Obj[selected].Skin = floor[sfloor].Obj[j].Skin) then
                             begin
                               floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
+                              floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                               floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
                             end;
                           end;
@@ -707,13 +709,15 @@ begin
                           myobj[selected].PositionZ := myobj[j].PositionZ;
                           if (FSnapOptions.chkSnapRotate.Checked) then
                           begin
-                            floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                             for k := 0 to RotateCount - 1 do
                               if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
                                 break;
+                            if k >= RotateCount then
+                              floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                             if (k < RotateCount) and (floor[sfloor].Obj[selected].Skin = floor[sfloor].Obj[j].Skin) then
                             begin
                               floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
+                              floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                               floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
                             end;
                           end;
@@ -761,13 +765,15 @@ begin
                       myobj[selected].PositionZ := myobj[j].PositionZ;
                       if (FSnapOptions.chkSnapRotate.Checked) then
                       begin
-                        floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                         for k := 0 to RotateCount - 1 do
                           if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
                             break;
+                        if k >= RotateCount then
+                          floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                         if (k < RotateCount) and (floor[sfloor].Obj[selected].Skin = floor[sfloor].Obj[j].Skin) then
                         begin
                           floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
+                          floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
                           floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
                         end;
                       end;

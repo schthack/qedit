@@ -7042,13 +7042,15 @@ begin
                     // Match object's rotations if enabled
                     if (FSnapOptions.chkSnapRotate.Checked) then
                     begin
-                      floor[sfloor].Obj[MoveSel].unknow6 := floor[sfloor].Obj[j].unknow6;
                       for k := 0 to RotateCount - 1 do
                         if floor[sfloor].Obj[MoveSel].Skin = RotateItm[k] then
                           break;
+                      if k >= RotateCount then
+                        floor[sfloor].Obj[MoveSel].unknow6 := floor[sfloor].Obj[j].unknow6;
                       if (k < RotateCount) and (floor[sfloor].Obj[MoveSel].Skin = floor[sfloor].Obj[j].Skin) then
                       begin
                         floor[sfloor].Obj[MoveSel].unknow5 := floor[sfloor].Obj[j].unknow5;
+                        floor[sfloor].Obj[MoveSel].unknow6 := floor[sfloor].Obj[j].unknow6;
                         floor[sfloor].Obj[MoveSel].unknow7 := floor[sfloor].Obj[j].unknow7;
                       end;
                     end;
@@ -7091,13 +7093,15 @@ begin
                     Floor[sfloor].Obj[MoveSel].Pos_Y := Floor[sfloor].Obj[j].Pos_Y;
                     if (FSnapOptions.chkSnapRotate.Checked) then
                     begin
-                      floor[sfloor].Obj[MoveSel].unknow6 := floor[sfloor].Obj[j].unknow6;
                       for k := 0 to RotateCount - 1 do
                         if floor[sfloor].Obj[MoveSel].Skin = RotateItm[k] then
                           break;
+                      if k >= RotateCount then
+                        floor[sfloor].Obj[MoveSel].unknow6 := floor[sfloor].Obj[j].unknow6;
                       if (k < RotateCount) and (floor[sfloor].Obj[MoveSel].Skin = floor[sfloor].Obj[j].Skin) then
                       begin
                         floor[sfloor].Obj[MoveSel].unknow5 := floor[sfloor].Obj[j].unknow5;
+                        floor[sfloor].Obj[MoveSel].unknow6 := floor[sfloor].Obj[j].unknow6;
                         floor[sfloor].Obj[MoveSel].unknow7 := floor[sfloor].Obj[j].unknow7;
                       end;
                     end;
