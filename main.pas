@@ -7428,6 +7428,7 @@ begin
   begin
     fmScriptTE.TextEdit.Lines.Clear;
     fmScriptTE.TextEdit.Lines.Add('0:      ret ');
+    TextEdited := true;
   end;
   for x := 0 to 17 do
   begin
@@ -7496,6 +7497,7 @@ begin
     fmScriptTE.TextEdit.Lines.Clear;
     fmScriptTE.TextEdit.Lines.Add('0:      ' + getopcodename($F8BC) + ' 00000001');
     fmScriptTE.TextEdit.Lines.Add('        ret ');
+    TextEdited := true;
   end;
   for x := 0 to 17 do
   begin
@@ -7563,6 +7565,7 @@ begin
     fmScriptTE.TextEdit.Lines.Clear;
     fmScriptTE.TextEdit.Lines.Add('0:      ' + getopcodename($F8BC) + ' 00000002');
     fmScriptTE.TextEdit.Lines.Add('        ret ');
+    TextEdited := true;
   end;
   x := 10;
   Floor[0].MonsterCount := 0;
