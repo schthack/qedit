@@ -1245,7 +1245,8 @@ begin
     fmScriptTE.TextEdit.MoveCaretToBeginning;
     fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
     fmScriptTE.TextEdit.TopLine := lastindex;
-    UpdateTextRefs();
+    if TextEdited then
+      UpdateTextRefs();
     isEdited := false;
     Form4.Listbox1.Clear;
     for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
