@@ -739,10 +739,10 @@ begin
       x := pos(':',form4.Listbox1.Items[i]);
       if (x <= 6) and (x <> 0) then
       begin
-        labelstr := copy(currentline, 0, x-1);
+        labelstr := copy(currentline, 1, x-1);
         currentline := copy(currentline, x+1, length(currentline));
         currentline := TrimLeft(currentline);
-        reftype := copy(currentline, 0, 4);
+        reftype := copy(currentline, 1, 4);
         if TryStrToInt(labelstr, labelnum) then
         begin
           if reftype = 'STR:' then
@@ -763,9 +763,7 @@ begin
 
       // Update functions used
       opcodestr := '';
-      try
-        opcodestr := copy(form4.Listbox1.Items[i], 9, form4.Listbox1.Items[i].Length);
-      except end; // End of line was reached; catch the exception
+      opcodestr := copy(form4.Listbox1.Items[i], 9, form4.Listbox1.Items[i].Length);
       for j := 0 to length(opcodelist) - 1 do
       begin
         if (opcodelist[j].name <> '') and (opcodestr.StartsWith(opcodelist[j].name)) then

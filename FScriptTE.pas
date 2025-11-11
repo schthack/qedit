@@ -4,8 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, ShellApi, System.Generics.Collections, System.StrUtils,
-  System.Generics.Defaults, System.RegularExpressions, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
+  System.Generics.Defaults, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
   Vcl.ExtCtrls, main, Vcl.ComCtrls, Vcl.StdCtrls;
 
 type
@@ -192,6 +192,7 @@ type
     procedure StringSTR1Click(Sender: TObject);
     procedure StringArgument1Click(Sender: TObject);
     procedure TextEditKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormDeactivate(Sender: TObject);
 
   private
     { Private declarations }
@@ -204,13 +205,15 @@ procedure SetTextZoom(zoomvalue: integer);
 procedure SetSearchEngine(engine: integer);
 procedure SetTextColor(colortype: string);
 function IsWordInString(aString: PWideChar; aSearchString: string; aSearchOptions: TStringSearchOptions): Boolean;
-function ReplaceApostrophes(const s: string): string;
 procedure UncheckThemes;
+procedure FormatCurrentLine;
 
 var
   fmScriptTE: TfmScriptTE;
   textEdited: Boolean = false;
   linechanged: Boolean = false;
+  autoformat: Boolean = false;
+  formatmap: Boolean = false;
   changeline: integer = 0;
   currentline: integer = 0;
   editline: integer = -1;
@@ -254,19 +257,29 @@ begin
   end;
 end;
 
+procedure FormatCurrentLine;
+begin
+  linechanged := true;
+  autoformat := true;
+  changeline := fmScriptTE.TextEdit.TextPosition.Line;
+  editline := changeline;
+  fmScriptTE.TextEditCaretChanged(nil, 0, 0, 0);
+  autoformat := false;
+end;
+
 procedure UpdateTextRefs();
 var
   i,j,x,labelnum: integer;
   reftype,currentline,labelstr: widestring;
   opcodestr: string;
 begin
+  // Remove empty lines
+  fmScriptTE.TextEdit.DeleteEmptyLines;
+
   form14.Caption := 'Adding References';
   form14.Label1.Hide;
   form14.Show;
   form14.ProgressBar1.max := fmScriptTE.TextEdit.Lines.Count - 1;
-
-  // Remove empty lines
-  fmScriptTE.TextEdit.DeleteEmptyLines;
 
   // Clear data references
   for i := 0 to 1000 do datablock[i]:=-1;
@@ -298,6 +311,15 @@ begin
   begin
     form14.ProgressBar1.Position := i;
     form14.Repaint;
+
+    // Format the line
+    linechanged := true;
+    autoformat := true;
+    changeline := i;
+    editline := changeline;
+    fmScriptTE.TextEditCaretChanged(nil, 0, 0, 0);
+    autoformat := false;
+
     currentline := fmScriptTE.TextEdit.Lines[i];
     if currentline <> '' then
     begin
@@ -305,10 +327,10 @@ begin
       x := pos(':',fmScriptTE.TextEdit.Lines[i]);
       if (x <= 6) and (x <> 0) then
       begin
-        labelstr := copy(currentline, 0, x-1);
+        labelstr := copy(currentline, 1, x-1);
         currentline := copy(currentline, x+1, length(currentline));
         currentline := TrimLeft(currentline);
-        reftype := copy(currentline, 0, 4);
+        reftype := copy(currentline, 1, 4);
         if TryStrToInt(labelstr, labelnum) then
         begin
           if reftype = 'STR:' then
@@ -329,9 +351,7 @@ begin
 
       // Update functions used
       opcodestr := '';
-      try
-        opcodestr := copy(fmScriptTE.TextEdit.Lines.TextLines[i], 9, fmScriptTE.TextEdit.Lines.TextLines[i].Length);
-      except end; // End of line was reached; catch the exception
+      opcodestr := copy(fmScriptTE.TextEdit.Lines[i], 9, fmScriptTE.TextEdit.Lines[i].Length);
       for j := 0 to length(opcodelist) - 1 do
       begin
         if (opcodelist[j].name <> '') and (opcodestr.StartsWith(opcodelist[j].name)) then
@@ -524,32 +544,6 @@ var
 begin
   size := strLen(aString);
   result := SearchBuf(aString, size, 0, 0, aSearchString, aSearchOptions) <> nil;
-end;
-
-function ReplaceApostrophes(const s: string): string;
-var
-  len: integer;
-begin
-  result := s;
-  len := length(s);
-
-  if len >= 4 then
-  begin
-    var i: integer := 1;
-    while i <= length(result) - 1 do // -1 because we're looking for ' '
-    begin
-      if (result[i] = '''') and (result[i+1] = '''') then
-      begin
-        // Check if this ' ' is not at the very beginning or end
-        if (i > 1) and (i + 1 < length(result)) then
-        begin
-          // Replace ' ' with a single '
-          delete(result, i + 1, 1); // Delete the second apostrophe
-        end;
-      end;
-      inc(i);
-    end;
-  end;
 end;
 
 procedure TfmScriptTE.Addlabel1Click(Sender: TObject);
@@ -786,6 +780,14 @@ begin
     form14.ProgressBar1.Position := 1;
     form14.Label1.Show;
   end;
+end;
+
+procedure TfmScriptTE.FormDeactivate(Sender: TObject);
+begin
+  // Format the current line when leaving the window
+  formatmap := true;
+  FormatCurrentLine;
+  formatmap := false;
 end;
 
 procedure TfmScriptTE.FormHide(Sender: TObject);
@@ -1402,15 +1404,16 @@ end;
 procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
   AOffset: Integer);
 var
-  i,j,j2,k,x,y,x3,y3,g,d,oldsize,newsize,prevline,labelnum,opcodepos,argpos: integer;
-  reftype,trimline,labelstr,opcodestr,whitespace,s,o,fullargs,constructline: widestring;
+  i,j,j2,k,x,y,x3,y3,g,d,oldsize,newsize,prevline,labelnum,opcodepos,stringpos,argpos: integer;
+  reftype,trimline,labelstr,opcodestr,whitespace,s,str,o,fullargs,constructline: widestring;
   argarray: TArray<string>;
   argstrings: TStringList;
   invalidswitch: Boolean;
   i2: double;
   f: single;
 begin
-  TextEditClick(nil);
+  if not autoformat then
+    TextEditClick(nil);
   nextline := TextEdit.TextPosition.Line;
   if (editline <> -1) and ((nextline <> editline) or linechanged) then
   begin
@@ -1470,14 +1473,24 @@ begin
         fullargs := copy(fmScriptTE.TextEdit.Lines[i], opcodepos +
         length(opcodestr),length(fmScriptTE.TextEdit.Lines[i]));
 
+        stringpos := pos('''', fullargs);
+        if (stringpos > 0) and (opcodestr <> 'STR:') then
+        begin
+          str := copy(fullargs, stringpos, Length(fullargs));
+          delete(fullargs, stringpos, length(fullargs) - stringpos);
+        end;
         if (opcodestr <> 'STR:') and (opcodestr <> 'HEX:') and (opcodestr <> 'Unknow_Opcode') then
         begin
-              argarray := TRegEx.Split(fullargs, ',(?=(?:[^'']*''[^'']*'')*[^'']*$)');
+              argarray := SplitString(fullargs, ',');
               for var arg in argarray do
                 argstrings.add(trim(arg));
         end;
         if argstrings.Count = 0 then
-          argstrings.add(trim(fullargs));
+        begin
+          if opcodestr = 'STR:' then
+            argstrings.add(fullargs)
+          else argstrings.add(Trim(fullargs));
+        end;
       end;
 
 
@@ -1530,8 +1543,8 @@ begin
             y:=hextoint(s)
            else
             trystrtoint(s,y);
-           if (y = -1) and not showdecimal then
-                y := 0;
+           if (y = -1) and (uppercase(s) <> 'FFFFFFFF') and not showdecimal
+           then y := 0;
            if y>$FFFFFFff then
                 y := $FFFFFFFF;
            s:=GetDisplayValue(y,8);
@@ -1545,11 +1558,11 @@ begin
            end;
           end else
           if (opcodelist[j].arg[x] = T_STR) then begin
+             if stringpos > 0 then s:=trim(str);
              if s[1] <> '''' then
               s:=''''+s;
              if s[length(s)] <> '''' then
              s:=s+'''';
-             s:=ReplaceApostrophes(s);
           end else
           if (opcodelist[j].arg[x] = T_BYTE) then begin
              if not showdecimal then
@@ -1683,7 +1696,8 @@ begin
                   trystrtofloat(s,f);
                   move(f,y,4);
              end;
-             if (y = -1) and not showdecimal then begin
+             if (y = -1) and (uppercase(s) <> 'FFFFFFFF') and not showdecimal
+             then begin
                   y := 0;
              end;
              if y>$FFFFFFff then
@@ -1731,7 +1745,7 @@ begin
         // Add register arguments
         if (AddArgs1.Checked) and (AddArgs1.Enabled) and (argstrings.count > 0)
         and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
-        and (opcodestr <> 'Unknow_Opcode') then
+        and (opcodestr <> 'Unknow_Opcode') and not autoformat then
         begin
           g := 0;
           for j := 0 to length(asmarg) - 1 do
@@ -1784,11 +1798,16 @@ begin
         end;
 
         // Leave and re-focus the text area to prevent issues with scrolling
-        Statusbar1.SetFocus;
-        TextEdit.SetFocus;
+        if TextEdit.Focused and not autoformat then
+        begin
+          Statusbar1.SetFocus;
+          TextEdit.SetFocus;
+        end;
 
         // Update maps
         try
+        if (not autoformat) or formatmap then
+        begin
            if (lowercase(opcodestr) = lowercase(GetOpcodeName($c4))) or
            (lowercase(opcodestr) = lowercase(GetOpcodeName($f80d))) or
            (lowercase(opcodestr) = lowercase(GetOpcodeName($9))) then
@@ -1816,8 +1835,9 @@ begin
            floor[x3].floorid:=MapArea[mapid[g]+y3];
            Form1.CheckListBox1.Items.Strings[x3]:=mapname[mapid[g]+y3];
          end;
+         end;
         end;
-        except end; // End of line reached, catch exception
+        except end; // Catch invalid argument exception
       end;
     end;
   end;
@@ -1857,10 +1877,7 @@ begin
   argstring := '';
   opcode := '';
   currentline := TextEdit.TextPosition.Line;
-  try
-    opcode := copy(TextEdit.Lines.TextLines[currentline], 9, TextEdit.Lines.TextLines[currentline].Length);
-  // The script is blank or end of line was reached; catch the exception
-  except end;
+  opcode := copy(TextEdit.Lines[currentline], 9, TextEdit.Lines[currentline].Length);
 
   TextEdit.CompletionProposal.SetOption(TTextEditorCompletionProposalOption.cpoAutoInvoke,true);
 
