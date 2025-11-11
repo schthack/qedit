@@ -214,6 +214,7 @@ var
   linechanged: Boolean = false;
   autoformat: Boolean = false;
   formatmap: Boolean = false;
+  strlabel: Boolean = false;
   changeline: integer = 0;
   currentline: integer = 0;
   editline: integer = -1;
@@ -559,7 +560,9 @@ end;
 procedure TfmScriptTE.AddSTRcomment1Click(Sender: TObject);
 begin
   TextEdit.BeginUndoBlock;
+  strlabel := true;
   NewLabel1Click(nil);
+  strlabel := false;
   TextEdit.InsertText('STR: ');
   TextEdit.EndUndoBlock;
 end;
@@ -1063,7 +1066,7 @@ begin
           InsertText(inttostr(i) + ':' + whitespace);
           TextEdit.TopLine := prevline;
         end
-        else if Lines[lastline].StartsWith('        ') then
+        else if Lines[lastline].StartsWith('        ') and not strlabel then
         begin
           s := inttostr(i) + ':' + whitespace + TrimLeft(Lines[lastline]);
           ReplaceLine(lastline+1, s , []);
