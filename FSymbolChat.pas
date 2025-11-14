@@ -46,6 +46,7 @@ type
     Button1: TButton;
     Button2: TButton;
     ComboBox6: TComboBox;
+    chkGCEndian: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure ComboBox2DrawItem(Control: TWinControl; Index: Integer; cRect: TRect; State: TOwnerDrawState);
     procedure ComboBox3DrawItem(Control: TWinControl; Index: Integer; cRect: TRect; State: TOwnerDrawState);

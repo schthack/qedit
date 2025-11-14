@@ -193,9 +193,14 @@ type
     procedure StringArgument1Click(Sender: TObject);
     procedure TextEditKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormDeactivate(Sender: TObject);
+    procedure TextEditMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure FormDestroy(Sender: TObject);
 
   private
     { Private declarations }
+    FNoteLookup: TDictionary<string, string>;
+    procedure BuildNoteLookup;
   public
     { Public declarations }
   end;
@@ -228,6 +233,31 @@ uses TCom, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.Completion
   NPCBuild, EnemyStat, FEnemyResist, FEnemyMov, FEnemyAttack, FVector;
 
 {$R *.dfm}
+
+procedure TfmScriptTE.BuildNoteLookup;
+var
+  i, sep: Integer;
+  s, left, right: string;
+begin
+  if Assigned(FNoteLookup) then
+    FNoteLookup.Free;
+
+  FNoteLookup := TDictionary<string, string>.Create;
+
+  for i := 0 to txtNotes.Lines.Count - 1 do
+  begin
+    s := txtNotes.Lines[i];
+    sep := Pos(':=', s);
+    if sep > 0 then
+    begin
+      left  := Trim(Copy(s, 1, sep - 1));
+      right := Trim(Copy(s, sep + 2, MaxInt));
+
+      // Make lookup case-insensitive
+      FNoteLookup.AddOrSetValue(UpperCase(left), right);
+    end;
+  end;
+end;
 
 procedure UncheckThemes;
 begin
@@ -793,6 +823,11 @@ begin
   formatmap := false;
 end;
 
+procedure TfmScriptTE.FormDestroy(Sender: TObject);
+begin
+  FNoteLookup.Free;
+end;
+
 procedure TfmScriptTE.FormHide(Sender: TObject);
 var
   Reg: TRegistry;
@@ -1331,6 +1366,10 @@ begin
   // Save references
   move(datablock[0], temp[0], sizeof(datablock));
 
+  lastcaret := TextEdit.CaretIndex;
+  lastline := TextEdit.TopLine;
+  TextEdit.DeleteEmptyLines;
+
   // Find and store the next unused label
   if tmenuitem(sender).Tag <> 0 then
   begin
@@ -1356,8 +1395,6 @@ begin
     end;
   end;
 
-  lastcaret := TextEdit.CaretIndex;
-  lastline := TextEdit.TopLine;
   form4.ListBox1.Clear;
   for i := 0 to TextEdit.Lines.Count - 1 do
     form4.ListBox1.Items.Add(TextEdit.Lines[i]);
@@ -1755,8 +1792,12 @@ begin
           begin
             if GetOpcodeId(opcodestr) = asmarg[j].opcodeid then
             begin
-              if (asmarg[j].argtype = 'leti') and (Lines[i-1].Contains('  ' + GetOpcodeName($9) + ' ')) then break;
-              if (asmarg[j].argtype = 'fleti') and (Lines[i-1].Contains('  ' + GetOpcodeName($f904) + ' ')) then break;
+              if (asmarg[j].argtype = 'leti') and
+              ((Lines[i-1].Contains('  ' + GetOpcodeName($8) + ' ')) or
+              (Lines[i-1].Contains('  ' + GetOpcodeName($9) + ' '))) then break;
+              if (asmarg[j].argtype = 'fleti') and
+              ((Lines[i-1].Contains('  ' + GetOpcodeName($f903) + ' ')) or
+              (Lines[i-1].Contains('  ' + GetOpcodeName($f904) + ' '))) then break;
               // Find the last register argument
               for k := 0 to argstrings.count - 1 do
                 if Uppercase(argstrings[k][1]) = 'R' then g:=k;
@@ -1978,9 +2019,31 @@ begin
     PopupMenu1.Popup(mouse.CursorPos.X, mouse.CursorPos.Y);
 end;
 
+procedure TfmScriptTE.TextEditMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+var
+  mouseword, hintText, oldHint: string;
+begin
+  if not Assigned(FNoteLookup) then
+    Exit;
+
+  mouseword := TextEdit.WordAtMouse;
+  oldHint := TextEdit.Hint;
+
+  if (mouseword <> '') and
+     FNoteLookup.TryGetValue(UpperCase(mouseword), hintText) then
+    TextEdit.Hint := hintText
+  else
+    TextEdit.Hint := '';
+
+  // Only refresh hint if changed
+  if TextEdit.Hint <> oldHint then
+    Application.ActivateHint(TextEdit.ClientToScreen(Point(X, Y)));
+end;
+
 procedure TfmScriptTE.txtNotesChange(Sender: TObject);
 begin
   isedited := true;
+  BuildNoteLookup;
 end;
 
 procedure TfmScriptTE.Undo1Click(Sender: TObject);

@@ -289,12 +289,25 @@ end;                  }
 Procedure TForm4.SaveToBackupFile(f:integer);
 var x,r:integer;
 begin
-    r:=$0a000d;
-    x:=listbox1.count;
-    filewrite(f,x,4);
-    for x:=0 to listbox1.count-1 do begin
-        filewrite(f,listbox1.items[x][1],length(listbox1.items[x])*2);
-        filewrite(f,r,4);
+    if fmScriptTE.Visible then
+    begin
+      r:=$0a000d;
+      x:=fmScriptTE.TextEdit.Lines.Count;
+      filewrite(f,x,4);
+      for x:=0 to fmScriptTE.TextEdit.Lines.Count-1 do begin
+          filewrite(f,fmScriptTE.TextEdit.Lines[x][1],length(fmScriptTE.TextEdit.Lines[x])*2);
+          filewrite(f,r,4);
+      end;
+    end
+    else
+    begin
+      r:=$0a000d;
+      x:=listbox1.count;
+      filewrite(f,x,4);
+      for x:=0 to listbox1.count-1 do begin
+          filewrite(f,listbox1.items[x][1],length(listbox1.items[x])*2);
+          filewrite(f,r,4);
+      end;
     end;
 end;
 
@@ -303,19 +316,38 @@ var x,i:integer;
     s:widestring;
     c:widechar;
 begin
-    x:=0;
-    listbox1.clear;
-    s:='';
-    fileread(f,i,4);
-    while (fileread(f,c,2) = 2) and (listbox1.count< i) do begin
-        if c = #$a then begin
-            listbox1.items.add(s);
-            s:='';
-        end else
-        if c <> #$d then s:=s+c;
+    if fmScriptTE.Visible then
+    begin
+      x:=0;
+      fmScriptTE.TextEdit.Lines.Clear;
+      s:='';
+      fileread(f,i,4);
+      while (fileread(f,c,2) = 2) and (fmScriptTE.TextEdit.Lines.count< i) do begin
+          if c = #$a then begin
+              fmScriptTE.TextEdit.Lines.add(s);
+              s:='';
+          end else
+          if c <> #$d then s:=s+c;
+      end;
+      if s <> '' then fmScriptTE.TextEdit.Lines.add(s);
+      fileseek(f,-2,1);
+    end
+    else
+    begin
+      x:=0;
+      listbox1.clear;
+      s:='';
+      fileread(f,i,4);
+      while (fileread(f,c,2) = 2) and (listbox1.count< i) do begin
+          if c = #$a then begin
+              listbox1.items.add(s);
+              s:='';
+          end else
+          if c <> #$d then s:=s+c;
+      end;
+      if s <> '' then listbox1.items.add(s);
+      fileseek(f,-2,1);
     end;
-    if s <> '' then listbox1.items.add(s);
-    fileseek(f,-2,1);
 end;
 
 
@@ -2107,6 +2139,8 @@ var b,f:string;
     s:widestring;
     inedit:boolean;
     x,y,z,i:integer;
+    p: PByte;
+    tmp: Byte;
 begin
     //fillchar(MyFload,sizeof(EnemyMovData),0);
     if listbox1.ItemIndex <> -1 then
@@ -2141,7 +2175,22 @@ begin
             end;
 
         end;
+        p := PByte(@form33.symbolData.face);
+        if (p[0] = $00) and (p[1] = $00)
+        and ((p[2] <> $00) or (p[3] <> $00)) then
+        begin
+          form33.chkGCEndian.Checked := true;
+          // Reverse first 4 bytes
+          tmp := p[0]; p[0] := p[3]; p[3] := tmp;
+          tmp := p[1]; p[1] := p[2]; p[2] := tmp;
 
+          // Reverse next 4 words
+          tmp := p[4]; p[4] := p[5]; p[5] := tmp;
+          tmp := p[6]; p[6] := p[7]; p[7] := tmp;
+          tmp := p[8]; p[8] := p[9]; p[9] := tmp;
+          tmp := p[10]; p[10] := p[11]; p[11] := tmp;
+        end
+        else form33.chkGCEndian.Checked := false;
     end;
 
 
@@ -2165,8 +2214,17 @@ begin
         s:=s+'HEX: ';
         i:=sizeof(TSymbolData);
         if i > 15 then i:=15;
-        for x:=0 to i do begin
-            s:=s+inttohex(byte(pansichar(@form33.symbolData.face)[x]),2)+' ';
+        for x := 0 to i do
+        begin
+          if form33.chkGCEndian.Checked and (x <= 11) then
+          begin
+            if x < 4 then
+              s := s + IntToHex(Byte(PAnsiChar(@form33.symbolData.face)[3 - x]), 2) + ' '
+            else if (x < 12) then
+              s := s + IntToHex(Byte(PAnsiChar(@form33.symbolData.face)[(x or 1) - (x and 1)]), 2) + ' ';
+          end
+          else
+            s := s + IntToHex(Byte(PAnsiChar(@form33.symbolData.face)[x]), 2) + ' ';
         end;
         listbox1.Items.Insert(y,s);
         inc(y);

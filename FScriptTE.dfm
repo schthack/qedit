@@ -13,6 +13,7 @@ object fmScriptTE: TfmScriptTE
   Menu = MainMenu1
   Position = poMainFormCenter
   OnClose = FormClose
+  OnDestroy = FormDestroy
   OnDeactivate = FormDeactivate
   OnHide = FormHide
   OnShow = FormShow
@@ -49,6 +50,7 @@ object fmScriptTE: TfmScriptTE
     OnKeyDown = TextEditKeyDown
     OnKeyUp = TextEditKeyUp
     OnMouseDown = TextEditMouseDown
+    OnMouseMove = TextEditMouseMove
     ParentShowHint = False
     RightMargin.Visible = False
     Search.Options = [soBeepIfStringNotFound, soHighlightResults, soSearchOnTyping, soShowSearchMatchNotFound, soWrapAround]
@@ -133,7 +135,7 @@ object fmScriptTE: TfmScriptTE
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentFont = False
-      ScrollBars = ssVertical
+      ScrollBars = ssBoth
       TabOrder = 1
       OnChange = txtNotesChange
     end

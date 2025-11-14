@@ -803,6 +803,14 @@ object Form33: TForm33
       'Sound 8'
       'Sound 9')
   end
+  object chkGCEndian: TCheckBox
+    Left = 286
+    Top = 363
+    Width = 97
+    Height = 17
+    Caption = 'GC endianness'
+    TabOrder = 19
+  end
   object ImageList1: TImageList
     Height = 256
     Width = 256

@@ -1102,6 +1102,7 @@ begin
   cleantitle := SanitizeFileName(title);
   if (cleantitle <> '') and FileExists('notes\' + cleantitle + ' notes'+ '.txt') then
     fmScriptTE.txtNotes.Lines.LoadFromFile('notes\' + cleantitle + ' notes'+ '.txt');
+  isedited := false;
 end;
 
 Procedure LoadShadow;
@@ -2524,6 +2525,7 @@ begin
       cleantitle := SanitizeFileName(title);
       if (cleantitle <> '') and FileExists('notes\' + cleantitle + ' notes'+ '.txt') then
         fmScriptTE.txtNotes.Lines.LoadFromFile('notes\' + cleantitle + ' notes'+ '.txt');
+      isedited := false;
 
       if pos('_f.', fn) > 0 then
         language := 3;
