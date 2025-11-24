@@ -4993,6 +4993,16 @@ begin
         if Reg.ValueExists('FontStyle') then
           form4.ListBox1.Font.Style := Tfontstyles(byte(Reg.ReadInteger('FontStyle')));
         form4.ListBox1.Font.Pitch := fpFixed;
+        if Reg.ValueExists('TENoteFontName') then
+          fmScriptTE.txtNotes.Font.Name := Reg.ReadString('TENoteFontName');
+        if Reg.ValueExists('TENoteFontSize') then
+          fmScriptTE.txtNotes.Font.Size := Reg.ReadInteger('TENoteFontSize');
+        if Reg.ValueExists('TENoteFontStyle') then
+          fmScriptTE.txtNotes.Font.Style := Tfontstyles(byte(Reg.ReadInteger('TENoteFontStyle')));
+        if Reg.ValueExists('TENoteColor') then
+          fmScriptTE.txtNotes.Font.Color := Reg.ReadInteger('TENoteColor');
+        if Reg.ValueExists('TENoteBackgroundColor') then
+          fmScriptTE.txtNotes.Color := Reg.ReadInteger('TENoteBackgroundColor');
         if Reg.ValueExists('ThemeModified') then
           thememodified := Reg.ReadBool('ThemeModified');
         if Reg.ValueExists('TETheme') then

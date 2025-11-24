@@ -128,6 +128,12 @@ type
     Label1: TMenuItem;
     StringSTR1: TMenuItem;
     StringArgument1: TMenuItem;
+    PopupMenu2: TPopupMenu;
+    NotesFont1: TMenuItem;
+    NotesReset1: TMenuItem;
+    NotesBackground1: TMenuItem;
+    NotesText1: TMenuItem;
+    N6: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -196,6 +202,10 @@ type
     procedure TextEditMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure FormDestroy(Sender: TObject);
+    procedure NotesFont1Click(Sender: TObject);
+    procedure NotesText1Click(Sender: TObject);
+    procedure NotesBackground1Click(Sender: TObject);
+    procedure NotesReset1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -1163,6 +1173,114 @@ begin
   Splitter1.Visible := not Splitter1.Visible;
   if fmScriptTE.Visible and NotesPanel.Visible then
     txtNotes.SetFocus;
+end;
+
+procedure TfmScriptTE.NotesBackground1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+    // Set default background color
+    colordialog1.Color := txtNotes.Color;
+
+    if colordialog1.Execute then begin
+      txtNotes.Color := colordialog1.Color;
+      Reg := TRegistry.Create;
+      try
+      Reg.RootKey := HKEY_CURRENT_USER;
+      if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+      begin
+          Reg.WriteInteger('TENoteBackgroundColor',txtNotes.Color);
+          Reg.CloseKey;
+          end;
+      finally
+          Reg.Free;
+      end;
+    end;
+end;
+
+procedure TfmScriptTE.NotesFont1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+    // Set default font
+    fontdialog1.Font := txtNotes.Font;
+
+    if fontdialog1.Execute then begin
+      txtNotes.Font := fontdialog1.Font;
+      Reg := TRegistry.Create;
+      try
+      Reg.RootKey := HKEY_CURRENT_USER;
+      if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+      begin
+          Reg.WriteInteger('TENoteFontSize',txtNotes.Font.Size);
+          Reg.WriteString('TENoteFontName',txtNotes.Font.Name);
+          Reg.WriteInteger('TENoteFontStyle',byte(txtNotes.Font.Style));
+          Reg.CloseKey;
+          end;
+      finally
+          Reg.Free;
+      end;
+    end;
+end;
+
+procedure TfmScriptTE.NotesReset1Click(Sender: TObject);
+var
+  choice: integer;
+  Reg: TRegistry;
+begin
+    choice := MessageDlg('Font and color options will be reset back to their defaults, continue?',
+      mtConfirmation, [mbYes, mbNo], 0);
+
+    if choice = mrYes then
+    begin
+      // Reset font
+      txtNotes.Font.Size := 12;
+      txtNotes.Font.Name := 'MS Sans Serif';
+      txtNotes.Font.Style := [];
+
+      // Reset colors
+      txtNotes.Font.Color := clWindowText;
+      txtNotes.Color := $00FFF8F8; // clGhostWhite
+
+      Reg := TRegistry.Create;
+      try
+      Reg.RootKey := HKEY_CURRENT_USER;
+      if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+      begin
+          Reg.WriteInteger('TENoteFontSize',12);
+          Reg.WriteString('TENoteFontName','MS Sans Serif');
+          Reg.WriteInteger('TENoteFontStyle',0);
+          Reg.WriteInteger('TENoteColor',clWindowText);
+          Reg.WriteInteger('TENoteBackgroundColor',$00FFF8F8);
+          Reg.CloseKey;
+      end;
+      finally
+        Reg.Free;
+      end;
+    end;
+end;
+
+procedure TfmScriptTE.NotesText1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+    // Set default text color
+    colordialog1.Color := txtNotes.Font.Color;
+
+    if colordialog1.Execute then begin
+      txtNotes.font.Color := colordialog1.Color;
+      Reg := TRegistry.Create;
+      try
+      Reg.RootKey := HKEY_CURRENT_USER;
+      if Reg.OpenKey('\Software\Microsoft\schthack\qedit', True) then
+      begin
+          Reg.WriteInteger('TENoteColor',txtNotes.Font.Color);
+          Reg.CloseKey;
+          end;
+      finally
+          Reg.Free;
+      end;
+    end;
 end;
 
 procedure TfmScriptTE.Openfromfile1Click(Sender: TObject);

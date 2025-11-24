@@ -119,6 +119,7 @@ object fmScriptTE: TfmScriptTE
       Font.Style = []
       ParentBackground = False
       ParentFont = False
+      PopupMenu = PopupMenu2
       TabOrder = 0
     end
     object txtNotes: TMemo
@@ -542,9 +543,8 @@ object fmScriptTE: TfmScriptTE
     end
     object View1: TMenuItem
       Caption = 'View'
-      ImageIndex = 22
       object Notes1: TMenuItem
-        Caption = 'Show notes'
+        Caption = 'Toggle notes'
         ImageIndex = 4
         ShortCut = 16462
         OnClick = Notes1Click
@@ -631,5 +631,32 @@ object fmScriptTE: TfmScriptTE
   object ColorDialog1: TColorDialog
     Left = 24
     Top = 248
+  end
+  object PopupMenu2: TPopupMenu
+    Images = Form1.ImageList1
+    Left = 344
+    Top = 288
+    object NotesFont1: TMenuItem
+      Caption = 'Change font'
+      ImageIndex = 22
+      OnClick = NotesFont1Click
+    end
+    object NotesText1: TMenuItem
+      Caption = 'Change text color'
+      ImageIndex = 23
+      OnClick = NotesText1Click
+    end
+    object NotesBackground1: TMenuItem
+      Caption = 'Change background color'
+      ImageIndex = 24
+      OnClick = NotesBackground1Click
+    end
+    object N6: TMenuItem
+      Caption = '-'
+    end
+    object NotesReset1: TMenuItem
+      Caption = 'Reset formatting'
+      OnClick = NotesReset1Click
+    end
   end
 end
