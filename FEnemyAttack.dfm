@@ -1,18 +1,18 @@
 object Form25: TForm25
   Left = 306
   Top = 166
+  BorderStyle = bsToolWindow
   Caption = 'Enemy Attack data'
-  ClientHeight = 120
-  ClientWidth = 343
+  ClientHeight = 126
+  ClientWidth = 349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
-  PixelsPerInch = 96
+  OnClose = FormClose
   TextHeight = 13
   object StringGrid1: TStringGrid
     Left = 6
@@ -54,7 +54,7 @@ object Form25: TForm25
   object Button1: TButton
     Left = 8
     Top = 94
-    Width = 75
+    Width = 81
     Height = 25
     Caption = 'Load template'
     TabOrder = 2
@@ -65,6 +65,7 @@ object Form25: TForm25
     Top = 94
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 3
     OnClick = Button2Click

@@ -17,6 +17,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure FormShow2(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -55,10 +56,18 @@ begin
      EnemyAttackData.v4:=strtoint(stringgrid1.Cells[1,3]);
      EnemyAttackData.f1:=strtofloat(stringgrid2.Cells[1,0]);
      EnemyAttackData.v5:=strtoint(stringgrid2.Cells[1,1]);
-     EnemyAttackData.v6:=strtoint(stringgrid2.Cells[1,2]);
      EnemyAttackData.f2:=strtofloat(stringgrid2.Cells[1,2]);
+     EnemyAttackData.v6:=strtoint(stringgrid2.Cells[1,3]);
      isedited:=true;
      modalresult:=1;
+end;
+
+procedure TForm25.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    if form22.lblAttack.Visible then
+    begin
+      HideAttackTables;
+    end;
 end;
 
 procedure TForm25.FormShow2(Sender: TObject);
@@ -69,16 +78,16 @@ begin
     stringgrid1.Cells[1,3]:=inttostr(EnemyAttackData.v4);
     stringgrid2.Cells[1,0]:=floattostr(EnemyAttackData.f1);
     stringgrid2.Cells[1,1]:=inttostr(EnemyAttackData.v5);
-    stringgrid2.Cells[1,2]:=inttostr(EnemyAttackData.v6);
-    stringgrid2.Cells[1,3]:=floattostr(EnemyAttackData.f2);
-    stringgrid1.Cells[0,0]:='NNI1';
-    stringgrid1.Cells[0,1]:='NNI2';
-    stringgrid1.Cells[0,2]:='NNI3';
-    stringgrid1.Cells[0,3]:='NNI4';
-    stringgrid2.Cells[0,0]:='NNF1';
-    stringgrid2.Cells[0,1]:='NNI5';
-    stringgrid2.Cells[0,2]:='NNI6';
-    stringgrid2.Cells[0,3]:='NNF2';
+    stringgrid2.Cells[1,2]:=floattostr(EnemyAttackData.f2);
+    stringgrid2.Cells[1,3]:='0';
+    stringgrid1.Cells[0,0]:='Min. +ATP';
+    stringgrid1.Cells[0,1]:='Max +ATP';
+    stringgrid1.Cells[0,2]:='Min. +ATA';
+    stringgrid1.Cells[0,3]:='Max +ATA';
+    stringgrid2.Cells[0,0]:='Range X';
+    stringgrid2.Cells[0,1]:='Angle';
+    stringgrid2.Cells[0,2]:='Range Y';
+    stringgrid2.Cells[0,3]:='Unused';
 end;
 
 end.

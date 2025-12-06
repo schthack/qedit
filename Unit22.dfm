@@ -11,10 +11,8 @@ object Form22: TForm22
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 10
@@ -37,6 +35,14 @@ object Form22: TForm22
     Height = 13
     Caption = 'Dificulty:'
   end
+  object lblAttack: TLabel
+    Left = 96
+    Top = -11
+    Width = 33
+    Height = 13
+    Caption = 'Table :'
+    Visible = False
+  end
   object ComboBox1: TComboBox
     Left = 70
     Top = 8
@@ -53,7 +59,9 @@ object Form22: TForm22
       'V3 Ep1 Offline '
       'V3 Ep1 Online '
       'V3 Ep2 Offline '
-      'V3 Ep2 Online ')
+      'V3 Ep2 Online '
+      'V4 Ep4 Offline'
+      'V4 Ep4 Online')
   end
   object ComboBox2: TComboBox
     Left = 70
@@ -78,14 +86,16 @@ object Form22: TForm22
     Style = csOwnerDrawFixed
     Sorted = True
     TabOrder = 2
+    OnChange = ComboBox3Change
   end
   object Button1: TButton
     Left = 60
     Top = 108
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
-    TabOrder = 3
+    TabOrder = 5
     OnClick = Button1Click
   end
   object Button2: TButton
@@ -96,5 +106,16 @@ object Form22: TForm22
     Caption = 'Load'
     TabOrder = 4
     OnClick = Button2Click
+  end
+  object cbAttack: TComboBox
+    Left = 70
+    Top = -19
+    Width = 147
+    Height = 22
+    Style = csOwnerDrawFixed
+    TabOrder = 3
+    Visible = False
+    Items.Strings = (
+      'Attack')
   end
 end

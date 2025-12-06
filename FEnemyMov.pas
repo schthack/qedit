@@ -29,7 +29,7 @@ var
 
 implementation
 
-uses Unit22, main;
+uses Unit1, Unit22, main;
 
 
 {$R *.dfm}
@@ -67,6 +67,8 @@ begin
 end;
 
 procedure TForm26.FormShow2(Sender: TObject);
+var
+  s: ansistring;
 begin
     stringgrid1.Cells[1,0]:=floattostr(EnemyMovData.f1);
     stringgrid1.Cells[1,1]:=floattostr(EnemyMovData.f2);
@@ -74,12 +76,19 @@ begin
     stringgrid1.Cells[1,3]:=floattostr(EnemyMovData.f4);
     stringgrid1.Cells[1,4]:=floattostr(EnemyMovData.f5);
     stringgrid1.Cells[1,5]:=floattostr(EnemyMovData.f6);
-    stringgrid2.Cells[1,0]:=inttostr(EnemyMovData.v1);
-    stringgrid2.Cells[1,1]:=inttostr(EnemyMovData.v2);
-    stringgrid2.Cells[1,2]:=inttostr(EnemyMovData.v3);
-    stringgrid2.Cells[1,3]:=inttostr(EnemyMovData.v4);
-    stringgrid2.Cells[1,4]:=inttostr(EnemyMovData.v5);
-    stringgrid2.Cells[1,5]:=inttostr(EnemyMovData.v6);
+
+    s := inttohex(EnemyMovData.v1);
+    stringgrid2.Cells[1,0]:=inttostr(hextosignedint(s,31));
+    s := inttohex(EnemyMovData.v2);
+    stringgrid2.Cells[1,1]:=inttostr(hextosignedint(s,31));
+    s := inttohex(EnemyMovData.v3);
+    stringgrid2.Cells[1,2]:=inttostr(hextosignedint(s,31));
+    s := inttohex(EnemyMovData.v4);
+    stringgrid2.Cells[1,3]:=inttostr(hextosignedint(s,31));
+    s := inttohex(EnemyMovData.v5);
+    stringgrid2.Cells[1,4]:=inttostr(hextosignedint(s,31));
+    s := inttohex(EnemyMovData.v6);
+    stringgrid2.Cells[1,5]:=inttostr(hextosignedint(s,31));
 
     stringgrid1.Cells[0,0]:='NNF1';
     stringgrid1.Cells[0,1]:='NNF2';

@@ -3,7 +3,7 @@ unit Unit13;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Windows, Registry, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, D3Dx9, StdCtrls;
 
 type
@@ -22,6 +22,8 @@ type
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
   private
     { Private declarations }
   public
@@ -51,12 +53,14 @@ var
   fogfl1,fogfl2:single;
   fogstep:single;
   Keys:array[0..256] of boolean;
-
-  
+  movespeed: integer = 3;
+  autoadjustsect: Boolean = false;
+  autoadjustY: Boolean = false;
+  lastclick: integer = 0;
 
 implementation
 
-uses main, Unit1, MyConst, FSnap;
+uses main, Unit1, MyConst, FSnap, Unit17;
 
 {$R *.dfm}
 
@@ -66,9 +70,9 @@ begin
     px:=cos(vr);
     py:=sin(vz);
     pz:=(cos(vz))*sin(vr);
-    ppx:=ppx+(px*3);
-    ppy:=ppy+(py*3);
-    ppz:=ppz+(pz*3);
+    ppx:=ppx+(px*movespeed);
+    ppy:=ppy+(py*movespeed);
+    ppz:=ppz+(pz*movespeed);
     myscreen.SetView(ppx,ppy,ppz,vr,vz);
 end;
 
@@ -78,17 +82,33 @@ begin
     px:=cos(vr);
     py:=sin(vz);
     pz:=(cos(vz))*sin(vr);
-    ppx:=ppx-(px*3);
-    ppy:=ppy-(py*3);
-    ppz:=ppz-(pz*3);
+    ppx:=ppx-(px*movespeed);
+    ppy:=ppy-(py*movespeed);
+    ppz:=ppz-(pz*movespeed);
     myscreen.SetView(ppx,ppy,ppz,vr,vz);
+end;
+
+procedure AutoRotate;
+begin
+  if sType = 1 then
+  begin
+    floor[sfloor].Monster[selected].Direction := rtinc;
+    GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
+  end;
+  if sType = 2 then
+  begin
+    floor[sfloor].Obj[selected].unknow6 := rtinc;
+    myobj[selected].Free;
+    Generateobj(floor[sfloor].obj[selected],selected);
+  end;
 end;
 
 procedure TForm13.Timer1Timer(Sender: TObject);
 var d1,d2,d3:dword;
     f1,f2,f3:double;
     r,g,b,r1,b1,g1:integer;
-    x,i:integer;
+    x,i,j:integer;
+    s: string;
 begin
     if have3d then
     if myscreen <> nil then begin
@@ -208,22 +228,83 @@ begin
         myscreen.TextOut('X: '+floattostrf(ppx,ffGeneral,6,2)+'  Y: '+floattostrf(ppy,ffGeneral,6,2)+
         '  Z: '+floattostrf(-ppz,ffGeneral,6,2)+'  Rotation: '+
         inttostr(round(vr*10430.37835047) and $ffff)+'/'+inttostr(round(vz*10430.37835047) and $ffff),rect(0,0,640,30),$FFFFFFFF,1)
-        else begin
+        else if dta = 1 then begin
         move(ppx,d1,4);
         move(ppy,d2,4);
         move(ppz,d3,4);
         myscreen.TextOut('X: '+inttohex(d1,8)+'  Y: '+inttohex(d2,8)+
         '  Z: '+inttohex(d3,8)+'  Rotation: '+
         inttohex(round(vr*10430.37835047) and $ffff,8)+'/'+inttohex(round(vz*10430.37835047) and $ffff,8),rect(0,0,640,30),$FFFFFFFF,1);
+        end
+        else
+        begin
+          if selected > -1 then
+          begin
+            if sType = 1 then
+              myscreen.TextOut(
+              'Map section: ' +
+              inttostr(Floor[sfloor].Monster[Selected].map_section) +
+              ' | Wave: ' + inttostr(Floor[sfloor].Monster[Selected].Unknow5) +
+              ' | X: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_X)) +
+              ' | Y: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_Z)) +
+              ' | Z: ' + inttostr(round(Floor[sfloor].Monster[Selected].Pos_Y)) +
+              ' | Rotation: ' + inttostr((Floor[sfloor].Monster[Selected].Direction) and
+              $FFFF div 182) + '°',rect(0,0,640,30),$FFFFFFFF,1)
+            else if sType = 2 then
+            begin
+              for j := 0 to RotateCount - 1 do
+                if Floor[sfloor].Obj[Selected].Skin = RotateItm[j] then break;
+              if j < RotateCount then
+                 myscreen.TextOut(
+              'Map section: ' +
+              inttostr(Floor[sfloor].Obj[Selected].map_section) +
+              ' | Group: ' + inttostr(Floor[sfloor].Obj[Selected].grp) +
+              ' | X: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_X)) +
+              ' | Y: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Z)) +
+              ' | Z: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Y)) +
+              ' | Rotation X: ' + inttostr((Floor[sfloor].Obj[Selected].unknow5) and
+              $FFFF div 182) + '°' +
+              ' | Rotation Y: ' + inttostr((Floor[sfloor].Obj[Selected].unknow6) and
+              $FFFF div 182) + '°' +
+              ' | Rotation Z: ' + inttostr((Floor[sfloor].Obj[Selected].unknow7) and
+              $FFFF div 182) + '°'
+              ,rect(0,0,1280,30),$FFFFFFFF,1)
+              else
+              myscreen.TextOut(
+              'Map section: ' +
+              inttostr(Floor[sfloor].Obj[Selected].map_section) +
+              ' | Group: ' + inttostr(Floor[sfloor].Obj[Selected].grp) +
+              ' | X: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_X)) +
+              ' | Y: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Z)) +
+              ' | Z: ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Y)) +
+              ' | Rotation: ' + inttostr((Floor[sfloor].Obj[Selected].unknow6) and
+              $FFFF div 182) + '°',rect(0,0,640,30),$FFFFFFFF,1)
+            end
+              else
+                myscreen.TextOut('Map section: - Wave: - X: - Y: - Z: - Rotation: - ',rect(0,0,640,30),$FFFFFFFF,1);
+          end
+          else
+            myscreen.TextOut('Map section: - Wave: - X: - Y: - Z: - Rotation: - ',rect(0,0,640,30),$FFFFFFFF,1);
         end;
 
+        s := 'Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ';
+        if autoadjustsect then
+          s := s + 'Auto-section: On, '
+        else
+          s := s + 'Auto-section: Off, ';
+        if autoadjustY then
+          s := s + 'Auto-Y: On'
+        else
+          s := s + 'Auto-Y: Off';
+        myscreen.TextOut(s,rect(0,15,640,45),$FFFFFFFF,1);
 
         if ini > 0 then begin
             dec(ini);
-            myscreen.TextOut('Q = Forward, A = Backward, D = Toggle data format, F = Toggle fog effect, R = Auto-rotate',rect(0,form13.Height-65,640,form13.Height-50),$FFFFFFFF,1);
-            myscreen.TextOut('Edit: Hold click + CTRL = Move, + SHIFT = Up/down, + right-click = Rotate, CTRL + S = Snap',rect(0,form13.Height-50,640,form13.Height-35),$FFFFFFFF,1);
+            myscreen.TextOut('Q = Forward, A = Backward, D = Toggle data format, F = Toggle fog effect, L/R = Auto-rotate',rect(0,form13.Height-80,640,form13.Height-64),$FFFFFFFF,1);
+            myscreen.TextOut('Scroll = Change movement speed, E = Toggle auto-section adjust, C = Toggle auto-Y adjust',rect(0,form13.Height-65,640,form13.Height-49),$FFFFFFFF,1);
+            myscreen.TextOut('Edit: Hold click + CTRL = Move, + SHIFT = Up/down, + right-click = Rotate, CTRL + S = Snap',rect(0,form13.Height-50,640,form13.Height-34),$FFFFFFFF,1);
             if borderStyle = bsNone then
-              myscreen.TextOut('ESC = Exit, CTRL + X = Show/hide the main window (Click outside of window to return to 3D)',rect(0,form13.Height-35,640,form13.Height-20),$FFFFFFFF,1);
+              myscreen.TextOut('ESC = Exit, CTRL + X = Show/hide the main window (Click outside of window to return to 3D)',rect(0,form13.Height-35,640,form13.Height-19),$FFFFFFFF,1);
         end;
         myscreen.RenderSurface;
         if Keys[Ord('Q')] then GoForward;
@@ -268,6 +349,27 @@ var i:integer;
 begin
     timer1.Enabled:=true;
     for i:=0 to 255 do Keys[i]:=false;
+    if (selected > -1) and form17.chkFollow.Checked then
+    begin
+      if sType = 1 then
+      begin
+        ppx := midpz[Floor[sfloor].Monster[selected].map_section].x;
+        ppy := Floor[sfloor].Monster[selected].Pos_Z + 15;
+        ppz := -midpz[Floor[sfloor].Monster[selected].map_section].y;
+        vr := 0;
+        vz := 0;
+        myscreen.SetView(ppx, ppy, ppz, vr, vz);
+      end;
+      if sType = 2 then
+      begin
+        ppx := midpz[Floor[sfloor].Obj[selected].map_section].x;
+        ppy := Floor[sfloor].Obj[selected].Pos_Z + 15;
+        ppz := -midpz[Floor[sfloor].Obj[selected].map_section].y;
+        vr := 0;
+        vz := 0;
+        myscreen.SetView(ppx, ppy, ppz, vr, vz);
+      end;
+    end;
 end;
 
 procedure TForm13.FormHide(Sender: TObject);
@@ -281,10 +383,10 @@ procedure TForm13.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
 
 var v,rayOrigin,rayDir:TD3DXVECTOR3;
     m,n:TD3DXMATRIX;
-    i,c,j,closest:integer;
+    i,z,c,d,j,k,closest:integer;
     rt:dword;
     px2,px3,py2,py3:single;
-    diff,diffmin:double;
+    di,diff,diffx,diffz,diffh,diffmin,ppx2,ppy2,pz2:double;
 begin
     if (shift = [ssleft]) and (not rtx) and (not rty) and (not rtz) then begin
         vz:=vz+((lmy-y)/120);
@@ -323,6 +425,28 @@ begin
             rayOrigin.z := rayOrigin.z + rayDir.z;
             inc(c);
         end;
+
+        // Find closest section
+        if autoadjustsect or autoadjustY then
+        begin
+          d := -1;
+          di := $FFFFFF;
+          for z := 0 to 25566 do
+          if MidPU[z] then
+          begin
+            // Find the distance
+            ppx2 := rayOrigin.x - (MidP[z].x * zoom);
+            ppy2 := -rayOrigin.z - (MidP[z].y * zoom);
+            ppx2 := (ppx2 * ppx2) + (ppy2 * ppy2);
+            // Save if nearest
+            if di > ppx2 then
+            begin
+            di := ppx2;
+            d := z;
+            end;
+          end;
+        end;
+
         snapvalue := FSnapOptions.seSnapTolerance.Value;
         distancelimit := FSnapOptions.seDistanceLimit.Value;
 
@@ -340,6 +464,17 @@ begin
             py3 := sin(rt/10430.37835)*px2 + cos(rt/10430.37835)*py2;
             floor[sfloor].Monster[selected].Pos_X:=px3;
             floor[sfloor].Monster[selected].Pos_Y:=py3;
+
+            if autoadjustsect then
+              floor[sfloor].Monster[selected].map_section := d;
+            if autoadjustY then
+            begin
+              pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
+              pz2 := pz2 - miz[d] * zoom;
+              floor[sfloor].Monster[selected].Pos_Z := pz2;
+            end;
+            if autoadjustsect or autoadjustY then
+              GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
 
             if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
             begin
@@ -364,6 +499,12 @@ begin
                           // Match monster's rotations if enabled
                           if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Monster[selected].Direction := floor[sfloor].Monster[j].Direction;
+                          // Match monster's Y value if enabled
+                          if (FSnapOptions.chkSnapYValue.Checked) then
+                          begin
+                            floor[sfloor].Monster[selected].Pos_Z := floor[sfloor].Monster[j].Pos_Z;
+                            mymonst[selected].PositionY := mymonst[j].PositionY;
+                          end;
                           if (diff < diffmin) and (j <> selected) then
                           begin
                             diffmin := diff;
@@ -401,6 +542,11 @@ begin
                           mymonst[selected].PositionZ := mymonst[j].PositionZ;
                           if (FSnapOptions.chkSnapRotate.Checked) then
                             floor[sfloor].Monster[selected].Direction := floor[sfloor].Monster[j].Direction;
+                          if (FSnapOptions.chkSnapYValue.Checked) then
+                          begin
+                            floor[sfloor].Monster[selected].Pos_Z := floor[sfloor].Monster[j].Pos_Z;
+                            mymonst[selected].PositionY := mymonst[j].PositionY;
+                          end;
                           if (diff < diffmin) and (j <> selected) then
                           begin
                             diffmin := diff;
@@ -414,6 +560,44 @@ begin
               end;
               if closest > -1 then
                 AdjustDistanceX(closest);
+
+              diffmin := Double.MaxValue;
+              closest := -1;
+
+              // 3D Y axis snap for monsters
+              for j := 0 to Floor[sfloor].MonsterCount - 1 do
+              begin
+                if (Floor[sfloor].Monster[j].map_section = Floor[sfloor].Monster[selected].map_section) and
+                ((Floor[sfloor].Monster[j].Unknow5 = showwave) or (showwave = -1)) then
+                begin
+                  diffx := Floor[sfloor].Monster[selected].Pos_X - Floor[sfloor].Monster[j].Pos_X;
+                  diffz := Floor[sfloor].Monster[selected].Pos_Y - Floor[sfloor].Monster[j].Pos_Y;
+                  diffh := sqrt(diffx * diffx + diffz * diffz);
+                  if diffh <= snapvalue then
+                  begin
+                    // Save closest snap target
+                    diff := abs(Floor[sfloor].Monster[selected].Pos_Z - Floor[sfloor].Monster[j].Pos_Z);
+                    if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                    or (not FSnapOptions.chkDistancelimit.Checked) then
+                    begin
+                      floor[sfloor].Monster[selected].Pos_X := floor[sfloor].Monster[j].Pos_X;
+                      floor[sfloor].Monster[selected].Pos_Y := floor[sfloor].Monster[j].Pos_Y;
+                      mymonst[selected].PositionX := mymonst[j].PositionX;
+                      mymonst[selected].PositionZ := mymonst[j].PositionZ;
+                      if (FSnapOptions.chkSnapRotate.Checked) then
+                        floor[sfloor].Monster[selected].Direction := floor[sfloor].Monster[j].Direction;
+                      if (diff < diffmin) and (j <> selected) then
+                      begin
+                        diffmin := diff;
+                        if j <> selected then
+                          closest := j;
+                      end;
+                    end;
+                  end;
+                end;
+              end;
+              if closest > -1 then
+                AdjustDistanceZ(closest);
               GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
             end;
 
@@ -433,6 +617,20 @@ begin
             floor[sfloor].Obj[selected].Pos_X:=px3;
             floor[sfloor].Obj[selected].Pos_Y:=py3;
 
+            if autoadjustsect then
+              floor[sfloor].Obj[selected].map_section := d;
+            if autoadjustY then
+            begin
+              pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
+              pz2 := pz2 - miz[d] * zoom;
+              floor[sfloor].Obj[selected].Pos_Z := pz2;
+            end;
+            if autoadjustsect or autoadjustY then
+            begin
+              myobj[selected].Free;
+              Generateobj(floor[sfloor].obj[selected],selected);
+            end;
+
             if (FSnapOptions.chkSnap.Checked) or (Keys[Ord('S')]) then
             begin
               // 3D X axis snap for objects
@@ -441,7 +639,7 @@ begin
                 for i := 0 to snapvalue do
                 begin
                     if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[selected].map_section) and
-                    ((Floor[sfloor].Obj[j].Unknow5 = showwave) or (showwave = -1)) then
+                    ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
                     begin
                       if ((round(Floor[sfloor].Obj[j].Pos_X + i)) = round(px3))
                       or ((round(Floor[sfloor].Obj[j].Pos_X - i)) = round(px3)) then
@@ -455,7 +653,25 @@ begin
                           myobj[selected].PositionX := myobj[j].PositionX;
                           // Match object's rotations if enabled
                           if (FSnapOptions.chkSnapRotate.Checked) then
-                            floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                          begin
+                            for k := 0 to RotateCount - 1 do
+                              if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
+                                break;
+                            if k >= RotateCount then
+                              floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                            if (k < RotateCount) and (floor[sfloor].Obj[selected].Skin = floor[sfloor].Obj[j].Skin) then
+                            begin
+                              floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
+                              floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                              floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
+                            end;
+                          end;
+                          // Match object's Y value if enabled
+                          if (FSnapOptions.chkSnapYValue.Checked) then
+                          begin
+                            floor[sfloor].Obj[selected].Pos_Z := floor[sfloor].Obj[j].Pos_Z;
+                            myobj[selected].PositionY := myobj[j].PositionY;
+                          end;
                           if (diff < diffmin) and (j <> selected) then
                           begin
                             diffmin := diff;
@@ -467,7 +683,6 @@ begin
                     end;
                 end;
               end;
-
               if closest > -1 then
                 AdjustDistanceY(closest);
 
@@ -480,7 +695,7 @@ begin
                 for i := 0 to snapvalue do
                 begin
                     if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[selected].map_section) and
-                    ((Floor[sfloor].Obj[j].Unknow5 = showwave) or (showwave = -1)) then
+                    ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
                     begin
                       if ((round(Floor[sfloor].Obj[j].Pos_Y + i)) = round(py3))
                       or ((round(Floor[sfloor].Obj[j].Pos_Y - i)) = round(py3)) then
@@ -493,7 +708,24 @@ begin
                           floor[sfloor].Obj[selected].Pos_Y := floor[sfloor].Obj[j].Pos_Y;
                           myobj[selected].PositionZ := myobj[j].PositionZ;
                           if (FSnapOptions.chkSnapRotate.Checked) then
-                            floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                          begin
+                            for k := 0 to RotateCount - 1 do
+                              if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
+                                break;
+                            if k >= RotateCount then
+                              floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                            if (k < RotateCount) and (floor[sfloor].Obj[selected].Skin = floor[sfloor].Obj[j].Skin) then
+                            begin
+                              floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
+                              floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                              floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
+                            end;
+                          end;
+                          if (FSnapOptions.chkSnapYValue.Checked) then
+                          begin
+                            floor[sfloor].Obj[selected].Pos_Z := floor[sfloor].Obj[j].Pos_Z;
+                            myobj[selected].PositionY := myobj[j].PositionY;
+                          end;
                           if (diff < diffmin) and (j <> selected) then
                           begin
                             diffmin := diff;
@@ -507,6 +739,56 @@ begin
               end;
               if closest > -1 then
                 AdjustDistanceX(closest);
+
+              diffmin := Double.MaxValue;
+              closest := -1;
+
+              // 3D Y axis snap for objects
+              for j := 0 to Floor[sfloor].ObjCount - 1 do
+              begin
+                if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[selected].map_section) and
+                ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
+                begin
+                  diffx := Floor[sfloor].Obj[selected].Pos_X - Floor[sfloor].Obj[j].Pos_X;
+                  diffz := Floor[sfloor].Obj[selected].Pos_Y - Floor[sfloor].Obj[j].Pos_Y;
+                  diffh := sqrt(diffx * diffx + diffz * diffz);
+                  if diffh <= snapvalue then
+                  begin
+                    // Save closest snap target
+                    diff := abs(Floor[sfloor].Obj[selected].Pos_Z - Floor[sfloor].Obj[j].Pos_Z);
+                    if ((diff <= distancelimit) and (FSnapOptions.chkDistancelimit.Checked))
+                    or (not FSnapOptions.chkDistancelimit.Checked) then
+                    begin
+                      floor[sfloor].Obj[selected].Pos_X := floor[sfloor].Obj[j].Pos_X;
+                      floor[sfloor].Obj[selected].Pos_Y := floor[sfloor].Obj[j].Pos_Y;
+                      myobj[selected].PositionX := myobj[j].PositionX;
+                      myobj[selected].PositionZ := myobj[j].PositionZ;
+                      if (FSnapOptions.chkSnapRotate.Checked) then
+                      begin
+                        for k := 0 to RotateCount - 1 do
+                          if floor[sfloor].Obj[selected].Skin = RotateItm[k] then
+                            break;
+                        if k >= RotateCount then
+                          floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                        if (k < RotateCount) and (floor[sfloor].Obj[selected].Skin = floor[sfloor].Obj[j].Skin) then
+                        begin
+                          floor[sfloor].Obj[selected].unknow5 := floor[sfloor].Obj[j].unknow5;
+                          floor[sfloor].Obj[selected].unknow6 := floor[sfloor].Obj[j].unknow6;
+                          floor[sfloor].Obj[selected].unknow7 := floor[sfloor].Obj[j].unknow7;
+                        end;
+                      end;
+                      if (diff < diffmin) and (j <> selected) then
+                      begin
+                        diffmin := diff;
+                        if j <> selected then
+                          closest := j;
+                      end;
+                    end;
+                  end;
+                end;
+              end;
+              if closest > -1 then
+                AdjustDistanceZ(closest);
               myobj[selected].Free;
               Generateobj(floor[sfloor].obj[selected],selected);
             end;
@@ -613,6 +895,7 @@ var v,rayOrigin,rayDir:TD3DXVECTOR3;
     m,n:TD3DXMATRIX;
     i,c,u1,u2,d1,d2:integer;
 begin
+    inedit := false;
     lmx:=x;
     lmy:=y;
 
@@ -658,6 +941,11 @@ begin
                     stype:=1;
                     form1.ListBox1.ItemIndex:=i;
                     form1.drawmap;
+                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
+                    begin
+                      form1.Button2Click(nil);
+                      inedit := true;
+                    end;
                     break;
                 end;
         end;
@@ -677,13 +965,19 @@ begin
                     stype:=2;
                     form1.ListBox2.ItemIndex:=i;
                     form1.drawmap;
+                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
+                    begin
+                      form1.Button2Click(nil);
+                      inedit := true;
+                    end;
                     break;
                 end;
         end;
         if i < floor[sfloor].ObjCount then break;
         
     end;
-
+    if not (ssRight in Shift) and not inedit then
+      lastclick := gettickcount();
 end;
 
 
@@ -717,6 +1011,30 @@ begin
     inclick:=false;
 end;
 
+procedure TForm13.FormMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+var
+  Reg: TRegistry;
+begin
+  if (WheelDelta > 0) and (movespeed < 30) then
+    movespeed := movespeed + 3
+  else if (WheelDelta < 0) and (movespeed > 3)  then
+    movespeed := movespeed - 3;
+
+  // Save movement value to the registry
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+  begin
+    Reg.WriteInteger('3DMoveSpeed', movespeed);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
+end;
+
 procedure TForm13.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     timer1.Enabled:=false;
@@ -736,27 +1054,79 @@ begin
 end;
 
 procedure TForm13.FormKeyPress(Sender: TObject; var Key: Char);
+var
+  Reg: TRegistry;
 begin
-    if key = 'd' then dta:=dta xor 1;
+    // Change and save auto-adjust settings to the registry
+    if key = 'e' then
+    begin
+        autoadjustsect := not autoadjustsect;
+        Reg := TRegistry.Create;
+        try
+          Reg.RootKey := HKEY_CURRENT_USER;
+          if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+          begin
+            Reg.WriteBool('3DAutoAdjustSect', autoadjustsect);
+            Reg.CloseKey;
+          end;
+        finally
+          Reg.Free;
+        end;
+    end;
+    if key = 'c' then
+    begin
+        autoadjustY := not autoadjustY;
+        Reg := TRegistry.Create;
+        try
+          Reg.RootKey := HKEY_CURRENT_USER;
+          if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+          begin
+            Reg.WriteBool('3DAutoAdjustY', autoadjustY);
+            Reg.CloseKey;
+          end;
+        finally
+          Reg.Free;
+        end;
+    end;
+
+    if key = 'd' then
+    begin
+     dta:=dta + 1;
+     if dta = 3 then dta := 0;
+     // Save data format setting to the registry
+     Reg := TRegistry.Create;
+     try
+         Reg.RootKey := HKEY_CURRENT_USER;
+         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+         begin
+           Reg.WriteInteger('DataDisplay', dta);
+           Reg.CloseKey;
+         end;
+     finally
+       Reg.Free;
+     end;
+    end;
+
     if key = 'f' then fog:=fog xor 1;
-    // Auto-rotate monster/object 45 degrees
+
+    // Auto-rotate monster/object clockwise 22.5 degrees
+    if (key = 'l') and (selected > -1) then
+    begin
+      // Decrement for next rotation
+      if rtinc > 0 then
+        rtinc := rtinc - 4096
+      else rtinc := 61440;
+      AutoRotate;
+    end;
+
+    // Auto-rotate monster/object counter-clockwise 22.5 degrees
     if (key = 'r') and (selected > -1) then
     begin
-      if sType = 1 then
-      begin
-        floor[sfloor].Monster[selected].Direction := rtinc;
-        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
-      end;
-      if sType = 2 then
-      begin
-        floor[sfloor].Obj[selected].unknow6 := rtinc;
-        myobj[selected].Free;
-        Generateobj(floor[sfloor].obj[selected],selected);
-      end;
       // Increment for next rotation
-      if rtinc <= 57344 then
-        rtinc := rtinc + 8192
+      if rtinc < 61440 then
+        rtinc := rtinc + 4096
       else rtinc := 0;
+      AutoRotate;
     end;
 end;
 

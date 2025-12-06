@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ComCtrls,  ImgList, ExtCtrls,
-   shellapi, System.ImageList, Vcl.Grids;
+   shellapi, System.ImageList, Vcl.Grids, System.Actions, Vcl.ActnList;
 
 type
   TForm5 = class(TForm)
@@ -20,6 +20,9 @@ type
     UnicodeStringGrid1: TStringGrid;
     TabControl1: TTabControl;
     ImageList2: TImageList;
+    ActionList1: TActionList;
+    AddNewLabel: TAction;
+    AddNewRegister: TAction;
     procedure ComboBox1Change(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -42,6 +45,8 @@ type
     procedure UnicodeStringGrid1Exit(Sender: TObject);
     procedure UnicodeStringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
+    procedure AddNewLabelExecute(Sender: TObject);
+    procedure AddNewRegisterExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -149,6 +154,80 @@ begin
         if copy(form4.ListBox1.Items.Strings[x],9,4) = 'HEX:' then result:=1;
 end;
 
+procedure TForm5.AddNewLabelExecute(Sender: TObject);
+var
+  found: boolean;
+  i,j,newlabel: integer;
+begin
+  if ActiveControl is TEdit then
+  begin
+      for i := 0 to 65535 do
+      begin
+        found := false;
+        for j := 0 to form4.ListBox1.Items.Count - 1 do
+        begin
+          if form4.listbox1.items[j].StartsWith(inttostr(i) + ':') then
+          begin
+            found := true;
+            break;
+          end;
+        end;
+        if not found then
+        begin
+          newlabel := i;
+          break;
+        end;
+      end;
+    TEdit(ActiveControl).Text := inttostr(newlabel);
+    TEdit(ActiveControl).SelectAll;
+  end;
+end;
+
+procedure TForm5.AddNewRegisterExecute(Sender: TObject);
+var
+  found: boolean;
+  i,j: integer;
+begin
+  if ActiveControl is TStringGrid then
+  begin
+    for i := 0 to 255 do
+    begin
+      found := false;
+      for j := 0 to form4.Listbox1.Items.Count - 1 do
+      begin
+        if form4.Listbox1.items[j].Contains('R' + inttostr(i)) then
+        begin
+          found := true;
+          break;
+        end;
+      end;
+      for j := 0 to TStringGrid(ActiveControl).RowCount - 1 do
+      begin
+        if lowercase(TStringGrid(ActiveControl).Cells[1, j]) = 'r' +
+        inttostr(i) then
+        begin
+          found := true;
+          break;
+        end;
+      end;
+      if not found
+      // Exclude all reserved registers
+      and (i <> 74) and (i <> 75)
+      and (i <> 76) and (i <> 77)
+      and (i <> 78) and (i <> 79)
+      and (i <> 253) and (i <> 255)
+      then
+      begin
+        with TStringGrid(ActiveControl) do
+        begin
+          Cells[Col, Row] := 'R' + inttostr(i);
+          break;
+        end;
+      end;
+    end;
+  end;
+end;
+
 procedure TForm5.Button1Click(Sender: TObject);
 var s,o:widestring;
     x,y,g,j,d:int64;
@@ -190,7 +269,12 @@ begin
            (AsmCode[ComboBox1.ItemIndex].arg[x] = T_RREG) then begin
            if (AsmCode[ComboBox1.ItemIndex].order = T_Args) and
             ((length(s) = 8) or (lowercase(copy(s,1,1))<> 'r')) then begin
-           y:=hextoint(s);
+           if not showdecimal then
+            y:=hextoint(s)
+           else
+           begin
+            if not trystrtoint64(s,y) then y:=HexToSignedInt(s,31);
+           end;
            if y = -1 then begin
                 MessageDlg(getlanguagestring(211), mtInformation,[mbOk], 0);
                 exit;
@@ -216,7 +300,12 @@ begin
            s:=''''+s+'''';
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_BYTE) then begin
-           y:=hextoint(s);
+           if not showdecimal then
+            y:=hextoint(s)
+           else
+           begin
+            if not trystrtoint64(s,y) then y:=HexToSignedInt(s,7);
+           end;
            if y = -1 then begin
                 MessageDlg(getlanguagestring(214), mtInformation,[mbOk], 0);
                 exit;
@@ -228,7 +317,12 @@ begin
            s:=GetDisplayValue(y,2);
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_WORD) then begin
-           y:=hextoint(s);
+           if not showdecimal then
+            y:=hextoint(s)
+           else
+           begin
+            if not trystrtoint64(s,y) then y:=HexToSignedInt(s,15);
+           end;
            if y = -1 then begin
                 MessageDlg(getlanguagestring(216), mtInformation,[mbOk], 0);
                 exit;
@@ -240,7 +334,12 @@ begin
            s:=GetDisplayValue(y,4);
         end else
         if (AsmCode[ComboBox1.ItemIndex].arg[x] = T_PFLAG) then begin
-           y:=hextoint(s);
+           if not showdecimal then
+            y:=hextoint(s)
+           else
+           begin
+            if not trystrtoint64(s,y) then y:=HexToSignedInt(s,15);
+           end;
            if y = -1 then begin
                 MessageDlg(getlanguagestring(218), mtInformation,[mbOk], 0);
                 exit;
@@ -346,6 +445,11 @@ begin
            if TabControl1.TabIndex = 0 then y:=hextoint(s);
            if TabControl1.TabIndex = 1 then y:=dword(strtoint(s));
            if TabControl1.TabIndex = 2 then begin
+                if lowercase(s) = 'nan' then
+                begin
+                  MessageDlg('Floating point value cannot be NAN.', mtInformation,[mbOk], 0);
+                  exit;
+                end;
                 y:=0;
                 f:=strtofloat(s);
                 move(f,y,4);
@@ -538,6 +642,7 @@ begin
         if x = 0 then begin
             Form4.ListBox1.ItemIndex:=Form4.ListBox1.Items.Count-1;
             form32.Tag:=strtoint(UnicodeStringGrid1.Cells[1,5]);
+            form32.chkBezier.Checked := true;
             form4.EditVectordata1Click(form5);
         end;
        // if g > 0 then Form4.ListBox1.wideItems.Strings[y]:=copy(s,1,24)+inttohex(g,8)+', '+UnicodeStringGrid1.Cells[1,1];
@@ -549,6 +654,7 @@ begin
         if x = 0 then begin
             Form4.ListBox1.ItemIndex:=Form4.ListBox1.Items.Count-1;
             form32.Tag:=strtoint(UnicodeStringGrid1.Cells[1,5]);
+            form32.chkBezier.Checked := false;
             form4.EditVectordata1Click(form5);
         end;
     end;
@@ -564,9 +670,18 @@ begin
          //bb map
          s:=Form4.ListBox1.Items.Strings[y];
          delete(s,1,9+length(GetOpcodeName($f951)));
-         x:=hextoint(copy(s,1,2));
-         g:=hextoint(copy(s,5,4));
-         y:=hextoint(copy(s,11,2));
+         if not showdecimal then
+         begin
+           x:=hextoint(copy(s,1,2));
+           g:=hextoint(copy(s,5,4));
+           y:=hextoint(copy(s,11,2));
+         end
+         else
+         begin
+           x:=strtoint(copy(s,1,2));
+           g:=strtoint(copy(s,5,4));
+           y:=strtoint(copy(s,11,2));
+         end;
          if x < 30 then begin
          mapxvmfile[x]:=path+'map\xvm\'+mapxvmname[mapid[g]+y];
          mapfile[x]:=path+'map\'+mapfilename[mapid[g]+y];
@@ -574,6 +689,12 @@ begin
          Form1.CheckListBox1.Items.Strings[x]:=mapname[mapid[g]+y];
          end;
      end;
+
+    if showdecimal then
+      lastmode := 1
+    else
+      lastmode := 0;
+
     form4.ListBox1.Repaint;
     close;
 end;
@@ -635,7 +756,7 @@ begin
     if lastmode = 1 then y:=strtoint(s);
     if lastmode = 2 then begin
         y:=0;
-        if s = 'NAN' then y:=dwval[i]
+        if lowercase(s) = 'nan' then y:=dwval[i]
         else begin
         f:=strtofloat(s);
         move(f,y,4);
@@ -646,7 +767,7 @@ begin
     if tabcontrol1.TabIndex = 2 then begin
         move(y,f,4);
         s:=floattostr(f);
-        if s = 'NAN' then dwval[i]:=y;
+        if lowercase(s) = 'nan' then dwval[i]:=y;
     end;
 
     unicodestringgrid1.Cells[1,i]:=s;
@@ -703,11 +824,16 @@ begin
          i:=form4.ListBox1.ItemIndex;
          if (lowercase(combobox1.Text) = lowercase(GetOpcodeName($f891))) then begin
             c:=getepisode;
-            if c = 2 then begin
-                Showmessage(getlanguagestring(227));
+            if c >= 3 then begin
+                Showmessage('Invalid episode number.');
             end else begin
                 form23.tag:=c;
-                if form23.showmodal = 1 then UnicodeStringGrid1.Cells[1,0]:=inttohex(form23.myresult,8);
+                if form23.showmodal = 1 then
+                begin
+                  if tabcontrol1.TabIndex = 1 then UnicodeStringGrid1.Cells[1,0]:=Format('%.8d', [form23.myresult])
+                  else
+                    UnicodeStringGrid1.Cells[1,0]:=inttohex(form23.myresult,8);
+                end;
             end;
          end;
 
@@ -816,6 +942,7 @@ begin
             if c = 1 then begin//find it
                 GoToLabel(UnicodeStringGrid1.Cells[1,5]);
                 form32.Tag:=0;
+                form32.chkBezier.Checked := true;
                 form4.EditVectordata1Click(form5);
             end;
             if c = 0 then begin
@@ -832,6 +959,7 @@ begin
             if c = 1 then begin//find it
                 GoToLabel(UnicodeStringGrid1.Cells[1,5]);
                 form32.Tag:=0;
+                form32.chkBezier.Checked := false;
                 form4.EditVectordata1Click(form5);
             end;
             if c = 0 then begin

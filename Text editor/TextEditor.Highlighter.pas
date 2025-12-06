@@ -53,6 +53,8 @@ type
     FTemporaryTokens: TList;
     FToken: TTextEditorToken;
     FTokenPosition: Integer;
+    FCharacterCount: Integer;
+    FLabelAttribute: TTextEditorHighlighterAttribute;
     function GetLoad: TFileName;
     procedure AddAllAttributes(const ARange: TTextEditorRange);
     procedure AddKeywords(const AKeywords: TStringList);
@@ -186,6 +188,7 @@ begin
 
   FMatchingPairs := TList.Create;
   FTemporaryTokens := TList.Create;
+  FLabelAttribute := TTextEditorHighlighterAttribute.Create('Label');
 end;
 
 destructor TTextEditorHighlighter.Destroy;
@@ -198,6 +201,7 @@ begin
   FCompletionProposalSkipRegions.Free;
   FMatchingPairs.Free;
   FColors.Free;
+  FLabelAttribute.Free;
 
   FreeTemporaryTokens;
 
@@ -299,6 +303,7 @@ begin
   FPreviousEndOfLine := False;
   FRightToLeftToken := False;
   FToken := nil;
+  FCharacterCount := 0;
 
   Next;
 end;
@@ -492,6 +497,8 @@ begin
 
   if FLine[FRunPosition] = TControlCharacters.Null then
     FPreviousEndOfLine := True;
+
+  Inc(FCharacterCount, TokenLength);
 end;
 
 function TTextEditorHighlighter.RangeAttribute: TTextEditorHighlighterAttribute;
@@ -504,6 +511,10 @@ end;
 
 function TTextEditorHighlighter.TokenAttribute: TTextEditorHighlighterAttribute;
 begin
+  // Check if we're in the first 5 characters
+  if FCharacterCount < 6 then
+    Result := FLabelAttribute
+  else
   if Assigned(FToken) then
     Result := FToken.Attribute
   else
@@ -695,8 +706,19 @@ begin
 end;
 
 procedure TTextEditorHighlighter.UpdateAttributes;
+var
+  LElement: TTextEditorHighlighterElement;
 begin
   UpdateAttributes(MainRules, nil);
+
+  // Update the label attribute
+  if Assigned(FLabelAttribute) and
+     FColors.Elements.TryGetValue('MethodName', LElement) then
+  begin
+    FLabelAttribute.Foreground := LElement.Foreground;
+    FLabelAttribute.Background := LElement.Background;
+    FLabelAttribute.FontStyles := LElement.FontStyles;
+  end;
 end;
 
 procedure TTextEditorHighlighter.PrepareYAMLHighlighter;

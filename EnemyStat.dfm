@@ -11,9 +11,7 @@ object Form21: TForm21
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
-  PixelsPerInch = 96
   TextHeight = 13
   object StringGrid1: TStringGrid
     Left = 6
@@ -112,7 +110,7 @@ object Form21: TForm21
   object Button1: TButton
     Left = 6
     Top = 156
-    Width = 75
+    Width = 83
     Height = 25
     Caption = 'Load template'
     TabOrder = 4
@@ -132,6 +130,7 @@ object Form21: TForm21
     Top = 156
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 6
     OnClick = Button3Click

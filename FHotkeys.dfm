@@ -148,7 +148,7 @@ object fmHotkeys: TfmHotkeys
   end
   object Label14: TLabel
     Left = 75
-    Top = 140
+    Top = 142
     Width = 95
     Height = 15
     Caption = 'Cancel placement'

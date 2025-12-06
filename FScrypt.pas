@@ -4,8 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls, ExtCtrls,
-  ImgList, Menus, shellapi, WSDLIntf, Registry, System.ImageList;
+  StrUtils, Dialogs, StdCtrls, ComCtrls, ExtCtrls, Generics.Collections, Generics.Defaults,
+  ImgList, Menus, shellapi, WSDLIntf, Registry, System.ImageList, System.RegularExpressions;
 
 type
   TForm4 = class(TForm)
@@ -62,6 +62,8 @@ type
     Hex1: TMenuItem;
     btnEditText: TButton;
     HideNOPs1: TMenuItem;
+    N3: TMenuItem;
+    Switcheditors1: TMenuItem;
     procedure Button4Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -108,6 +110,9 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnEditTextClick(Sender: TObject);
     procedure HideNOPs1Click(Sender: TObject);
+    procedure Switcheditors1Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormHide(Sender: TObject);
 
 
   private
@@ -124,23 +129,26 @@ type
   Procedure AddStrRef(l:integer);
   Procedure RemoveRef(s:ansistring);
   Function GetOpcodeName(id:dword):ansistring;
+  function GetOpcodeId(opcodename:ansistring):dword;
   function CompareReg(List: TStringList; Index1, Index2: Integer): Integer;
     function CompareLabel(List: TStringList; Index1, Index2: Integer): Integer;
     function CompareStr(List: TStringList; Index1, Index2: Integer): Integer;
     Procedure ScanForMap;
-
+    procedure UpdateScriptRefs;
+    Procedure DelOpcode (s:ansistring);
 
 var
   Form4: TForm4;
   CopyedData:widestring = '';
   ScriptTest:tstrings=nil;
   refname:array[0..9] of ansistring = ('unused','NPC data','Code','Image data','String data','Enemy physical data','Enemy Resist data','Enemy attack data','Enemy movement data','Float data');
-
+  treesearch: Boolean = false;
 
 implementation
 
 uses TCom, main, Unit1, NPCBuild, PikaPackage, EnemyStat, Unit22,
-  FEnemyResist, FEnemyAttack, FEnemyMov, FFloatEdit, FVector, FSymbolChat, FScriptTE;
+  FEnemyResist, FEnemyAttack, FEnemyMov, FFloatEdit, FVector, FSymbolChat, FScriptTE,
+  Unit14;
 
 {$R *.dfm}
 
@@ -281,12 +289,25 @@ end;                  }
 Procedure TForm4.SaveToBackupFile(f:integer);
 var x,r:integer;
 begin
-    r:=$0a000d;
-    x:=listbox1.count;
-    filewrite(f,x,4);
-    for x:=0 to listbox1.count-1 do begin
-        filewrite(f,listbox1.items[x][1],length(listbox1.items[x])*2);
-        filewrite(f,r,4);
+    if fmScriptTE.Visible then
+    begin
+      r:=$0a000d;
+      x:=fmScriptTE.TextEdit.Lines.Count;
+      filewrite(f,x,4);
+      for x:=0 to fmScriptTE.TextEdit.Lines.Count-1 do begin
+          filewrite(f,fmScriptTE.TextEdit.Lines[x][1],length(fmScriptTE.TextEdit.Lines[x])*2);
+          filewrite(f,r,4);
+      end;
+    end
+    else
+    begin
+      r:=$0a000d;
+      x:=listbox1.count;
+      filewrite(f,x,4);
+      for x:=0 to listbox1.count-1 do begin
+          filewrite(f,listbox1.items[x][1],length(listbox1.items[x])*2);
+          filewrite(f,r,4);
+      end;
     end;
 end;
 
@@ -295,19 +316,38 @@ var x,i:integer;
     s:widestring;
     c:widechar;
 begin
-    x:=0;
-    listbox1.clear;
-    s:='';
-    fileread(f,i,4);
-    while (fileread(f,c,2) = 2) and (listbox1.count< i) do begin
-        if c = #$a then begin
-            listbox1.items.add(s);
-            s:='';
-        end else
-        if c <> #$d then s:=s+c;
+    if fmScriptTE.Visible then
+    begin
+      x:=0;
+      fmScriptTE.TextEdit.Lines.Clear;
+      s:='';
+      fileread(f,i,4);
+      while (fileread(f,c,2) = 2) and (fmScriptTE.TextEdit.Lines.count< i) do begin
+          if c = #$a then begin
+              fmScriptTE.TextEdit.Lines.add(s);
+              s:='';
+          end else
+          if c <> #$d then s:=s+c;
+      end;
+      if s <> '' then fmScriptTE.TextEdit.Lines.add(s);
+      fileseek(f,-2,1);
+    end
+    else
+    begin
+      x:=0;
+      listbox1.clear;
+      s:='';
+      fileread(f,i,4);
+      while (fileread(f,c,2) = 2) and (listbox1.count< i) do begin
+          if c = #$a then begin
+              listbox1.items.add(s);
+              s:='';
+          end else
+          if c <> #$d then s:=s+c;
+      end;
+      if s <> '' then listbox1.items.add(s);
+      fileseek(f,-2,1);
     end;
-    if s <> '' then listbox1.items.add(s);
-    fileseek(f,-2,1);
 end;
 
 
@@ -463,6 +503,8 @@ end;
 Procedure AddDataRef(l:integer);
 var x,i:integer;
 begin
+    // Prevents access violation errors in case label 0 is not a reference
+    AddLabel(0);
     for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
     datablock[i] := l;
     datablockT[i] := T_DATA;
@@ -483,6 +525,8 @@ end;
 Procedure AddStrRef(l:integer);
 var x,i:integer;
 begin
+    // Prevents access violation errors in case label 0 is not a reference
+    AddLabel(0);
     for i:=0 to 1000 do if (datablock[i]=l) or (datablock[i]=-1) then break;
     datablock[i] := l;
     datablockT[i] := T_STRDATA;
@@ -529,72 +573,253 @@ begin
         Listbox1.Items.Delete(listbox1.ItemIndex);
         RemoveRef(s);
         if x < listbox1.Items.Count then begin
-        listbox1.ItemIndex:=x;
+        listbox1.ItemIndex:=x
         //listbox1.Selected[x]:=true;
+        end
+        else if x > 0 then
+        begin
+          listbox1.ItemIndex := x - 1;
+          listbox1.TopIndex := listbox1.TopIndex + 1;
         end;
+        if x > 0 then
+        listbox1Click(nil);
     end;
 end;
 
 Procedure ScanForMap;
-var x,i,y:integer;
+var x,i,y,x3,y3,g:integer;
     mappc,mapgc,mapbb,s:ansistring;
     tmpreg:array[0..256] of dword;
 begin
     mappc:=GetOpcodeName($c4)+' ';
     mapgc:=GetOpcodeName($f80d)+' ';
-    //mapbb:=GetOpcodeName($f951);
-    for x:=0 to form4.ListBox1.Items.Count-1 do begin
-        if copy(form4.ListBox1.Items.Strings[x],9,6) = 'leti R' then begin
-            s:=copy(form4.ListBox1.Items.Strings[x],15,15);
-            i:=pos(',',s);
-            y:=strtoint(copy(s,1,i-1));
-            delete(s,1,i+1);
-            tmpreg[y]:=hextoint(s);
-        end;
-        if copy(form4.ListBox1.Items.Strings[x],9,length(mapgc)) = mapgc then begin
-            s:=copy(form4.ListBox1.Items.Strings[x],10+length(mapgc),3);  //the reg
-            i:=strtoint(s);
-            if (tmpreg[i] < 30) and (tmpreg[i+1] < 46) then
-            if mapid[tmpreg[i+1]]+tmpreg[i+3] < 123 then begin
-            mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
-            mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
-            floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
-            Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
-            end;
-        end;
-        if copy(form4.ListBox1.Items.Strings[x],9,length(mappc)) = mappc then begin
-            s:=copy(form4.ListBox1.Items.Strings[x],10+length(mappc),3);  //the reg
-            i:=strtoint(s);
-            if (tmpreg[i] < 30) then
-            if mapid[tmpreg[i]]+tmpreg[i+2] < 123 then begin
-            mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i]]+tmpreg[i+2] ];
-            mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i]]+tmpreg[i+2] ];
-            floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i]]+tmpreg[i+2] ];
-            Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i]]+tmpreg[i+2] ];
-            end;
-        end;
+    mapbb:=GetOpcodeName($f951)+' ';
 
-
+    if not fmScriptTE.Visible then
+    begin
+      for x:=0 to form4.ListBox1.Items.Count-1 do begin
+          if copy(form4.ListBox1.Items.Strings[x],9,6) = 'leti R' then begin
+              s:=copy(form4.ListBox1.Items.Strings[x],15,15);
+              i:=pos(',',s);
+              y:=strtoint(copy(s,1,i-1));
+              delete(s,1,i+1);
+              if not showdecimal then
+                tmpreg[y]:=hextoint(s)
+              else tmpreg[y] := strtoint(s);
+          end;
+          if copy(form4.ListBox1.Items.Strings[x],9,length(mapgc)) = mapgc then begin
+              s:=copy(form4.ListBox1.Items.Strings[x],10+length(mapgc),3);  //the reg
+              i:=strtoint(s);
+              if (tmpreg[i] < 30) and (tmpreg[i+1] < 46) then
+              if mapid[tmpreg[i+1]]+tmpreg[i+3] < 123 then begin
+              mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              end;
+          end;
+          if (copy(form4.ListBox1.Items.Strings[x],9,length(mapbb)) = mapbb) and importscan then begin
+               s:=form4.Listbox1.Items.Strings[x];
+               delete(s,1,9+length(GetOpcodeName($f951)));
+               if not showdecimal then
+               begin
+                 x3:=hextoint(copy(s,1,2));
+                 g:=hextoint(copy(s,5,4));
+                 y3:=hextoint(copy(s,11,2));
+               end
+               else
+               begin
+                 x3:=strtoint(copy(s,1,2));
+                 g:=strtoint(copy(s,5,4));
+                 y3:=strtoint(copy(s,11,2));
+               end;
+               if x3 < 30 then begin
+               mapxvmfile[x3]:=path+'map\xvm\'+mapxvmname[mapid[g]+y3];
+               mapfile[x3]:=path+'map\'+mapfilename[mapid[g]+y3];
+               floor[x3].floorid:=MapArea[mapid[g]+y3];
+               Form1.CheckListBox1.Items.Strings[x3]:=mapname[mapid[g]+y3];
+             end;
+          end;
+          if copy(form4.ListBox1.Items.Strings[x],9,length(mappc)) = mappc then begin
+              s:=copy(form4.ListBox1.Items.Strings[x],10+length(mappc),3);  //the reg
+              i:=strtoint(s);
+              if (tmpreg[i] < 30) then
+              if mapid[tmpreg[i]]+tmpreg[i+2] < 123 then begin
+              mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              end;
+          end;
+      end;
+    end
+    else if fmScriptTE.Visible then
+    begin
+      for x:=0 to fmScriptTE.TextEdit.Lines.Count-1 do begin
+          if copy(fmScriptTE.TextEdit.Lines[x],9,6) = 'leti R' then begin
+              s:=copy(fmScriptTE.TextEdit.Lines[x],15,15);
+              i:=pos(',',s);
+              y:=strtoint(copy(s,1,i-1));
+              delete(s,1,i+1);
+              if not showdecimal then
+                tmpreg[y]:=hextoint(s)
+              else tmpreg[y] := strtoint(s);
+          end;
+          if copy(fmScriptTE.TextEdit.Lines[x],9,length(mapgc)) = mapgc then begin
+              s:=copy(fmScriptTE.TextEdit.Lines[x],10+length(mapgc),3);  //the reg
+              i:=strtoint(s);
+              if (tmpreg[i] < 30) and (tmpreg[i+1] < 46) then
+              if mapid[tmpreg[i+1]]+tmpreg[i+3] < 123 then begin
+              mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i+1]]+tmpreg[i+3] ];
+              end;
+          end;
+         if (copy(fmScriptTE.TextEdit.Lines[x],9,length(mapbb)) = mapbb) and importscan then begin
+               s:=fmScriptTE.TextEdit.Lines[x];
+               delete(s,1,9+length(GetOpcodeName($f951)));
+               if not showdecimal then
+               begin
+                 x3:=hextoint(copy(s,1,2));
+                 g:=hextoint(copy(s,5,4));
+                 y3:=hextoint(copy(s,11,2));
+               end
+               else
+               begin
+                 x3:=strtoint(copy(s,1,2));
+                 g:=strtoint(copy(s,5,4));
+                 y3:=strtoint(copy(s,11,2));
+               end;
+               if x3 < 30 then begin
+               mapxvmfile[x3]:=path+'map\xvm\'+mapxvmname[mapid[g]+y3];
+               mapfile[x3]:=path+'map\'+mapfilename[mapid[g]+y3];
+               floor[x3].floorid:=MapArea[mapid[g]+y3];
+               Form1.CheckListBox1.Items.Strings[x3]:=mapname[mapid[g]+y3];
+             end;
+          end;
+          if copy(fmScriptTE.TextEdit.Lines[x],9,length(mappc)) = mappc then begin
+              s:=copy(fmScriptTE.TextEdit.Lines[x],10+length(mappc),3);  //the reg
+              i:=strtoint(s);
+              if (tmpreg[i] < 30) then
+              if mapid[tmpreg[i]]+tmpreg[i+2] < 123 then begin
+              mapxvmfile[tmpreg[i]]:=path+'map\xvm\'+mapxvmname[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              mapfile[tmpreg[i]]:=path+'map\'+mapfilename[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              floor[tmpreg[i]].floorid:=MapArea[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              Form1.CheckListBox1.Items.Strings[tmpreg[i]]:=mapname[mapid[tmpreg[i]]+tmpreg[i+2] ];
+              end;
+          end;
+      end;
     end;
+end;
 
+procedure UpdateScriptRefs();
+var
+  i,j,x,labelnum: integer;
+  reftype,currentline,labelstr: widestring;
+  opcodestr: string;
+begin
+  // Sort opcode list by name string length (highest to lowest)
+  for i := 0 to Length(asmcode) - 1 do
+    opcodelist[i] := asmcode[i];
+    TArray.Sort<TAsmFnc>(opcodelist,TDelegatedComparer<TAsmFnc>.Construct(
+  function(const Right, Left: TAsmFnc): Integer
+  begin
+    Result := Length(Left.name) - Length(Right.name);
+  end
+  ));
+
+  form14.Caption := 'Adding References';
+  form14.Label1.Hide;
+  form14.Show;
+  form14.ProgressBar1.max := form4.Listbox1.Items.Count - 1;
+
+  // Clear data references
+  for i := 0 to 1000 do datablock[i]:=-1;
+
+   // Clear and re-initialize the treeview
+  form4.TreeView1.Items.Clear;
+  TrFnc := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Function');
+  TrData := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Data/Str');
+  TrReg := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Register');
+  Tropc := form4.TreeView1.Items.Add(form4.TreeView1.Items.GetFirstNode, 'Opcode');
+  TrData.Text := getlanguagestring(133);
+  TrFnc.Text := getlanguagestring(132);
+  TrReg.Text := getlanguagestring(134);
+  Tropc.Text := getlanguagestring(135);
+  TrFnc.ImageIndex := 2;
+  TrFnc.SelectedIndex := 2;
+  TrData.ImageIndex := 2;
+  TrData.SelectedIndex := 2;
+  TrReg.ImageIndex := 2;
+  TrReg.SelectedIndex := 2;
+  Tropc.ImageIndex := 2;
+  Tropc.SelectedIndex := 2;
+  TsData.Clear;
+  TsFnc.Clear;
+  TsReg.Clear;
+  Tsopc.Clear;
+
+  for i := 0 to form4.Listbox1.Items.Count - 1 do
+  begin
+    form14.ProgressBar1.Position := i;
+    form14.Repaint;
+    currentline := form4.Listbox1.Items[i];
+    if currentline <> '' then
+    begin
+      // Update all label flag data references
+      x := pos(':',form4.Listbox1.Items[i]);
+      if (x <= 6) and (x <> 0) then
+      begin
+        labelstr := copy(currentline, 1, x-1);
+        currentline := copy(currentline, x+1, length(currentline));
+        currentline := TrimLeft(currentline);
+        reftype := copy(currentline, 1, 4);
+        if TryStrToInt(labelstr, labelnum) then
+        begin
+          if reftype = 'STR:' then
+            AddStrRef(labelnum)
+          else if reftype = 'HEX:' then
+            AddDataRef(labelnum)
+          else AddLabel(labelnum);
+      end;
+      end;
+
+      // Update registers
+      for j := 0 to 255 do
+      begin
+          if IsWordInString(PChar(form4.Listbox1.Items[i]),
+          'R'+inttostr(j),[soDown, soWholeWord, soMatchCase]) then
+            AddRegister(j);
+      end;
+
+      // Update functions used
+      opcodestr := '';
+      opcodestr := copy(form4.Listbox1.Items[i], 9, form4.Listbox1.Items[i].Length);
+      for j := 0 to length(opcodelist) - 1 do
+      begin
+        if (opcodelist[j].name <> '') and (opcodestr.StartsWith(opcodelist[j].name)) then
+        begin
+          AddFunctionUsed(AnsiString(opcodelist[j].name));
+          break;
+        end;
+      end;
+    end;
+  end;
+  form14.Hide;
+  form14.Caption := '3D Processing';
+  form14.ProgressBar1.Position := 1;
+  form14.Label1.Show;
 end;
 
 procedure TForm4.Button3Click(Sender: TObject);
 begin
     form5.Tag:=0;
     form5.Edit5.Text:='';
-    if showdecimal then
-    begin
-      lastmode:=1;
-      form5.TabControl1.TabIndex := 1;
-    end
-    else
-    begin
-      lastmode:=0;
-      form5.TabControl1.TabIndex := 0;
-    end;
     form5.TabControl1Change(form5);
     Form5.ShowModal;
+    if listbox1.ItemIndex > -1 then
+      listbox1Click(nil);
 end;
 
 procedure TForm4.Button5Click(Sender: TObject);
@@ -643,15 +868,9 @@ begin
         inc(x);
         end;
         if showdecimal then
-        begin
-          lastmode:=1;
-          form5.TabControl1.TabIndex := 1;
-        end
+          lastmode:=1
         else
-        begin
           lastmode:=0;
-          form5.TabControl1.TabIndex := 0;
-        end;
         form5.TabControl1Change(form5);
         Form5.ShowModal;
     end;
@@ -667,6 +886,7 @@ begin
             listbox1.Items.Strings[listbox1.ItemIndex-1];
         listbox1.Items.Strings[listbox1.ItemIndex-1]:=s;
         Listbox1.ItemIndex:=ListBox1.ItemIndex-1;
+        listbox1Click(nil);
     end;
 end;
 
@@ -680,6 +900,7 @@ begin
             listbox1.Items.Strings[listbox1.ItemIndex+1];
         listbox1.Items.Strings[listbox1.ItemIndex+1]:=s;
         Listbox1.ItemIndex:=ListBox1.ItemIndex+1;
+        listbox1Click(nil);
     end;
 end;
 
@@ -694,13 +915,29 @@ begin
     while i = 0 do begin
         inc(x);
         if x = listbox1.Items.count then x:=0;
-        if pos(lowercase(edit1.Text),lowercase(listbox1.Items.Strings[x]))>0 then begin
-            i:=1;
-            break;
+        if treesearch and (pos(' ',edit1.Text) = 0) then
+        begin
+          if TRegEx.IsMatch(listbox1.Items.Strings[x],
+          '(?<![a-zA-Z0-9_<>=!])'+edit1.Text+'(?![a-zA-Z0-9_<>=!])') then
+          begin
+              i:=1;
+              break;
+          end;
+        end
+        else
+        begin
+          if pos(lowercase(edit1.Text),lowercase(listbox1.Items.Strings[x]))>0 then begin
+              i:=1;
+              break;
+          end;
         end;
         if x = y then break;
     end;
-    if i=1 then listbox1.ItemIndex:=x
+    if i=1 then
+    begin
+      listbox1.ItemIndex:=x;
+      listbox1Click(nil);
+    end
     else MessageDlg(getlanguagestring(177), mtInformation,
       [mbOk], 0);
 
@@ -733,6 +970,8 @@ end;
 
 procedure TForm4.Button8Click(Sender: TObject);
 begin
+    if fmScriptTE.Visible then
+      form4.Show;
     if savedialog1.Execute then begin
         //listbox1.WideItems.SaveUnicode:=true;
          listbox1.Items.SaveToFile(savedialog1.FileName);
@@ -741,8 +980,14 @@ end;
 
 procedure TForm4.Button9Click(Sender: TObject);
 begin
+    if fmScriptTE.Visible then
+      form4.Show;
     if opendialog1.Execute then begin
-    listbox1.Items.LoadFromFile(opendialog1.FileName);
+        listbox1.Items.LoadFromFile(opendialog1.FileName);
+        UpdateScriptRefs;
+        importscan := true;
+        ScanForMap;
+        importscan := false;
         isedited:=true;
     end;
 end;
@@ -817,7 +1062,9 @@ begin
     if copy(treeview1.Selected.Text,1,2) = 'F_' then begin s:=copy(treeview1.Selected.Text,3,length(treeview1.Selected.Text)-2)+':'+copy('        ',1,9-length(treeview1.Selected.Text)); listbox1.ItemIndex:=0; end;
     if copy(treeview1.Selected.Text,1,2) = 'S_' then begin s:=copy(treeview1.Selected.Text,3,length(treeview1.Selected.Text)-2)+':'+copy('        ',1,9-length(treeview1.Selected.Text)); listbox1.ItemIndex:=0; end;
     edit1.Text:=s;
+    treesearch := true;
     button6click(self);
+    treesearch := false;
     end;
 end;
 
@@ -931,7 +1178,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form20.SpinEdit1.Value) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form20.SpinEdit1.Value) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -941,6 +1188,14 @@ begin
     for x:=0 to asmcount-1 do
         if AsmCode[x].fnc = id then break;
     result:=AsmCode[x].name;
+end;
+
+Function GetOpcodeId(opcodename:ansistring):dword;
+var x:integer;
+begin
+   for x:=0 to asmcount-1 do
+          if AsmCode[x].name = opcodename then break;
+      result:=AsmCode[x].fnc;
 end;
 
 Function GetReferenceType(x:integer):integer;
@@ -1195,7 +1450,7 @@ end;
 procedure TForm4.Decimal1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice, lastcaret: integer;
+  choice, lastcaret, lastline, lastindex: integer;
 begin
     if not Decimal1.Checked then
     begin
@@ -1212,6 +1467,8 @@ begin
         Reg := TRegistry.Create;
         choice := listbox1.ItemIndex;
         lastcaret := fmScriptTE.TextEdit.CaretIndex;
+        lastline := fmScriptTE.TextEdit.TopLine;
+        lastindex := listbox1.TopIndex;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -1225,7 +1482,9 @@ begin
         try
           QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
           listbox1.ItemIndex := choice;
-          fmScriptTE.TextEdit.CaretIndex := lastcaret;
+          listbox1.TopIndex := lastindex;
+          fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+          fmScriptTE.TextEdit.TopLine := lastline;
         except
           Showmessage('Error reloading quest data.');
         end;
@@ -1304,7 +1563,8 @@ begin
         inc(y);
         AddDataRef(form21.tag);
         if y < 0 then y:=0;
-        s:=inttostr(form21.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form21.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         for x:=0 to 15 do begin
@@ -1327,7 +1587,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form21.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form21.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1387,7 +1647,8 @@ begin
         inc(y);
         AddDataRef(form24.tag);
         if y < 0 then y:=0;
-        s:=inttostr(form24.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form24.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         for x:=0 to 15 do begin
@@ -1410,7 +1671,7 @@ begin
         end;
         x:=0;
         while x < 4 do begin
-            if z = 17 then begin
+            if z = 16 then begin
                 listbox1.Items.Insert(y,s);
                 inc(y);
                 s:='        HEX: ';
@@ -1422,7 +1683,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form24.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form24.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1510,7 +1771,8 @@ begin
         AddDataRef(form25.tag);
         inc(y);
         if y < 0 then y:=0;
-        s:=inttostr(form25.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form25.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         for x:=0 to 15 do begin
@@ -1533,7 +1795,7 @@ begin
         end;
         x:=0;
         while x < 4 do begin
-            if z = 17 then begin
+            if z = 16 then begin
                 listbox1.Items.Insert(y,s);
                 inc(y);
                 s:='        HEX: ';
@@ -1545,7 +1807,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form25.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form25.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1604,7 +1866,8 @@ begin
         AddDataRef(form26.tag);
         inc(y);
         if y < 0 then y:=0;
-        s:=inttostr(form26.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form26.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         for x:=0 to 15 do begin
@@ -1639,7 +1902,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form26.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form26.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1650,7 +1913,7 @@ begin
 end;
 
 procedure TForm4.Ascode1Click(Sender: TObject);
-var x,i,choice:integer;
+var x,i,choice,lastindex:integer;
 begin
     if isedited then
       choice := MessageDlg(getlanguagestring(188),
@@ -1666,9 +1929,11 @@ begin
           datablock[i]:=section1.Tag;
           datablockt[i]:=x;
       end;
+      lastindex := listbox1.TopIndex;
       try
       QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
       listbox1.ItemIndex := choice;
+      listbox1.TopIndex := lastindex;
       except
           Showmessage(getlanguagestring(189));
       end;
@@ -1731,6 +1996,11 @@ begin
     form4.StatusBar1.Panels.Items[0].Width:=form4.TreeView1.Width+4;
 end;
 
+procedure TForm4.Switcheditors1Click(Sender: TObject);
+begin
+  form1.SwitchScriptEditor1Click(nil);
+end;
+
 procedure TForm4.ListBox1Click(Sender: TObject);
 begin
     form4.StatusBar1.Panels.Items[1].Text:=inttostr(listbox1.ItemIndex);
@@ -1751,6 +2021,8 @@ begin
     dec(y);
     listbox1.ItemIndex:=y;
     isedited:=true;
+    if listbox1.ItemIndex > -1 then
+      listbox1Click(nil);
 end;
 
 procedure TForm4.ListBox1KeyUp(Sender: TObject; var Key: Word;
@@ -1764,7 +2036,7 @@ begin
             delete(s,1,8);
             x:=pos(' ',s);
             if x > 0 then s:=copy(s,1,x-1);
-            shellexecute(0,'open',pchar('http://qedit.schtserv.com/index.php?title='+s),'','',0);
+            shellexecute(0,'open',pchar('http://qedit.info/index.php?title='+s),'','',0);
         end;
     end;
 end;
@@ -1831,7 +2103,8 @@ begin
         AddDataRef(form28.tag);
         inc(y);
         if y < 0 then y:=0;
-        s:=inttostr(form28.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form28.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         i:=floatcount*4;
@@ -1857,7 +2130,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form28.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form28.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -1866,6 +2139,8 @@ var b,f:string;
     s:widestring;
     inedit:boolean;
     x,y,z,i:integer;
+    p: PByte;
+    tmp: Byte;
 begin
     //fillchar(MyFload,sizeof(EnemyMovData),0);
     if listbox1.ItemIndex <> -1 then
@@ -1900,7 +2175,22 @@ begin
             end;
 
         end;
+        p := PByte(@form33.symbolData.face);
+        if (p[0] = $00) and (p[1] = $00)
+        and ((p[2] <> $00) or (p[3] <> $00)) then
+        begin
+          form33.chkGCEndian.Checked := true;
+          // Reverse first 4 bytes
+          tmp := p[0]; p[0] := p[3]; p[3] := tmp;
+          tmp := p[1]; p[1] := p[2]; p[2] := tmp;
 
+          // Reverse next 4 words
+          tmp := p[4]; p[4] := p[5]; p[5] := tmp;
+          tmp := p[6]; p[6] := p[7]; p[7] := tmp;
+          tmp := p[8]; p[8] := p[9]; p[9] := tmp;
+          tmp := p[10]; p[10] := p[11]; p[11] := tmp;
+        end
+        else form33.chkGCEndian.Checked := false;
     end;
 
 
@@ -1918,13 +2208,23 @@ begin
         AddDataRef(form32.tag);
         inc(y);
         if y < 0 then y:=0;
-        s:=inttostr(form33.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form33.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         i:=sizeof(TSymbolData);
         if i > 15 then i:=15;
-        for x:=0 to i do begin
-            s:=s+inttohex(byte(pansichar(@form33.symbolData.face)[x]),2)+' ';
+        for x := 0 to i do
+        begin
+          if form33.chkGCEndian.Checked and (x <= 11) then
+          begin
+            if x < 4 then
+              s := s + IntToHex(Byte(PAnsiChar(@form33.symbolData.face)[3 - x]), 2) + ' '
+            else if (x < 12) then
+              s := s + IntToHex(Byte(PAnsiChar(@form33.symbolData.face)[(x or 1) - (x and 1)]), 2) + ' ';
+          end
+          else
+            s := s + IntToHex(Byte(PAnsiChar(@form33.symbolData.face)[x]), 2) + ' ';
         end;
         listbox1.Items.Insert(y,s);
         inc(y);
@@ -1944,7 +2244,7 @@ begin
         end;
         if length(s) > 13 then listbox1.Items.Insert(y,s + '00 00 00 00');
 
-        if GetReferenceType(form33.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form33.tag) = 0 then showmessage(getlanguagestring(179));
     end;
 end;
 
@@ -2006,7 +2306,8 @@ begin
         AddDataRef(form32.tag);
         inc(y);
         if y < 0 then y:=0;
-        s:=inttostr(form32.tag)+':';
+        if sender = fmScriptTE then s:=inttostr(nextlabel)+':'
+        else s:=inttostr(form32.tag)+':';
         while length(s) < 8 do s:=s+' ';
         s:=s+'HEX: ';
         i:=form32.vectorCount*16;
@@ -2036,8 +2337,14 @@ begin
         inc(y);
         listbox1.Items.Insert(y,s);
 
-        if GetReferenceType(form32.tag) = 0 then showmessage(getlanguagestring(179));
+        // if GetReferenceType(form32.tag) = 0 then showmessage(getlanguagestring(179));
     end;
+end;
+
+procedure TForm4.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+   scriptline := form4.listbox1.itemindex;
+   scriptindex := form4.listbox1.TopIndex;
 end;
 
 procedure TForm4.FormCreate(Sender: TObject);
@@ -2045,16 +2352,25 @@ begin
    // listbox1:=TMyNewUnicode.create;
 end;
 
+procedure TForm4.FormHide(Sender: TObject);
+begin
+   scriptline := form4.listbox1.itemindex;
+   scriptindex := form4.listbox1.TopIndex;
+end;
+
 procedure TForm4.FormShow(Sender: TObject);
 begin
   if fmScriptTE.Visible then
     fmScriptTE.Close;
+
+  form4.listbox1.itemindex := scriptline;
+  form4.listbox1.TopIndex := scriptindex;
 end;
 
 procedure TForm4.Hex1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice, lastcaret: integer;
+  choice, lastcaret, lastline, lastindex: integer;
 begin
     if not Hex1.Checked then
     begin
@@ -2071,6 +2387,8 @@ begin
         Reg := TRegistry.Create;
         choice := listbox1.ItemIndex;
         lastcaret := fmScriptTE.TextEdit.CaretIndex;
+        lastline := fmScriptTE.TextEdit.TopLine;
+        lastindex := listbox1.TopIndex;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -2081,13 +2399,15 @@ begin
         finally
           Reg.Free;
         end;
-      end;
-      try
-        QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
-        listbox1.ItemIndex := choice;
-        fmScriptTE.TextEdit.CaretIndex := lastcaret;
-      except
-        Showmessage('Error reloading quest data.');
+        try
+          QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+          listbox1.ItemIndex := choice;
+          listbox1.TopIndex := lastindex;
+          fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+          fmScriptTE.TextEdit.TopLine := lastline;
+        except
+          Showmessage('Error reloading quest data.');
+        end;
       end;
     end;
 end;
@@ -2095,7 +2415,7 @@ end;
 procedure TForm4.HideNOPs1Click(Sender: TObject);
 var
   Reg: TRegistry;
-  choice, lastcaret: integer;
+  choice, lastcaret, lastline, lastindex: integer;
 begin
       if isedited then
         choice := MessageDlg('Changing the NOP opcode display will cancel any unsaved changes, continue?',
@@ -2108,6 +2428,8 @@ begin
         Reg := TRegistry.Create;
         choice := listbox1.ItemIndex;
         lastcaret := fmScriptTE.TextEdit.CaretIndex;
+        lastline := fmScriptTE.TextEdit.TopLine;
+        lastindex := listbox1.TopIndex;
         try
           Reg.RootKey := HKEY_CURRENT_USER;
         if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
@@ -2118,13 +2440,15 @@ begin
         finally
           Reg.Free;
         end;
-      end;
-      try
-        QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
-        listbox1.ItemIndex := choice;
-        fmScriptTE.TextEdit.CaretIndex := lastcaret;
-      except
-        Showmessage('Error reloading quest data.');
+        try
+          QuestDisam(@asmdata,AsmRef,asmdatas,asmrefs);
+          listbox1.ItemIndex := choice;
+          listbox1.TopIndex := lastindex;
+          fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+          fmScriptTE.TextEdit.TopLine := lastline;
+        except
+          Showmessage('Error reloading quest data.');
+        end;
       end;
 end;
 

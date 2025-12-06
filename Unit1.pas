@@ -86,7 +86,7 @@ const
     'Del Rappy', // 7
     'Saint Million', 'Shambertin', 'Kondrieu', 'Vol Opt Part A', 'NPC Rappy', 'Unknown');
   MapID: array [0 .. 45] of integer = (0, 1, 2, 3, 9, 15, 21, 27, 33, 38, 43, 48, 49, 50, 51, 52, 67, 70 // ep1 0-17
-    , 73, 80, 83, 74, 77, 86, 87, 88, 89, 92, 93, 96, 99, 100, 101, 102, 103, 104 // ep2 18 -  35
+    , 73, 74, 77, 80, 83, 86, 87, 88, 89, 92, 93, 96, 99, 100, 101, 102, 103, 104 // ep2 18 -  35
     , 109, 110, 111, 112, 113, 114, 117, 118, 121, 122 // ep4 36 - 44
     );
   EPMap: array [0 .. 2] of integer = (0, 18, 36);
@@ -108,11 +108,11 @@ const
     'map_soccer11c.rel', 'map_vs01_00c.rel', 'map_vs01_01c.rel', 'map_vs01_02c.rel', 'map_vs02_00c.rel',
     'map_vs02_01c.rel', 'map_vs02_02c.rel', // episode 2
     'map_labo00_00c.rel', // 73
-    'map_space01_00c.rel', // 74
-    'map_space01_01c.rel', 'map_space01_02c.rel', 'map_space02_00c.rel', // 77
-    'map_space02_01c.rel', 'map_space02_02c.rel', 'map_ruins01_00c.rel', // 80
+    'map_ruins01_00c.rel', // 80
     'map_ruins01_01c.rel', 'map_ruins01_02c.rel', 'map_ruins02_00c.rel', // 83
-    'map_ruins02_01c.rel', 'map_ruins02_02c.rel', 'map_jungle01_00c.rel', // 86
+    'map_ruins02_01c.rel', 'map_ruins02_02c.rel', 'map_space01_00c.rel', // 74
+    'map_space01_01c.rel', 'map_space01_02c.rel', 'map_space02_00c.rel', // 77
+    'map_space02_01c.rel', 'map_space02_02c.rel', 'map_jungle01_00c.rel', // 86
     'map_jungle02_00c.rel', // 87
     'map_jungle03_00c.rel', // 88
     'map_jungle04_00c.rel', // 89
@@ -151,11 +151,11 @@ const
     'map_soccer11.xvm', 'map_soccer11.xvm', 'map_vs01.xvm', 'map_vs01.xvm', 'map_vs01.xvm', 'map_vs02.xvm',
     'map_vs02.xvm', 'map_vs02.xvm', // episode 2
     'map_labo00.xvm', // 73
-     'map_space01.xvm', // 74
-    'map_space01.xvm', 'map_space01.xvm', 'map_space02.xvm', // 77
-    'map_space02.xvm', 'map_space02.xvm', 'map_ruins01.xvm', // 80
+    'map_ruins01.xvm', // 80
     'map_ruins01.xvm', 'map_ruins01.xvm', 'map_ruins02.xvm', // 83
-    'map_ruins02.xvm', 'map_ruins02.xvm', 'map_jungle01.xvm', // 86
+    'map_ruins02.xvm', 'map_ruins02.xvm', 'map_space01.xvm', // 74
+    'map_space01.xvm', 'map_space01.xvm', 'map_space02.xvm', // 77
+    'map_space02.xvm', 'map_space02.xvm', 'map_jungle01.xvm', // 86
     'map_jungle02.xvm', // 87
     'map_jungle03.xvm', // 88
     'map_jungle04.xvm', // 89
@@ -191,11 +191,11 @@ const
     'BA: Palace - map 1', 'BA: Palace - map 2', 'BA: Palace - map 3',
     // episode 2
     'Labo', // 73
-    'Space Ship alpha - map 1', // 74
-    'Space Ship alpha - map 2', 'Space Ship alpha - map 3', 'Space Ship beta - map 1', // 77
-    'Space Ship beta - map 2', 'Space Ship beta - map 3', 'Temple alpha - map 1', // 80
+    'Temple alpha - map 1', // 80
     'Temple alpha - map 2', 'Temple alpha - map 3', 'Temple beta - map 1', // 83
-    'Temple beta - map 2', 'Temple beta - map 3', 'CCA', // 86
+    'Temple beta - map 2', 'Temple beta - map 3', 'Space Ship alpha - map 1', // 74
+    'Space Ship alpha - map 2', 'Space Ship alpha - map 3', 'Space Ship beta - map 1', // 77
+    'Space Ship beta - map 2', 'Space Ship beta - map 3', 'CCA', // 86
     'Jungle north', // 88
     'Jungle east', // 87
 
@@ -300,6 +300,7 @@ Function QuestDisam(code: pansichar; ref: array of dword; CodeLength, RefCount: 
 Function QuestBuild(code: pansichar): dword;
 function MakeUni(s: ansistring): ansistring;
 function GetDisplayValue(value: dword; size: byte): ansistring;
+function HexToSignedInt(const hexstring: string; numbits: integer): integer;
 function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
 
 implementation
@@ -317,21 +318,46 @@ begin
 end;
 
 function GetDisplayValue(value: dword; size: byte): ansistring;
+var
+  s: ansistring;
 begin
-  if showdecimal then result := Format('%.' + inttostr(size) + 'd', [value])
-  else result := inttohex(value, size);
+  s := inttohex(value, size);
+  if showdecimal then
+  begin
+    if value < 0 then
+      value := HexToSignedInt(s, (size*4)-1);
+    s := Format('%.' + inttostr(size) + 'd', [value]);
+  end;
+  result := s;
+end;
+
+function HexToSignedInt(const hexstring: string; numbits: integer): integer;
+var
+  intvalue: cardinal;
+  signMask: cardinal;
+begin
+  intvalue := strtoint('$' + hexstring);
+  signmask := 1 shl (numbits - 1);
+  if (intvalue and signmask) <> 0 then
+  begin
+    result := - ( (not intvalue and ((1 shl numbits) - 1)) + 1 );
+  end
+  else
+  begin
+    result := intvalue;
+  end;
 end;
 
 Function QuestDisam(code: pansichar; ref: array of dword; CodeLength, RefCount: integer): boolean;
 var
-  x, y, v, i, px, dlength, ll: integer;
-  s, b: ansistring;
+  x, x2, y, v, i, px, dlength, ll: integer;
+  s, b, opc: ansistring;
   z, r60, r62, lr: dword;
   m: single;
   p: pansichar;
   StackP, stackb: integer;
   Stack: array [0 .. 400] of TPSOStack;
-  inva: boolean;
+  inva, hasargr, hasargl, hasargb, hasargw, hasarga, hasargo, hasargs: boolean;
 
 begin
   // init the treeview
@@ -481,7 +507,17 @@ begin
 
         if (z >= $48) and (z <= $4E) and (not inva) then
         begin
+          // Re-parse the script if the AsmMode changed and the quest was loaded as a .bin
+          if (AsmMode <> 2) and ((lastloadformat = 1) or (lastloadformat = 2)) then
+          begin
+            AsmMode := 2;
+            QuestDisam(code, ref, CodeLength, RefCount);
+            exit;
+          end;
+
+          // This technically shouldn't be needed, but kept in to avoid risk of breaking things in rare cases
           AsmMode := 2;
+
           // stackb:=0;
           Stack[StackP].DataType := z - $48;
           if (z = $48) or (z = $4A) then
@@ -1129,11 +1165,45 @@ begin
   // Clean up remaining nops if the option is enabled
   if hidenops then
   begin
+    DelOpcode(GetOpcodeName($0));
     for i := form4.Listbox1.items.count - 1 downto 0 do
     begin
-      if form4.Listbox1.items[i].contains('        nop') then
-        form4.ListBox1.Items.Delete(i);
+      if form4.Listbox1.items[i].StartsWith('        '+GetOpcodeName(0)+ ' ')
+      then form4.ListBox1.Items.Delete(i);
     end;
+  end;
+
+  // Clean up opcode references for script mode 2 quests
+  if asmmode = 2 then
+  begin
+    hasargr := false;
+    hasargl := false;
+    hasargb := false;
+    hasargw := false;
+    hasarga := false;
+    hasargo := false;
+    hasargs := false;
+    for i := 0 to form4.Listbox1.items.count - 1 do
+    begin
+      opc:= form4.listbox1.Items.Strings[i];
+      delete(opc,1,8);
+      x2:=pos(' ',opc);
+      if x2 > 0 then opc:=copy(opc,1,x2-1);
+      if (opc + ' ') = (GetOpcodeName($48) + ' ') then hasargr := true;
+      if (opc + ' ') = (GetOpcodeName($49) + ' ') then hasargl := true;
+      if (opc + ' ') = (GetOpcodeName($4a) + ' ') then hasargb := true;
+      if (opc + ' ') = (GetOpcodeName($4b) + ' ') then hasargw := true;
+      if (opc + ' ') = (GetOpcodeName($4c) + ' ') then hasarga := true;
+      if (opc + ' ') = (GetOpcodeName($4d) + ' ') then hasargo := true;
+      if (opc + ' ') = (GetOpcodeName($4e) + ' ') then hasargs := true;
+    end;
+    if not hasargr then DelOpcode(GetOpcodeName($48));
+    if not hasargl then DelOpcode(GetOpcodeName($49));
+    if not hasargb then DelOpcode(GetOpcodeName($4a));
+    if not hasargw then DelOpcode(GetOpcodeName($4b));
+    if not hasarga then DelOpcode(GetOpcodeName($4c));
+    if not hasargo then DelOpcode(GetOpcodeName($4d));
+    if not hasargs then DelOpcode(GetOpcodeName($4e));
   end;
 
   // Insert script lines into text editor if visible
@@ -1162,7 +1232,7 @@ Function QuestBuild(code: pansichar): dword;
 var
   b, cmd, o: widestring;
   s, v: widestring;
-  x, p, y, z, i, j, g, d, ll, kkk, oldval, um, lastsection: integer;
+  x, p, y, z, i, j, g, d, ll, kkk, oldval, um, lastsection, lastcaret, lastindex: integer;
   m: single;
   a: ansistring;
   dw: dword;
@@ -1170,16 +1240,21 @@ begin
   // Copy text editor lines if visible
   if fmScriptTE.Visible then
   begin
-    UpdateTextRefs();
+    lastcaret := fmScriptTE.TextEdit.CaretIndex;
+    lastindex := fmScriptTE.TextEdit.TopLine;
+    fmScriptTE.TextEdit.MoveCaretToBeginning;
+    fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
+    fmScriptTE.TextEdit.TopLine := lastindex;
+    if TextEdited then
+      UpdateTextRefs();
     isEdited := false;
     Form4.Listbox1.Clear;
     for i := 0 to fmScriptTE.TextEdit.Lines.Count - 1 do
     begin
     if fmScriptTE.TextEdit.Lines[i] <> '' then
       begin
-        s := fmScriptTE.TextEdit.Lines[i];
-        // Replace tabs with spaces when adding back to listbox
-        s := StringReplace(s, #9, '  ', [rfReplaceAll]);
+        // Replace first 8 character tabs with spaces when adding back to listbox
+        s := replacetabs(fmScriptTE.TextEdit.Lines[i]);
         form4.ListBox1.items.add(s);
       end;
     end;
@@ -1419,9 +1494,8 @@ begin
                 code[p] := #$49;
                 inc(p);
                 if showdecimal then
-                  dw := strtoint(b)
-                else
-                  dw := hextoint(b);
+                  b := inttohex(strtoint(b));
+                dw := hextoint(b);
                 move(dw, code[p], 4);
                 inc(p, 4);
               end;
@@ -1446,9 +1520,8 @@ begin
               code[p] := #$4a;
               inc(p);
               if showdecimal then
-                code[p] := ansichar(strtoint(b))
-              else
-                code[p] := ansichar(hextoint(b));
+                b := inttohex(strtoint(b));
+              code[p] := ansichar(hextoint(b));
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_WORD) or (AsmCode[z].arg[i] = T_PFLAG) then
@@ -1456,19 +1529,11 @@ begin
               code[p] := #$4b;
               inc(p);
               if showdecimal then
-              begin
-                code[p] := ansichar(strtoint(b));
-                inc(p);
-                code[p] := ansichar(strtoint(b) div 256);
-                inc(p);
-              end
-              else
-              begin
-                code[p] := ansichar(hextoint(b));
-                inc(p);
-                code[p] := ansichar(hextoint(b) div 256);
-                inc(p);
-              end;
+                b := inttohex(strtoint(b));
+              code[p] := ansichar(hextoint(b));
+              inc(p);
+              code[p] := ansichar(hextoint(b) div 256);
+              inc(p);
             end
             else if (AsmCode[z].arg[i] = T_DATA) then
             begin
@@ -1593,9 +1658,8 @@ begin
                 code[p] := #$49;
                 inc(p);
                 if showdecimal then
-                  dw := strtoint(b)
-                else
-                  dw := hextoint(b);
+                  b := inttohex(strtoint(b));
+                dw := hextoint(b);
                 move(dw, code[p], 4);
                 inc(p, 4);
               end;
@@ -1656,25 +1720,17 @@ begin
             else if (AsmCode[z].arg[i] = T_BYTE) then
             begin
               if showdecimal then
-                code[p] := ansichar(strtoint(b))
-              else
-                code[p] := ansichar(hextoint(b));
+                b := inttohex(strtoint(b));
+              code[p] := ansichar(hextoint(b));
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_WORD) or (AsmCode[z].arg[i] = T_PFLAG) then
             begin
               if showdecimal then
-              begin
-                code[p] := ansichar(strtoint(b));
-                inc(p);
-                code[p] := ansichar(strtoint(b) div 256);
-              end
-              else
-              begin
-                code[p] := ansichar(hextoint(b));
-                inc(p);
-                code[p] := ansichar(hextoint(b) div 256);
-              end;
+                b := inttohex(strtoint(b));
+              code[p] := ansichar(hextoint(b));
+              inc(p);
+              code[p] := ansichar(hextoint(b) div 256);
               inc(p);
             end
             else if (AsmCode[z].arg[i] = T_DATA) or (AsmCode[z].arg[i] = T_STRDATA) then
@@ -1813,27 +1869,15 @@ begin
             else
             begin
               if showdecimal then
-              begin
-                code[p] := ansichar(strtoint(b));
-                inc(p);
-                code[p] := ansichar(strtoint(b) div 256);
-                inc(p);
-                code[p] := ansichar(strtoint(b) div $10000);
-                inc(p);
-                code[p] := ansichar(strtoint(b) div $1000000);
-                inc(p);
-              end
-              else
-              begin
-                code[p] := ansichar(hextoint(b));
-                inc(p);
-                code[p] := ansichar(hextoint(b) div 256);
-                inc(p);
-                code[p] := ansichar(hextoint(b) div $10000);
-                inc(p);
-                code[p] := ansichar(hextoint(b) div $1000000);
-                inc(p);
-              end;
+                b := inttohex(strtoint(b));
+              code[p] := ansichar(hextoint(b));
+              inc(p);
+              code[p] := ansichar(hextoint(b) div 256);
+              inc(p);
+              code[p] := ansichar(hextoint(b) div $10000);
+              inc(p);
+              code[p] := ansichar(hextoint(b) div $1000000);
+              inc(p);
             end;
             inc(i);
           end;
@@ -1845,6 +1889,10 @@ begin
         MessageDlg('Build error at line ' + inttostr(x) + #13#10 + E.Message, mtInformation, [mbOk], 0);
         form4.Show;
         form4.ListBox1.ItemIndex := x;
+        if not directoryexists(path + 'error backup') then
+          CreateDir(path + 'error backup');
+        form4.listbox1.Items.SaveToFile('error backup\' +
+        FormatDateTime('yyyy-mm-dd_hh-nn-ss', Now) + '.pasm');
         break;
       end;
     end;

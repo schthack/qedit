@@ -11,7 +11,9 @@ object Form4: TForm4
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   Position = poMainFormCenter
+  OnClose = FormClose
   OnCreate = FormCreate
+  OnHide = FormHide
   OnShow = FormShow
   TextHeight = 13
   object Splitter1: TSplitter
@@ -56,6 +58,7 @@ object Form4: TForm4
         Height = 21
         Anchors = [akTop, akRight]
         Caption = 'Search'
+        Default = True
         TabOrder = 1
         OnClick = Button6Click
       end
@@ -156,6 +159,7 @@ object Form4: TForm4
         Top = 379
         Width = 75
         Height = 25
+        Anchors = [akRight, akBottom]
         Caption = 'Edit text'
         TabOrder = 8
         OnClick = btnEditTextClick
@@ -199,6 +203,7 @@ object Form4: TForm4
       Align = alClient
       Images = ImageList1
       Indent = 19
+      ReadOnly = True
       TabOrder = 0
       OnCompare = TreeView1Compare
       OnDblClick = TreeView1DblClick
@@ -557,7 +562,7 @@ object Form4: TForm4
         OnClick = EditFloatdata1Click
       end
       object Editsymbolechat1: TMenuItem
-        Caption = 'Edit symbol chat'
+        Caption = 'Edit Symbol Chat'
         OnClick = Editsymbolechat1Click
       end
       object EditVectordata1: TMenuItem
@@ -572,7 +577,7 @@ object Form4: TForm4
         OnClick = Delete2Click
       end
       object Addsymbolechat1: TMenuItem
-        Caption = 'Add symbol chat'
+        Caption = 'Add Symbol Chat'
         OnClick = Addsymbolechat1Click
       end
     end
@@ -626,6 +631,14 @@ object Form4: TForm4
     object Delete1: TMenuItem
       Caption = 'Delete'
       OnClick = Button4Click
+    end
+    object N3: TMenuItem
+      Caption = '-'
+    end
+    object Switcheditors1: TMenuItem
+      Caption = 'Switch editor'
+      ShortCut = 32856
+      OnClick = Switcheditors1Click
     end
   end
   object SaveDialog1: TSaveDialog

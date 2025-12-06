@@ -30,6 +30,7 @@ uses main;
 procedure TForm2.Button1Click(Sender: TObject);
 begin
     Title:=Edit1.Text;
+    UpdateWindowTitle;
     isedited:=true;
     close;
 end;

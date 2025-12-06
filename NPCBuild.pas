@@ -198,7 +198,10 @@ uses main;
 
 Procedure SetControl;
 begin
-    form20.label7.Caption:=getlanguagestring(196)+' '+inttostr(form20.npcdata.section_id+1)+'/10';
+    if form1.New1.Caption.Contains('New') then
+      form20.label7.Caption:='Section ID'+' '+inttostr(form20.npcdata.section_id+1)+'/10'
+    else
+      form20.label7.Caption:=getlanguagestring(196)+' '+inttostr(form20.npcdata.section_id+1)+'/10';
     if form20.npcdata.v2_flags = 0 then form20.label10.Caption:=getlanguagestring(197)
     else form20.label10.Caption:=getlanguagestring(198)+' '+NPC_Name[form20.npcdata.extra_model];
     form20.label2.Caption:=Class_name[form20.npcdata.char_class];
@@ -765,6 +768,9 @@ procedure TForm20.Button11Click(Sender: TObject);
 begin
     dec(npcdata.section_id);
     if npcdata.section_id > 9 then npcdata.section_id:=9;
+    if form1.New1.Caption.Contains('New') then
+      label7.Caption:='Section ID'+' '+inttostr(npcdata.section_id+1)+'/10'
+    else
     label7.Caption:=getlanguagestring(205)+' '+inttostr(npcdata.section_id+1)+'/10';
     if npcscreen.Enable then begin
         NPCScreen.LookAt(0,15,-25,0,10,0);
@@ -776,6 +782,9 @@ procedure TForm20.Button12Click(Sender: TObject);
 begin
     inc(npcdata.section_id);
     if npcdata.section_id > 9 then npcdata.section_id:=0;
+    if form1.New1.Caption.Contains('New') then
+      label7.Caption:='Section ID'+' '+inttostr(npcdata.section_id+1)+'/10'
+    else
     label7.Caption:=getlanguagestring(205)+' '+inttostr(npcdata.section_id+1)+'/10';
     if npcscreen.Enable then begin
         NPCScreen.LookAt(0,15,-25,0,10,0);

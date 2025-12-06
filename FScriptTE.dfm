@@ -2,7 +2,7 @@ object fmScriptTE: TfmScriptTE
   Left = 0
   Top = 0
   Caption = 'Script Text Editor'
-  ClientHeight = 517
+  ClientHeight = 601
   ClientWidth = 794
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -13,35 +13,55 @@ object fmScriptTE: TfmScriptTE
   Menu = MainMenu1
   Position = poMainFormCenter
   OnClose = FormClose
+  OnDestroy = FormDestroy
+  OnDeactivate = FormDeactivate
+  OnHide = FormHide
   OnShow = FormShow
   TextHeight = 13
+  object Splitter1: TSplitter
+    Left = 606
+    Top = 0
+    Height = 561
+    Align = alRight
+    Visible = False
+    ExplicitLeft = 448
+    ExplicitTop = 320
+    ExplicitHeight = 100
+  end
   object TextEdit: TTextEditor
     Left = 0
     Top = 0
-    Width = 794
-    Height = 498
+    Width = 606
+    Height = 561
     Align = alClient
-    Colors.EditorStringForeground = clBlack
     CompletionProposal.Options = [cpoAutoInvoke, cpoAutoConstraints, cpoAddHighlighterKeywords, cpoFiltered]
     HighlightLine.Items = <
       item
       end>
-    LeftMargin.Visible = False
-    LeftMargin.Width = 0
+    LeftMargin.Bookmarks.Visible = False
+    LeftMargin.LineNumbers.Visible = False
+    LeftMargin.LineState.Visible = False
+    LeftMargin.Marks.Visible = False
+    LeftMargin.MarksPanel.Visible = False
+    LeftMargin.Width = 3
     OnCaretChanged = TextEditCaretChanged
     OnChange = TextEditChange
     OnClick = TextEditClick
     OnKeyDown = TextEditKeyDown
+    OnKeyUp = TextEditKeyUp
     OnMouseDown = TextEditMouseDown
+    OnMouseMove = TextEditMouseMove
     ParentShowHint = False
     RightMargin.Visible = False
+    Search.Options = [soBeepIfStringNotFound, soHighlightResults, soSearchOnTyping, soShowSearchMatchNotFound, soWrapAround]
+    Selection.Options = [soTermsCaseSensitive]
     ShowHint = True
+    SyncEdit.Active = False
     TabOrder = 0
-    Tabs.Options = [toColumns, toSelectedBlockIndent, toTabsToSpaces]
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 498
+    Top = 582
     Width = 794
     Height = 19
     Panels = <
@@ -57,10 +77,11 @@ object fmScriptTE: TfmScriptTE
       end>
   end
   object Edit2: TEdit
-    Left = 120
-    Top = 5
-    Width = 529
+    Left = 0
+    Top = 561
+    Width = 794
     Height = 21
+    Align = alBottom
     TabOrder = 2
     Visible = False
     OnExit = Edit2Exit
@@ -75,11 +96,56 @@ object fmScriptTE: TfmScriptTE
     TabOrder = 3
     OnClick = btnSearchClick
   end
+  object NotesPanel: TPanel
+    Left = 609
+    Top = 0
+    Width = 185
+    Height = 561
+    Align = alRight
+    ParentBackground = False
+    TabOrder = 4
+    Visible = False
+    object Panel2: TPanel
+      Left = 1
+      Top = 1
+      Width = 183
+      Height = 18
+      Align = alTop
+      Caption = 'Notes'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentBackground = False
+      ParentFont = False
+      PopupMenu = PopupMenu2
+      TabOrder = 0
+    end
+    object txtNotes: TMemo
+      Left = 1
+      Top = 19
+      Width = 183
+      Height = 541
+      Align = alClient
+      BorderStyle = bsNone
+      Color = clGhostwhite
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      ScrollBars = ssBoth
+      TabOrder = 1
+      OnChange = txtNotesChange
+    end
+  end
   object PopupMenu1: TPopupMenu
     Left = 344
     Top = 232
     object Addeditdata1: TMenuItem
-      Caption = 'Add/Edit data'
+      Caption = 'Add or edit data'
       object NPC1: TMenuItem
         Caption = 'NPC'
         OnClick = AddEditData
@@ -128,7 +194,7 @@ object fmScriptTE: TfmScriptTE
       end
       object Symbolchat1: TMenuItem
         Tag = 8
-        Caption = 'Symbol chat'
+        Caption = 'Symbol Chat'
         OnClick = AddEditData
       end
       object Vector1: TMenuItem
@@ -146,6 +212,13 @@ object fmScriptTE: TfmScriptTE
       Caption = 'Add new unused register'
       ShortCut = 16466
       OnClick = Newregister1Click
+    end
+    object N10: TMenuItem
+      Caption = '-'
+    end
+    object AddArgs1: TMenuItem
+      Caption = 'Prepend leti/fleti arguments'
+      OnClick = AddArgs1Click
     end
     object N3: TMenuItem
       Caption = '-'
@@ -188,29 +261,40 @@ object fmScriptTE: TfmScriptTE
       ShortCut = 46
       OnClick = Delete1Click
     end
-    object N1: TMenuItem
-      Caption = '-'
-    end
     object Undo1: TMenuItem
       Caption = 'Undo'
       ShortCut = 16474
       OnClick = Undo1Click
     end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object Switcheditor1: TMenuItem
+      Caption = 'Switch editor'
+      ShortCut = 32856
+      OnClick = Switcheditor1Click
+    end
   end
   object MainMenu1: TMainMenu
+    Images = Form1.ImageList1
     Left = 24
     Top = 24
     object File1: TMenuItem
       Caption = 'File'
       object Openfromfile1: TMenuItem
-        Caption = 'Import from file'
-        ShortCut = 16457
+        Caption = 'Open from file'
+        ImageIndex = 2
+        ShortCut = 16463
         OnClick = Openfromfile1Click
       end
       object Savetofile1: TMenuItem
-        Caption = 'Export to file'
+        Caption = 'Save to file'
+        ImageIndex = 3
         ShortCut = 16467
         OnClick = Savetofile1Click
+      end
+      object N9: TMenuItem
+        Caption = '-'
       end
       object Exit1: TMenuItem
         Caption = 'Exit'
@@ -219,8 +303,17 @@ object fmScriptTE: TfmScriptTE
     end
     object Edit1: TMenuItem
       Caption = 'Edit'
+      object AddSTRcomment1: TMenuItem
+        Caption = 'Add STR comment'
+        ImageIndex = 20
+        ShortCut = 32851
+        OnClick = AddSTRcomment1Click
+      end
+      object N11: TMenuItem
+        Caption = '-'
+      end
       object Find1: TMenuItem
-        Caption = 'Find'
+        Caption = 'Search'
         ShortCut = 16454
         OnClick = Find1Click
       end
@@ -229,10 +322,57 @@ object fmScriptTE: TfmScriptTE
         ShortCut = 16456
         OnClick = Replace1Click
       end
+      object Searchreplacesettings1: TMenuItem
+        Caption = 'Search and replace settings'
+        object Wholewords1: TMenuItem
+          Caption = 'Find whole words and registers only'
+          OnClick = Wholewords1Click
+        end
+        object Matchcase1: TMenuItem
+          Caption = 'Match case'
+          OnClick = Matchcase1Click
+        end
+        object Engine1: TMenuItem
+          Caption = 'Engine'
+          object Normal1: TMenuItem
+            Caption = 'Normal'
+            OnClick = Normal1Click
+          end
+          object Extended1: TMenuItem
+            Caption = 'Extended'
+            OnClick = Extended1Click
+          end
+          object RegularExpression1: TMenuItem
+            Caption = 'Regular Expression'
+            OnClick = RegularExpression1Click
+          end
+          object Wildcard1: TMenuItem
+            Caption = 'Wildcard'
+            OnClick = Wildcard1Click
+          end
+        end
+        object N5: TMenuItem
+          Caption = '-'
+        end
+        object Resetsettings1: TMenuItem
+          Caption = 'Reset'
+          OnClick = Resetsettings1Click
+        end
+      end
+      object N8: TMenuItem
+        Caption = '-'
+      end
       object GoToLabel1: TMenuItem
         Caption = 'Go to label'
+        ImageIndex = 13
         ShortCut = 16455
         OnClick = GoToLabel1Click
+      end
+      object GotoLine1: TMenuItem
+        Caption = 'Go to line'
+        ImageIndex = 13
+        ShortCut = 32839
+        OnClick = GotoLine1Click
       end
       object Deleteselection1: TMenuItem
         Caption = 'Delete selection'
@@ -245,10 +385,16 @@ object fmScriptTE: TfmScriptTE
       Caption = 'Format'
       object Changefont1: TMenuItem
         Caption = 'Change font'
+        ImageIndex = 22
         OnClick = Changefont1Click
       end
       object Changetextcolor1: TMenuItem
         Caption = 'Change text color'
+        ImageIndex = 23
+        object Label1: TMenuItem
+          Caption = 'Label'
+          OnClick = Label1Click
+        end
         object Opcodes1: TMenuItem
           Caption = 'Opcode'
           OnClick = Opcodes1Click
@@ -258,13 +404,22 @@ object fmScriptTE: TfmScriptTE
           OnClick = Registers1Click
         end
         object Values1: TMenuItem
-          Caption = 'Number'
+          Caption = 'Value'
           OnClick = Values1Click
+        end
+        object StringSTR1: TMenuItem
+          Caption = 'String (STR)'
+          OnClick = StringSTR1Click
+        end
+        object StringArgument1: TMenuItem
+          Caption = 'String (Argument)'
+          OnClick = StringArgument1Click
         end
       end
       object Changetheme1: TMenuItem
         Caption = 'Change theme'
         Enabled = False
+        ImageIndex = 24
         object Default1: TMenuItem
           Tag = -1
           Caption = 'Default'
@@ -378,6 +533,9 @@ object fmScriptTE: TfmScriptTE
           OnClick = ChangeTheme
         end
       end
+      object N7: TMenuItem
+        Caption = '-'
+      end
       object Setformattingdefaults1: TMenuItem
         Caption = 'Reset formatting'
         OnClick = Setformattingdefaults1Click
@@ -385,8 +543,15 @@ object fmScriptTE: TfmScriptTE
     end
     object View1: TMenuItem
       Caption = 'View'
+      object Notes1: TMenuItem
+        Caption = 'Toggle notes'
+        ImageIndex = 4
+        ShortCut = 16462
+        OnClick = Notes1Click
+      end
       object Zoom1: TMenuItem
         Caption = 'Zoom'
+        ImageIndex = 21
         object Z100: TMenuItem
           Caption = '100 %'
           OnClick = Z100Click
@@ -408,6 +573,24 @@ object fmScriptTE: TfmScriptTE
           Caption = '300 %'
           OnClick = Z300Click
         end
+      end
+    end
+    object Help1: TMenuItem
+      Caption = 'Help'
+      object Opcodes2: TMenuItem
+        Caption = 'Opcode list'
+        ImageIndex = 1
+        OnClick = Opcodes2Click
+      end
+      object ReservedRegisters1: TMenuItem
+        Caption = 'Typical register uses'
+        ImageIndex = 1
+        OnClick = ReservedRegisters1Click
+      end
+      object Functions1: TMenuItem
+        Caption = 'Common functions'
+        ImageIndex = 1
+        OnClick = Functions1Click
       end
     end
     object Hotkeys1: TMenuItem
@@ -448,5 +631,32 @@ object fmScriptTE: TfmScriptTE
   object ColorDialog1: TColorDialog
     Left = 24
     Top = 248
+  end
+  object PopupMenu2: TPopupMenu
+    Images = Form1.ImageList1
+    Left = 344
+    Top = 288
+    object NotesFont1: TMenuItem
+      Caption = 'Change font'
+      ImageIndex = 22
+      OnClick = NotesFont1Click
+    end
+    object NotesText1: TMenuItem
+      Caption = 'Change text color'
+      ImageIndex = 23
+      OnClick = NotesText1Click
+    end
+    object NotesBackground1: TMenuItem
+      Caption = 'Change background color'
+      ImageIndex = 24
+      OnClick = NotesBackground1Click
+    end
+    object N6: TMenuItem
+      Caption = '-'
+    end
+    object NotesReset1: TMenuItem
+      Caption = 'Reset formatting'
+      OnClick = NotesReset1Click
+    end
   end
 end

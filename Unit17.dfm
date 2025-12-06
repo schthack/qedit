@@ -3,8 +3,8 @@ object Form17: TForm17
   Top = 196
   BorderStyle = bsDialog
   Caption = '3D Settings'
-  ClientHeight = 274
-  ClientWidth = 180
+  ClientHeight = 297
+  ClientWidth = 177
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,6 +12,7 @@ object Form17: TForm17
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   Position = poMainFormCenter
+  OnShow = FormShow
   TextHeight = 13
   object Label1: TLabel
     Left = 16
@@ -38,10 +39,12 @@ object Form17: TForm17
     Left = 16
     Top = 32
     Width = 145
-    Height = 21
+    Height = 22
+    Style = csOwnerDrawFixed
     ItemIndex = 0
     TabOrder = 0
     Text = '320x240'
+    OnChange = ComboBox1Change
     Items.Strings = (
       '320x240'
       '640x480'
@@ -56,7 +59,8 @@ object Form17: TForm17
     Left = 16
     Top = 80
     Width = 145
-    Height = 21
+    Height = 22
+    Style = csOwnerDrawFixed
     ItemIndex = 0
     TabOrder = 1
     Text = '0'
@@ -68,19 +72,20 @@ object Form17: TForm17
   end
   object Button1: TButton
     Left = 54
-    Top = 235
+    Top = 258
     Width = 75
     Height = 25
     Caption = 'Save'
     Default = True
-    TabOrder = 6
+    TabOrder = 7
     OnClick = Button1Click
   end
   object ComboBox4: TComboBox
     Left = 16
     Top = 128
     Width = 145
-    Height = 21
+    Height = 22
+    Style = csOwnerDrawFixed
     ItemIndex = 0
     TabOrder = 2
     Text = 'Close'
@@ -111,7 +116,16 @@ object Form17: TForm17
     Top = 207
     Width = 147
     Height = 17
-    Caption = 'Fullscreen'
+    Caption = 'Fullscreen mode'
     TabOrder = 5
+    OnClick = chkFullscreenClick
+  end
+  object chkFollow: TCheckBox
+    Left = 16
+    Top = 230
+    Width = 97
+    Height = 17
+    Caption = 'Follow selection'
+    TabOrder = 6
   end
 end

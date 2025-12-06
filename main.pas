@@ -66,6 +66,12 @@ type
     arg: array [0 .. 9] of word;
   end;
 
+  TAsmArg = Record
+    opcodeid: dword;
+    argtype: ansistring;
+    argnum: integer;
+  end;
+
   TFloorIDData = Record
     count: array [0 .. 3] of integer;
     ids: array [0 .. 3, 0 .. 500] of word;
@@ -331,6 +337,12 @@ type
     SnapOptions2: TMenuItem;
     Options2: TMenuItem;
     Texteditor1: TMenuItem;
+    SwitchScriptEditor1: TMenuItem;
+    PopupMenu4: TPopupMenu;
+    Smallfont1: TMenuItem;
+    Largefont1: TMenuItem;
+    Mediumfont1: TMenuItem;
+    byGroup1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -441,6 +453,13 @@ type
     procedure smSnapOptionsClick(Sender: TObject);
     procedure SnapOptions2Click(Sender: TObject);
     procedure Texteditor1Click(Sender: TObject);
+    procedure SwitchScriptEditor1Click(Sender: TObject);
+    procedure Label5MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure Smallfont1Click(Sender: TObject);
+    procedure Largefont1Click(Sender: TObject);
+    procedure Mediumfont1Click(Sender: TObject);
+    procedure byGroup1Click(Sender: TObject);
 
 
   private
@@ -463,13 +482,19 @@ Function GetMonsterParam(id: integer): tstringlist;
 Function GetMonsterName(id: integer): ansistring;
 procedure ClearShadow;
 Function GetLanguageString(id: integer): ansistring;
+function FindClosestSection(): integer;
 procedure SetMonsterDefaults();
 procedure SetObjectDefaults();
 procedure ShowIndicator();
 procedure HideIndicator();
 procedure AdjustDistanceX(target: integer);
 procedure AdjustDistanceY(target: integer);
+procedure AdjustDistanceZ(target: integer);
 procedure CalculateWarpOffsets(rotation: dword);
+function SanitizeFileName(const AFileName: string): string;
+procedure SetCoordSize(size: integer);
+function ReplaceTabs(const S: string): string;
+procedure UpdateWindowTitle;
 
 var
   Form1: TForm1;
@@ -491,6 +516,7 @@ var
   mapfile, mapxvmfile: array [0 .. 40] of ansistring;
   lmpx, lmpy, mpx, mpy, mdown, mdrag, asmcount: integer;
   asmcode: array [0 .. 1000] of TAsmFnc;
+  asmarg: array [0 .. 1000] of TAsmArg;
   AsmRef: array [0 .. 100000] of dword;
   AsmData: Array [0 .. 4000000] of byte;
   isdc: Boolean;
@@ -557,13 +583,20 @@ var
   texttheme: integer = -1;
   autoaxis: Boolean = false;
   snaprotate: Boolean = false;
+  snapyvalue: Boolean = false;
   snapdistance: Boolean = false;
   anchorenabled: Boolean = false;
   disableindicator: Boolean = false;
   fullscreen: Boolean = false;
+  follow3D: Boolean = false;
   showdata: Boolean = false;
   showdecimal: Boolean = false;
+  addargs: Boolean = false;
   hidenops: Boolean = true;
+  searchwholewords: Boolean = false;
+  searchmatchcase: Boolean = false;
+  searchengine: integer = 0;
+  replaceselectiononly: Boolean = false;
   OffsetX: single = 0.0;
   OffsetY: single = 0.0;
   OffsetZ: single = 0.0;
@@ -572,6 +605,18 @@ var
   DefaultY: single = 0.0;
   DefaultZ: single = 0.0;
   warpx, warpz: single;
+  TEHeight: integer = 673;
+  TEWidth: integer = 810;
+  NotesWidth: integer = 183;
+  NotesVisible: Boolean = false;
+  scriptline: integer = 0;
+  scriptindex: integer = 0;
+  importscan: Boolean = false;
+  coordsize: integer = 0;
+  thememodified: Boolean = false;
+  inedit: Boolean = false;
+  inundo: Boolean = false;
+  indelete: Boolean = false;
 
 implementation
 
@@ -580,7 +625,7 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   Unit17, Unit18, Unit19, FCompat, MyConst, Unit29, crc32, EnemyStat,
   FEnemyAttack, FEnemyMov, FEnemyResist, FFloatEdit, NPCBuild, Unit22,
   FFFilter, FMonsDet, Unit23, FSymbolChat, FAsmModeSel, FPlacement, FHotkeys,
-  FSnap, FScriptTE;
+  FSnap, FScriptTE, FReplace;
 
 {$R *.dfm}
 
@@ -909,6 +954,9 @@ begin
     move(Tsopc.Strings[x][1], ch[0], length(Tsopc.Strings[x]));
     filewrite(f, ch[0], 16);
   end;
+  // Window title information
+  filewrite(f, isdc, 1);
+  filewrite(f, asmmode, 2);
   fileclose(f);
 end;
 
@@ -927,6 +975,7 @@ var
   ch: array [0 .. 2047] of byte;
   x, y, i, f: integer;
   TrTmp: ttreenode;
+  cleantitle: widestring;
 begin
 
   f := fileopen(fn, $40);
@@ -1014,23 +1063,58 @@ begin
     TrTmp.ImageIndex := 5;
     TrTmp.SelectedIndex := 5;
   end;
+
+  // Window title information
+  isdc := false;
+  fileread(f, isdc, 1);
+  asmmode := 0;
+  fileread(f, asmmode, 2);
+
   fileclose(f);
+
+  curepi := GetEpisode;
+  UpdateWindowTitle;
+
+  // Clear and update map strings
+  for x := 0 to 30 do
+    form1.CheckListBox1.Items.Strings[x] := '';
+  if curepi < 2 then
+  begin
+    for x := 0 to 17 do
+      form1.CheckListBox1.Items.Strings[x] := mapname[mapid[x + EPMap[curepi]]];
+  end
+  else
+  begin
+    x := 10;
+    form1.CheckListBox1.Items.Strings[0] := mapname[mapid[x + EPMap[2]]];
+    for x := 0 to 8 do
+      form1.CheckListBox1.Items.Strings[x + 1] := mapname[mapid[x + EPMap[2]]];
+  end;
+  UpdateScriptRefs;
+  importscan := true;
+  ScanForMap;
+  importscan := false;
+  form1.CheckListBox1.ItemIndex := 0;
+  form1.CheckListBox1Click(Form1);
+
+  // Load quest notes file based on quest name if they exist
+  fmScriptTE.txtNotes.Clear;
+  cleantitle := SanitizeFileName(title);
+  if (cleantitle <> '') and FileExists('notes\' + cleantitle + ' notes'+ '.txt') then
+    fmScriptTE.txtNotes.Lines.LoadFromFile('notes\' + cleantitle + ' notes'+ '.txt');
+  isedited := false;
 end;
 
 Procedure LoadShadow;
 var
   s: ansistring;
-  tmp2: widestring;
 begin
+  if fmScriptTE.Visible then
+    form4.Show;
   if not directoryexists(path + 'temp') then
     CreateDir(path + 'temp');
   s := inttohex(crc32ofstring(FullQuestFile), 8);
   unDumpQuest(path + 'temp\_' + s);
-
-  tmp2 := 'Quest Editor V 1.0c Public - ' + Title;
-
-  Form1.Caption := unitochar(tmp2, 1000);
-  curepi := GetEpisode;
 end;
 
 Procedure CheckShadow;
@@ -1243,6 +1327,23 @@ begin
       if m.Skin = 26 then
       begin
         MyObj[x].rotationseq := 1;
+        MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
+          (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444));
+      end
+      else if m.Skin = 135 then
+      begin
+        MyObj[x].rotationseq := 3;
+        MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
+          (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444));
+      end
+      else if m.Skin = 140 then
+      begin
+        MyObj[x].rotationseq := 3;
+        MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
+          (-(m.Unknow5 and $FFFF) / 182.04444), (-(m.unknow7 and $FFFF) / 182.04444));
+      end
+      else if (m.Skin = 192) or (m.Skin = 222) or (m.Skin = 257) or (m.Skin = 323) then
+      begin
         MyObj[x].SetRotation(((-(m.unknow6 + rev[Floor[sfloor].Obj[x].map_section]) and $FFFF)) / 182.04444,
           (-(m.Unknow5 and $FFFF) / 182.04444), ((m.unknow7 and $FFFF) / 182.04444));
       end
@@ -1642,7 +1743,7 @@ end;
 Procedure TForm1.DrawMap;
 Var
   px, py, px2, py2, px3, py3: double;
-  ppx, ppy: Single;
+  ppx, ppy, rad: Single;
   x, i, z: integer;
   rt: word;
   tpt: array [0 .. 2] of TPoint;
@@ -1818,11 +1919,15 @@ begin
               break;
           if i < 13 then
           begin
+            if Floor[sfloor].Obj[x].Skin = 14 then
+              rad := (Floor[sfloor].Obj[x].unknow8 * 10) + 30
+            else
+              rad := Floor[sfloor].Obj[x].unknow8;
             BBRelBmp.Canvas.Brush.Style := bsclear;
             BBRelBmp.Canvas.Pen.Color := ClOlive;
-            BBRelBmp.Canvas.Ellipse(round(px - (Floor[sfloor].Obj[x].unknow8 / Zoom)),
-              round(py - (Floor[sfloor].Obj[x].unknow8 / Zoom)), round(px + (Floor[sfloor].Obj[x].unknow8 / Zoom)),
-              round(py + (Floor[sfloor].Obj[x].unknow8 / Zoom)));
+            BBRelBmp.Canvas.Ellipse(round(px - (rad / Zoom)),
+              round(py - (rad / Zoom)), round(px + (rad / Zoom)),
+              round(py + (rad / Zoom)));
             BBRelBmp.Canvas.Brush.Style := bssolid;
             BBRelBmp.Canvas.Pen.Color := clblack;
           end;
@@ -1932,10 +2037,15 @@ begin
 end;
 
 procedure TForm1.Quit1Click(Sender: TObject);
+var
+  s: ansistring;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before quitting?'
+  else s:=GetLanguageString(55);
+
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(55), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -2057,14 +2167,16 @@ var
   txt: array [0 .. $137F] of byte;
   unp: array [0 .. $8FF] of byte;
   tmp: ansistring;
-  tmp2: widestring;
-  fn, g: ansistring;
+  tmp2, cleantitle: widestring;
+  fn, g, s: ansistring;
   si, ln, eb1, eb2: dword;
   di, da, db: pansichar;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before opening a new one?'
+  else s:=GetLanguageString(56);
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(56), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -2099,10 +2211,6 @@ begin
       if (OpenDialog1.FilterIndex = 6) then
       begin
         unDumpQuest(fn);
-        tmp2 := 'Quest Editor V 1.0c Public - ' + Title;
-
-        Form1.Caption := unitochar(tmp2, 1000);
-        curepi := GetEpisode;
         exit;
       end;
       if (OpenDialog1.FilterIndex = 1) or (OpenDialog1.FilterIndex = 2) then
@@ -2412,6 +2520,13 @@ begin
         inc(x, 1);
       end;
 
+      // Load quest notes file based on quest name if they exist
+      fmScriptTE.txtNotes.Clear;
+      cleantitle := SanitizeFileName(title);
+      if (cleantitle <> '') and FileExists('notes\' + cleantitle + ' notes'+ '.txt') then
+        fmScriptTE.txtNotes.Lines.LoadFromFile('notes\' + cleantitle + ' notes'+ '.txt');
+      isedited := false;
+
       if pos('_f.', fn) > 0 then
         language := 3;
       if pos('_e.', fn) > 0 then
@@ -2441,10 +2556,10 @@ begin
       if pos('.qst.cn', fn) > 0 then
         language := 0;
 
-      if OpenDialog1.FilterIndex = 2 then begin
-        // detect asm mode
-        form34.showmodal;
-      end;
+//      if OpenDialog1.FilterIndex = 2 then begin
+//        // detect asm mode
+//        form34.showmodal;
+//      end;
       QuestDisam(@AsmData, AsmRef, seg[1] - seg[0], (seg[2] - seg[1]) div 4);
     except
       MessageDlg(GetLanguageString(63), mtInformation, [mbOk], 0);
@@ -2491,7 +2606,6 @@ begin
     CheckListBox1.ItemIndex := 0;
     CheckListBox1Click(Form1);
     // Form1.Caption:='Quest Editor V 1.6d - '+Title;
-    tmp2 := 'Quest Editor V 1.0c Public - ' + Title;
     { if isdc then Form1.Caption:=Form1.Caption+' (DreamCast ASCII Format)'
       else Form1.Caption:=Form1.Caption+' (PC Unicode Format)';
       if curepi = 0 then  Form1.Caption:=Form1.Caption+' - Episode 1';
@@ -2500,26 +2614,13 @@ begin
       if asmmode = 2 then
       Form1.Caption:=Form1.Caption+' - Scrypt Mode 2'; }
 
-    if isdc then
-      tmp2 := tmp2 + GetLanguageString(64)
-    else
-      tmp2 := tmp2 + GetLanguageString(65);
-    if curepi = 0 then
-      tmp2 := tmp2 + GetLanguageString(66);
-    if curepi = 1 then
-      tmp2 := tmp2 + GetLanguageString(67);
-    if curepi = 2 then
-      tmp2 := tmp2 + GetLanguageString(68);
-    if AsmMode = 2 then
-      tmp2 := tmp2 + GetLanguageString(69);
-    tmp2 := tmp2 + #0#0;
+    UpdateWindowTitle;
+
     FFilter := 1;
     if AsmMode = 2 then
       FFilter := 3;
     if isdc and (AsmMode = 2) then
       FFilter := 2;
-    // SetWindowTextW(form1.Handle,@tmp2[1]);
-    Form1.Caption := unitochar(tmp2, 1000);
     CheckShadow;
   end;
 end;
@@ -2609,6 +2710,33 @@ begin
     delete(a, 1, y);
     y := pos(#9, a);
     result.Add(copy(a, 1, y - 1));
+    if (id = 39) or (id = 128) then
+    begin
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+    end;
+    if (id = 222) or (id = 527) or (id = 528) then
+    begin
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+    end;
+    if (id = 33) or (id = 37) then
+    begin
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+      delete(a, 1, y);
+      y := pos(#9, a);
+      result.Add(copy(a, 1, y - 1));
+    end;
     delete(a, 1, y);
     result.Add(a);
   end
@@ -2681,22 +2809,79 @@ begin
   end;
 end;
 
+function FindClosestSection(): integer;
+var
+  x, d: integer;
+  di, ppx2, ppy2: double;
+begin
+  // Find closest section to the player
+  d := -1;
+  di := $FFFFFF;
+  for x := 0 to 25566 do
+  if MidPU[x] then
+    begin
+    // Find the distance
+    ppx2 := ppx - (MidP[x].x * zoom);
+    ppy2 := -ppz - (MidP[x].y * zoom);
+    ppx2 := (ppx2 * ppx2) + (ppy2 * ppy2);
+    // Record if nearest
+    if di > ppx2 then
+    begin
+      di := ppx2;
+      d := x;
+    end;
+  end;
+  result := d;
+end;
+
 procedure SetMonsterDefaults();
+var
+  section: integer;
+  pz2: double;
 begin
   // Set default monster position based on user's setting
-  Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].map_section := FPlacementOptions.seDefaultSect.Value;
-  Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_X := FPlacementOptions.nbDefaultX.Value;
-  Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
-  Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Z := FPlacementOptions.nbDefaultY.Value;
+  if form13.focused then
+  begin
+    section := FindClosestSection();
+    pz2 := Form1.YFromBBRELFile(MidP[section].x * zoom, MidP[section].y * zoom);
+    pz2 := pz2 - miz[section] * zoom;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].map_section := section;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_X := 0;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Y := 0;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Z := pz2;
+  end
+  else
+  begin
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].map_section := FPlacementOptions.seDefaultSect.Value;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_X := FPlacementOptions.nbDefaultX.Value;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Z := FPlacementOptions.nbDefaultY.Value;
+  end;
 end;
 
 procedure SetObjectDefaults();
+var
+  section: integer;
+  pz2: double;
 begin
   // Set default object position based on user's setting
-  Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].map_section := FPlacementOptions.seDefaultSect.Value;
-  Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_X := FPlacementOptions.nbDefaultX.Value;
-  Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
-  Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Z := FPlacementOptions.nbDefaultY.Value;
+  if form13.focused then
+  begin
+    section := FindClosestSection();
+    pz2 := Form1.YFromBBRELFile(MidP[section].x * zoom, MidP[section].y * zoom);
+    pz2 := pz2 - miz[section] * zoom;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].map_section := section;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_X := 0;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Y := 0;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Z := pz2;
+  end
+  else
+  begin
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].map_section := FPlacementOptions.seDefaultSect.Value;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_X := FPlacementOptions.nbDefaultX.Value;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Z := FPlacementOptions.nbDefaultY.Value;
+  end;
 end;
 
 procedure ShowIndicator();
@@ -2802,7 +2987,7 @@ begin
           for i := 0 to Floor[sfloor].ObjCount - 1 do
           begin
             if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
-              ((Floor[sfloor].Obj[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Obj[i].Pos_X > targetX)
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_X > targetX)
               and (round(Floor[sfloor].Obj[i].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
               and (i <> target) and (i <> selectionidx) then
               begin
@@ -2827,7 +3012,7 @@ begin
           for i := 0 to Floor[sfloor].ObjCount - 1 do
           begin
             if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
-              ((Floor[sfloor].Obj[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Obj[i].Pos_X < targetX)
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_X < targetX)
               and (round(Floor[sfloor].Obj[i].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
               and (i <> target) and (i <> selectionidx) then
               begin
@@ -2935,7 +3120,7 @@ begin
           for i := 0 to Floor[sfloor].ObjCount - 1 do
           begin
             if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
-              ((Floor[sfloor].Obj[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Obj[i].Pos_Y > targetY)
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_Y > targetY)
               and (round(Floor[sfloor].Obj[i].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
               and (i <> target) and (i <> selectionidx) then
               begin
@@ -2960,7 +3145,7 @@ begin
           for i := 0 to Floor[sfloor].ObjCount - 1 do
           begin
             if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
-              ((Floor[sfloor].Obj[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Obj[i].Pos_Y < targetY)
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_Y < targetY)
               and (round(Floor[sfloor].Obj[i].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
               and (i <> target) and (i <> selectionidx) then
               begin
@@ -2983,6 +3168,138 @@ begin
   end;
 end;
 
+procedure AdjustDistanceZ(target: integer);
+var
+  i,closest: integer;
+  selectionZ,targetZ: single;
+  diff,diffmin: double;
+begin
+  if FSnapOptions.chkSnapDistance.Checked then
+  begin
+    diff := 0;
+    diffmin := Double.MaxValue;
+    closest := -1;
+
+    if sType = 1 then
+    begin
+      selectionZ := Floor[sfloor].Monster[selected].Pos_Z;
+      targetZ := Floor[sfloor].Monster[target].Pos_Z;
+
+      if selectionZ < targetZ then
+      begin
+          // First find the next closest from the target in the opposite direction
+          for i := 0 to Floor[sfloor].MonsterCount - 1 do
+          begin
+            if (Floor[sfloor].Monster[i].map_section = Floor[sfloor].Monster[target].map_section) and
+              ((Floor[sfloor].Monster[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Monster[i].Pos_Z > targetZ)
+              and (round(Floor[sfloor].Monster[i].Pos_X) = round(Floor[sfloor].Monster[target].Pos_X))
+              and (round(Floor[sfloor].Monster[i].Pos_Y) = round(Floor[sfloor].Monster[target].Pos_Y))
+              and (i <> target) and (i <> selected) then
+              begin
+                diff := abs(targetZ - Floor[sfloor].Monster[i].Pos_Z);
+                if diff < diffmin then
+                begin
+                  diffmin := diff;
+                  closest := i;
+                end;
+              end;
+          end;
+          // Find the difference
+          if closest <> -1 then
+            diff := abs(targetZ - Floor[sfloor].Monster[closest].Pos_Z);
+         // Offset the selection by the difference
+         if diff <> 0 then
+          Floor[sfloor].Monster[selected].Pos_Z := targetZ - diff;
+      end
+      else if selectionZ > targetZ then
+      begin
+          // First find the next closest from the target in the opposite direction
+          for i := 0 to Floor[sfloor].MonsterCount - 1 do
+          begin
+            if (Floor[sfloor].Monster[i].map_section = Floor[sfloor].Monster[target].map_section) and
+              ((Floor[sfloor].Monster[i].Unknow5 = showwave) or (showwave = -1)) and (Floor[sfloor].Monster[i].Pos_Z < targetZ)
+              and (round(Floor[sfloor].Monster[i].Pos_X) = round(Floor[sfloor].Monster[target].Pos_X))
+              and (round(Floor[sfloor].Monster[i].Pos_Y) = round(Floor[sfloor].Monster[target].Pos_Y))
+              and (i <> target) and (i <> selected) then
+              begin
+                diff := abs(targetZ - Floor[sfloor].Monster[i].Pos_Z);
+                if diff < diffmin then
+                begin
+                  diffmin := diff;
+                  closest := i;
+                end;
+              end;
+          end;
+          // Find the difference
+          if closest <> -1 then
+            diff := abs(targetZ - Floor[sfloor].Monster[closest].Pos_Z);
+         // Offset the selection by the difference
+         if diff <> 0 then
+          Floor[sfloor].Monster[selected].Pos_Z := targetZ + diff;
+      end
+    end;
+
+    if sType = 2 then
+    begin
+      selectionZ := Floor[sfloor].obj[selected].Pos_Z;
+      targetZ := Floor[sfloor].obj[target].Pos_Z;
+
+      if selectionZ < targetZ then
+      begin
+          // First find the next closest from the target in the opposite direction
+          for i := 0 to Floor[sfloor].ObjCount - 1 do
+          begin
+            if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_Z > targetZ)
+              and (round(Floor[sfloor].Obj[i].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
+              and (round(Floor[sfloor].Obj[i].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
+              and (i <> target) and (i <> selected) then
+              begin
+                diff := abs(targetZ - Floor[sfloor].Obj[i].Pos_Z);
+                if diff < diffmin then
+                begin
+                  diffmin := diff;
+                  closest := i;
+                end;
+              end;
+          end;
+          // Find the difference
+          if closest <> -1 then
+            diff := abs(targetZ - Floor[sfloor].Obj[closest].Pos_Z);
+         // Offset the selection by the difference
+         if diff <> 0 then
+          Floor[sfloor].Obj[selected].Pos_Z := targetZ - diff;
+      end
+      else if selectionZ > targetZ then
+      begin
+          // First find the next closest from the target in the opposite direction
+          for i := 0 to Floor[sfloor].ObjCount - 1 do
+          begin
+            if (Floor[sfloor].Obj[i].map_section = Floor[sfloor].Obj[target].map_section) and
+              ((Floor[sfloor].Obj[i].grp = showgrp) or (showgrp = -1)) and (Floor[sfloor].Obj[i].Pos_Z < targetZ)
+              and (round(Floor[sfloor].Obj[i].Pos_X) = round(Floor[sfloor].Obj[target].Pos_X))
+              and (round(Floor[sfloor].Obj[i].Pos_Y) = round(Floor[sfloor].Obj[target].Pos_Y))
+              and (i <> target) and (i <> selected) then
+              begin
+                diff := abs(targetZ - Floor[sfloor].Obj[i].Pos_Z);
+                if diff < diffmin then
+                begin
+                  diffmin := diff;
+                  closest := i;
+                end;
+              end;
+          end;
+          // Find the difference
+          if closest <> -1 then
+            diff := abs(targetZ - Floor[sfloor].Obj[closest].Pos_Z);
+         // Offset the selection by the difference
+         if diff <> 0 then
+          Floor[sfloor].Obj[selected].Pos_Z := targetZ + diff;
+      end
+    end;
+  end;
+end;
+
 procedure CalculateWarpOffsets(rotation: dword);
 var
   angle: single;
@@ -2999,6 +3316,153 @@ begin
     warpx := -(10 * sin(angle) + 10 * cos(angle));
     warpz := -(10 * cos(angle) - 10 * sin(angle));
   end;
+end;
+
+function SanitizeFileName(const AFileName: string): string;
+const
+  InvalidChars: set of Char = ['\', '/', ':', '*', '?', '"', '<', '>', '|'];
+var
+  I: Integer;
+  ResultFileName: string;
+begin
+  ResultFileName := '';
+  for I := 1 to Length(AFileName) do
+  begin
+    if not (AFileName[I] in InvalidChars) and (Ord(AFileName[I]) >= 32) then // Exclude control characters and invalid chars
+    begin
+      ResultFileName := ResultFileName + AFileName[I];
+    end;
+  end;
+
+  // Handle trailing periods/spaces for Windows compatibility
+  while (Length(ResultFileName) > 0) and (ResultFileName[Length(ResultFileName)] in ['.', ' ']) do
+  begin
+    SetLength(ResultFileName, Length(ResultFileName) - 1);
+  end;
+
+  // Truncate to a maximum of 249 characters to allow room for ' notes' suffix
+  if Length(ResultFileName) > 249 then
+  begin
+    SetLength(ResultFileName, 249);
+  end;
+
+  // Ensure a non-empty filename, if all characters were invalid
+  if ResultFileName = '' then
+    ResultFileName := 'Untitled';
+
+  Result := ResultFileName;
+end;
+
+procedure SetCoordSize(size: integer);
+var
+  Reg: TRegistry;
+begin
+  form1.Smallfont1.Checked := false;
+  form1.Mediumfont1.Checked := false;
+  form1.Largefont1.Checked := false;
+
+  if size = 1 then
+  begin
+    form1.label5.Left := 386;
+    form1.label5.Top := 225;
+    form1.label5.Width := 11;
+    form1.label5.Height := 16;
+    form1.label5.Font.Size := 10;
+    form1.Mediumfont1.Checked := true;
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('CoordSize', 1);
+      Reg.CloseKey;
+    end;
+    finally
+      Reg.Free;
+    end;
+  end
+  else if size = 2 then
+  begin
+    form1.label5.Left := 387;
+    form1.label5.Top := 222;
+    form1.label5.Width := 10;
+    form1.label5.Height := 20;
+    form1.label5.Font.Size := 12;
+    form1.Largefont1.Checked := true;
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('CoordSize', 2);
+      Reg.CloseKey;
+    end;
+    finally
+      Reg.Free;
+    end;
+  end
+  else
+  begin
+    form1.label5.Left := 384;
+    form1.label5.Top := 228;
+    form1.label5.Width := 6;
+    form1.label5.Height := 13;
+    form1.label5.Font.Size := 8;
+    form1.Smallfont1.Checked := true;
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('CoordSize', 0);
+      Reg.CloseKey;
+    end;
+    finally
+      Reg.Free;
+    end;
+  end;
+end;
+
+function ReplaceTabs(const S: string): string;
+var
+  First8, Rest: string;
+begin
+  First8 := Copy(S, 1, 8);
+  Rest := Copy(S, 9, MaxInt);
+
+  First8 := StringReplace(First8, #9, '  ', [rfReplaceAll]);
+
+  Result := First8 + Rest;
+end;
+
+procedure UpdateWindowTitle;
+var
+  tmp2: widestring;
+begin
+  tmp2 := 'Quest Editor V 2.0c Public - ' + Title;
+
+  if isdc then
+    tmp2 := tmp2 + GetLanguageString(64)
+  else
+  begin
+    if form1.New1.Caption.Contains('New') then
+      tmp2 := tmp2 + ' (Unicode Format)'
+    else
+      tmp2 := tmp2 + GetLanguageString(65);
+  end;
+  if curepi = 0 then
+    tmp2 := tmp2 + GetLanguageString(66);
+  if curepi = 1 then
+    tmp2 := tmp2 + GetLanguageString(67);
+  if curepi = 2 then
+    tmp2 := tmp2 + GetLanguageString(68);
+  if AsmMode = 2 then
+    tmp2 := tmp2 + GetLanguageString(69);
+  tmp2 := tmp2 + #0#0;
+  if isdc then
+    Form1.Caption := unitochar(tmp2, 1000)
+  else
+    Form1.Caption := tmp2;
 end;
 
 procedure TForm1.CheckListBox1Click(Sender: TObject);
@@ -3049,8 +3513,20 @@ begin
     else
       Button12.Enabled := true;
     DrawMap;
+    if form17.chkFollow.Checked and not inundo and not indelete then
+    begin
+      ppx := 0;
+      ppy := YFromBBRELFile(0,0) + 15;
+      ppz := 0;
+      vr := 0;
+      vz := 0;
+    end;
     if have3d then
+    begin
       load3d;
+      if form17.chkFollow.Checked and not inundo and not indelete then
+        myscreen.SetView(ppx,ppy,ppz,vr,vz);
+    end;
   end;
 end;
 
@@ -3148,6 +3624,15 @@ begin
       $FFFF div 182) + '°');
 
     bm.Free;
+    if have3d and form17.chkFollow.Checked then
+    begin
+      ppx := midpz[Floor[sfloor].Monster[selected].map_section].x;
+      ppy := Floor[sfloor].Monster[selected].Pos_Z + 15;
+      ppz := -midpz[Floor[sfloor].Monster[selected].map_section].y;
+      vr := 0;
+      vz := 0;
+      myscreen.SetView(ppx, ppy, ppz, vr, vz);
+    end;
   end;
 end;
 
@@ -3237,6 +3722,15 @@ begin
     Image1.Canvas.TextOut(260, 4, 'Direction : ' + inttostr((Floor[sfloor].Obj[Selected].unknow6 and $FFFF)
       div 182) + '°');
     bm.Free;
+    if have3d and form17.chkFollow.Checked then
+    begin
+      ppx := midpz[Floor[sfloor].Obj[selected].map_section].x;
+      ppy := Floor[sfloor].Obj[selected].Pos_Z + 15;
+      ppz := -midpz[Floor[sfloor].Obj[selected].map_section].y;
+      vr := 0;
+      vz := 0;
+      myscreen.SetView(ppx, ppy, ppz, vr, vz);
+    end;
   end;
 end;
 
@@ -3248,12 +3742,15 @@ end;
 
 procedure TForm1.Delete1Click(Sender: TObject);
 begin
-  if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused then
+  if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
+  and not fmScriptTE.txtNotes.Focused then
     Button3Click(nil)
   else if form4.edit1.Focused then
     form4.edit1.Clear
   else if fmScriptTE.TextEdit.Focused then
-    fmScriptTE.TextEdit.DeleteSelection;
+    fmScriptTE.TextEdit.DeleteSelection
+  else if fmScriptTE.txtNotes.Focused then
+    fmScriptTE.txtNotes.SelText := '';
 end;
 
 procedure TForm1.Description1Click(Sender: TObject);
@@ -3824,6 +4321,11 @@ begin
     firstdrop := true;
     DrawMap;
     isedited := true;
+    if form13.focused then
+    begin
+      MoveSel := -1;
+      HideIndicator();
+    end;
   end;
 end;
 
@@ -3856,20 +4358,27 @@ begin
     DrawMap;
     ctrldw := true;
     isedited := true;
+    if form13.focused then
+    begin
+      MoveSel := -1;
+      HideIndicator();
+    end;
   end;
 end;
 
 procedure TForm1.Copymonster1Click(Sender: TObject);
 begin
   if Copylastmonster1.Enabled and not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
-  and not fmScriptTE.Edit2.Focused then
+  and not fmScriptTE.Edit2.Focused and not fmScriptTE.txtNotes.Focused then
     Copylastmonster1Click(nil)
   else if form4.edit1.Focused then
     form4.edit1.CopyToClipboard
   else if fmScriptTE.TextEdit.Focused then
     fmScriptTE.TextEdit.CopyToClipboard(false)
   else if fmScriptTE.Edit2.Focused then
-    fmScriptTE.Edit2.CopyToClipboard;
+    fmScriptTE.Edit2.CopyToClipboard
+  else if fmScriptTE.txtNotes.Focused then
+    fmScriptTE.txtNotes.CopyToClipboard
 end;
 
 procedure TForm1.ViewScrypt1Click(Sender: TObject);
@@ -3883,8 +4392,8 @@ var
 begin
   mpcx := x;
   mpcy := y;
-  Label5.Caption := 'X:' + inttostr(round(((x - mmx) - (mpx / Zoom)) * Zoom)) + '  Y:' +
-    inttostr(round(YFromBBRELFile(((x - mmx) - (mpx / Zoom)) * Zoom, ((y - mmy) - (mpy / Zoom)) * Zoom))) + '  Z:' +
+  Label5.Caption := 'X: ' + inttostr(round(((x - mmx) - (mpx / Zoom)) * Zoom)) + '  Y: ' +
+    inttostr(round(YFromBBRELFile(((x - mmx) - (mpx / Zoom)) * Zoom, ((y - mmy) - (mpy / Zoom)) * Zoom))) + '  Z: ' +
     inttostr(round(((y - mmy) - (mpy / Zoom)) * Zoom));
   if mdown >= 1 then
   begin
@@ -3906,6 +4415,7 @@ var
   z, l: Integer;
   px, px2, py, py2: Double;
 begin
+  inedit := false;
   // Start of mouse drag
   if (Button = mbleft) and (smDrag.checked) then
   begin
@@ -3949,10 +4459,14 @@ begin
             if gettickcount() - lastimgclick > 500 then
               l := -1;
             if l = ListBox1.ItemIndex then
+            begin
+              inedit := true;
               Form1.ListBox1DblClick(Form1)
+            end
             else
               Form1.ListBox1Click(Form1);
-              lastimgclick := gettickcount();
+              if not inedit then
+                lastimgclick := gettickcount();
               mdrag := 1;
             end;
       end;
@@ -3995,10 +4509,14 @@ begin
             if gettickcount() - lastimgclick > 500 then
               l := -1;
             if l = ListBox2.ItemIndex then
+            begin
+              inedit := true;
               Form1.ListBox1DblClick(Form1)
+            end
             else
               Form1.ListBox2Click(Form1);
-              lastimgclick := gettickcount();
+              if not inedit then
+                lastimgclick := gettickcount();
               mdrag := 1;
             end;
       end;
@@ -4054,7 +4572,7 @@ var
   f: textfile;
   s, b: ansistring;
   x, y, z, ma, l, i, mylang: integer;
-  m, fl: tstringlist;
+  m, fl, arglist: tstringlist;
   fx: textfile;
   Reg: TRegistry;
   flp: TMemoryStream;
@@ -4300,6 +4818,35 @@ begin
       flp.read(FogEntry[0], flp.size);
     end;
 
+    if fileexists('asmargs.txt') then
+      fl.LoadFromFile('asmargs.txt')
+    else
+    begin
+      fmScriptTE.AddArgs1.Checked := false;
+      fmScriptTE.AddArgs1.Enabled := false;
+    end;
+
+    // Load asm argument list
+    if fmScriptTE.AddArgs1.Enabled then
+    begin
+      x := 0;
+      arglist := TStringList.Create;
+      while x < fl.count do
+      begin
+          arglist.StrictDelimiter := True;
+          arglist.Delimiter := ' ';
+          arglist.DelimitedText := fl.Strings[x];
+          if arglist.count > 2 then
+          begin
+            trystrtoint('$' + arglist[0],integer(asmarg[x].opcodeid));
+            asmarg[x].argtype := arglist[1];
+            trystrtoint(arglist[2],asmarg[x].argnum);
+          end;
+          inc(x);
+      end;
+      arglist.Free;
+    end;
+
     if fileexists('asm.txt') then
       fl.LoadFromFile('asm.txt')
     else
@@ -4446,39 +4993,24 @@ begin
         if Reg.ValueExists('FontStyle') then
           form4.ListBox1.Font.Style := Tfontstyles(byte(Reg.ReadInteger('FontStyle')));
         form4.ListBox1.Font.Pitch := fpFixed;
-        if Reg.ValueExists('TEFontName') then
-          fmScriptTE.TextEdit.Fonts.Text.name := Reg.ReadString('TEFontName');
-        if Reg.ValueExists('TEFontSize') then
-          fmScriptTE.TextEdit.Fonts.Text.size := Reg.ReadInteger('TEFontSize');
-        if Reg.ValueExists('TEFontStyle') then
-          fmScriptTE.TextEdit.Fonts.Text.Style := Tfontstyles(byte(Reg.ReadInteger('TEFontStyle')));
-        fmScriptTE.TextEdit.Fonts.Text.Pitch := fpFixed;
-        // Set theme and text editor colors
-        if Reg.ValueExists('TEOpcodeColor') then
-          fmScriptTE.TextEdit.Colors.EditorReservedWordForeground := Reg.ReadInteger('TEOpcodeColor');
-        if Reg.ValueExists('TERegisterColor') then
-          fmScriptTE.TextEdit.Colors.EditorSymbolForeground := Reg.ReadInteger('TERegisterColor');
-        if Reg.ValueExists('TEValueColor') then
-        begin
-          fmScriptTE.TextEdit.Colors.EditorNumberForeground := Reg.ReadInteger('TEValueColor');
-          fmScriptTE.TextEdit.Colors.EditorHexNumberForeground := Reg.ReadInteger('TEValueColor');
-        end;
+        if Reg.ValueExists('TENoteFontName') then
+          fmScriptTE.txtNotes.Font.Name := Reg.ReadString('TENoteFontName');
+        if Reg.ValueExists('TENoteFontSize') then
+          fmScriptTE.txtNotes.Font.Size := Reg.ReadInteger('TENoteFontSize');
+        if Reg.ValueExists('TENoteFontStyle') then
+          fmScriptTE.txtNotes.Font.Style := Tfontstyles(byte(Reg.ReadInteger('TENoteFontStyle')));
+        if Reg.ValueExists('TENoteColor') then
+          fmScriptTE.txtNotes.Font.Color := Reg.ReadInteger('TENoteColor');
+        if Reg.ValueExists('TENoteBackgroundColor') then
+          fmScriptTE.txtNotes.Color := Reg.ReadInteger('TENoteBackgroundColor');
+        if Reg.ValueExists('ThemeModified') then
+          thememodified := Reg.ReadBool('ThemeModified');
         if Reg.ValueExists('TETheme') then
           texttheme := Reg.ReadInteger('TETheme');
         if DirectoryExists('Text editor\Themes') then
         begin
           with fmScriptTE do
           begin
-            if texttheme = -1 then
-            begin
-              Changetextcolor1.Enabled := true;
-              Changefont1.Enabled := true
-            end
-            else
-            begin
-              Changetextcolor1.Enabled := false;
-              Changefont1.Enabled := false;
-            end;
             Changetheme1.Enabled := true;
             if texttheme = -1 then
               ChangeTheme(Default1)
@@ -4526,6 +5058,34 @@ begin
               ChangeTheme(Windows11Dark1);
           end;
         end;
+        if thememodified then
+        begin
+          Reg.WriteBool('ThemeModified',thememodified);
+          UncheckThemes;
+          if Reg.ValueExists('TEFontName') then
+            fmScriptTE.TextEdit.Fonts.Text.name := Reg.ReadString('TEFontName');
+          if Reg.ValueExists('TEFontSize') then
+            fmScriptTE.TextEdit.Fonts.Text.size := Reg.ReadInteger('TEFontSize');
+          if Reg.ValueExists('TEFontStyle') then
+            fmScriptTE.TextEdit.Fonts.Text.Style := Tfontstyles(byte(Reg.ReadInteger('TEFontStyle')));
+          fmScriptTE.TextEdit.Fonts.Text.Pitch := fpFixed;
+          // Set theme and text editor colors
+          if Reg.ValueExists('TELabelColor') then
+            fmScriptTE.TextEdit.Colors.EditorMethodNameForeground := Reg.ReadInteger('TELabelColor');
+          if Reg.ValueExists('TEOpcodeColor') then
+            fmScriptTE.TextEdit.Colors.EditorReservedWordForeground := Reg.ReadInteger('TEOpcodeColor');
+          if Reg.ValueExists('TERegisterColor') then
+            fmScriptTE.TextEdit.Colors.EditorSymbolForeground := Reg.ReadInteger('TERegisterColor');
+          if Reg.ValueExists('TEValueColor') then
+          begin
+            fmScriptTE.TextEdit.Colors.EditorNumberForeground := Reg.ReadInteger('TEValueColor');
+            fmScriptTE.TextEdit.Colors.EditorHexNumberForeground := Reg.ReadInteger('TEValueColor');
+          end;
+          if Reg.ValueExists('TESTRColor') then
+            fmScriptTE.TextEdit.Colors.EditorCommentForeground := Reg.ReadInteger('TESTRColor');
+          if Reg.ValueExists('TEStringColor') then
+            fmScriptTE.TextEdit.Colors.EditorStringForeground := Reg.ReadInteger('TEStringColor');
+        end;
         if Reg.ValueExists('Lang') then
           mylang := Reg.ReadInteger('Lang');
         if Reg.ValueExists('LoadFrom') then
@@ -4546,6 +5106,8 @@ begin
           texteditzoom := Reg.ReadInteger('TextEditZoom');
         if Reg.ValueExists('SnapRotate') then
           snaprotate := Reg.ReadBool('SnapRotate');
+       if Reg.ValueExists('SnapYValue') then
+          snapyvalue := Reg.ReadBool('SnapYValue');
         if Reg.ValueExists('SnapDistance') then
           snapdistance := Reg.ReadBool('SnapDistance');
         if Reg.ValueExists('AnchorEnabled') then
@@ -4568,12 +5130,42 @@ begin
           disableindicator := Reg.ReadBool('DisableIndicator');
         if Reg.ValueExists('Fullscreen3D') then
           fullscreen := Reg.ReadBool('Fullscreen3D');
+        if Reg.ValueExists('Follow3D') then
+          follow3D := Reg.ReadBool('Follow3D');
         if Reg.ValueExists('ShowData') then
           showdata := Reg.ReadBool('ShowData');
         if Reg.ValueExists('ShowDecimal') then
           ShowDecimal := Reg.ReadBool('ShowDecimal');
+       if Reg.ValueExists('AddArgs') then
+          addargs := Reg.ReadBool('AddArgs');
         if Reg.ValueExists('HideNOPs') then
           hidenops := Reg.ReadBool('HideNOPs');
+        if Reg.ValueExists('SearchWholeWords') then
+          searchwholewords := Reg.ReadBool('SearchWholeWords');
+        if Reg.ValueExists('SearchMatchCase') then
+          searchmatchcase := Reg.ReadBool('SearchMatchCase');
+        if Reg.ValueExists('SearchEngine') then
+          searchengine := Reg.ReadInteger('SearchEngine');
+        if Reg.ValueExists('ReplaceSelectionOnly') then
+          replaceselectiononly := Reg.ReadBool('ReplaceSelectionOnly');
+        if Reg.ValueExists('3DMoveSpeed') then
+          movespeed := Reg.ReadInteger('3DMoveSpeed');
+        if Reg.ValueExists('DataDisplay') then
+          dta := Reg.ReadInteger('DataDisplay');
+        if Reg.ValueExists('3DAutoAdjustSect') then
+          autoadjustsect := Reg.ReadBool('3DAutoAdjustSect');
+        if Reg.ValueExists('3DAutoAdjustY') then
+          autoadjustY := Reg.ReadBool('3DAutoAdjustY');
+        if Reg.ValueExists('TEHeight') then
+          TEHeight := Reg.ReadInteger('TEHeight');
+        if Reg.ValueExists('TEWidth') then
+          TEWidth := Reg.ReadInteger('TEWidth');
+        if Reg.ValueExists('NotesWidth') then
+          NotesWidth := Reg.ReadInteger('NotesWidth');
+        if Reg.ValueExists('NotesVisible') then
+          NotesVisible := Reg.ReadBool('NotesVisible');
+        if Reg.ValueExists('CoordSize') then
+          coordsize := Reg.ReadInteger('CoordSize');
         Reg.CloseKey;
       end;
       Reg.Free;
@@ -4702,15 +5294,18 @@ begin
     FSnapOptions.chkSnap.Checked := snapenabled;
     FSnapOptions.chkSnapDistance.Enabled := snapenabled;
     FSnapOptions.chkSnapRotate.Enabled := snapenabled;
+    FSnapOptions.chkSnapYValue.Enabled := snapenabled;
     FSnapOptions.chkDistancelimit.Enabled := snapenabled;
     FSnapOptions.seSnapTolerance.Enabled := snapenabled;
     Form7.chkAutoAxis.Checked := autoaxis;
     FSnapOptions.seSnapTolerance.Value := snapvalue;
     FSnapOptions.chkSnapRotate.Checked := snaprotate;
+    FSnapOptions.chkSnapYValue.Checked := snapyvalue;
     FSnapOptions.chkSnapDistance.Checked := snapdistance;
 
     smDisableIndicator.Checked := disableindicator;
     form17.chkFullscreen.Checked := fullscreen;
+    form17.chkFollow.Checked := follow3D;
 
     if showdata then
       form7.btnToggleData.Caption := 'Hide data'
@@ -4732,6 +5327,7 @@ begin
       fmScriptTE.Decimal1.Checked := false;
     end;
 
+    fmScriptTE.AddArgs1.Checked := addargs;
     form4.HideNOPs1.Checked := hidenops;
     fmScriptTE.HideNOPs1.Checked := hidenops;
 
@@ -4745,6 +5341,23 @@ begin
     FPlacementOptions.nbDefaultZ.Value := DefaultZ;
 
     SetTextZoom(texteditzoom);
+    fmScriptTE.Wholewords1.Checked := searchwholewords;
+    fmScriptTE.Matchcase1.Checked := searchmatchcase;
+    SetSearchEngine(searchengine);
+    fmReplace.Selectiononly1.Checked := replaceselectiononly;
+    fmScriptTE.Height := TEHeight;
+    fmScriptTE.Width := TEWidth;
+
+    // Work around to avoid misalignment of search bar after resizing text editor
+    fmScriptTE.Edit2.Show;
+    fmScriptTE.Edit2.Hide;
+
+    fmScriptTE.NotesPanel.Width := NotesWidth;
+    fmScriptTE.Splitter1.Left := fmScriptTE.NotesPanel.Left;
+    if NotesVisible then
+      fmScriptTE.Notes1Click(nil);
+
+    SetCoordSize(coordsize);
 
     flp.Position := 0;
     LanguageString.LoadFromStream(flp);
@@ -4753,6 +5366,20 @@ begin
     begin
       form4.Past1.Caption := 'Paste';
       form4.Delete2.Caption := 'Delete chunk';
+      form25.Caption := 'Enemy attack data';
+      form26.Caption := 'Enemy movement data';
+      form22.Label3.Caption := 'Difficulty : ';
+      form4.Section1.Caption := 'Change label flag';
+      form8.Caption := 'Map events';
+      form1.Button10.Caption := 'View map events';
+      form10.Caption := 'Add Object';
+      form16.Memo1.Lines.Add('');
+      form16.Memo1.Lines.Add('1.0c-2.0c updates:');
+      form16.Memo1.Lines.Add('Alisaryn');
+      form6.Caption := 'Common settings';
+      form17.Label2.Caption := 'Frame skip:';
+      form17.Label4.Caption := 'Distance:';
+      form17.CheckBox2.Caption := 'Use skydome';
     end;
     flp.Clear;
     CheckShadow;
@@ -4821,7 +5448,7 @@ procedure TForm1.Button7Click(Sender: TObject);
 var // h:TNPCGroupeHeader;
   f: integer;
 begin
-  SaveDialog1.Filter := 'All chunk|*.*|Object only|*o.dat|Monster only|*e.dat|Event only|*.evt';
+  SaveDialog1.Filter := 'All chunks|*.*|Objects only|*o.dat|Monsters only|*e.dat|Events only|*.evt';
   if CheckListBox1.ItemIndex > -1 then
     if SaveDialog1.Execute then
     begin
@@ -4880,22 +5507,32 @@ var
   qtmp: array [0 .. 99] of pansichar;
   qtmpsize, qtmppos: array [0 .. 99] of integer;
   mh: ansistring;
+  cleantitle: widestring;
 begin
 
   SaveDialog1.Filter :=
     'Quest file|*.bin|Server Quest file(PC)|*.qst|Server Quest file(DC)|*.qst|Server Quest file(GC)|*.qst|Server Quest file(BB)'
     + '|*.qst|Download Quest file(DC)|*.qst|Download Quest file(PC)|*.qst|Download Quest file(GC)|*.qst|Download Quest file(Xbox)|*.qst'
-    + '|Kohle basic format(PC)|*.bin|Kohle basic format(DC)|*.bin|Kohle basic format(GC)|*.bin|Kohle basic format(BB)|*.bin'
+    + '|Compressed Quest file(PC)|*.bin|Compressed Quest file(DC)|*.bin|Compressed Quest file(GC)|*.bin|Compressed Quest file(BB)|*.bin'
+    + '|Uncompressed Quest file(PC)|*.bin|Uncompressed Quest file(DC)|*.bin|Uncompressed Quest file(GC)|*.bin|Uncompressed Quest file(BB)|*.bin'
     + '|Quest project|*.qprj';
 
   SaveDialog1.FilterIndex := lsatsaveformat;
   if SaveDialog1.Execute then
   begin
+    // Save quest notes
+    if not DirectoryExists(path + 'notes') then
+      CreateDir(path + 'notes');
+    cleantitle := SanitizeFileName(title);
+    if (cleantitle <> '') and DirectoryExists(path + 'notes')
+    and (fmScriptTE.txtNotes.Lines.Count > 0) then
+      fmScriptTE.txtNotes.Lines.SaveToFile('notes\' + cleantitle + ' notes' + '.txt');
+
     lsatsaveformat := SaveDialog1.FilterIndex;
     isedited := false;
     ClearShadow;
     FullQuestFile := SaveDialog1.filename;
-    if SaveDialog1.FilterIndex = 13 then
+    if SaveDialog1.FilterIndex = 18 then
     begin
       DumpQuest(changefileext(SaveDialog1.filename, '.qprj'));
       exit;
@@ -4919,22 +5556,22 @@ begin
     if SaveDialog1.FilterIndex = 7 then
       AsmMode := 0;
 
-    if SaveDialog1.FilterIndex = 10 then
+    if (SaveDialog1.FilterIndex = 10) or (SaveDialog1.FilterIndex = 14) then
     begin
       AsmMode := 0;
       isdc := false;
     end;
-    if SaveDialog1.FilterIndex = 11 then
+    if (SaveDialog1.FilterIndex = 11) or (SaveDialog1.FilterIndex = 15) then
     begin
       AsmMode := 0;
       isdc := true;
     end;
-    if SaveDialog1.FilterIndex = 12 then
+    if (SaveDialog1.FilterIndex = 12) or (SaveDialog1.FilterIndex = 16) then
     begin
       AsmMode := 2;
-      isdc := true;
+      isdc := false;
     end;
-    if SaveDialog1.FilterIndex = 13 then
+    if (SaveDialog1.FilterIndex = 13) or (SaveDialog1.FilterIndex = 17) then
     begin
       AsmMode := 2;
       isdc := false;
@@ -5540,6 +6177,7 @@ begin
             end;
           end;
       end;
+
       fileclose(f);
       for x := 0 to qstfilecount - 1 do
         freemem(qtmp[x]);
@@ -5706,10 +6344,11 @@ end;
 
 procedure TForm1.Button8Click(Sender: TObject);
 var
-  x, y, f: integer;
+  x, y, z, f: integer;
   h: TNPCGroupeHeader;
 begin
-  OpenDialog1.Filter := 'Object only|*o.dat;*d.dat|Monster only|*e.dat|Event only|*.evt';
+  OpenDialog1.Filter := 'Objects|*o.dat;*d.dat|Monsters|*e.dat|Events|*.evt' +
+                        '|Append objects|*o.dat;*d.dat|Append monsters|*e.dat';
   if OpenDialog1.Execute then
   begin
     isedited := true;
@@ -5740,7 +6379,28 @@ begin
       fileread(f, Floor[x].Unknow[0], Floor[x].UnknowCount);
       fileclose(f);
     end;
-
+    if OpenDialog1.FilterIndex = 4 then
+    begin
+      f := fileopen(OpenDialog1.filename, $40);
+      y := fileseek(f, 0, 2) div $44;
+      z := Floor[x].ObjCount;
+      inc(Floor[x].ObjCount,y);
+      fileseek(f, 0, 0);
+      fileread(f, Floor[x].Obj[z], y * $44);
+      fileclose(f);
+      CheckListBox1Click(Form1);
+    end;
+    if OpenDialog1.FilterIndex = 5 then
+    begin
+      f := fileopen(OpenDialog1.filename, $40);
+      y := fileseek(f, 0, 2) div $48;
+      z := Floor[x].MonsterCount;
+      inc(Floor[x].MonsterCount,y);
+      fileseek(f, 0, 0);
+      fileread(f, Floor[x].Monster[z], y * $48);
+      fileclose(f);
+      CheckListBox1Click(Form1);
+    end;
   end;
 end;
 
@@ -5793,7 +6453,9 @@ begin
     end;
     ctrldw := true;
     //
+    indelete := true;
     CheckListBox1Click(Form1);
+    indelete := false;
     if stype = 1 then
     begin
       if s < Form1.ListBox1.count then
@@ -5911,6 +6573,11 @@ begin
     firstdrop := true;
     DrawMap;
     isedited := true;
+    if form13.focused then
+    begin
+      MoveSel := -1;
+      HideIndicator();
+    end;
     // CheckListBox1Click(form1);
   end;
 
@@ -5992,7 +6659,35 @@ begin
     DrawMap;
     ctrldw := true;
     isedited := true;
+    if form13.focused then
+    begin
+      MoveSel := -1;
+      HideIndicator();
+    end;
   end;
+end;
+
+procedure TForm1.byGroup1Click(Sender: TObject);
+var
+  x, i, v: integer;
+  m: array [0 .. 1000] of TObj;
+begin
+  // sort
+  i := 0;
+  v := 0;
+  // for x:=0 to Floor[sfloor].MonsterCount-1 do if v < Floor[sfloor].Monster[x].map_section
+  while i < Floor[sfloor].ObjCount do
+  begin
+    for x := 0 to Floor[sfloor].ObjCount - 1 do
+      if Floor[sfloor].Obj[x].grp = v then
+      begin
+        move(Floor[sfloor].Obj[x], m[i], sizeof(TObj));
+        inc(i);
+      end;
+    inc(v);
+  end;
+  move(m[0], Floor[sfloor].Obj[0], sizeof(TObj) * Floor[sfloor].ObjCount);
+  CheckListBox1Click(Form1);
 end;
 
 procedure TForm1.Byroom1Click(Sender: TObject);
@@ -6112,7 +6807,7 @@ end;
 
 procedure TForm1.Image2Click(Sender: TObject);
 var
-  x, d, pz, i, z, y, j, l, closest: integer;
+  x, d, pz, i, z, y, j, k, l, closest: integer;
   lastwarpx, lastwarpz: single;
   px, py, px2, py2, di, pz2, diff, diffmin: double;
 begin
@@ -6128,30 +6823,36 @@ begin
     begin
       if MoveType = 1 then
       begin
-        inc(Floor[sfloor].MonsterCount);
-        if have3d then
+        if not firstdrop then
         begin
-          setlength(MyMonst, Floor[sfloor].MonsterCount);
-          MyMonstCount := Floor[sfloor].MonsterCount;
-          MyMonst[Floor[sfloor].MonsterCount - 1] := t3ditem.Create(myscreen);
+          inc(Floor[sfloor].MonsterCount);
+          if have3d then
+          begin
+            setlength(MyMonst, Floor[sfloor].MonsterCount);
+            MyMonstCount := Floor[sfloor].MonsterCount;
+            MyMonst[Floor[sfloor].MonsterCount - 1] := t3ditem.Create(myscreen);
+          end;
+          for x := 0 to sizeof(TMonster) - 1 do
+            pansichar(@Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1])[x] :=
+              pansichar(@Floor[sfloor].Monster[MoveSel])[x];
         end;
-        for x := 0 to sizeof(TMonster) - 1 do
-          pansichar(@Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1])[x] :=
-            pansichar(@Floor[sfloor].Monster[MoveSel])[x];
         ShowIndicator();
         MoveSel := Floor[sfloor].MonsterCount - 1;
       end;
       if MoveType = 2 then
       begin
-        inc(Floor[sfloor].ObjCount);
-        if have3d then
+        if not firstdrop then
         begin
-          setlength(MyObj, Floor[sfloor].ObjCount);
-          MyObjCount := Floor[sfloor].ObjCount;
-          MyObj[Floor[sfloor].ObjCount - 1] := nil;
+          inc(Floor[sfloor].ObjCount);
+          if have3d then
+          begin
+            setlength(MyObj, Floor[sfloor].ObjCount);
+            MyObjCount := Floor[sfloor].ObjCount;
+            MyObj[Floor[sfloor].ObjCount - 1] := nil;
+          end;
+          for x := 0 to sizeof(TObj) - 1 do
+            pansichar(@Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1])[x] := pansichar(@Floor[sfloor].Obj[MoveSel])[x];
         end;
-        for x := 0 to sizeof(TObj) - 1 do
-          pansichar(@Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1])[x] := pansichar(@Floor[sfloor].Obj[MoveSel])[x];
         ShowIndicator();
         MoveSel := Floor[sfloor].ObjCount - 1;
       end;
@@ -6218,6 +6919,9 @@ begin
       Floor[sfloor].Monster[MoveSel].map_section := d;
       Floor[sfloor].Monster[MoveSel].Pos_X := px;
       Floor[sfloor].Monster[MoveSel].Pos_Y := py;
+      // look around to find the best pz
+      if not altdw or firstdrop then
+        Floor[sfloor].Monster[MoveSel].Pos_Z := pz2;
 
       if (FSnapOptions.chkSnap.Checked) or (sdown) then // S key
       begin
@@ -6242,6 +6946,9 @@ begin
                     // Match monster's rotations if enabled
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Monster[MoveSel].Direction := Floor[sfloor].Monster[j].Direction;
+                    // Match monster's Y value if enabled
+                    if FSnapOptions.chkSnapYValue.Checked and not altdw then
+                      Floor[sfloor].Monster[MoveSel].Pos_Z := Floor[sfloor].Monster[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
                       diffmin := diff;
@@ -6278,6 +6985,8 @@ begin
                     Floor[sfloor].Monster[MoveSel].Pos_Y := Floor[sfloor].Monster[j].Pos_Y;
                     if FSnapOptions.chkSnapRotate.Checked then
                       Floor[sfloor].Monster[MoveSel].Direction := Floor[sfloor].Monster[j].Direction;
+                    if FSnapOptions.chkSnapYValue.Checked and not altdw then
+                      Floor[sfloor].Monster[MoveSel].Pos_Z := Floor[sfloor].Monster[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
                       diffmin := diff;
@@ -6291,10 +7000,6 @@ begin
         if closest > -1 then
           AdjustDistanceX(closest);
       end;
-
-      // look around to find the best pz
-      if not altdw or firstdrop then
-        Floor[sfloor].Monster[MoveSel].Pos_Z := pz2;
 
       // Placement modifiers - overwrite values if keys are pressed
       if (Selected > -1) and (fdown) then // F key
@@ -6323,6 +7028,8 @@ begin
       Floor[sfloor].Obj[MoveSel].map_section := d;
       Floor[sfloor].Obj[MoveSel].Pos_X := px;
       Floor[sfloor].Obj[MoveSel].Pos_Y := py;
+      if not altdw or firstdrop then
+        Floor[sfloor].Obj[MoveSel].Pos_Z := pz2;
 
       if (FSnapOptions.chkSnap.Checked) or (sdown) then // S key
       begin
@@ -6333,7 +7040,7 @@ begin
           begin
               // Make sure both are visible and sections are the same
               if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[MoveSel].map_section) and
-              ((Floor[sfloor].Obj[j].Unknow5 = showwave) or (showwave = -1)) then
+              ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
               begin
                 if ((round(Floor[sfloor].Obj[j].Pos_X + i)) = round(px))
                 or ((round(Floor[sfloor].Obj[j].Pos_X - i)) = round(px)) then
@@ -6345,8 +7052,23 @@ begin
                   begin
                     Floor[sfloor].Obj[MoveSel].Pos_X := Floor[sfloor].Obj[j].Pos_X;
                     // Match object's rotations if enabled
-                    if FSnapOptions.chkSnapRotate.Checked then
-                      Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
+                    if (FSnapOptions.chkSnapRotate.Checked) then
+                    begin
+                      for k := 0 to RotateCount - 1 do
+                        if floor[sfloor].Obj[MoveSel].Skin = RotateItm[k] then
+                          break;
+                      if k >= RotateCount then
+                        floor[sfloor].Obj[MoveSel].unknow6 := floor[sfloor].Obj[j].unknow6;
+                      if (k < RotateCount) and (floor[sfloor].Obj[MoveSel].Skin = floor[sfloor].Obj[j].Skin) then
+                      begin
+                        floor[sfloor].Obj[MoveSel].unknow5 := floor[sfloor].Obj[j].unknow5;
+                        floor[sfloor].Obj[MoveSel].unknow6 := floor[sfloor].Obj[j].unknow6;
+                        floor[sfloor].Obj[MoveSel].unknow7 := floor[sfloor].Obj[j].unknow7;
+                      end;
+                    end;
+                    // Match object's Y value if enabled
+                    if FSnapOptions.chkSnapYValue.Checked and not altdw then
+                      Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sfloor].Obj[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
                       diffmin := diff;
@@ -6370,7 +7092,7 @@ begin
           begin
               // Make sure both are visible and sections are the same
               if (Floor[sfloor].Obj[j].map_section = Floor[sfloor].Obj[MoveSel].map_section) and
-              ((Floor[sfloor].Obj[j].Unknow5 = showwave) or (showwave = -1)) then
+              ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
               begin
                 if ((round(Floor[sfloor].Obj[j].Pos_Y + i)) = round(py))
                 or ((round(Floor[sfloor].Obj[j].Pos_Y - i)) = round(py)) then
@@ -6381,8 +7103,22 @@ begin
                   or (not FSnapOptions.chkDistancelimit.Checked) then
                   begin
                     Floor[sfloor].Obj[MoveSel].Pos_Y := Floor[sfloor].Obj[j].Pos_Y;
-                    if FSnapOptions.chkSnapRotate.Checked then
-                      Floor[sfloor].Obj[MoveSel].unknow6 := Floor[sfloor].Obj[j].unknow6;
+                    if (FSnapOptions.chkSnapRotate.Checked) then
+                    begin
+                      for k := 0 to RotateCount - 1 do
+                        if floor[sfloor].Obj[MoveSel].Skin = RotateItm[k] then
+                          break;
+                      if k >= RotateCount then
+                        floor[sfloor].Obj[MoveSel].unknow6 := floor[sfloor].Obj[j].unknow6;
+                      if (k < RotateCount) and (floor[sfloor].Obj[MoveSel].Skin = floor[sfloor].Obj[j].Skin) then
+                      begin
+                        floor[sfloor].Obj[MoveSel].unknow5 := floor[sfloor].Obj[j].unknow5;
+                        floor[sfloor].Obj[MoveSel].unknow6 := floor[sfloor].Obj[j].unknow6;
+                        floor[sfloor].Obj[MoveSel].unknow7 := floor[sfloor].Obj[j].unknow7;
+                      end;
+                    end;
+                    if FSnapOptions.chkSnapYValue.Checked and not altdw then
+                      Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sfloor].Obj[j].Pos_Z;
                     if (diff < diffmin) and (j <> MoveSel) then
                     begin
                       diffmin := diff;
@@ -6396,9 +7132,6 @@ begin
         if closest > -1 then
           AdjustDistanceX(closest);
       end;
-
-      if not altdw or firstdrop then
-        Floor[sfloor].Obj[MoveSel].Pos_Z := pz2;
 
       // Placement modifiers - overwrite values if keys are pressed
       if (Selected > -1) and (fdown) then // F key
@@ -6441,7 +7174,6 @@ begin
     end;
     HideIndicator();
     MoveSel := -1;
-    firstdrop := false;
     if ctrldw then
     begin
       // Form1.CheckListBox1Click(form1);
@@ -6449,20 +7181,23 @@ begin
       begin
         ShowIndicator();
         MoveSel := Floor[sfloor].MonsterCount - 1;
-        ListBox1.Items.Add('#' + inttostr(MoveSel) + ' - ' + GenerateMonsterName(Floor[sfloor].Monster[MoveSel],
-          MoveSel, 0));
+        if not firstdrop then
+          ListBox1.Items.Add('#' + inttostr(MoveSel) + ' - ' + GenerateMonsterName(Floor[sfloor].Monster[MoveSel],
+            MoveSel, 0));
         Selected := MoveSel;
       end;
       if MoveType = 2 then
       begin
         ShowIndicator();
         MoveSel := Floor[sfloor].ObjCount - 1;
-        ListBox2.Items.Add('#' + inttostr(MoveSel) + ' - ' + GetObjName(Floor[sfloor].Obj[MoveSel].Skin));
+        if not firstdrop then
+          ListBox2.Items.Add('#' + inttostr(MoveSel) + ' - ' + GetObjName(Floor[sfloor].Obj[MoveSel].Skin));
         Selected := MoveSel;
 
       end;
       DrawMap;
     end;
+    firstdrop := false;
     DrawMap;
   end
   else
@@ -6659,10 +7394,13 @@ end;
 procedure TForm1.Episode11Click(Sender: TObject);
 var
   x: integer;
+  s: ansistring;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
+  else s:=GetLanguageString(79);
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(79), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -6684,6 +7422,7 @@ begin
   TsFnc.Clear;
   TsReg.Clear;
   Tsopc.Clear;
+  fmScriptTE.txtNotes.Clear;
   for x := 0 to 30 do
   begin
     Floor[x].MonsterCount := 0;
@@ -6692,8 +7431,17 @@ begin
     CheckListBox1.Checked[x] := false;
     CheckListBox1.Items.Strings[x] := '';
   end;
-  form4.ListBox1.Items.Clear;
-  form4.ListBox1.Items.Add('0:      ret ');
+  if not fmScriptTE.Visible then
+  begin
+    form4.ListBox1.Items.Clear;
+    form4.ListBox1.Items.Add('0:      ret ')
+  end
+  else
+  begin
+    fmScriptTE.TextEdit.Lines.Clear;
+    fmScriptTE.TextEdit.Lines.Add('0:      ret ');
+    TextEdited := true;
+  end;
   for x := 0 to 17 do
   begin
     Floor[x].MonsterCount := 0;
@@ -6707,15 +7455,19 @@ begin
   end;
   curepi := 0;
 
+  UpdateWindowTitle;
 end;
 
 procedure TForm1.Episode21Click(Sender: TObject);
 var
   x: integer;
+  s: ansistring;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
+  else s:=GetLanguageString(79);
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(79), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -6737,6 +7489,7 @@ begin
   TsFnc.Clear;
   TsReg.Clear;
   Tsopc.Clear;
+  fmScriptTE.txtNotes.Clear;
   for x := 0 to 30 do
   begin
     Floor[x].MonsterCount := 0;
@@ -6745,9 +7498,19 @@ begin
     CheckListBox1.Checked[x] := false;
     CheckListBox1.Items.Strings[x] := '';
   end;
-  form4.ListBox1.Items.Clear;
-  form4.ListBox1.Items.Add('0:      ' + getopcodename($F8BC) + ' 00000001');
-  form4.ListBox1.Items.Add('        ret ');
+  if not fmScriptTE.Visible then
+  begin
+    form4.ListBox1.Items.Clear;
+    form4.ListBox1.Items.Add('0:      ' + getopcodename($F8BC) + ' 00000001');
+    form4.ListBox1.Items.Add('        ret ')
+  end
+  else
+  begin
+    fmScriptTE.TextEdit.Lines.Clear;
+    fmScriptTE.TextEdit.Lines.Add('0:      ' + getopcodename($F8BC) + ' 00000001');
+    fmScriptTE.TextEdit.Lines.Add('        ret ');
+    TextEdited := true;
+  end;
   for x := 0 to 17 do
   begin
     Floor[x].MonsterCount := 0;
@@ -6760,15 +7523,19 @@ begin
     Floor[x].floorid := maparea[mapid[x + EPMap[1]]];
   end;
   curepi := 1;
+  UpdateWindowTitle;
 end;
 
 procedure TForm1.Episode41Click(Sender: TObject);
 var
   x: integer;
+  s: ansistring;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
+  else s:=GetLanguageString(79);
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(79), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -6790,6 +7557,7 @@ begin
   TsFnc.Clear;
   TsReg.Clear;
   Tsopc.Clear;
+  fmScriptTE.txtNotes.Clear;
   for x := 0 to 30 do
   begin
     Floor[x].MonsterCount := 0;
@@ -6798,9 +7566,19 @@ begin
     CheckListBox1.Checked[x] := false;
     CheckListBox1.Items.Strings[x] := '';
   end;
-  form4.ListBox1.Items.Clear;
-  form4.ListBox1.Items.Add('0:      ' + getopcodename($F8BC) + ' 00000002');
-  form4.ListBox1.Items.Add('        ret ');
+  if not fmScriptTE.Visible then
+  begin
+    form4.ListBox1.Items.Clear;
+    form4.ListBox1.Items.Add('0:      ' + getopcodename($F8BC) + ' 00000002');
+    form4.ListBox1.Items.Add('        ret ')
+  end
+  else
+  begin
+    fmScriptTE.TextEdit.Lines.Clear;
+    fmScriptTE.TextEdit.Lines.Add('0:      ' + getopcodename($F8BC) + ' 00000002');
+    fmScriptTE.TextEdit.Lines.Add('        ret ');
+    TextEdited := true;
+  end;
   x := 10;
   Floor[0].MonsterCount := 0;
   Floor[0].ObjCount := 0;
@@ -6822,6 +7600,7 @@ begin
     Floor[x + 1].floorid := maparea[mapid[x + EPMap[2]]];
   end;
   curepi := 2;
+  UpdateWindowTitle;
 end;
 
 procedure TForm1.Button11Click(Sender: TObject);
@@ -6839,7 +7618,9 @@ begin
   isedited := true;
   move(FloorUn[undocount], Floor[0], sizeof(TFloor) * 40);
   ctrldw := true;
+  inundo := true;
   Form1.CheckListBox1Click(Form1);
+  inundo := false;
   ctrldw := false;
 end;
 
@@ -6857,6 +7638,11 @@ begin
   move(Floor[0], FloorUn[undocount], sizeof(TFloor) * 40);
   inc(undocount);
   // Form1.CheckListBox1Click(form1);
+end;
+
+procedure TForm1.Smallfont1Click(Sender: TObject);
+begin
+  SetCoordSize(0);
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -7349,6 +8135,11 @@ begin
   MenueDrawItem(Sender, ACanvas, ARect, Selected);
 end;
 
+procedure TForm1.Mediumfont1Click(Sender: TObject);
+begin
+  SetCoordSIze(1);
+end;
+
 procedure TForm1.MenueDrawItemX(xMenu: TMenu);
 var
   i: integer;
@@ -7719,7 +8510,9 @@ end;
 
 procedure TForm1.Newmonster1Click(Sender: TObject);
 begin
-  Button9Click(nil);
+  if fmScriptTE.Focused then
+    fmScriptTE.Notes1Click(nil)
+  else Button9Click(nil);
 end;
 
 procedure TForm1.smNewItemClick(Sender: TObject);
@@ -7781,6 +8574,7 @@ begin
   // Update based on snap preferences
   snapvalue := FSnapOptions.seSnapTolerance.Value;
   snaprotate := FSnapOptions.chkSnapRotate.Checked;
+  snapyvalue := FSnapOptions.chkSnapYValue.Checked;
   snapdistance := FSnapOptions.chkSnapDistance.Checked;
 end;
 
@@ -8078,12 +8872,16 @@ begin
     fmScriptTE.TextEdit.CutToClipboard
    else if fmScriptTE.Edit2.Focused then
     fmScriptTE.Edit2.CutToClipboard
+   else if fmScriptTE.txtNotes.Focused then
+    fmScriptTE.txtNotes.CutToClipboard
    else if (have3d) and (form13.BorderStyle = bsNone) and (not form13.Focused) then
     Form1.WindowState := wsMinimized
    else if (have3d) and (form13.BorderStyle = bsNone) and (form13.Focused) then
    begin
     Form1.WindowState := wsNormal;
     Form1.BringToFront;
+    if form4.Visible then form4.BringToFront;
+    if fmScriptTE.Visible then fmScriptTE.BringToFront;
    end;
 end;
 
@@ -8202,7 +9000,10 @@ procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   Reg: TRegistry;
   flp: TMemoryStream;
+  s: ansistring;
 begin
+  if New1.Caption.Contains('New') then s:='Save current project before quitting?'
+  else s:=GetLanguageString(55);
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;
@@ -8218,7 +9019,7 @@ begin
   end;
   if isedited then
   begin
-    if MessageDlg(GetLanguageString(55), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       Form1.Save1Click(Form1);
       if isedited then
@@ -8512,6 +9313,8 @@ end;
 
 procedure TForm1.Compatibilitycheck1Click(Sender: TObject);
 begin
+  if fmScriptTE.Visible then
+    form4.Show;
   TestCompatibility(0, form27.er[0], form27.wa[0]);
   TestCompatibility(1, form27.er[1], form27.wa[1]);
   form27.er[2] := form27.er[1];
@@ -8573,9 +9376,21 @@ begin
   end;
 end;
 
+procedure TForm1.Label5MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+    if (Button = mbRight) and (mdown = 0) then
+      PopupMenu4.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
+end;
+
+procedure TForm1.Largefont1Click(Sender: TObject);
+begin
+  SetCoordSize(2);
+end;
+
 procedure TForm1.Layout11Click(Sender: TObject);
 var
-  x, i, c, pos, k, y, okfnd: integer;
+  x, i, c, pos, k, y, z, okfnd: integer;
   strtofind, mappc, mapgc, mapbb, leti: ansistring;
   regused, modetouse, regcount: byte;
   s: ansistring;
@@ -8596,136 +9411,284 @@ begin
   if Floor[CheckListBox1.ItemIndex].floorid > $23 then
     modetouse := 2;
   strtofind := '';
-  for c := i downto 0 do
+  if not fmScriptTE.Visible then
   begin
-    if copy(form4.ListBox1.Items.Strings[c], 9, length(mapbb)) = mapbb then
+    for c := i downto 0 do
     begin
-      modetouse := 2;
-      s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mapbb), 2);
-      if hextoint(s) = x then
+      if copy(form4.ListBox1.Items.Strings[c], 9, length(mapbb)) = mapbb then
       begin
+        modetouse := 2;
+        s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mapbb), 2);
+        if showdecimal then
+        begin
+          z := strtoint(s);
+          s := inttohex(z);
+        end;
+        if hextoint(s) = x then
+        begin
+          pos := c;
+          b := copy(form4.ListBox1.Items.Strings[c], 1, 8) + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
+            GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00';
+          form4.ListBox1.Items.Strings[c] := b;
+          okfnd := 1;
+          break;
+        end;
+      end;
+      if copy(form4.ListBox1.Items.Strings[c], 9, length(mapgc)) = mapgc then
+      begin
+        modetouse := 1;
         pos := c;
-        b := copy(form4.ListBox1.Items.Strings[c], 1, 8) + mapbb + ' ' + inttohex(x, 2) + ', ' +
-          inttohex(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + inttohex(TMenuItem(Sender).tag, 2) + ', 00';
-        form4.ListBox1.Items.Strings[c] := b;
-        okfnd := 1;
-        break;
+        s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mapgc), 3); // the reg
+        regused := strtoint(s);
+        strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+        regcount := 4;
+      end;
+      if copy(form4.ListBox1.Items.Strings[c], 9, length(mappc)) = mappc then
+      begin
+        modetouse := 0;
+        s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mappc), 3); // the reg
+        pos := c;
+        regused := strtoint(s);
+        strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+        regcount := 3;
+      end;
+      if strtofind <> '' then
+      begin
+        if strtofind = copy(form4.ListBox1.Items.Strings[c], 9, length(form4.ListBox1.Items.Strings[c]) - 8) then
+        begin
+          k := c;
+          b := copy(form4.ListBox1.Items.Strings[c], 1, 8);
+          while k < pos do
+          begin // delete all reg
+            // scan for any matching reg
+            for y := regused to regused + regcount do
+            begin
+              s := leti + ' R' + inttostr(y) + ', ';
+              if copy(form4.ListBox1.Items.Strings[k], 9, length(s)) = s then
+              begin
+                form4.ListBox1.Items.delete(k);
+                dec(pos);
+                break;
+              end;
+            end;
+            if y > regused + regcount then
+              inc(k); // didnt match
+          end;
+          // here insert all at the pos
+          b := b + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+          form4.ListBox1.Items.insert(pos, b);
+          y := 0;
+          if regcount = 4 then
+          begin
+            form4.ListBox1.Items.insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
+              GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 8));
+            y := 1;
+          end;
+          form4.ListBox1.Items.insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
+          form4.ListBox1.Items.insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
+            GetDisplayValue(TMenuItem(Sender).tag, 8));
+          form4.ListBox1.Items.insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
+          okfnd := 1;
+          break;
+        end;
       end;
     end;
-    if copy(form4.ListBox1.Items.Strings[c], 9, length(mapgc)) = mapgc then
+
+    // if not found add it
+    if okfnd = 0 then
     begin
-      modetouse := 1;
-      pos := c;
-      s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mapgc), 3); // the reg
-      regused := strtoint(s);
-      strtofind := leti + ' R' + inttostr(regused) + ', ' + inttohex(x, 8);
-      regcount := 4;
-    end;
-    if copy(form4.ListBox1.Items.Strings[c], 9, length(mappc)) = mappc then
-    begin
-      modetouse := 0;
-      s := copy(form4.ListBox1.Items.Strings[c], 10 + length(mappc), 3); // the reg
-      pos := c;
-      regused := strtoint(s);
-      strtofind := leti + ' R' + inttostr(regused) + ', ' + inttohex(x, 8);
-      regcount := 3;
-    end;
-    if strtofind <> '' then
-    begin
-      if strtofind = copy(form4.ListBox1.Items.Strings[c], 9, length(form4.ListBox1.Items.Strings[c]) - 8) then
-      begin
-        k := c;
-        b := copy(form4.ListBox1.Items.Strings[c], 1, 8);
-        while k < pos do
-        begin // delete all reg
-          // scan for any matching reg
-          for y := regused to regused + regcount do
-          begin
-            s := leti + ' R' + inttostr(y) + ', ';
-            if copy(form4.ListBox1.Items.Strings[k], 9, length(s)) = s then
-            begin
-              form4.ListBox1.Items.delete(k);
-              dec(pos);
-              break;
-            end;
-          end;
-          if y > regused + regcount then
-            inc(k); // didnt match
+      // find the label 0
+      for c := i downto 0 do
+        if copy(form4.ListBox1.Items.Strings[c], 1, 8) = '0:      ' then
+          break;
+      if c > -1 then
+        if copy(form4.ListBox1.Items.Strings[c], 1, 8) = '0:      ' then
+        begin
+          form4.ListBox1.Items.Strings[c] := '  ' + copy(form4.ListBox1.Items.Strings[c], 3,
+            length(form4.ListBox1.Items.Strings[c]) - 2);
         end;
-        // here insert all at the pos
-        b := b + leti + ' R' + inttostr(regused) + ', ' + inttohex(x, 8);
+      // dec(c);
+      if modetouse = 2 then
+      begin
+        form4.ListBox1.Items.insert(c, '0:      ' + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
+          GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00');
+      end
+      else
+      begin
+        pos := c;
+        if pos < 0 then
+          pos := 0;
+        if modetouse = 0 then
+        begin
+          regused := 60;
+          regcount := 3;
+        end
+        else
+        begin
+          regused := 60;
+          regcount := 4;
+        end;
+        b := '0:      ' + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
         form4.ListBox1.Items.insert(pos, b);
         y := 0;
         if regcount = 4 then
         begin
           form4.ListBox1.Items.insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
-            inttohex(Floor[CheckListBox1.ItemIndex].floorid, 8));
+            GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 8));
           y := 1;
         end;
         form4.ListBox1.Items.insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
         form4.ListBox1.Items.insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
-          inttohex(TMenuItem(Sender).tag, 8));
+          GetDisplayValue(TMenuItem(Sender).tag, 8));
         form4.ListBox1.Items.insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
-        okfnd := 1;
-        break;
+        if modetouse = 0 then
+          form4.ListBox1.Items.insert(pos + y + 4, '        ' + mappc + 'R60')
+        else
+          form4.ListBox1.Items.insert(pos + y + 4, '        ' + mapgc + 'R60')
       end;
     end;
-  end;
-
-  // if not found add it
-  if okfnd = 0 then
+  end
+  else
   begin
-    // find the label 0
+    i := fmScriptTE.TextEdit.Lines.Count - 1;
+    TextEdited := true;
     for c := i downto 0 do
-      if copy(form4.ListBox1.Items.Strings[c], 1, 8) = '0:      ' then
-        break;
-    if c > -1 then
-      if copy(form4.ListBox1.Items.Strings[c], 1, 8) = '0:      ' then
+    begin
+      if copy(fmScriptTE.TextEdit.Lines[c], 9, length(mapbb)) = mapbb then
       begin
-        form4.ListBox1.Items.Strings[c] := '  ' + copy(form4.ListBox1.Items.Strings[c], 3,
-          length(form4.ListBox1.Items.Strings[c]) - 2);
+        modetouse := 2;
+        s := copy(fmScriptTE.TextEdit.Lines[c], 10 + length(mapbb), 2);
+        if showdecimal then
+        begin
+          z := strtoint(s);
+          s := inttohex(z);
+        end;
+        if hextoint(s) = x then
+        begin
+          pos := c;
+          b := copy(fmScriptTE.TextEdit.Lines[c], 1, 8) + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
+            GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00';
+          fmScriptTE.TextEdit.Lines[c] := b;
+          okfnd := 1;
+          break;
+        end;
       end;
-    // dec(c);
-    if modetouse = 2 then
-    begin
-      form4.ListBox1.Items.insert(c, '0:      ' + mapbb + ' ' + inttohex(x, 2) + ', ' +
-        inttohex(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + inttohex(TMenuItem(Sender).tag, 2) + ', 00');
-    end
-    else
-    begin
-      pos := c;
-      if pos < 0 then
-        pos := 0;
-      if modetouse = 0 then
+      if copy(fmScriptTE.TextEdit.Lines[c], 9, length(mapgc)) = mapgc then
       begin
-        regused := 60;
+        modetouse := 1;
+        pos := c;
+        s := copy(fmScriptTE.TextEdit.Lines[c], 10 + length(mapgc), 3); // the reg
+        regused := strtoint(s);
+        strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+        regcount := 4;
+      end;
+      if copy(fmScriptTE.TextEdit.Lines[c], 9, length(mappc)) = mappc then
+      begin
+        modetouse := 0;
+        s := copy(fmScriptTE.TextEdit.Lines[c], 10 + length(mappc), 3); // the reg
+        pos := c;
+        regused := strtoint(s);
+        strtofind := leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
         regcount := 3;
+      end;
+      if strtofind <> '' then
+      begin
+        if strtofind = copy(fmScriptTE.TextEdit.Lines[c], 9, length(fmScriptTE.TextEdit.Lines[c]) - 8) then
+        begin
+          k := c;
+          b := copy(fmScriptTE.TextEdit.Lines[c], 1, 8);
+          while k < pos do
+          begin // delete all reg
+            // scan for any matching reg
+            for y := regused to regused + regcount do
+            begin
+              s := leti + ' R' + inttostr(y) + ', ';
+              if copy(fmScriptTE.TextEdit.Lines[k], 9, length(s)) = s then
+              begin
+                fmScriptTE.TextEdit.Lines.Delete(k);
+                dec(pos);
+                break;
+              end;
+            end;
+            if y > regused + regcount then
+              inc(k); // didnt match
+          end;
+          // here insert all at the pos
+          b := b + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+          fmScriptTE.TextEdit.Lines.Insert(pos, b);
+          y := 0;
+          if regcount = 4 then
+          begin
+            fmScriptTE.TextEdit.Lines.Insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
+              GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 8));
+            y := 1;
+          end;
+          fmScriptTE.TextEdit.Lines.Insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
+          fmScriptTE.TextEdit.Lines.Insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
+            GetDisplayValue(TMenuItem(Sender).tag, 8));
+          fmScriptTE.TextEdit.Lines.Insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
+          okfnd := 1;
+          break;
+        end;
+      end;
+    end;
+
+    // if not found add it
+    if okfnd = 0 then
+    begin
+      // find the label 0
+      for c := i downto 0 do
+        if copy(fmScriptTE.TextEdit.Lines[c], 1, 8) = '0:      ' then
+          break;
+      if c > -1 then
+        if copy(fmScriptTE.TextEdit.Lines[c], 1, 8) = '0:      ' then
+        begin
+          fmScriptTE.TextEdit.Lines[c] := '  ' + copy(fmScriptTE.TextEdit.Lines[c], 3,
+            length(fmScriptTE.TextEdit.Lines[c]) - 2);
+        end;
+      // dec(c);
+      if modetouse = 2 then
+      begin
+        if c = -1 then
+          inc(c);
+        fmScriptTE.TextEdit.Lines.Insert(c, '0:      ' + mapbb + ' ' + GetDisplayValue(x, 2) + ', ' +
+          GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 4) + ', ' + GetDisplayValue(TMenuItem(Sender).tag, 2) + ', 00');
       end
       else
       begin
-        regused := 60;
-        regcount := 4;
+        pos := c;
+        if pos < 0 then
+          pos := 0;
+        if modetouse = 0 then
+        begin
+          regused := 60;
+          regcount := 3;
+        end
+        else
+        begin
+          regused := 60;
+          regcount := 4;
+        end;
+        b := '0:      ' + leti + ' R' + inttostr(regused) + ', ' + GetDisplayValue(x, 8);
+        fmScriptTE.TextEdit.Lines.Insert(pos, b);
+        y := 0;
+        if regcount = 4 then
+        begin
+          fmScriptTE.TextEdit.Lines.Insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
+            GetDisplayValue(Floor[CheckListBox1.ItemIndex].floorid, 8));
+          y := 1;
+        end;
+        fmScriptTE.TextEdit.Lines.Insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
+        fmScriptTE.TextEdit.Lines.Insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
+          GetDisplayValue(TMenuItem(Sender).tag, 8));
+        fmScriptTE.TextEdit.Lines.Insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
+        if modetouse = 0 then
+          fmScriptTE.TextEdit.Lines.Insert(pos + y + 4, '        ' + mappc + 'R60')
+        else
+          fmScriptTE.TextEdit.Lines.Insert(pos + y + 4, '        ' + mapgc + 'R60')
       end;
-      b := '0:      ' + leti + ' R' + inttostr(regused) + ', ' + inttohex(x, 8);
-      form4.ListBox1.Items.insert(pos, b);
-      y := 0;
-      if regcount = 4 then
-      begin
-        form4.ListBox1.Items.insert(pos + 1, '        ' + leti + ' R' + inttostr(regused + 1) + ', ' +
-          inttohex(Floor[CheckListBox1.ItemIndex].floorid, 8));
-        y := 1;
-      end;
-      form4.ListBox1.Items.insert(pos + y + 1, '        ' + leti + ' R' + inttostr(regused + 1 + y) + ', 00000000');
-      form4.ListBox1.Items.insert(pos + y + 2, '        ' + leti + ' R' + inttostr(regused + 2 + y) + ', ' +
-        inttohex(TMenuItem(Sender).tag, 8));
-      form4.ListBox1.Items.insert(pos + y + 3, '        ' + leti + ' R' + inttostr(regused + 3 + y) + ', 00000000');
-      if modetouse = 0 then
-        form4.ListBox1.Items.insert(pos + y + 4, '        ' + mappc + 'R60')
-      else
-        form4.ListBox1.Items.insert(pos + y + 4, '        ' + mapgc + 'R60')
     end;
   end;
-
   mapxvmfile[x] := path + 'map\xvm\' + mapxvmname[mapid[Floor[CheckListBox1.ItemIndex].floorid] +
     TMenuItem(Sender).tag];
   mapfile[x] := path + 'map\' + mapfilename[mapid[Floor[CheckListBox1.ItemIndex].floorid] + TMenuItem(Sender).tag];
@@ -8766,6 +9729,13 @@ procedure TForm1.Cancelplacement1Click(Sender: TObject);
 begin
   if (have3d) and (form13.Focused) and (form13.BorderStyle = bsNone) then
     form13.close
+  else if fmScriptTE.Edit2.Focused then
+  begin
+    fmScriptTE.Edit2.Hide;
+    fmScriptTE.TextEdit.ClearSelection
+  end
+  else if fmScriptTE.txtNotes.Focused then
+    fmScriptTE.Notes1Click(nil)
   else
   begin
     MoveSel := -1;
@@ -8787,14 +9757,16 @@ end;
 procedure TForm1.Undo1Click(Sender: TObject);
 begin
   if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
-  and not fmScriptTE.Edit2.Focused then
+  and not fmScriptTE.Edit2.Focused and not fmScriptTE.txtNotes.Focused then
     Button11Click(nil)
   else if form4.edit1.Focused then
     form4.edit1.Undo
   else if fmScriptTE.TextEdit.Focused then
-    fmScriptTE.TextEdit.DoUndo
+    fmScriptTE.Undo1Click(nil)
   else if fmScriptTE.Edit2.focused then
-    fmScriptTE.Edit2.Undo;
+    fmScriptTE.Edit2.Undo
+  else if fmScriptTE.txtNotes.focused then
+    fmScriptTE.txtNotes.Undo;
 end;
 
 procedure TForm1.English1Click(Sender: TObject);
@@ -8853,6 +9825,8 @@ var
   s, b: widestring;
   f, x, y, re, z, i, c: integer;
 begin
+  if fmScriptTE.Visible then
+    form4.Show;
   if SaveDialog3.Execute then
   begin
     f := filecreate(SaveDialog3.filename);
@@ -8974,6 +9948,8 @@ var
   s, b, a: widestring;
   f, x, y, re, z, i, c: integer;
 begin
+  if fmScriptTE.Visible then
+    form4.Show;
   if OpenDialog3.Execute then
   begin
     f := fileopen(OpenDialog3.filename, $40);
@@ -9090,6 +10066,14 @@ begin
   LanguageString.LoadFromStream(flp);
   SetInterfaceText;
   flp.Free;
+end;
+
+procedure TForm1.SwitchScriptEditor1Click(Sender: TObject);
+begin
+  if fmScriptTE.Visible then
+    form4.Show
+  else if form4.Visible then
+    fmScriptTE.Show;
 end;
 
 procedure TForm1.Floorfilter1Click(Sender: TObject);

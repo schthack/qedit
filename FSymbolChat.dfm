@@ -1,6 +1,7 @@
 object Form33: TForm33
   Left = 0
   Top = 0
+  BorderStyle = bsDialog
   Caption = 'Symbol Chat'
   ClientHeight = 408
   ClientWidth = 558
@@ -10,10 +11,9 @@ object Form33: TForm33
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
+  Position = poOwnerFormCenter
   OnCreate = FormCreate
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
     Left = 256
@@ -777,6 +777,7 @@ object Form33: TForm33
     Top = 360
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Cancel'
     TabOrder = 17
     OnClick = Button2Click
@@ -802,13 +803,21 @@ object Form33: TForm33
       'Sound 8'
       'Sound 9')
   end
+  object chkGCEndian: TCheckBox
+    Left = 286
+    Top = 363
+    Width = 97
+    Height = 17
+    Caption = 'GC endianness'
+    TabOrder = 19
+  end
   object ImageList1: TImageList
     Height = 256
     Width = 256
     Left = 512
     Top = 184
     Bitmap = {
-      494C010104000800080000010001FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010104000800040000010001FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000400000002000001002000000000000000
       2000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -68405,7 +68414,7 @@ object Form33: TForm33
     Left = 472
     Top = 184
     Bitmap = {
-      494C010102000800080020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800040020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

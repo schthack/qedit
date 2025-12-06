@@ -1,6 +1,6 @@
 # PSO Quest Editor
 ## Building
-In Delphi Community Edition, install the Designtime bpl package file located in the Text editor folder (Component -> Install packages -> Add) before building.
+Open the .dproj file in Delphi (tested using Delphi 12 Community Edition) and install (Component -> Install packages -> Add) the Designtime.bpl package file located in the Text editor folder, then build with Shift+F9.
 DirectX 9c is required, the specific dll is included in the source. 
 
 The script text editor utilizes the TTextEditor control by Lasse Markus Rautiainen: https://github.com/TextEditorPro/TTextEditor

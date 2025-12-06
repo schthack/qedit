@@ -18,7 +18,11 @@ type
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     chkFullscreen: TCheckBox;
+    chkFollow: TCheckBox;
     procedure Button1Click(Sender: TObject);
+    procedure chkFullscreenClick(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -27,6 +31,7 @@ type
 
 var
   Form17: TForm17;
+  screenchanged: Boolean = false;
 
 implementation
 
@@ -48,6 +53,7 @@ begin
       Reg.WriteInteger('Dist',combobox4.ItemIndex);
       Reg.WriteInteger('SkyDome',dword(checkbox2.checked));
       Reg.WriteBool('Fullscreen3D',chkFullscreen.Checked);
+      Reg.WriteBool('Follow3D',chkFollow.Checked);
       Reg.CloseKey;
     end;
   finally
@@ -69,16 +75,29 @@ begin
       else myscreen.Setclipping(0);
       if form17.CheckBox1.Checked then myscreen.Antializing:=true
       else myscreen.Antializing:=false;
-  end
-  else
-  // Re-render screen next time with new settings.
-  if myscreen <> nil then
-  begin
-    myscreen.Free;
-    myscreen := nil;
   end;
 
   close;
+  if (myscreen <> nil) and screenchanged then
+  begin
+    MessageDlg('Settings saved. Screen size and window settings will take effect the next time QEdit is launched.',
+     mtInformation, [mbOk], 0);
+  end;
+end;
+
+procedure TForm17.chkFullscreenClick(Sender: TObject);
+begin
+  screenchanged := true;
+end;
+
+procedure TForm17.ComboBox1Change(Sender: TObject);
+begin
+  screenchanged := true;
+end;
+
+procedure TForm17.FormShow(Sender: TObject);
+begin
+  screenchanged := false;
 end;
 
 end.

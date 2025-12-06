@@ -473,7 +473,7 @@
 {0xf8ef, "unknownF8EF", T_NONE, T_NONE, T_V3}, // found in q86(test) does nothing
 {0xf8f0, "turn_off_bgm_p2", T_NONE, T_NONE, T_V3}, // Name, Lee
 {0xf8f1, "turn_on_bgm_p2", T_NONE, T_NONE, T_V3}, // Name, Lee
-{0xf8f2, "load_unk_data", T_ARGS, T_DWORD, T_DWORD, T_DWORD, T_DWORD, T_BREG, T_DATA, T_NONE, T_V3}, // fix Lee
+{0xf8f2, "compute_bezier_curve_point", T_ARGS, T_DWORD, T_DWORD, T_DWORD, T_DWORD, T_BREG, T_DATA, T_NONE, T_V3},
 {0xf8f3, "particle2", T_ARGS, T_BREG, T_DWORD, T_FLOAT, T_NONE, T_V3},
 {0xf901, "dec2float", T_IMED, T_REG, T_REG, T_NONE, T_V3},
 {0xf902, "float2dec", T_IMED, T_REG, T_REG, T_NONE, T_V3},

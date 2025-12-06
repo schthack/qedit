@@ -11,10 +11,8 @@ object Form8: TForm8
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
-  PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
@@ -63,6 +61,7 @@ object Form8: TForm8
       Top = 316
       Width = 121
       Height = 25
+      Cancel = True
       Caption = 'Cancel'
       TabOrder = 3
       OnClick = Button3Click
