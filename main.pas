@@ -7339,7 +7339,8 @@ begin
 
     if Floor[CheckListBox1.ItemIndex].Unknow[15] = $32 then
     begin
-      form8.Memo2.Lines.Add('wave_choice:');
+      form8.Memo2.Lines.Add('random_waves:');
+      form8.Memo2.Lines.Add('');
       form8.Memo2.Lines.Add('');
     end;
 

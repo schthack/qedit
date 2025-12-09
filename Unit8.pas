@@ -145,7 +145,7 @@ begin
     b:='';
     evtv:=20;
     for x:=0 to form8.Memo2.Lines.Count-1 do
-        if GetWord(form8.Memo2.Lines.Strings[x]) = 'wave_choice:' then evtv:=24;
+        if GetWord(form8.Memo2.Lines.Strings[x]) = 'random_waves:' then evtv:=24;
     //if floor[form1.checklistbox1.ItemIndex].Unknow[15] = $32 then evtv:=24;
     y:=0;
     try
@@ -336,7 +336,7 @@ begin
         wordlist:=tstringlist.Create;
         wordlist.Add('section:');
         wordlist.Add('wave:');
-        wordlist.Add('wave_choice:');
+        wordlist.Add('random_waves:');
         wordlist.Add('delay:');
         wordlist.Add('mindelay:');
         wordlist.Add('maxdelay:');
