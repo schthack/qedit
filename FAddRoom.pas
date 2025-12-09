@@ -31,7 +31,7 @@ uses unit15;
 
 procedure TfmRoom.btnOKClick(Sender: TObject);
 var
-  idx: Integer;
+  idx, x: Integer;
 begin
   if fmRoom.Caption = 'Add room' then
   begin
@@ -56,9 +56,17 @@ begin
     // Update the roomnum in the roomdata array
     roomdata[idx + 1].roomnum := Spinedit1.Value;
 
+    // Update the room ID cell
+    if roomdata[idx + 1].numentries > 0 then
+    begin
+      for x := 0 to roomdata[idx + 1].numentries do
+        move(roomdata[idx + 1].roomnum, roomdata[idx + 1].data[(x * 28) + 24], 2);
+    end;
+
     // Update the ListBox display
     form15.ListBox1.Items[idx] := IntToStr(Spinedit1.Value) +
       ' (' + IntToStr(roomdata[idx + 1].numentries) + ' entries)';
+    form15.ListBox1Click(nil);
     Close;
   end;
 end;

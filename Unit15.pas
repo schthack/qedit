@@ -327,8 +327,8 @@ end;
 
 procedure TForm15.Addrow1Click(Sender: TObject);
 var
-  roomIndex, insertRow: Integer;
-  insertPos, oldSize: Integer;
+  i, j, roomIndex, insertRow, insertPos, oldSize: Integer;
+  found: Boolean;
 begin
   roomIndex := Listbox1.ItemIndex + 1;
 
@@ -340,6 +340,9 @@ begin
     // Create first entry
     SetLength(roomdata[roomIndex].data, 28);
     FillChar(roomdata[roomIndex].data[0], 28, 0);
+
+    // Set room ID cell
+    move(roomdata[roomIndex].roomnum, roomdata[roomIndex].data[24], 2);
 
     // Update count
     roomdata[roomIndex].numentries := 1;
@@ -375,6 +378,26 @@ begin
 
   // Zero the new block
   FillChar(roomdata[roomIndex].data[insertPos], 28, 0);
+
+  // Set room ID cell
+  move(roomdata[roomIndex].roomnum, roomdata[roomIndex].data[insertPos + 24], 2);
+
+  // Set entry # cell
+  for i := 0 to 65535 do
+  begin
+    found := false;
+    for j := 1 to StringGrid3.RowCount - 1 do
+    begin
+      if strtoint(StringGrid3.Cells[8,j]) = i then
+      begin
+        found := true;
+        break;
+      end;
+    end;
+    if not found then
+      break;
+  end;
+  move(i, roomdata[roomIndex].data[insertPos + 26], 2);
 
   // Increase total
   Inc(roomdata[roomIndex].numentries);
@@ -753,12 +776,27 @@ begin
 
    // Add entry
   if (Listbox1.ItemIndex > -1) and (StringGrid3.RowCount < 33) then
-    btnAddEntry.Enabled := true
-  else btnAddEntry.Enabled := false;
+  begin
+    btnAddEntry.Enabled := true;
+    AddRow1.Enabled := true
+  end
+  else
+  begin
+    btnAddEntry.Enabled := false;
+    AddRow1.Enabled := false;
+  end;
   // Delete entry
-  if (Stringgrid3.Row > 0) and (Listbox1.ItemIndex > -1) then
-    btnDeleteEntry.Enabled := true
-  else btnDeleteEntry.Enabled := false;
+  if (Stringgrid3.Row > 0) and (Stringgrid3.RowCount > 1)
+  and (Listbox1.ItemIndex > -1) then
+  begin
+    btnDeleteEntry.Enabled := true;
+    DeleteRow1.Enabled := true
+  end
+  else
+  begin
+    btnDeleteEntry.Enabled := false;
+    DeleteRow1.Enabled := false;
+  end;
 
   // Delete row
   if Stringgrid1.Row > 0 then
