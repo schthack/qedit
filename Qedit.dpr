@@ -50,7 +50,9 @@ uses
   FSnap in 'FSnap.pas' {FSnapOptions},
   FScriptTE in 'FScriptTE.pas' {fmScriptTE},
   FReplace in 'FReplace.pas' {fmReplace},
-  FGoto in 'FGoto.pas' {fmGoto};
+  FGoto in 'FGoto.pas' {fmGoto},
+  FAddRoom in 'FAddRoom.pas' {FRoom},
+  FMonsType in 'FMonsType.pas' {fmMonsterType};
 
 {$R *.res}
 
@@ -103,6 +105,8 @@ begin
   Application.CreateForm(TfmScriptTE, fmScriptTE);
   Application.CreateForm(TfmReplace, fmReplace);
   Application.CreateForm(TfmGoto, fmGoto);
+  Application.CreateForm(TfmRoom, fmRoom);
+  Application.CreateForm(TfmMonsterType, fmMonsterType);
   Application.Run;
   end;
 end.

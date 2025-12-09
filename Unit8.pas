@@ -183,19 +183,30 @@ begin
                 move(i,a[13],4);
             end;
 
-            if r = 'wavesetting:' then begin
+            if evtv = 24 then
+            begin
+              if r = 'mindelay:' then begin
                 i:=strtoint(GetWord(s));
-                s:=GetAfterWord(s);
-                move(i,a[17],1);
-                i:=strtoint(GetWord(s));
-                s:=GetAfterWord(s);
-                move(i,a[18],1);
-                i:=strtoint(GetWord(s));
-                s:=GetAfterWord(s);
-                move(i,a[19],1);
-                i:=strtoint(GetWord(s));
-                s:=GetAfterWord(s);
-                move(i,a[20],1);
+                move(i,a[13],2);
+              end;
+              if r = 'maxdelay:' then begin
+                  i:=strtoint(GetWord(s));
+                  move(i,a[15],2);
+              end;
+              if r = 'wavesetting:' then begin
+                  i:=strtoint(GetWord(s));
+                  s:=GetAfterWord(s);
+                  move(i,a[17],1);
+                  i:=strtoint(GetWord(s));
+                  s:=GetAfterWord(s);
+                  move(i,a[18],1);
+                  i:=strtoint(GetWord(s));
+                  s:=GetAfterWord(s);
+                  move(i,a[19],1);
+                  i:=strtoint(GetWord(s));
+                  s:=GetAfterWord(s);
+                  move(i,a[20],1);
+              end;
             end;
 
             //command
@@ -325,7 +336,10 @@ begin
         wordlist:=tstringlist.Create;
         wordlist.Add('section:');
         wordlist.Add('wave:');
+        wordlist.Add('wave_choice:');
         wordlist.Add('delay:');
+        wordlist.Add('mindelay:');
+        wordlist.Add('maxdelay:');
         wordlist.Add('wavesetting:');
         wordlist.Add('call');
         wordlist.Add('lock');

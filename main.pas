@@ -5380,6 +5380,8 @@ begin
       form17.Label2.Caption := 'Frame skip:';
       form17.Label4.Caption := 'Distance:';
       form17.CheckBox2.Caption := 'Use skydome';
+      form15.Label2.Caption := 'Spawn points';
+      form15.Label3.Caption := 'Monster settings';
     end;
     flp.Clear;
     CheckShadow;
@@ -5448,7 +5450,8 @@ procedure TForm1.Button7Click(Sender: TObject);
 var // h:TNPCGroupeHeader;
   f: integer;
 begin
-  SaveDialog1.Filter := 'All chunks|*.*|Objects only|*o.dat|Monsters only|*e.dat|Events only|*.evt';
+  SaveDialog1.Filter := 'All chunks|*.*|Objects only|*o.dat|Monsters only|*e.dat|Events only|*.evt' +
+                        '|Random spawn data only|*r.dat';
   if CheckListBox1.ItemIndex > -1 then
     if SaveDialog1.Execute then
     begin
@@ -5468,6 +5471,15 @@ begin
       begin
         f := filecreate(SaveDialog1.filename + '.evt');
         filewrite(f, Floor[CheckListBox1.ItemIndex].Unknow[0], Floor[CheckListBox1.ItemIndex].UnknowCount);
+        fileclose(f);
+      end;
+      if (SaveDialog1.FilterIndex = 1) or (SaveDialog1.FilterIndex = 5) then
+      begin
+        f := filecreate(SaveDialog1.filename + 'r.dat');
+        filewrite(f, Floor[CheckListBox1.ItemIndex].d04count, 4);
+        filewrite(f, Floor[CheckListBox1.ItemIndex].d04[0], Floor[CheckListBox1.ItemIndex].d04count);
+        filewrite(f, Floor[CheckListBox1.ItemIndex].d05count, 4);
+        filewrite(f, Floor[CheckListBox1.ItemIndex].d05[0], Floor[CheckListBox1.ItemIndex].d05count);
         fileclose(f);
       end;
       { f:=filecreate(SaveDialog1.FileName);
@@ -6348,6 +6360,7 @@ var
   h: TNPCGroupeHeader;
 begin
   OpenDialog1.Filter := 'Objects|*o.dat;*d.dat|Monsters|*e.dat|Events|*.evt' +
+                        '|Random spawn data|*r.dat' +
                         '|Append objects|*o.dat;*d.dat|Append monsters|*e.dat';
   if OpenDialog1.Execute then
   begin
@@ -6382,6 +6395,19 @@ begin
     if OpenDialog1.FilterIndex = 4 then
     begin
       f := fileopen(OpenDialog1.filename, $40);
+      Floor[x].d04count := 0;
+      Floor[x].d05count := 0;
+      fileread(f, Floor[x].d04count, 4);
+      fileread(f, Floor[x].d04[0], Floor[x].d04count);
+      fileread(f, Floor[x].d05count, 4);
+      fileread(f, Floor[x].d05[0], Floor[x].d05count);
+      if (Floor[x].d04count > 0) or (Floor[x].d05count > 0) then
+        button12.Enabled := true
+      else button12.Enabled := false;
+    end;
+    if OpenDialog1.FilterIndex = 5 then
+    begin
+      f := fileopen(OpenDialog1.filename, $40);
       y := fileseek(f, 0, 2) div $44;
       z := Floor[x].ObjCount;
       inc(Floor[x].ObjCount,y);
@@ -6390,7 +6416,7 @@ begin
       fileclose(f);
       CheckListBox1Click(Form1);
     end;
-    if OpenDialog1.FilterIndex = 5 then
+    if OpenDialog1.FilterIndex = 6 then
     begin
       f := fileopen(OpenDialog1.filename, $40);
       y := fileseek(f, 0, 2) div $48;
@@ -7310,6 +7336,13 @@ begin
     move(Floor[CheckListBox1.ItemIndex].Unknow[8], c, 4);
     form8.Memo2.Clear;
     form8.ListBox1.Clear;
+
+    if Floor[CheckListBox1.ItemIndex].Unknow[15] = $32 then
+    begin
+      form8.Memo2.Lines.Add('wave_choice:');
+      form8.Memo2.Lines.Add('');
+    end;
+
     for x := 1 to c do
     begin
 
@@ -7321,11 +7354,17 @@ begin
         (Floor[CheckListBox1.ItemIndex].Unknow[y + 9] * 256)));
       form8.Memo2.Lines.Add('    Wave: ' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[y + 10] +
         (Floor[CheckListBox1.ItemIndex].Unknow[y + 11] * 256)));
-      form8.Memo2.Lines.Add('    Delay: ' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[y + 12] +
-        (Floor[CheckListBox1.ItemIndex].Unknow[y + 13] * 256)));
+      if Floor[CheckListBox1.ItemIndex].Unknow[15] = $32 then
+        form8.Memo2.Lines.Add('    Mindelay: ' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[y + 12] +
+          (Floor[CheckListBox1.ItemIndex].Unknow[y + 13] * 256)))
+      else
+        form8.Memo2.Lines.Add('    Delay: ' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[y + 12] +
+          (Floor[CheckListBox1.ItemIndex].Unknow[y + 13] * 256)));
 
       if Floor[CheckListBox1.ItemIndex].Unknow[15] = $32 then
       begin
+        form8.Memo2.Lines.Add('    Maxdelay: ' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[y + 14] +
+          (Floor[CheckListBox1.ItemIndex].Unknow[y + 15] * 256)));
         z := Floor[CheckListBox1.ItemIndex].Unknow[y + 20] + (Floor[CheckListBox1.ItemIndex].Unknow[y + 21] * 256);
         z := z + (Floor[CheckListBox1.ItemIndex].Unknow[0] + (Floor[CheckListBox1.ItemIndex].Unknow[1] * 256));
         form8.Memo2.Lines.Add('    wavesetting: ' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[y + 16]) + ' ' +
@@ -8657,13 +8696,13 @@ end;
 
 procedure TForm1.Button12Click(Sender: TObject);
 var
-  x, int, y, z: integer;
+  x, int, i, y, z, offset: integer;
   flt: Single;
 begin
   move(Floor[sfloor].d05[0], y, 4);
   move(Floor[sfloor].d05[8], z, 4);
   if z = 0 then
-    form15.StringGrid1.RowCount := 2
+    form15.StringGrid1.RowCount := 1
   else
     form15.StringGrid1.RowCount := z + 1;
   form15.StringGrid1.Rows[0].LoadFromFile(path + 'rand05A.cfg');
@@ -8698,7 +8737,7 @@ begin
   move(Floor[sfloor].d05[4], y, 4);
   move(Floor[sfloor].d05[12], z, 4);
   if z = 0 then
-    form15.StringGrid2.RowCount := 2
+    form15.StringGrid2.RowCount := 1
   else
     form15.StringGrid2.RowCount := z + 1;
   for x := 1 to z do
@@ -8715,20 +8754,35 @@ begin
 
   // enumerate the entry
   move(Floor[sfloor].d04[0], y, 4);
+  move(Floor[sfloor].d04[4], i, 4);
   move(Floor[sfloor].d04[8], z, 4);
+  move(Floor[sfloor].d04[y+4], offset, 4);
+  inc(i, offset);
   form15.ListBox1.Clear;
+  SetLength(roomdata, z+1);
   for x := 1 to z do
   begin
     move(Floor[sfloor].d04[y], int, 4);
-    form15.ListBox1.Items.Add(inttostr(int and $FFFF) + ' (' + inttostr(int div $10000) + GetLanguageString(82));
+    // Store room data
+    roomdata[x].roomnum := int and $FFFF;
+    roomdata[x].numentries := int div $10000;
+    SetLength(roomdata[x].data, roomdata[x].numentries * 28);
+    move(Floor[sfloor].d04[i], roomdata[x].data[0], roomdata[x].numentries * 28);
+
+    if form1.New1.Caption.Contains('New') then
+      form15.ListBox1.Items.Add(inttostr(int and $FFFF) + ' (' + inttostr(int div $10000) + ' entries)')
+    else
+      form15.ListBox1.Items.Add(inttostr(int and $FFFF) + ' (' + inttostr(int div $10000) + GetLanguageString(82));
     inc(y, 8);
+    inc(i, roomdata[x].numentries * 28);
   end;
   if z > 0 then
   begin
     form15.ListBox1.Selected[0] := true;
     form15.ListBox1.ItemIndex := 0;
     form15.ListBox1Click(Form1);
-  end;
+  end
+  else form15.StringGrid3.RowCount := 0;
   form15.ShowModal;
 end;
 
@@ -9143,7 +9197,7 @@ begin
         begin
           if b = '' then
           begin
-            errors.Add('Array of function is missing entrys at line ' + inttostr(x));
+            errors.Add('Array of function is missing entries at line ' + inttostr(x));
             break;
           end;
           l := pos(':', b) - 1;
@@ -9154,7 +9208,7 @@ begin
           delete(b, 1, l + 1);
         end;
         if b <> '' then
-          errors.Add('Array of function contain too many entrys at line ' + inttostr(x));
+          errors.Add('Array of function contains too many entries at line ' + inttostr(x));
       end;
 
       l := pos(' ', s);

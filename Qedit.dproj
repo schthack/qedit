@@ -273,6 +273,14 @@
             <Form>fmGoto</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="FAddRoom.pas">
+            <Form>FRoom</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="FMonsType.pas">
+            <Form>fmMonsterType</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
