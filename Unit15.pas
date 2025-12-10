@@ -845,7 +845,7 @@ begin
     if (acol = 1) and (arow > 0) then
     begin
       btnPos.X := rect.left+16;
-      form5.imagelist2.Draw(StringGrid2.Canvas,rect.left+16,rect.top+2,0,true);
+      form5.imagelist2.Draw(StringGrid2.Canvas,rect.left+16,rect.top+1,0,true);
     end;
 end;
 
