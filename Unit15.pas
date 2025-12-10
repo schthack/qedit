@@ -139,6 +139,7 @@ begin
 
   // Expand grid
   Grid.RowCount := Grid.RowCount + 1;
+  Grid.FixedRows := 1;
 
   // Shift rows down from bottom
   for c := Grid.RowCount - 1 downto r + 2 do
@@ -353,6 +354,7 @@ begin
 
     // Refresh grid
     Listbox1Click(form15.ListBox1);
+    StringGrid3.FixedRows := 1;
 
     // Select the new row
     StringGrid3.Row := 1;
@@ -388,7 +390,7 @@ begin
     found := false;
     for j := 1 to StringGrid3.RowCount - 1 do
     begin
-      if strtoint(StringGrid3.Cells[8,j]) = i then
+      if StrToIntDef(StringGrid3.Cells[8,j], -1) = i then
       begin
         found := true;
         break;
@@ -436,6 +438,7 @@ begin
     Form1.Button12.Enabled := true
   else Form1.Button12.Enabled := false;
   Form1.DrawMap;
+  isedited := true;
   Close;
 end;
 
@@ -842,7 +845,7 @@ begin
     if (acol = 1) and (arow > 0) then
     begin
       btnPos.X := rect.left+16;
-      form5.imagelist2.Draw(StringGrid2.Canvas,rect.left+16,rect.top+1,0,true);
+      form5.imagelist2.Draw(StringGrid2.Canvas,rect.left+16,rect.top+2,0,true);
     end;
 end;
 
