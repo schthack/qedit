@@ -85,17 +85,13 @@ end;
 procedure TfmMonsterType.FormCreate(Sender: TObject);
 var
   i: integer;
-  filelist: TStringList;
   filename: String;
 begin
-  filelist := TStringList.Create;
   filename := 'm_types.ini';
   // Load names from the file if it exists
   if FileExists(filename) then
   begin
-    filelist.LoadFromFile(filename);
-    for i := 0 to filelist.Count - 1 do
-      Combobox1.Items.Add(filelist.Strings[i]);
+    Combobox1.Items.LoadFromFile(filename);
     Combobox1.ItemIndex := 0;
   end
   else
@@ -106,7 +102,6 @@ begin
     Combobox1.Items.SaveToFile(filename);
     Combobox1.ItemIndex := 0;
   end;
-  filelist.Free;
 end;
 
 end.

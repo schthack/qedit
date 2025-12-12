@@ -655,7 +655,7 @@ object fmScriptTE: TfmScriptTE
       Caption = '-'
     end
     object NotesReset1: TMenuItem
-      Caption = 'Reset formatting'
+      Caption = 'Reset notes formatting'
       OnClick = NotesReset1Click
     end
   end

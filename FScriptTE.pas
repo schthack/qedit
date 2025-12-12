@@ -1228,7 +1228,7 @@ var
   choice: integer;
   Reg: TRegistry;
 begin
-    choice := MessageDlg('Font and color options will be reset back to their defaults, continue?',
+    choice := MessageDlg('Font and color options for notes will be reset back to their defaults, continue?',
       mtConfirmation, [mbYes, mbNo], 0);
 
     if choice = mrYes then

@@ -281,6 +281,10 @@
             <Form>fmMonsterType</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="FRotation.pas">
+            <Form>fmRotation</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

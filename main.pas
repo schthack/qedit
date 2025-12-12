@@ -343,6 +343,7 @@ type
     Largefont1: TMenuItem;
     Mediumfont1: TMenuItem;
     byGroup1: TMenuItem;
+    Button14: TButton;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -460,6 +461,7 @@ type
     procedure Largefont1Click(Sender: TObject);
     procedure Mediumfont1Click(Sender: TObject);
     procedure byGroup1Click(Sender: TObject);
+    procedure Button14Click(Sender: TObject);
 
 
   private
@@ -495,6 +497,7 @@ function SanitizeFileName(const AFileName: string): string;
 procedure SetCoordSize(size: integer);
 function ReplaceTabs(const S: string): string;
 procedure UpdateWindowTitle;
+procedure AddRoomEntry(section: integer; x: double; y: double; z: double);
 
 var
   Form1: TForm1;
@@ -617,6 +620,8 @@ var
   inedit: Boolean = false;
   inundo: Boolean = false;
   indelete: Boolean = false;
+  placerandom: Boolean = false;
+  placerotation: integer = 0;
 
 implementation
 
@@ -625,7 +630,7 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   Unit17, Unit18, Unit19, FCompat, MyConst, Unit29, crc32, EnemyStat,
   FEnemyAttack, FEnemyMov, FEnemyResist, FFloatEdit, NPCBuild, Unit22,
   FFFilter, FMonsDet, Unit23, FSymbolChat, FAsmModeSel, FPlacement, FHotkeys,
-  FSnap, FScriptTE, FReplace;
+  FSnap, FScriptTE, FReplace, FRotation;
 
 {$R *.dfm}
 
@@ -2889,7 +2894,11 @@ begin
   if not Form1.smDisableIndicator.Checked then
   begin
     Form1.lblStatus.Visible := true;
-    Form1.lblModifiers.Visible := true;
+    if not placerandom then
+    begin
+      Form1.lblModifiers.Visible := true;
+      Form1.lblStatus.Caption := '[Click to place]';
+    end;
   end;
 end;
 
@@ -3463,6 +3472,86 @@ begin
     Form1.Caption := unitochar(tmp2, 1000)
   else
     Form1.Caption := tmp2;
+end;
+
+procedure AddRoomEntry(section: integer; x: double; y: double; z: double);
+var
+  i, j, roomIndex, insertRow, insertPos, oldSize, idx: Integer;
+  sx, sy, sz: single;
+  found: Boolean;
+begin
+  sx := x;
+  sy := y;
+  sz := z;
+
+  for i := 0 to length(roomdata) do if roomdata[i].roomnum = section then break;
+  roomIndex := i;
+
+  if roomIndex > length(roomdata) then
+  begin
+    // Create a new room with the entry values
+    SetLength(roomdata, Length(roomdata) + 1);
+    idx := High(roomdata);
+    with roomdata[idx] do
+    begin
+      roomnum := section;
+      numentries := 1;
+      SetLength(data, 28);
+      FillChar(data[0], 28, 0);
+      move(sx, data[0], 4);
+      move(sz, data[4], 4);
+      move(sy, data[8], 4);
+      move(placerotation, data[16], 4);
+      move(roomnum, data[24], 2);
+    end;
+    Form1.Button12.Enabled := true;
+    exit;
+  end;
+
+  // Only continue if below 32 entries
+  if roomdata[roomIndex].numentries >= 32 then exit;
+
+  // Number of existing entries in this room
+  oldSize := Length(roomdata[roomIndex].data);
+
+  // Insert at the end
+  insertPos := oldSize;
+
+  // Expand data for one more entry
+  SetLength(roomdata[roomIndex].data, oldSize + 28);
+
+  // Zero the new block
+  FillChar(roomdata[roomIndex].data[insertPos], 28, 0);
+
+  // Set X/Y/Z location and rotation
+  move(sx, roomdata[roomIndex].data[insertPos + 0], 4);
+  move(sz, roomdata[roomIndex].data[insertPos + 4], 4);
+  move(sy, roomdata[roomIndex].data[insertPos + 8], 4);
+  move(placerotation, roomdata[roomIndex].data[insertPos + 16], 4);
+
+  // Set room ID
+  move(roomdata[roomIndex].roomnum, roomdata[roomIndex].data[insertPos + 24], 2);
+
+  // Set entry #
+  for i := 0 to 65535 do
+  begin
+    found := false;
+    for j := 0 to roomdata[roomIndex].numentries do
+    begin
+      if roomdata[roomIndex].data[(j*28) + 26] = i then
+      begin
+        found := true;
+        break;
+      end;
+    end;
+    if not found then
+      break;
+  end;
+  move(i, roomdata[roomIndex].data[insertPos + 26], 2);
+
+  // Increase total
+  Inc(roomdata[roomIndex].numentries);
+  Form1.Button12.Enabled := true;
 end;
 
 procedure TForm1.CheckListBox1Click(Sender: TObject);
@@ -6841,7 +6930,8 @@ begin
   begin
     snapvalue := FSnapOptions.seSnapTolerance.Value;
     distancelimit := FSnapOptions.seDistanceLimit.Value;
-    HideIndicator();
+    if not placerandom then
+      HideIndicator();
     // find the nearest zone
     // extract the real px, py
     SetUndow;
@@ -6891,7 +6981,7 @@ begin
     py := mpcy - mmy - py;
 
     // py:=py+116+midp[Floor[sfloor].Monster[x].map_section].y+px2;
-    if shiftdw then
+    if shiftdw and not placerandom then
     begin
       if MoveType = 1 then
         d := Floor[sfloor].Monster[MoveSel].map_section;
@@ -6936,6 +7026,16 @@ begin
     px := px * Zoom;
     py := py * Zoom;
     // pz:=$0;
+
+    if placerandom then
+    begin
+      Button12Click(Button14);
+      AddRoomEntry(d, px, py, pz2);
+      // Save data and redraw the map
+      form15.SaveD04;
+      DrawMap;
+      exit;
+    end;
 
     diffmin := Double.MaxValue;
     closest := -1;
@@ -8784,12 +8884,28 @@ begin
     form15.ListBox1Click(Form1);
   end
   else form15.StringGrid3.RowCount := 0;
-  form15.ShowModal;
+  if Sender <> Button14 then
+    form15.ShowModal;
 end;
 
 procedure TForm1.Button13Click(Sender: TObject);
 begin
   form33.Show;
+end;
+
+procedure TForm1.Button14Click(Sender: TObject);
+begin
+  fmRotation.Showmodal;
+  if fmRotation.modalresult = 1 then
+  begin
+    placerandom := true;
+    placerotation := fmRotation.SpinEdit1.Value;
+    lblStatus.Caption := '[Click to place - Esc: cancel]';
+    lblStatus.Show;
+    lblModifiers.Hide;
+    MoveType := 0;
+    MoveSel := 0;
+  end;
 end;
 
 procedure TForm1.About1Click(Sender: TObject);
@@ -9795,6 +9911,7 @@ begin
   begin
     MoveSel := -1;
     HideIndicator();
+    placerandom := false;
   end;
 end;
 

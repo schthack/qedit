@@ -192,13 +192,22 @@ object Form1: TForm1
     end
     object Button12: TButton
       Left = 8
-      Top = 360
+      Top = 388
       Width = 165
       Height = 25
       Caption = 'Random Monster data'
       Enabled = False
-      TabOrder = 4
+      TabOrder = 5
       OnClick = Button12Click
+    end
+    object Button14: TButton
+      Left = 8
+      Top = 360
+      Width = 165
+      Height = 25
+      Caption = 'Place random spawns'
+      TabOrder = 4
+      OnClick = Button14Click
     end
   end
   object ListBox2: TListBox

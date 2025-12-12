@@ -52,7 +52,8 @@ uses
   FReplace in 'FReplace.pas' {fmReplace},
   FGoto in 'FGoto.pas' {fmGoto},
   FAddRoom in 'FAddRoom.pas' {FRoom},
-  FMonsType in 'FMonsType.pas' {fmMonsterType};
+  FMonsType in 'FMonsType.pas' {fmMonsterType},
+  FRotation in 'FRotation.pas' {fmRotation};
 
 {$R *.res}
 
@@ -107,6 +108,7 @@ begin
   Application.CreateForm(TfmGoto, fmGoto);
   Application.CreateForm(TfmRoom, fmRoom);
   Application.CreateForm(TfmMonsterType, fmMonsterType);
+  Application.CreateForm(TfmRotation, fmRotation);
   Application.Run;
   end;
 end.
