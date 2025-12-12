@@ -87,7 +87,7 @@ var
   i: integer;
   filename: String;
 begin
-  filename := 'm_types.ini';
+  filename := 'm_types.txt';
   // Load names from the file if it exists
   if FileExists(filename) then
   begin
