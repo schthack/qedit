@@ -3508,9 +3508,6 @@ begin
     exit;
   end;
 
-  // Only continue if below 32 entries
-  if roomdata[roomIndex].numentries >= 32 then exit;
-
   // Number of existing entries in this room
   oldSize := Length(roomdata[roomIndex].data);
 
@@ -8901,7 +8898,8 @@ begin
     placerandom := true;
     placerotation := fmRotation.SpinEdit1.Value;
     lblStatus.Caption := '[Click to place - Esc: cancel]';
-    lblStatus.Show;
+    if not Form1.smDisableIndicator.Checked then
+      lblStatus.Show;
     lblModifiers.Hide;
     MoveType := 0;
     MoveSel := 0;

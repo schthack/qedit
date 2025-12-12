@@ -778,7 +778,7 @@ begin
   end;
 
    // Add entry
-  if (Listbox1.ItemIndex > -1) and (StringGrid3.RowCount < 33) then
+  if Listbox1.ItemIndex > -1 then
   begin
     btnAddEntry.Enabled := true;
     AddRow1.Enabled := true
