@@ -53,6 +53,7 @@ object fmScriptTE: TfmScriptTE
     OnMouseMove = TextEditMouseMove
     ParentShowHint = False
     RightMargin.Visible = False
+    Scroll.Options = [soShowVerticalScrollHint, soWheelClickMove]
     Search.Options = [soBeepIfStringNotFound, soHighlightResults, soSearchOnTyping, soShowSearchMatchNotFound, soWrapAround]
     Selection.Options = [soTermsCaseSensitive]
     ShowHint = True
@@ -138,6 +139,7 @@ object fmScriptTE: TfmScriptTE
       ParentFont = False
       ScrollBars = ssBoth
       TabOrder = 1
+      StyleElements = [seBorder]
       OnChange = txtNotesChange
     end
   end

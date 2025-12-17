@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, Grids, Math, StdCtrls, Vcl.Menus, Vcl.ExtCtrls;
+  Dialogs, ComCtrls, Grids, Math, StdCtrls, Vcl.Menus, Vcl.ExtCtrls, Vcl.Styles,
+  Vcl.Themes;
 
 type
   TRoomData = record
@@ -695,18 +696,47 @@ end;
 procedure TForm15.StringGrid3DrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
 begin
-    if odd(ARow) then
-        StringGrid3.Canvas.Brush.Color := rgb (250,250,255) else
-    StringGrid3.Canvas.brush.Color := rgb (230,230,255);
-     if arow = 0 then
-    StringGrid3.Canvas.Brush.Color := clbtnface;
-    if acol = 0 then
-    StringGrid3.Canvas.Brush.Color := clbtnface;
-    if StringGrid3.Row = ARow then
-      StringGrid3.Canvas.Brush.Color := cl3dlight; // except the selected cell.
-    StringGrid3.Canvas.Font := StringGrid1.Font;
-    StringGrid3.Canvas.FillRect(Rect); // Fill the background
-    StringGrid3.Canvas.TextRect(Rect, Rect.Left+1, Rect.Top+1, StringGrid3.Cells[ACol, ARow]);
+   if darkmode then
+    begin
+      // Alternate rows
+      if Odd(ARow) then
+        StringGrid3.Canvas.Brush.Color := RGB(95,95,95)
+      else
+        StringGrid3.Canvas.Brush.Color := RGB(105,105,105);
+      // Header row
+      if ARow = 0 then
+        StringGrid3.Canvas.Brush.Color := RGB(80,80,80);
+      // First column
+      if ACol = 0 then
+        StringGrid3.Canvas.Brush.Color := RGB(85,85,85);
+      // Selected row
+      if StringGrid3.Row = ARow then
+        StringGrid3.Canvas.Brush.Color := RGB(70,110,180);
+      // Text color
+      StringGrid3.Canvas.Font.Color := RGB(235,235,235);
+      StringGrid3.Canvas.FillRect(Rect);
+      StringGrid3.Canvas.TextRect(
+        Rect,
+        Rect.Left + 4,
+        Rect.Top + 2,
+        StringGrid3.Cells[ACol, ARow]
+      );
+    end
+    else
+    begin
+      if odd(ARow) then
+          StringGrid3.Canvas.Brush.Color := rgb (250,250,255) else
+      StringGrid3.Canvas.brush.Color := rgb (230,230,255);
+       if arow = 0 then
+      StringGrid3.Canvas.Brush.Color := clbtnface;
+      if acol = 0 then
+      StringGrid3.Canvas.Brush.Color := clbtnface;
+      if StringGrid3.Row = ARow then
+        StringGrid3.Canvas.Brush.Color := cl3dlight; // except the selected cell.
+      StringGrid3.Canvas.Font := StringGrid1.Font;
+      StringGrid3.Canvas.FillRect(Rect); // Fill the background
+      StringGrid3.Canvas.TextRect(Rect, Rect.Left+1, Rect.Top+1, StringGrid3.Cells[ACol, ARow]);
+    end;
 end;
 
 procedure TForm15.StringGrid3SelectCell(Sender: TObject; ACol, ARow: LongInt;
@@ -813,35 +843,93 @@ end;
 procedure TForm15.StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
 begin
-if odd(ARow) then
-        StringGrid1.Canvas.Brush.Color := rgb (250,250,255) else
-    StringGrid1.Canvas.brush.Color := rgb (230,230,255);
-     if arow = 0 then
-    StringGrid1.Canvas.Brush.Color := clbtnface;
-    if acol = 0 then
-    StringGrid1.Canvas.Brush.Color := clbtnface;
-    if StringGrid1.Row = ARow then
-      StringGrid1.Canvas.Brush.Color := cl3dlight; // except the selected cell.
-    StringGrid1.Canvas.Font := StringGrid1.Font;
-    StringGrid1.Canvas.FillRect(Rect); // Fill the background
-    StringGrid1.Canvas.TextRect(Rect, Rect.Left+1, Rect.Top+1, StringGrid1.Cells[ACol, ARow]);
+   if darkmode then
+    begin
+      // Alternate rows
+      if Odd(ARow) then
+        StringGrid1.Canvas.Brush.Color := RGB(95,95,95)
+      else
+        StringGrid1.Canvas.Brush.Color := RGB(105,105,105);
+      // Header row
+      if ARow = 0 then
+        StringGrid1.Canvas.Brush.Color := RGB(80,80,80);
+      // First column
+      if ACol = 0 then
+        StringGrid1.Canvas.Brush.Color := RGB(85,85,85);
+      // Selected row
+      if StringGrid1.Row = ARow then
+        StringGrid1.Canvas.Brush.Color := RGB(70,110,180);
+      // Text color
+      StringGrid1.Canvas.Font.Color := RGB(235,235,235);
+      StringGrid1.Canvas.FillRect(Rect);
+      StringGrid1.Canvas.TextRect(
+        Rect,
+        Rect.Left + 4,
+        Rect.Top + 2,
+        StringGrid1.Cells[ACol, ARow]
+      );
+    end
+    else
+    begin
+      if odd(ARow) then
+          StringGrid1.Canvas.Brush.Color := rgb (250,250,255) else
+      StringGrid1.Canvas.brush.Color := rgb (230,230,255);
+       if arow = 0 then
+      StringGrid1.Canvas.Brush.Color := clbtnface;
+      if acol = 0 then
+      StringGrid1.Canvas.Brush.Color := clbtnface;
+      if StringGrid1.Row = ARow then
+        StringGrid1.Canvas.Brush.Color := cl3dlight; // except the selected cell.
+      StringGrid1.Canvas.Font := StringGrid1.Font;
+      StringGrid1.Canvas.FillRect(Rect); // Fill the background
+      StringGrid1.Canvas.TextRect(Rect, Rect.Left+1, Rect.Top+1, StringGrid1.Cells[ACol, ARow]);
+    end;
 end;
 
 procedure TForm15.StringGrid2DrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
 begin
-    if odd(ARow) then
-        StringGrid2.Canvas.Brush.Color := rgb (250,250,255) else
-    StringGrid2.Canvas.brush.Color := rgb (230,230,255);
-     if arow = 0 then
-    StringGrid2.Canvas.Brush.Color := clbtnface;
-    if acol = 0 then
-    StringGrid2.Canvas.Brush.Color := clbtnface;
-    if StringGrid2.Row = ARow then
-      StringGrid2.Canvas.Brush.Color := cl3dlight; // except the selected cell.
-    StringGrid2.Canvas.Font := StringGrid1.Font;
-    StringGrid2.Canvas.FillRect(Rect); // Fill the background
-    StringGrid2.Canvas.TextRect(Rect, Rect.Left+1, Rect.Top+1, StringGrid2.Cells[ACol, ARow]);
+    if darkmode then
+    begin
+      // Alternate rows
+      if Odd(ARow) then
+        StringGrid2.Canvas.Brush.Color := RGB(95,95,95)
+      else
+        StringGrid2.Canvas.Brush.Color := RGB(105,105,105);
+      // Header row
+      if ARow = 0 then
+        StringGrid2.Canvas.Brush.Color := RGB(80,80,80);
+      // First column
+      if ACol = 0 then
+        StringGrid2.Canvas.Brush.Color := RGB(85,85,85);
+      // Selected row
+      if StringGrid2.Row = ARow then
+        StringGrid2.Canvas.Brush.Color := RGB(70,110,180);
+      // Text color
+      StringGrid2.Canvas.Font.Color := RGB(235,235,235);
+      StringGrid2.Canvas.FillRect(Rect);
+      StringGrid2.Canvas.TextRect(
+        Rect,
+        Rect.Left + 4,
+        Rect.Top + 2,
+        StringGrid2.Cells[ACol, ARow]
+      );
+    end
+    else
+    begin
+      if odd(ARow) then
+          StringGrid2.Canvas.Brush.Color := rgb (250,250,255) else
+      StringGrid2.Canvas.brush.Color := rgb (230,230,255);
+       if arow = 0 then
+      StringGrid2.Canvas.Brush.Color := clbtnface;
+      if acol = 0 then
+      StringGrid2.Canvas.Brush.Color := clbtnface;
+      if StringGrid2.Row = ARow then
+        StringGrid2.Canvas.Brush.Color := cl3dlight; // except the selected cell.
+      StringGrid2.Canvas.Font := StringGrid1.Font;
+      StringGrid2.Canvas.FillRect(Rect); // Fill the background
+      StringGrid2.Canvas.TextRect(Rect, Rect.Left+1, Rect.Top+1, StringGrid2.Cells[ACol, ARow]);
+    end;
     if (acol = 1) and (arow > 0) then
     begin
       btnPos.X := rect.left+16;

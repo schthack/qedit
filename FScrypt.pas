@@ -1002,8 +1002,17 @@ procedure TForm4.ListBox1DrawItem(Control: TWinControl; Index: Integer;
 var id,cmd,s:ansistring;
     x,y,i,c,l:integer;
 begin
-    listbox1.Canvas.Brush.Color:=$FFFFFF;
-    if odSelected in state then listbox1.Canvas.Brush.Color:=$D4B7B6;
+    if darkmode then
+      listbox1.Canvas.Brush.Color:=RGB(18,18,18)
+    else
+      listbox1.Canvas.Brush.Color:=$FFFFFF;
+    if odSelected in state then
+    begin
+      if darkmode then
+        listbox1.Canvas.Brush.Color:=RGB(60, 80, 100)
+      else
+        listbox1.Canvas.Brush.Color:=$D4B7B6;
+    end;
     listbox1.Canvas.FillRect(rect);
     //get the id
     s:=listbox1.Items.strings[index];
@@ -1019,14 +1028,32 @@ begin
         if lowercase(cmd) = lowercase(AsmCode[i].name) then break;
 
     x:=8+length(cmd);
-    listbox1.Canvas.Font.Color:=clBlue;
+    if darkmode then
+      listbox1.Canvas.Font.Color:= RGB(140,180,215)
+    else
+      listbox1.Canvas.Font.Color:=clBlue;
     listbox1.Canvas.TextOut(rect.Left+2,rect.Top,id);
     y:=listbox1.Canvas.TextWidth(id);
-    listbox1.Canvas.Font.Color:=clgreen;
+    if darkmode then
+      listbox1.Canvas.Font.Color:=rgb(120,190,150)
+    else
+      listbox1.Canvas.Font.Color:=clgreen;
     if i < asmcount then begin
-        if asmcode[i].ver=1 then listbox1.Canvas.Font.Color:=clnavy;
-        if asmcode[i].ver=2 then listbox1.Canvas.Font.Color:=clmaroon;
-        if asmcode[i].ver=3 then listbox1.Canvas.Font.Color:=clpurple;
+      if darkmode then
+      begin
+        if asmcode[i].ver = 1 then
+          listbox1.Canvas.Font.Color := RGB(95,140,200);
+        if asmcode[i].ver = 2 then
+          listbox1.Canvas.Font.Color := RGB(215,135,135);
+        if asmcode[i].ver = 3 then
+          listbox1.Canvas.Font.Color := RGB(180,140,200);
+      end
+      else
+      begin
+        if asmcode[i].ver = 1 then listbox1.Canvas.Font.Color := clNavy;
+        if asmcode[i].ver = 2 then listbox1.Canvas.Font.Color := clMaroon;
+        if asmcode[i].ver = 3 then listbox1.Canvas.Font.Color := clPurple;
+      end;
     end;
 
     //must get his color
@@ -1038,18 +1065,24 @@ begin
         if ((asmcode[i].arg[c] = T_REG) and (s[1] <> 'R'))
         or ((asmcode[i].arg[c] = T_DWORD) and (s[1] = 'R'))
          then
-            listbox1.Canvas.Font.Color:=clmaroon;
+            if darkmode then
+              listbox1.Canvas.Font.Color := RGB(215,135,135)
+            else
+              listbox1.Canvas.Font.Color := clmaroon;
         l:=pos(' ',s);
         if l > 0 then delete(s,1,l)
         else s:='';
         inc(c);
     end;
     end;
-    
+
 
     listbox1.Canvas.TextOut(rect.Left+2+y,rect.Top,cmd);
     y:=y+listbox1.Canvas.TextWidth(cmd);
-    listbox1.Canvas.Font.Color:=clBlack;
+    if darkmode then
+      listbox1.Canvas.Font.Color := RGB(235,235,235)
+    else
+      listbox1.Canvas.Font.Color := clBlack;
     TextOutW(listbox1.Canvas.Handle, rect.Left+2+y, rect.Top, pwidechar(@listbox1.Items.strings[index][x+1]), Length(listbox1.Items.strings[index])-x);
 end;
 

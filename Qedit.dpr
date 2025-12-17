@@ -4,6 +4,8 @@ uses
   Forms,
   SysUtils,
   windows,
+  Registry,
+  Classes,
   main in 'main.pas' {Form1},
   FTitle in 'FTitle.pas' {Form2},
   FInfo in 'FInfo.pas' {Form3},
@@ -53,9 +55,52 @@ uses
   FGoto in 'FGoto.pas' {fmGoto},
   FAddRoom in 'FAddRoom.pas' {FRoom},
   FMonsType in 'FMonsType.pas' {fmMonsterType},
-  FRotation in 'FRotation.pas' {fmRotation};
+  FRotation in 'FRotation.pas' {fmRotation},
+  FThemes in 'FThemes.pas' {fmThemes};
 
 {$R *.res}
+
+procedure LoadStyleFromRegistry;
+var
+  Reg: TRegistry;
+  StyleIndex: integer;
+  StyleNames: TStringList;
+begin
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      if Reg.ValueExists('MainTheme') then
+        StyleIndex := Reg.ReadInteger('MainTheme')
+      else StyleIndex := 29;
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+
+  // Copy styles into a sortable list
+  StyleNames := TStringList.Create;
+  try
+    StyleNames.AddStrings(TStyleManager.StyleNames);
+    StyleNames.Sort;  // Alphabetical
+
+    if StyleNames.Count = 0 then
+      Exit;
+
+    // Check range
+    if StyleIndex < 0 then
+      StyleIndex := 0
+    else if StyleIndex >= StyleNames.Count then
+      StyleIndex := StyleNames.Count - 1;
+
+    // Apply style
+    TStyleManager.SetStyle(StyleNames[StyleIndex]);
+  finally
+    StyleNames.Free;
+  end;
+end;
 
 begin
   if lowercase(extractfilename(application.ExeName)) = '_qedit.exe' then begin
@@ -65,6 +110,7 @@ begin
     if fileexists(extractfilepath(application.ExeName)+'_qedit.exe') then begin
         while not deletefile(pchar(extractfilepath(application.ExeName)+'_qedit.exe')) do sleep(100);
     end;
+  LoadStyleFromRegistry;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.CreateForm(TForm2, Form2);
@@ -109,6 +155,7 @@ begin
   Application.CreateForm(TfmRoom, fmRoom);
   Application.CreateForm(TfmMonsterType, fmMonsterType);
   Application.CreateForm(TfmRotation, fmRotation);
+  Application.CreateForm(TfmThemes, fmThemes);
   Application.Run;
   end;
 end.

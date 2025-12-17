@@ -31,6 +31,8 @@ implementation
 
 {$R *.dfm}
 
+uses main;
+
 procedure TForm27.Button1Click(Sender: TObject);
 begin
     close;
@@ -56,15 +58,31 @@ end;
 procedure TForm27.ListBox1DrawItem(Control: TWinControl; Index: Integer;
   Rect: TRect; State: TOwnerDrawState);
 begin
-    listbox1.Canvas.Brush.Color:=$FFFFFF;
-    if state <> [] then listbox1.Canvas.Brush.Color:=$D4B7B6;
-    listbox1.Canvas.FillRect(rect);
+    if darkmode then
+    begin
+      listbox1.Canvas.Brush.Color:=RGB(100,100,100);
+      if odSelected in State then listbox1.Canvas.Brush.Color:=RGB(70,120,180);
+      listbox1.Canvas.FillRect(rect);
 
-    if er[index].Count > 0 then imagelist1.Draw(listbox1.Canvas,0,rect.top,0)
-    else if wa[index].Count > 0 then imagelist1.Draw(listbox1.Canvas,0,rect.top,1)
-    else imagelist1.Draw(listbox1.Canvas,0,rect.top,2);
+      if er[index].Count > 0 then imagelist1.Draw(listbox1.Canvas,0,rect.top,0)
+      else if wa[index].Count > 0 then imagelist1.Draw(listbox1.Canvas,0,rect.top,1)
+      else imagelist1.Draw(listbox1.Canvas,0,rect.top,2);
 
-    listbox1.Canvas.TextOut(24,rect.top+5,listbox1.Items.Strings[index]);
+      listbox1.Canvas.Font.Color := RGB(235,235,235);
+      listbox1.Canvas.TextOut(24,rect.top+5,listbox1.Items.Strings[index]);
+    end
+    else
+    begin
+      listbox1.Canvas.Brush.Color:=$FFFFFF;
+      if state <> [] then listbox1.Canvas.Brush.Color:=$D4B7B6;
+      listbox1.Canvas.FillRect(rect);
+
+      if er[index].Count > 0 then imagelist1.Draw(listbox1.Canvas,0,rect.top,0)
+      else if wa[index].Count > 0 then imagelist1.Draw(listbox1.Canvas,0,rect.top,1)
+      else imagelist1.Draw(listbox1.Canvas,0,rect.top,2);
+
+      listbox1.Canvas.TextOut(24,rect.top+5,listbox1.Items.Strings[index]);
+    end;
 end;
 
 end.

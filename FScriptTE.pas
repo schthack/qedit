@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, ShellApi, System.Generics.Collections, System.StrUtils,
   System.Generics.Defaults, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
-  Vcl.ExtCtrls, main, Vcl.ComCtrls, Vcl.StdCtrls;
+  Vcl.ExtCtrls, main, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Themes, Vcl.Styles, Winapi.UxTheme,
+  Winapi.DwmApi;
 
 type
     TfmScriptTE = class(TForm)
@@ -222,6 +223,7 @@ procedure SetTextColor(colortype: string);
 function IsWordInString(aString: PWideChar; aSearchString: string; aSearchOptions: TStringSearchOptions): Boolean;
 procedure UncheckThemes;
 procedure FormatCurrentLine;
+procedure ApplyDarkScrollBars(AEditor: TTextEditor);
 
 var
   fmScriptTE: TfmScriptTE;
@@ -240,7 +242,7 @@ var
 implementation
 
 uses TCom, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.CompletionProposal.Snippets,
-  NPCBuild, EnemyStat, FEnemyResist, FEnemyMov, FEnemyAttack, FVector;
+  NPCBuild, EnemyStat, FEnemyResist, FEnemyMov, FEnemyAttack, FVector, DarkScrollbarTheme;
 
 {$R *.dfm}
 
@@ -408,6 +410,29 @@ begin
   form14.ProgressBar1.Position := 1;
   form14.Label1.Show;
   TextEdited := false;
+end;
+
+procedure ApplyDarkScrollbars(AEditor: TTextEditor);
+var
+  DarkMode: BOOL;
+begin
+  if (AEditor = nil) or not AEditor.HandleAllocated then
+    Exit;
+
+  // Apply dark windows scrollbar theme if it exists
+  try
+    SetWindowTheme(AEditor.Handle, 'DarkMode_Explorer', nil);
+
+    DarkMode := True;
+    DwmSetWindowAttribute(
+      AEditor.Handle,
+      20,
+      @DarkMode,
+      SizeOf(DarkMode)
+    );
+  except
+    // Catch any exceptions
+  end;
 end;
 
 procedure SetTextZoom(zoomvalue: integer);
@@ -620,8 +645,8 @@ begin
 
   selection := TMenuItem(Sender);
   themename := StringReplace(selection.Caption, '&', '', [rfReplaceAll]);
-  TextEdit.Highlighter.LoadFromFile('Text editor\Themes\' + themename + '.json');
-  TextEdit.Highlighter.Colors.LoadFromFile('Text editor\Themes\' + themename + '.json');
+  TextEdit.Highlighter.LoadFromFile(path + 'Text editor\Themes\' + themename + '.json');
+  TextEdit.Highlighter.Colors.LoadFromFile(path + 'Text editor\Themes\' + themename + '.json');
   tmenuitem(sender).Checked := true;
   Reg := TRegistry.Create;
   try
@@ -1024,6 +1049,8 @@ begin
     form14.Caption := '3D Processing';
     form14.ProgressBar1.Position := 1;
     form14.Label1.Show;
+    if darkmode and TextEdit.HandleAllocated then
+      ApplyDarkScrollBars(TextEdit);
 end;
 
 procedure TfmScriptTE.Functions1Click(Sender: TObject);

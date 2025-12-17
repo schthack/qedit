@@ -72,6 +72,8 @@ implementation
 
 {$R *.dfm}
 
+uses main;
+
 procedure TfmMonsterType.Button1Click(Sender: TObject);
 begin
   modalresult := 1;
@@ -87,7 +89,7 @@ var
   i: integer;
   filename: String;
 begin
-  filename := 'm_types.txt';
+  filename := path + 'm_types.txt';
   // Load names from the file if it exists
   if FileExists(filename) then
   begin

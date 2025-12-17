@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Grids, ValEdit, StdCtrls, ComCtrls, ExtCtrls, registry, main;
+  Dialogs, Grids, ValEdit, StdCtrls, ComCtrls, ExtCtrls, registry, main,
+  Vcl.Styles, Vcl.Themes;
 
 type
   TForm7 = class(TForm)
@@ -213,7 +214,10 @@ Procedure DrawRotation(Rot:word);
 var rt:word;
     px2,px3,py2,py3:single;
 begin
-    form7.Image2.Canvas.Brush.Color:=clwhite;
+    if darkmode then
+      form7.Image2.Canvas.Brush.Color:=TStyleManager.ActiveStyle.GetSystemColor(clBtnFace)
+    else
+      form7.Image2.Canvas.Brush.Color:=clwhite;
     form7.Image2.Canvas.FillRect(form7.Image2.Canvas.ClipRect);
 
     form7.Image2.Canvas.Brush.Color:=$008000;
@@ -682,7 +686,7 @@ begin
 end;
 
 procedure TForm7.chkAutoAxisMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-  var
+var
   Reg: TRegistry;
 begin
   Reg := TRegistry.Create;

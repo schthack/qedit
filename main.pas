@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   ImgList, Dialogs, Menus, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
   ShellApi, D3DEngin, registry, Spin, System.ImageList, System.Actions,
-  Vcl.ActnList;
+  Vcl.ActnList, Vcl.Themes, Vcl.Styles;
 
 const
   gcstring = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!"/$%?&*()_+-=#qazwsxedcrfvtgbyhnujmik,ol.p;^`<>';
@@ -344,6 +344,8 @@ type
     Mediumfont1: TMenuItem;
     byGroup1: TMenuItem;
     Button14: TButton;
+    Settheme1: TMenuItem;
+    N3: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -463,11 +465,14 @@ type
     procedure byGroup1Click(Sender: TObject);
     procedure Button14Click(Sender: TObject);
 
+    procedure Button15Click(Sender: TObject);
 
   private
+    FClosedSuccessfully: Boolean;
     procedure MenueDrawItemX(xMenu: TMenu);
     { Private declarations }
   public
+    property ClosedSuccessfully: Boolean read FClosedSuccessfully;
     { Public declarations }
   end;
 
@@ -498,6 +503,7 @@ procedure SetCoordSize(size: integer);
 function ReplaceTabs(const S: string): string;
 procedure UpdateWindowTitle;
 procedure AddRoomEntry(section: integer; x: double; y: double; z: double);
+procedure SetImage1Colors;
 
 var
   Form1: TForm1;
@@ -622,6 +628,7 @@ var
   indelete: Boolean = false;
   placerandom: Boolean = false;
   placerotation: integer = 0;
+  darkmode: Boolean = false;
 
 implementation
 
@@ -630,7 +637,7 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   Unit17, Unit18, Unit19, FCompat, MyConst, Unit29, crc32, EnemyStat,
   FEnemyAttack, FEnemyMov, FEnemyResist, FFloatEdit, NPCBuild, Unit22,
   FFFilter, FMonsDet, Unit23, FSymbolChat, FAsmModeSel, FPlacement, FHotkeys,
-  FSnap, FScriptTE, FReplace, FRotation;
+  FSnap, FScriptTE, FReplace, FRotation, FThemes;
 
 {$R *.dfm}
 
@@ -1105,8 +1112,8 @@ begin
   // Load quest notes file based on quest name if they exist
   fmScriptTE.txtNotes.Clear;
   cleantitle := SanitizeFileName(title);
-  if (cleantitle <> '') and FileExists('notes\' + cleantitle + ' notes'+ '.txt') then
-    fmScriptTE.txtNotes.Lines.LoadFromFile('notes\' + cleantitle + ' notes'+ '.txt');
+  if (cleantitle <> '') and FileExists(path + 'notes\' + cleantitle + ' notes'+ '.txt') then
+    fmScriptTE.txtNotes.Lines.LoadFromFile(path + 'notes\' + cleantitle + ' notes'+ '.txt');
   isedited := false;
 end;
 
@@ -1761,7 +1768,9 @@ begin
   BBRelBmp.Width := Image2.Width;
   BBRelBmp.height := Image2.height;
 
-  BBRelBmp.Canvas.Brush.Color := ClWhite;
+  if darkmode then BBRelBmp.Canvas.Brush.Color := RGB(18,18,18)
+  else
+    BBRelBmp.Canvas.Brush.Color := ClWhite;
   BBRelBmp.Canvas.FillRect(BBRelBmp.Canvas.ClipRect);
   if fileexists(mapfilenam) then
     DrawBBRELFile(mapfilenam);
@@ -1838,7 +1847,10 @@ begin
         px2 := mpy;
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Monster[x].map_section].y + px2;
-        BBRelBmp.Canvas.Brush.Color := ClRed;
+        if darkmode then
+           BBRelBmp.Canvas.Brush.Color := RGB(200, 70, 70)
+        else
+          BBRelBmp.Canvas.Brush.Color := ClRed;
         BBRelBmp.Canvas.FillRect(Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom)));
         if (stype = 1) and (Selected = x) then
@@ -1908,7 +1920,10 @@ begin
         px2 := mpy;
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Obj[x].map_section].y + px2;
-        BBRelBmp.Canvas.Brush.Color := ClGreen;
+        if darkmode then
+          BBRelBmp.Canvas.Brush.Color := RGB(80, 180, 120)
+        else
+          BBRelBmp.Canvas.Brush.Color := ClGreen;
         BBRelBmp.Canvas.FillRect(Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom)));
         if (stype = 2) and (Selected = x) then
@@ -2027,8 +2042,16 @@ begin
         }
 
       end;
-    BBRelBmp.Canvas.Brush.Color := ClWhite;
+
+    if darkmode then
+    begin
+      BBRelBmp.Canvas.Brush.Color := RGB(18,18,18);
+      BBRelBmp.Canvas.Font.Color := RGB(220,220,220)
+    end
+    else
+      BBRelBmp.Canvas.Brush.Color := ClWhite;
     BBRelBmp.Canvas.TextOut(5, 5, GetLanguageString(54) + ' ' + inttohex(sms, 2));
+    BBRelBmp.Canvas.Font.Color := clBlack;
   except
     MessageDlg(GetLanguageString(53), mtInformation, [mbOk], 0);
   end;
@@ -2528,8 +2551,8 @@ begin
       // Load quest notes file based on quest name if they exist
       fmScriptTE.txtNotes.Clear;
       cleantitle := SanitizeFileName(title);
-      if (cleantitle <> '') and FileExists('notes\' + cleantitle + ' notes'+ '.txt') then
-        fmScriptTE.txtNotes.Lines.LoadFromFile('notes\' + cleantitle + ' notes'+ '.txt');
+      if (cleantitle <> '') and FileExists(path + 'notes\' + cleantitle + ' notes'+ '.txt') then
+        fmScriptTE.txtNotes.Lines.LoadFromFile(path + 'notes\' + cleantitle + ' notes'+ '.txt');
       isedited := false;
 
       if pos('_f.', fn) > 0 then
@@ -2909,6 +2932,7 @@ begin
     Form1.lblStatus.Visible := false;
     Form1.lblModifiers.Visible := false;
   end;
+  placerandom := false;
 end;
 
 procedure AdjustDistanceX(target: integer);
@@ -3448,7 +3472,7 @@ procedure UpdateWindowTitle;
 var
   tmp2: widestring;
 begin
-  tmp2 := 'Quest Editor V 2.0c Public - ' + Title;
+  tmp2 := 'Quest Editor v2.0c Public - ' + Title;
 
   if isdc then
     tmp2 := tmp2 + GetLanguageString(64)
@@ -3476,7 +3500,7 @@ end;
 
 procedure AddRoomEntry(section: integer; x: double; y: double; z: double);
 var
-  i, j, roomIndex, insertRow, insertPos, oldSize, idx: Integer;
+  i, j, roomIndex, insertRow, insertPos, oldSize, idx, newrotation: Integer;
   sx, sy, sz: single;
   found: Boolean;
 begin
@@ -3501,7 +3525,8 @@ begin
       move(sx, data[0], 4);
       move(sz, data[4], 4);
       move(sy, data[8], 4);
-      move(placerotation, data[16], 4);
+      newrotation := -(placerotation + rev[section]);
+      move(newrotation, data[16], 4);
       move(roomnum, data[24], 2);
     end;
     Form1.Button12.Enabled := true;
@@ -3524,7 +3549,8 @@ begin
   move(sx, roomdata[roomIndex].data[insertPos + 0], 4);
   move(sz, roomdata[roomIndex].data[insertPos + 4], 4);
   move(sy, roomdata[roomIndex].data[insertPos + 8], 4);
-  move(placerotation, roomdata[roomIndex].data[insertPos + 16], 4);
+  newrotation := -(placerotation + rev[section]);
+  move(newrotation, roomdata[roomIndex].data[insertPos + 16], 4);
 
   // Set room ID
   move(roomdata[roomIndex].roomnum, roomdata[roomIndex].data[insertPos + 24], 2);
@@ -3549,6 +3575,24 @@ begin
   // Increase total
   Inc(roomdata[roomIndex].numentries);
   Form1.Button12.Enabled := true;
+end;
+
+procedure SetImage1Colors;
+begin
+  if (TStyleManager.ActiveStyle.Name <> 'Obsidian') and
+  (TStyleManager.ActiveStyle.Name <> 'Windows10 Blue') and
+  (TStyleManager.ActiveStyle.Name <> 'Windows10 Green') and
+  (TStyleManager.ActiveStyle.Name <> 'Windows10 Purple')
+  then
+  begin
+    form1.Image1.Canvas.Brush.Color := TStyleManager.ActiveStyle.GetStyleColor(scListBox);
+    form1.Image1.Canvas.Font.Color := TStyleManager.ActiveStyle.GetStyleFontColor(sfTextLabelNormal);
+  end
+  else
+  begin
+    form1.Image1.Canvas.Brush.Color := TStyleManager.ActiveStyle.GetStyleColor(scListBox);
+    form1.Image1.Canvas.Font.Color := clBlack;
+  end;
 end;
 
 procedure TForm1.CheckListBox1Click(Sender: TObject);
@@ -3577,6 +3621,7 @@ begin
       if CheckListBox1.ItemIndex = 14 then mapfilename:=path+'map\map_darkfalz00c.rel';
       if (CheckListBox1.ItemIndex > 2) and (CheckListBox1.ItemIndex < 11) then }
     mapfilenam := mapfile[CheckListBox1.ItemIndex];
+    SetImage1Colors;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     Button2.Enabled := false;
     Button1.Enabled := false;
@@ -3664,6 +3709,7 @@ begin
     smMove.Enabled := true;
     sms := Floor[sfloor].Monster[Selected].map_section;
     DrawMap;
+    SetImage1Colors;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     bm := TBitmap.Create;
 
@@ -3748,6 +3794,7 @@ begin
     sms := Floor[sfloor].Obj[Selected].map_section;
     stype := 2;
     DrawMap;
+    SetImage1Colors;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     { if fileexists(path+'img\i'+inttohex(floor[sfloor].obj[selected].Skin,2)+'.bmp') then
       Image3.Picture.LoadFromFile(path+'img\i'+inttohex(floor[sfloor].obj[selected].Skin,2)+'.bmp')
@@ -4183,7 +4230,10 @@ begin
     BBRelFile.read(t, 4); // find the first room entry
     BBRelFile.Seek(t, 0);
     BBRelFile.read(t, 4);
-    BBRelBmp.Canvas.Brush.Color := clblack;
+    if darkmode then
+      BBRelBmp.Canvas.Brush.Color := RGB(200,200,200)
+    else
+      BBRelBmp.Canvas.Brush.Color := clblack;
     BBRelFile.Seek(t, 0); // first header found ready to read
     // fillchar(zmap,sizeof(zmap),$7f);
     tab := t + $18;
@@ -4233,9 +4283,19 @@ begin
             else if (pt[3] and 16 = 16) then
               BBRelBmp.Canvas.Pen.Color := $7FFF7F
             else if (pt[3] and 1 = 1) then
-              BBRelBmp.Canvas.Pen.Color := $999999 // $90D517//$77AD19
+            begin
+              if darkmode then
+                BBRelBmp.Canvas.Pen.Color := RGB(135,135,135)
+              else
+                BBRelBmp.Canvas.Pen.Color := $999999 // $90D517//$77AD19
+            end
             else
-              BBRelBmp.Canvas.Pen.Color := clblack;
+            begin
+              if darkmode then
+                BBRelBmp.Canvas.Pen.Color := RGB(200,200,200)
+              else
+                BBRelBmp.Canvas.Pen.Color := clblack;
+            end;
 
             tpt[0].x := round((rel1[0] + mpx) / Zoom) + mmx;
             tpt[0].y := round((rel1[2] + mpy) / Zoom) + mmy;
@@ -5079,6 +5139,15 @@ begin
         if Reg.ValueExists('FontStyle') then
           form4.ListBox1.Font.Style := Tfontstyles(byte(Reg.ReadInteger('FontStyle')));
         form4.ListBox1.Font.Pitch := fpFixed;
+        if Reg.ValueExists('MainTheme') then
+        begin
+          fmThemes.ComboBox1.ItemIndex := Reg.ReadInteger('MainTheme');
+        end
+        else fmThemes.ComboBox1.ItemIndex := 29; // Windows default
+        // Set dark mode based on theme
+        if (TStyleManager.ActiveStyle.GetStyleColor(scListBox) <> clWhite)
+        and TStyleManager.IsCustomStyleActive then
+          darkmode := true;
         if Reg.ValueExists('TENoteFontName') then
           fmScriptTE.txtNotes.Font.Name := Reg.ReadString('TENoteFontName');
         if Reg.ValueExists('TENoteFontSize') then
@@ -5384,6 +5453,7 @@ begin
     FSnapOptions.chkDistancelimit.Enabled := snapenabled;
     FSnapOptions.seSnapTolerance.Enabled := snapenabled;
     Form7.chkAutoAxis.Checked := autoaxis;
+    fmRotation.chkAutoAxis.Checked := autoaxis;
     FSnapOptions.seSnapTolerance.Value := snapvalue;
     FSnapOptions.chkSnapRotate.Checked := snaprotate;
     FSnapOptions.chkSnapYValue.Checked := snapyvalue;
@@ -5468,6 +5538,12 @@ begin
       form17.CheckBox2.Caption := 'Use skydome';
       form15.Label2.Caption := 'Spawn points';
       form15.Label3.Caption := 'Monster settings';
+      form1.Quest1.Caption := 'File';
+      form1.About1.Caption := 'About';
+      form1.Help1.Caption := 'Help';
+      form1.itemslistbb1.Caption := 'Item list (BB quests only)';
+      form19.Caption := 'Item list manager';
+      form1.Load1.Caption := 'Open';
     end;
     flp.Clear;
     CheckShadow;
@@ -5624,7 +5700,7 @@ begin
     cleantitle := SanitizeFileName(title);
     if (cleantitle <> '') and DirectoryExists(path + 'notes')
     and (fmScriptTE.txtNotes.Lines.Count > 0) then
-      fmScriptTE.txtNotes.Lines.SaveToFile('notes\' + cleantitle + ' notes' + '.txt');
+      fmScriptTE.txtNotes.Lines.SaveToFile(path + 'notes\' + cleantitle + ' notes' + '.txt');
 
     lsatsaveformat := SaveDialog1.FilterIndex;
     isedited := false;
@@ -8896,13 +8972,48 @@ begin
   if fmRotation.modalresult = 1 then
   begin
     placerandom := true;
-    placerotation := fmRotation.SpinEdit1.Value;
     lblStatus.Caption := '[Click to place - Esc: cancel]';
     if not Form1.smDisableIndicator.Checked then
       lblStatus.Show;
     lblModifiers.Hide;
     MoveType := 0;
     MoveSel := 0;
+  end;
+end;
+
+procedure TForm1.Button15Click(Sender: TObject);
+var
+  idx, lasttheme: integer;
+  Reg: TRegistry;
+begin
+  lasttheme := fmThemes.ComboBox1.ItemIndex;
+  fmThemes.ShowModal;
+  if fmThemes.modalresult = 1 then
+  begin
+    idx := fmThemes.ComboBox1.ItemIndex;
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := HKEY_CURRENT_USER;
+      if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+      begin
+        Reg.WriteInteger('MainTheme', idx);
+        Reg.CloseKey;
+      end;
+    finally
+      Reg.Free;
+    end;
+
+  if MessageDlg('The new theme will be applied on next restart. Restart now?',
+                mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      form1.Close;
+      if form1.ClosedSuccessfully then
+      begin
+        ShellExecute(0, 'open', PChar(ParamStr(0)), nil,
+                     PChar(ExtractFilePath(ParamStr(0))),
+                     SW_SHOWNORMAL);
+      end;
+    end;
   end;
 end;
 
@@ -9171,6 +9282,7 @@ var
   flp: TMemoryStream;
   s: ansistring;
 begin
+  FClosedSuccessfully := False;
   if New1.Caption.Contains('New') then s:='Save current project before quitting?'
   else s:=GetLanguageString(55);
   Reg := TRegistry.Create;
@@ -9194,6 +9306,7 @@ begin
       if isedited then
       begin
         Action := caNone;
+        FClosedSuccessfully := False;
         exit;
       end;
     end;
@@ -9203,6 +9316,7 @@ begin
   if objscreen <> nil then
     objscreen.Free3d;
   ClearShadow;
+  FClosedSuccessfully := True;
 end;
 
 Function LookForLabel2(s: ansistring): integer;
@@ -9365,6 +9479,24 @@ begin
   for x := 0 to 20 do
     if Form1.CheckListBox1.Checked[x] then
     begin
+      // Check room entries
+      if ver > 0 then
+      begin
+        sFloor := x;
+        form1.Button12Click(form1.Button14);
+        sFloor := form1.CheckListBox1.ItemIndex;
+        if Floor[x].d04count > 0 then
+        begin
+          for i := 0 to length(roomdata) - 1 do
+          begin
+            if roomdata[i].numentries > 32 then
+              warn.Add('Floor ' + inttostr(x)
+              + ' room '
+              + inttostr(roomdata[i].roomnum)
+              + ' has more than 32 random spawn entries');
+          end;
+        end;
+      end;
       for y := 0 to Floor[x].MonsterCount - 1 do
       begin
 
@@ -10260,6 +10392,7 @@ begin
   Label3.Left := 200 + (((Form1.Width - 190) div 2) - 16);
   ListBox2.Width := (((Form1.Width - 190) div 2) - 14);
   ListBox1.Width := (((Form1.Width - 190) div 2) - 14);
+  lblModifiers.Left := lblStatus.Left + 76;
   DrawMap;
 end;
 

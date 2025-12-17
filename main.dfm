@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 195
   Top = 115
-  Caption = 'Quest Editor V 2.0c Public'
+  Caption = 'Quest Editor v2.0c Public'
   ClientHeight = 481
   ClientWidth = 723
   Color = clBtnFace
@@ -77,6 +77,7 @@ object Form1: TForm1
     Top = 464
     Width = 70
     Height = 13
+    Anchors = [akBottom]
     Caption = '[Click to place]'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -92,6 +93,7 @@ object Form1: TForm1
     Width = 48
     Height = 13
     Cursor = crHandPoint
+    Anchors = [akBottom]
     Caption = '(Modifiers)'
     Color = clBtnFace
     Font.Charset = DEFAULT_CHARSET
@@ -205,7 +207,7 @@ object Form1: TForm1
       Top = 360
       Width = 165
       Height = 25
-      Caption = 'Place random spawns'
+      Caption = 'Add random spawns'
       TabOrder = 4
       OnClick = Button14Click
     end
@@ -430,6 +432,13 @@ object Form1: TForm1
         OnClick = Save1Click
       end
       object N1: TMenuItem
+        Caption = '-'
+      end
+      object Settheme1: TMenuItem
+        Caption = 'Set theme'
+        OnClick = Button15Click
+      end
+      object N3: TMenuItem
         Caption = '-'
       end
       object Language1: TMenuItem
