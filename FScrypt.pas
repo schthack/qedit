@@ -1009,7 +1009,7 @@ begin
     if odSelected in state then
     begin
       if darkmode then
-        listbox1.Canvas.Brush.Color:=RGB(60, 80, 100)
+        listbox1.Canvas.Brush.Color:=RGB(55, 75, 85)
       else
         listbox1.Canvas.Brush.Color:=$D4B7B6;
     end;

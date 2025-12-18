@@ -87,8 +87,8 @@ begin
         if form1.ClosedSuccessfully then
         begin
           ShellExecute(0, 'open', PChar(ParamStr(0)), nil,
-                       PChar(ExtractFilePath(ParamStr(0))),
-                       SW_SHOWNORMAL);
+          PChar(ExtractFilePath(ParamStr(0))),
+          SW_SHOWNORMAL);
         end;
       end;
   end;

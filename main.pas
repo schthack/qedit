@@ -4451,6 +4451,7 @@ begin
     end;
 
     SetObjectDefaults();
+    placerandom := false;
     ShowIndicator();
     MoveSel := Floor[sfloor].ObjCount - 1;
     MoveType := 2;
@@ -4491,6 +4492,7 @@ begin
     Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].unknow3 := MapFloorId[Floor[sfloor].floorid];
 
     SetMonsterDefaults();
+    placerandom := false;
     ShowIndicator();
     MoveSel := Floor[sfloor].MonsterCount - 1;
     MoveType := 1;
@@ -6745,6 +6747,7 @@ begin
     end;
 
     SetObjectDefaults();
+    placerandom := false;
     ShowIndicator();
     MoveSel := Floor[sfloor].ObjCount - 1;
     MoveType := 2;
@@ -6834,6 +6837,7 @@ begin
     Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].unknow3 := MapFloorId[Floor[sfloor].floorid];
 
     SetMonsterDefaults();
+    placerandom := false;
     ShowIndicator();
     MoveSel := Floor[sfloor].MonsterCount - 1;
     MoveType := 1;
@@ -9002,16 +9006,19 @@ begin
     finally
       Reg.Free;
     end;
-
-  if MessageDlg('The new theme will be applied on next restart. Restart now?',
-                mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if (lasttheme <> idx) then
     begin
-      form1.Close;
-      if form1.ClosedSuccessfully then
+      if (MessageDlg('The new theme will be applied on next restart. Restart now?',
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes) and (lasttheme <> idx)
+      then
       begin
-        ShellExecute(0, 'open', PChar(ParamStr(0)), nil,
-                     PChar(ExtractFilePath(ParamStr(0))),
-                     SW_SHOWNORMAL);
+        form1.Close;
+        if form1.ClosedSuccessfully then
+        begin
+          ShellExecute(0, 'open', PChar(ParamStr(0)), nil,
+          PChar(ExtractFilePath(ParamStr(0))),
+          SW_SHOWNORMAL);
+        end;
       end;
     end;
   end;
