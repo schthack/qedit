@@ -8987,14 +8987,16 @@ end;
 
 procedure TForm1.Button15Click(Sender: TObject);
 var
-  idx, lasttheme: integer;
+  idx: integer;
   Reg: TRegistry;
+  selectedstyle: string;
 begin
-  lasttheme := fmThemes.ComboBox1.ItemIndex;
   fmThemes.ShowModal;
   if fmThemes.modalresult = 1 then
   begin
     idx := fmThemes.ComboBox1.ItemIndex;
+    selectedstyle := fmThemes.ComboBox1.Items[idx];
+    if selectedstyle = 'Windows (Default)' then selectedstyle := 'Windows';
     Reg := TRegistry.Create;
     try
       Reg.RootKey := HKEY_CURRENT_USER;
@@ -9006,10 +9008,10 @@ begin
     finally
       Reg.Free;
     end;
-    if (lasttheme <> idx) then
+    if selectedstyle <> TStyleManager.ActiveStyle.Name then
     begin
-      if (MessageDlg('The new theme will be applied on next restart. Restart now?',
-      mtConfirmation, [mbYes, mbNo], 0) = mrYes) and (lasttheme <> idx)
+      if MessageDlg('The new theme will be applied on next restart. Restart now?',
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes
       then
       begin
         form1.Close;
