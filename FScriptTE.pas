@@ -242,7 +242,7 @@ var
 implementation
 
 uses TCom, unit1, unit14, FScrypt, FFind, FReplace, FGoto, TextEditor.CompletionProposal.Snippets,
-  NPCBuild, EnemyStat, FEnemyResist, FEnemyMov, FEnemyAttack, FVector, DarkScrollbarTheme;
+  NPCBuild, EnemyStat, FEnemyResist, FEnemyMov, FEnemyAttack, FVector;
 
 {$R *.dfm}
 

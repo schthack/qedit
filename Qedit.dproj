@@ -130,6 +130,7 @@
         <DCC_Inlining>off</DCC_Inlining>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <Icon_MainIcon>Qedit_Icon1.ico</Icon_MainIcon>
+        <DCC_UnitSearchPath>Text editor;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
