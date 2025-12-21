@@ -6112,8 +6112,8 @@ begin
           // Make sure rooms are saved in the correct order
           sFloor := x;
           form15.LoadRandomData;
-          sFloor := CheckListBox1.ItemIndex;
           form15.SaveD04;
+          sFloor := CheckListBox1.ItemIndex;
           h.flag := 4;
           h.TotalSize := Floor[x].d04count + 16;
           dl := dl + h.TotalSize;
