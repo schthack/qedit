@@ -5245,6 +5245,9 @@ begin
         end;
         if Reg.ValueExists('Lang') then
           mylang := Reg.ReadInteger('Lang');
+        if mylang = 0 then English1.Checked := true
+        else if mylang = 1 then French1.Checked := true
+        else if mylang = 2 then Spanish1.Checked := true;
         if Reg.ValueExists('LoadFrom') then
           lastloadformat := Reg.ReadInteger('LoadFrom');
         if Reg.ValueExists('SaveTo') then
@@ -5545,7 +5548,14 @@ begin
       form1.Help1.Caption := 'Help';
       form1.itemslistbb1.Caption := 'Item list (BB quests only)';
       form19.Caption := 'Item list manager';
-      form1.Load1.Caption := 'Open';
+      form1.Load1.Caption := 'Open...';
+      form1.Save1.Caption := 'Save...';
+      form1.Export1.Caption := 'Export...';
+      form1.Import1.Caption := 'Import...';
+      form1.Exporttextfortranslation1.Caption := 'Export text for translation...';
+      form1.Importtextfromtranslation1.Caption := 'Import text from translation...';
+      form1.Events1.Caption := 'Events';
+      form1.Randommonsters1.Caption := 'Random monsters';
     end;
     flp.Clear;
     CheckShadow;
@@ -6099,6 +6109,11 @@ begin
       if CheckListBox1.Checked[x] then
         if Floor[x].d04count > 0 then
         begin
+          // Make sure rooms are saved in the correct order
+          sFloor := x;
+          form15.LoadRandomData;
+          sFloor := CheckListBox1.ItemIndex;
+          form15.SaveD04;
           h.flag := 4;
           h.TotalSize := Floor[x].d04count + 16;
           dl := dl + h.TotalSize;
@@ -7106,7 +7121,7 @@ begin
 
     if placerandom then
     begin
-      Button12Click(Button14);
+      form15.LoadRandomData;
       AddRoomEntry(d, px, py, pz2);
       // Save data and redraw the map
       form15.SaveD04;
@@ -9488,12 +9503,13 @@ begin
   for x := 0 to 20 do
     if Form1.CheckListBox1.Checked[x] then
     begin
-      // Check room entries
+      // Check random monster entries
       if ver > 0 then
       begin
         sFloor := x;
-        form1.Button12Click(form1.Button14);
+        form15.LoadRandomData;
         sFloor := form1.CheckListBox1.ItemIndex;
+        // Room data
         if Floor[x].d04count > 0 then
         begin
           for i := 0 to length(roomdata) - 1 do
@@ -9503,6 +9519,24 @@ begin
               + ' room '
               + inttostr(roomdata[i].roomnum)
               + ' has more than 32 random spawn entries');
+          end;
+        end;
+        // Config data
+        if Floor[x].d05count > 0 then
+        begin
+          for i := 1 to form15.StringGrid2.RowCount - 1 do
+          begin
+            if strtointdef(form15.StringGrid2.Cells[3,i],-1) <= 0 then
+              warn.Add('Invalid random monster weight value at row #' + inttostr(i)
+              + ' on floor '
+              + inttostr(x));
+            for y := 1 to form15.StringGrid1.RowCount - 1 do
+              if strtointdef(form15.StringGrid2.Cells[2,i],-1) =
+              strtointdef(form15.StringGrid1.Cells[8,y],-2) then break;
+            if y >= form15.StringGrid1.RowCount then
+              warn.Add('Invalid random monster config value at row #' + inttostr(i)
+              + ' on floor '
+              + inttostr(x));
           end;
         end;
       end;
@@ -10085,6 +10119,9 @@ var
   Reg: TRegistry;
   flp: TMemoryStream;
 begin
+  English1.Checked := true;
+  French1.Checked := false;
+  Spanish1.Checked := false;
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;
@@ -10110,6 +10147,9 @@ var
   Reg: TRegistry;
   flp: TMemoryStream;
 begin
+  English1.Checked := false;
+  French1.Checked := true;
+  Spanish1.Checked := false;
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;
@@ -10358,6 +10398,9 @@ var
   Reg: TRegistry;
   flp: TMemoryStream;
 begin
+  English1.Checked := false;
+  French1.Checked := false;
+  Spanish1.Checked := true;
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;

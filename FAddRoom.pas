@@ -43,10 +43,6 @@ begin
       numentries := 0;
       SetLength(data, 0);
     end;
-
-    form15.ListBox1.Items.Add(IntToStr(Spinedit1.Value) + ' (0 entries)');
-    form15.ListBox1.ItemIndex := form15.ListBox1.Count - 1;
-    form15.ListBox1Click(nil);
     Close;
   end
   else if fmRoom.Caption = 'Edit room' then
@@ -62,13 +58,13 @@ begin
       for x := 0 to roomdata[idx + 1].numentries do
         move(roomdata[idx + 1].roomnum, roomdata[idx + 1].data[(x * 28) + 24], 2);
     end;
-
-    // Update the ListBox display
-    form15.ListBox1.Items[idx] := IntToStr(Spinedit1.Value) +
-      ' (' + IntToStr(roomdata[idx + 1].numentries) + ' entries)';
-    form15.ListBox1Click(nil);
     Close;
   end;
+
+  // Save and reload the data
+  form15.SaveD04;
+  form15.LoadRandomData;
+  form15.ListBox1Click(nil);
 end;
 
 procedure TfmRoom.Button1Click(Sender: TObject);

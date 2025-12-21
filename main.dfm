@@ -435,7 +435,7 @@ object Form1: TForm1
         Caption = '-'
       end
       object Settheme1: TMenuItem
-        Caption = 'Set theme'
+        Caption = 'Set theme...'
         OnClick = Button15Click
       end
       object N3: TMenuItem
@@ -1682,7 +1682,7 @@ object Form1: TForm1
       Caption = 'Enemy wave'
     end
     object Itemsgroupe1: TMenuItem
-      Caption = 'Item group'
+      Caption = 'Object group'
     end
     object N10: TMenuItem
       Caption = '-'
@@ -1690,12 +1690,12 @@ object Form1: TForm1
     object smNew: TMenuItem
       Caption = 'New'
       object smNewMonster: TMenuItem
-        Caption = 'Monster'
+        Caption = 'Monster...'
         ShortCut = 16462
         OnClick = smNewMonsterClick
       end
       object smNewItem: TMenuItem
-        Caption = 'Item'
+        Caption = 'Object...'
         ShortCut = 32846
         OnClick = smNewItemClick
       end
@@ -1706,7 +1706,7 @@ object Form1: TForm1
         OnClick = Copylastmonster1Click
       end
       object Copylastitem1: TMenuItem
-        Caption = 'Copy last item'
+        Caption = 'Copy last object'
         Enabled = False
         ShortCut = 32835
         OnClick = Copylastitem1Click

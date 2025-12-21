@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ImgList, System.ImageList;
+  Dialogs, StdCtrls, ImgList, System.ImageList, Vcl.Themes, Vcl.Styles;
 
 type
   TForm27 = class(TForm)
@@ -74,7 +74,14 @@ begin
     else
     begin
       listbox1.Canvas.Brush.Color:=$FFFFFF;
-      if state <> [] then listbox1.Canvas.Brush.Color:=$D4B7B6;
+      if TStyleManager.IsCustomStyleActive then
+      begin
+        if odSelected in State then listbox1.Canvas.Brush.Color:=$D4B7B6;
+      end
+      else
+      begin
+        if state <> [] then listbox1.Canvas.Brush.Color:=$D4B7B6;
+      end;
       listbox1.Canvas.FillRect(rect);
 
       if er[index].Count > 0 then imagelist1.Draw(listbox1.Canvas,0,rect.top,0)

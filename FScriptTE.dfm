@@ -284,13 +284,13 @@ object fmScriptTE: TfmScriptTE
     object File1: TMenuItem
       Caption = 'File'
       object Openfromfile1: TMenuItem
-        Caption = 'Open from file'
+        Caption = 'Open from file...'
         ImageIndex = 2
         ShortCut = 16463
         OnClick = Openfromfile1Click
       end
       object Savetofile1: TMenuItem
-        Caption = 'Save to file'
+        Caption = 'Save to file...'
         ImageIndex = 3
         ShortCut = 16467
         OnClick = Savetofile1Click
@@ -320,7 +320,7 @@ object fmScriptTE: TfmScriptTE
         OnClick = Find1Click
       end
       object Replace1: TMenuItem
-        Caption = 'Replace'
+        Caption = 'Replace...'
         ShortCut = 16456
         OnClick = Replace1Click
       end
@@ -357,7 +357,7 @@ object fmScriptTE: TfmScriptTE
           Caption = '-'
         end
         object Resetsettings1: TMenuItem
-          Caption = 'Reset'
+          Caption = 'Reset...'
           OnClick = Resetsettings1Click
         end
       end
@@ -365,13 +365,13 @@ object fmScriptTE: TfmScriptTE
         Caption = '-'
       end
       object GoToLabel1: TMenuItem
-        Caption = 'Go to label'
+        Caption = 'Go to label...'
         ImageIndex = 13
         ShortCut = 16455
         OnClick = GoToLabel1Click
       end
       object GotoLine1: TMenuItem
-        Caption = 'Go to line'
+        Caption = 'Go to line...'
         ImageIndex = 13
         ShortCut = 32839
         OnClick = GotoLine1Click
@@ -386,7 +386,7 @@ object fmScriptTE: TfmScriptTE
     object Format1: TMenuItem
       Caption = 'Format'
       object Changefont1: TMenuItem
-        Caption = 'Change font'
+        Caption = 'Change font...'
         ImageIndex = 22
         OnClick = Changefont1Click
       end
@@ -394,27 +394,27 @@ object fmScriptTE: TfmScriptTE
         Caption = 'Change text color'
         ImageIndex = 23
         object Label1: TMenuItem
-          Caption = 'Label'
+          Caption = 'Label...'
           OnClick = Label1Click
         end
         object Opcodes1: TMenuItem
-          Caption = 'Opcode'
+          Caption = 'Opcode...'
           OnClick = Opcodes1Click
         end
         object Registers1: TMenuItem
-          Caption = 'Register'
+          Caption = 'Register...'
           OnClick = Registers1Click
         end
         object Values1: TMenuItem
-          Caption = 'Value'
+          Caption = 'Value...'
           OnClick = Values1Click
         end
         object StringSTR1: TMenuItem
-          Caption = 'String (STR)'
+          Caption = 'String (STR)...'
           OnClick = StringSTR1Click
         end
         object StringArgument1: TMenuItem
-          Caption = 'String (Argument)'
+          Caption = 'String (Argument)...'
           OnClick = StringArgument1Click
         end
       end
@@ -539,7 +539,7 @@ object fmScriptTE: TfmScriptTE
         Caption = '-'
       end
       object Setformattingdefaults1: TMenuItem
-        Caption = 'Reset formatting'
+        Caption = 'Reset formatting...'
         OnClick = Setformattingdefaults1Click
       end
     end
@@ -639,17 +639,17 @@ object fmScriptTE: TfmScriptTE
     Left = 344
     Top = 288
     object NotesFont1: TMenuItem
-      Caption = 'Change font'
+      Caption = 'Change font...'
       ImageIndex = 22
       OnClick = NotesFont1Click
     end
     object NotesText1: TMenuItem
-      Caption = 'Change text color'
+      Caption = 'Change text color...'
       ImageIndex = 23
       OnClick = NotesText1Click
     end
     object NotesBackground1: TMenuItem
-      Caption = 'Change background color'
+      Caption = 'Change background color...'
       ImageIndex = 24
       OnClick = NotesBackground1Click
     end
@@ -657,7 +657,7 @@ object fmScriptTE: TfmScriptTE
       Caption = '-'
     end
     object NotesReset1: TMenuItem
-      Caption = 'Reset notes formatting'
+      Caption = 'Reset notes formatting...'
       OnClick = NotesReset1Click
     end
   end

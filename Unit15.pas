@@ -5,13 +5,18 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, Grids, Math, StdCtrls, Vcl.Menus, Vcl.ExtCtrls, Vcl.Styles,
-  Vcl.Themes;
+  Vcl.Themes, System.Generics.Collections, system.Generics.Defaults;
 
 type
   TRoomData = record
     roomnum: integer;
     numentries: integer;
     data: TBytes;
+end;
+
+type
+  TStringGridRow = record
+    Cells: TArray<string>;
 end;
 
 type
@@ -102,8 +107,10 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure LoadRandomData;
     procedure SaveD04;
     procedure SaveD05;
+    procedure SortConfigPool;
   end;
 
 var
@@ -117,7 +124,45 @@ uses main, FAddRoom, TCom, FMonsType;
 
 {$R *.dfm}
 
-procedure AddRowAfter(Grid: TStringGrid);
+procedure TForm15.SortConfigPool;
+var
+  Rows: TArray<TStringGridRow>;
+  r, c: Integer;
+begin
+  SetLength(Rows, StringGrid1.RowCount - 1);
+
+  // Copy grid rows
+  for r := 1 to StringGrid1.RowCount - 1 do
+  begin
+    SetLength(Rows[r - 1].Cells, StringGrid1.ColCount);
+    for c := 0 to StringGrid1.ColCount - 1 do
+      Rows[r - 1].Cells[c] := StringGrid1.Cells[c, r];
+  end;
+
+  // Sort by config #
+  TArray.Sort<TStringGridRow>(Rows,
+    TComparer<TStringGridRow>.Construct(
+      function(const L, R: TStringGridRow): Integer
+      var
+        VL, VR: Double;
+      begin
+        VL := StrToFloatDef(L.Cells[8], 0);
+        VR := StrToFloatDef(R.Cells[8], 0);
+        Result := CompareValue(VL, VR);
+      end
+    )
+  );
+
+  // Write back and reindex column 0
+  for r := 0 to High(Rows) do
+  begin
+    StringGrid1.Cells[0, r + 1] := IntToStr(r + 1);
+    for c := 1 to StringGrid1.ColCount - 1 do
+      StringGrid1.Cells[c, r + 1] := Rows[r].Cells[c];
+  end;
+end;
+
+function AddRowAfter(Grid: TStringGrid): Integer;
 var
   r, c: Integer;
 begin
@@ -129,6 +174,7 @@ begin
       Grid.Cells[c, 1] := '0';
     Grid.Cells[0, 1] := '1';
     Grid.Row := 1;
+    result := 0;
     Exit;
   end;
 
@@ -136,7 +182,10 @@ begin
 
   // Prevent inserting above header
   if r < 1 then
+  begin
+    result := -1;
     Exit;
+  end;
 
   // Expand grid
   Grid.RowCount := Grid.RowCount + 1;
@@ -156,6 +205,9 @@ begin
 
   // Select the new row
   Grid.Row := r + 1;
+
+  // Return the row index
+  result := r;
 end;
 
 procedure DeleteRow(Grid: TStringGrid);
@@ -182,6 +234,11 @@ begin
     Grid.Row := Grid.RowCount - 1;
 end;
 
+procedure TForm15.LoadRandomData;
+begin
+  form1.Button12Click(form1.Button14);
+end;
+
 procedure TForm15.SaveD04;
 var
   roomCount: Integer;
@@ -190,8 +247,9 @@ var
   headerPos: Integer;
   writePos: Integer;
   dataOffsetRel: Integer;
-  r: Integer;
+  r, idx: Integer;
   tmpInt: Integer;
+  roomOrder: TArray<Integer>;
 begin
   // Base header is always 12
   headerBase := 12;
@@ -216,8 +274,26 @@ begin
   writePos := dataStart;
   dataOffsetRel := 0;
 
-  for r := 1 to roomCount do
+  // Add rooms
+  SetLength(roomOrder, roomCount);
+  for r := 0 to roomCount - 1 do
+    roomOrder[r] := r + 1;
+
+  // Sort rooms by room number in ascending order
+  TArray.Sort<Integer>(
+    roomOrder,
+    TComparer<Integer>.Construct(
+      function(const A, B: Integer): Integer
+      begin
+        Result := roomdata[A].roomnum - roomdata[B].roomnum;
+      end
+    )
+  );
+
+  for idx := 0 to High(roomOrder) do
   begin
+    r := roomOrder[idx];
+
     // low 16 bits = roomnum, high 16 bits = numentries
     tmpInt := (roomdata[r].numentries shl 16) or (roomdata[r].roomnum and $FFFF);
     Move(tmpInt, Floor[sfloor].d04[headerPos], 4);
@@ -417,13 +493,46 @@ begin
 end;
 
 procedure TForm15.Addrow2Click(Sender: TObject);
+var
+  idx, i, j: integer;
+  found: Boolean;
 begin
-  AddRowAfter(Stringgrid1);
+  idx := AddRowAfter(Stringgrid1);
+  // Set config # cell
+  if idx >= 0 then
+  begin
+    for i := 0 to 65535 do
+    begin
+      found := false;
+      for j := 1 to StringGrid1.RowCount - 1 do
+      begin
+        if StrToIntDef(StringGrid1.Cells[8,j], -1) = i then
+        begin
+          found := true;
+          break;
+        end;
+      end;
+      if not found then
+        break;
+    end;
+    Stringgrid1.cells[8,idx+1] := inttostr(i);
+    // Sort and select the new row
+    SortConfigPool;
+    Stringgrid1.Row := Stringgrid1.RowCount - 1;
+  end;
 end;
 
 procedure TForm15.Addrow3Click(Sender: TObject);
+var
+  idx: integer;
 begin
-  AddRowAfter(Stringgrid2);
+  idx := AddRowAfter(Stringgrid2);
+  // Set default config and weight values
+  if idx >= 0 then
+  begin
+    Stringgrid2.cells[2,idx+1] := '1';
+    Stringgrid2.cells[3,idx+1] := '1';
+  end;
 end;
 
 procedure TForm15.btnEditRoomClick(Sender: TObject);
