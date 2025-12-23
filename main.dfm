@@ -583,6 +583,13 @@ object Form1: TForm1
         Caption = 'Events...'
         OnClick = Button10Click
       end
+      object Previewmapevent1: TMenuItem
+        Caption = 'Preview events'
+        OnClick = Previewmapevent1Click
+      end
+      object N13: TMenuItem
+        Caption = '-'
+      end
       object Randommonsters1: TMenuItem
         Caption = 'Random monsters...'
         OnClick = Button12Click
@@ -1690,12 +1697,12 @@ object Form1: TForm1
     object smNew: TMenuItem
       Caption = 'New'
       object smNewMonster: TMenuItem
-        Caption = 'Monster...'
+        Caption = 'Monster'
         ShortCut = 16462
         OnClick = smNewMonsterClick
       end
       object smNewItem: TMenuItem
-        Caption = 'Object...'
+        Caption = 'Object'
         ShortCut = 32846
         OnClick = smNewItemClick
       end
@@ -1818,5 +1825,10 @@ object Form1: TForm1
       Caption = '150%'
       OnClick = Largefont1Click
     end
+  end
+  object tmPreview: TTimer
+    OnTimer = tmPreviewTimer
+    Left = 528
+    Top = 8
   end
 end

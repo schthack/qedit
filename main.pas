@@ -346,6 +346,9 @@ type
     Button14: TButton;
     Settheme1: TMenuItem;
     N3: TMenuItem;
+    Previewmapevent1: TMenuItem;
+    N13: TMenuItem;
+    tmPreview: TTimer;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -466,6 +469,8 @@ type
     procedure Button14Click(Sender: TObject);
 
     procedure Button15Click(Sender: TObject);
+    procedure Previewmapevent1Click(Sender: TObject);
+    procedure tmPreviewTimer(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -629,6 +634,11 @@ var
   placerandom: Boolean = false;
   placerotation: integer = 0;
   darkmode: Boolean = false;
+  previewstate: integer = 0;
+  prevsection: integer = 0;
+  prevx: integer = 0;
+  prevy: integer = 0;
+  prevwave: integer = -1;
 
 implementation
 
@@ -1787,6 +1797,11 @@ begin
         // rotate it
         z := 0;
         move(Floor[sfloor].d04[x + 24], z, 2);
+        if (previewstate > 0) and (z <> prevsection) then
+        begin
+          inc(x, 28);
+          continue;
+        end;
         px := cos(-rev[z] / 10430.37835) * px2 - sin(-rev[z] / 10430.37835) * py2;
         py := sin(-rev[z] / 10430.37835) * px2 + cos(-rev[z] / 10430.37835) * py2;
 
@@ -1828,6 +1843,10 @@ begin
     for x := 0 to Floor[sfloor].MonsterCount - 1 do
       if (Floor[sfloor].Monster[x].Unknow5 = showwave) or (showwave = -1) then
       begin
+        if (previewstate > 0) and
+        (Floor[sfloor].Monster[x].map_section <> prevsection)
+        then continue;
+
         // 395,233
         if extractfilename(mapfilenam) = 'map_boss03c.rel' then
         begin
@@ -1940,7 +1959,7 @@ begin
           if i < 13 then
           begin
             if Floor[sfloor].Obj[x].Skin = 14 then
-              rad := (Floor[sfloor].Obj[x].unknow8 * 10) + 30
+              rad := (Floor[sfloor].Obj[x].unknow8 * 10)
             else
               rad := Floor[sfloor].Obj[x].unknow8;
             BBRelBmp.Canvas.Brush.Style := bsclear;
@@ -2050,7 +2069,14 @@ begin
     end
     else
       BBRelBmp.Canvas.Brush.Color := ClWhite;
-    BBRelBmp.Canvas.TextOut(5, 5, GetLanguageString(54) + ' ' + inttohex(sms, 2));
+    if previewstate > 0 then
+    begin
+      BBRelBmp.Canvas.TextOut(5, 5, 'Event ' + inttostr(previewstate) + '/' +
+      inttostr(Floor[CheckListBox1.ItemIndex].Unknow[8]));
+      BBRelBmp.Canvas.TextOut(5, 20, '(Esc: cancel playback)');
+    end
+    else
+      BBRelBmp.Canvas.TextOut(5, 5, GetLanguageString(54) + ' ' + inttohex(sms, 2));
     BBRelBmp.Canvas.Font.Color := clBlack;
   except
     MessageDlg(GetLanguageString(53), mtInformation, [mbOk], 0);
@@ -3601,6 +3627,13 @@ var
 begin
   if CheckListBox1.ItemIndex >= 0 then
   begin
+    if previewstate > 0 then
+    begin
+      previewstate := 0;
+      mpx := prevx;
+      mpy := prevy;
+      showwave := prevwave;
+    end;
     HideIndicator();
     Copylastmonster1.Enabled := false;
     Copylastitem1.Enabled := false;
@@ -9720,6 +9753,22 @@ begin
   end;
 end;
 
+procedure TForm1.Previewmapevent1Click(Sender: TObject);
+var
+  x: integer;
+begin
+   // Set up the map
+  prevx := mpx;
+  prevy := mpy;
+  prevwave := showwave;
+
+  // Set the starting state and start the timer
+  previewstate := 1;
+  tmPreviewTimer(nil);
+  tmPreview.Enabled := false;
+  tmPreview.Enabled := true;
+end;
+
 procedure TForm1.Label5MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
@@ -10085,6 +10134,14 @@ begin
     MoveSel := -1;
     HideIndicator();
     placerandom := false;
+    if previewstate > 0 then
+    begin
+      previewstate := 0;
+      mpx := prevx;
+      mpy := prevy;
+      showwave := prevwave;
+      DrawMap;
+    end;
   end;
 end;
 
@@ -10097,6 +10154,46 @@ procedure TForm1.Timer1Timer(Sender: TObject);
 begin
   if isedited then
     CreateShadow;
+end;
+
+procedure TForm1.tmPreviewTimer(Sender: TObject);
+var
+  x, y: integer;
+begin
+  if (CheckListBox1.ItemIndex > -1) and (previewstate > 0) then
+  begin
+    // Check if the preview is done
+    if previewstate > Floor[CheckListBox1.ItemIndex].Unknow[8] then
+    begin
+      previewstate := 0;
+      mpx := prevx;
+      mpy := prevy;
+      showwave := prevwave;
+      DrawMap;
+      Exit;
+    end;
+
+    // Calculate offset
+    if Floor[CheckListBox1.ItemIndex].Unknow[15] = $32 then
+      y := 16 + (24 * (previewstate - 1))
+    else y := 16 + (20 * (previewstate - 1));
+
+    // Draw current state
+    prevsection :=
+      Floor[CheckListBox1.ItemIndex].Unknow[y + 8] +
+      Floor[CheckListBox1.ItemIndex].Unknow[y + 9] * 256;
+
+    showwave :=
+      Floor[CheckListBox1.ItemIndex].Unknow[y + 10] +
+      Floor[CheckListBox1.ItemIndex].Unknow[y + 11] * 256;
+
+    mpx := round(-MidP[prevsection].x * Zoom);
+    mpy := round(-MidP[prevsection].y * Zoom);
+    DrawMap;
+
+    // Move to the next state for next tick
+    Inc(previewstate);
+  end;
 end;
 
 procedure TForm1.Undo1Click(Sender: TObject);
