@@ -639,17 +639,17 @@ object fmScriptTE: TfmScriptTE
     Left = 344
     Top = 288
     object NotesFont1: TMenuItem
-      Caption = 'Change font'
+      Caption = 'Change font...'
       ImageIndex = 22
       OnClick = NotesFont1Click
     end
     object NotesText1: TMenuItem
-      Caption = 'Change text color'
+      Caption = 'Change text color...'
       ImageIndex = 23
       OnClick = NotesText1Click
     end
     object NotesBackground1: TMenuItem
-      Caption = 'Change background color'
+      Caption = 'Change background color...'
       ImageIndex = 24
       OnClick = NotesBackground1Click
     end
@@ -657,7 +657,7 @@ object fmScriptTE: TfmScriptTE
       Caption = '-'
     end
     object NotesReset1: TMenuItem
-      Caption = 'Reset notes formatting'
+      Caption = 'Reset notes formatting...'
       OnClick = NotesReset1Click
     end
   end

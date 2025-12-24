@@ -17,6 +17,7 @@ object Form1: TForm1
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnKeyPress = FormKeyPress
   OnKeyUp = FormKeyUp
   OnMouseUp = FormMouseUp
   OnMouseWheelDown = FormMouseWheelDown
@@ -105,6 +106,17 @@ object Form1: TForm1
     ParentFont = False
     Visible = False
     OnClick = lblModifiersClick
+  end
+  object lblPreview: TLabel
+    Left = 236
+    Top = 464
+    Width = 302
+    Height = 13
+    Anchors = [akBottom]
+    Caption = 
+      #8592' Previous  |  '#8594' Next  |  Space: Pause/Play  |  Esc: Exit previe' +
+      'w'
+    Visible = False
   end
   object GroupBox1: TGroupBox
     Left = 0

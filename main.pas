@@ -349,6 +349,7 @@ type
     Previewmapevent1: TMenuItem;
     N13: TMenuItem;
     tmPreview: TTimer;
+    lblPreview: TLabel;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -471,6 +472,7 @@ type
     procedure Button15Click(Sender: TObject);
     procedure Previewmapevent1Click(Sender: TObject);
     procedure tmPreviewTimer(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
 
   private
     FClosedSuccessfully: Boolean;
@@ -635,10 +637,16 @@ var
   placerotation: integer = 0;
   darkmode: Boolean = false;
   previewstate: integer = 0;
+  previewstring: string;
+  previewpaused: Boolean = false;
+  settingstring: string;
+  actionstring: string;
+  delaystring: string;
   prevsection: integer = 0;
   prevx: integer = 0;
   prevy: integer = 0;
   prevwave: integer = -1;
+  prevgroup: integer = -1;
 
 implementation
 
@@ -869,6 +877,123 @@ begin
 
   Form1.Exporttextfortranslation1.Caption := GetLanguageString(294);
   Form1.Importtextfromtranslation1.Caption := GetLanguageString(295);
+end;
+
+procedure DrawPreviewState(AState: Integer);
+var
+  y, z, m, u: Integer;
+  idx: Integer;
+begin
+  idx := form1.CheckListBox1.ItemIndex;
+  if idx < 0 then Exit;
+
+  delaystring := 'Delay: ';
+  actionstring := 'Actions: ';
+  settingstring := 'Wave setting: ';
+
+  // Check if the state is in bounds
+  if (AState <= 0) or
+     (AState > Floor[idx].Unknow[8]) then
+    Exit;
+
+  // Calculate offsets and delay/setting string
+  if Floor[idx].Unknow[15] = $32 then
+  begin
+    y := 16 + (24 * (AState - 1));
+    z := Floor[idx].Unknow[y + 20] + Floor[idx].Unknow[y + 21] * 256;
+    z := z + (Floor[idx].Unknow[0] + Floor[idx].Unknow[1] * 256);
+
+    delaystring :=
+      delaystring +
+      'min = ' + IntToStr(Floor[idx].Unknow[y + 12] +
+                           Floor[idx].Unknow[y + 13] * 256) +
+      ' max = ' + IntToStr(Floor[idx].Unknow[y + 14] +
+                           Floor[idx].Unknow[y + 15] * 256);
+    settingstring :=
+      settingstring +
+        inttostr(Floor[form1.CheckListBox1.ItemIndex].Unknow[y + 16]) + ' ' +
+        inttostr(Floor[form1.CheckListBox1.ItemIndex].Unknow[y + 17]) + ' ' +
+        inttostr(Floor[form1.CheckListBox1.ItemIndex].Unknow[y + 18]) + ' ' +
+        inttostr(Floor[form1.CheckListBox1.ItemIndex].Unknow[y + 19]);
+  end
+  else
+  begin
+    y := 16 + (20 * (AState - 1));
+    z := Floor[idx].Unknow[y + 16] + Floor[idx].Unknow[y + 17] * 256;
+    z := z + (Floor[idx].Unknow[0] + Floor[idx].Unknow[1] * 256);
+
+    delaystring :=
+      delaystring +
+      IntToStr(Floor[idx].Unknow[y + 12] +
+               Floor[idx].Unknow[y + 13] * 256);
+  end;
+
+  // Event information
+  previewstring :=
+    '#' + IntToStr(Floor[idx].Unknow[y] +
+                   Floor[idx].Unknow[y + 1] * 256);
+
+  prevsection :=
+    Floor[idx].Unknow[y + 8] +
+    Floor[idx].Unknow[y + 9] * 256;
+
+  showwave :=
+    Floor[idx].Unknow[y + 10] +
+    Floor[idx].Unknow[y + 11] * 256;
+
+  // Hide all objects
+  showgrp := 65536;
+
+  // Parse the actions
+  while (Floor[idx].Unknow[z] <> 1) and
+        (z < Length(Floor[idx].Unknow) - 5) do
+  begin
+    m := 0;
+    u := 0;
+
+    if Floor[idx].Unknow[z] = $0C then
+    begin
+      move(Floor[idx].Unknow[z + 1], m, 4);
+      actionstring := actionstring + 'Call ' + IntToStr(m);
+      Inc(z, 5);
+    end
+    else if Floor[idx].Unknow[z] = $0A then
+    begin
+      move(Floor[idx].Unknow[z + 1], m, 2);
+      actionstring := actionstring + 'Unlock ' + IntToStr(m);
+      Inc(z, 3);
+    end
+    else if Floor[idx].Unknow[z] = $0B then
+    begin
+      move(Floor[idx].Unknow[z + 1], m, 2);
+      actionstring := actionstring + 'Lock ' + IntToStr(m);
+      Inc(z, 3);
+    end
+    else if Floor[idx].Unknow[z] = $08 then
+    begin
+      move(Floor[idx].Unknow[z + 1], m, 2);
+      move(Floor[idx].Unknow[z + 3], u, 2);
+      actionstring :=
+        actionstring + 'Unhide ' + IntToStr(m) + ' ' + IntToStr(u);
+      Inc(z, 5);
+    end;
+    actionstring := actionstring + ' > ';
+  end;
+  actionstring := actionstring + 'End';
+
+  mpx := Round(-MidP[prevsection].x * Zoom);
+  mpy := Round(-MidP[prevsection].y * Zoom);
+  form1.DrawMap;
+end;
+
+Procedure ResetPreviewState;
+begin
+  previewstate := 0;
+  mpx := prevx;
+  mpy := prevy;
+  showwave := prevwave;
+  showgrp := prevgroup;
+  form1.lblPreview.Visible := false;
 end;
 
 Procedure ClearShadow;
@@ -2071,9 +2196,22 @@ begin
       BBRelBmp.Canvas.Brush.Color := ClWhite;
     if previewstate > 0 then
     begin
-      BBRelBmp.Canvas.TextOut(5, 5, 'Event ' + inttostr(previewstate) + '/' +
-      inttostr(Floor[CheckListBox1.ItemIndex].Unknow[8]));
-      BBRelBmp.Canvas.TextOut(5, 20, '(Esc: cancel playback)');
+      if previewstate > Floor[CheckListBox1.ItemIndex].Unknow[8] then
+        BBRelBmp.Canvas.TextOut(5, 5, 'Event ' + previewstring +
+         ' (' + inttostr(previewstate - 1) + '/' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[8]) + ')')
+      else
+        BBRelBmp.Canvas.TextOut(5, 5, 'Event ' + previewstring +
+         ' (' + inttostr(previewstate) + '/' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[8]) + ')');
+      BBRelBmp.Canvas.TextOut(5, 20, 'Section: ' + inttostr(prevsection));
+      BBRelBmp.Canvas.TextOut(5, 35, 'Wave: ' + inttostr(showwave));
+      BBRelBmp.Canvas.TextOut(5, 50, delaystring);
+      if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then
+      begin
+        BBRelBmp.Canvas.TextOut(5, 65, settingstring);
+        BBRelBmp.Canvas.TextOut(5, 80, actionstring)
+      end
+      else BBRelBmp.Canvas.TextOut(5, 65, actionstring);
+      if previewpaused then BBRelBmp.Canvas.TextOut(5, Image2.Height-20, 'Paused');
     end
     else
       BBRelBmp.Canvas.TextOut(5, 5, GetLanguageString(54) + ' ' + inttohex(sms, 2));
@@ -2949,6 +3087,11 @@ begin
       Form1.lblStatus.Caption := '[Click to place]';
     end;
   end;
+  if previewstate > 0 then
+  begin
+    ResetPreviewState;
+    form1.DrawMap;
+  end;
 end;
 
 procedure HideIndicator();
@@ -3628,12 +3771,7 @@ begin
   if CheckListBox1.ItemIndex >= 0 then
   begin
     if previewstate > 0 then
-    begin
-      previewstate := 0;
-      mpx := prevx;
-      mpy := prevy;
-      showwave := prevwave;
-    end;
+      ResetPreviewState;
     HideIndicator();
     Copylastmonster1.Enabled := false;
     Copylastitem1.Enabled := false;
@@ -5587,7 +5725,7 @@ begin
       form1.Import1.Caption := 'Import...';
       form1.Exporttextfortranslation1.Caption := 'Export text for translation...';
       form1.Importtextfromtranslation1.Caption := 'Import text from translation...';
-      form1.Events1.Caption := 'Events';
+      form1.Events1.Caption := 'Map events';
       form1.Randommonsters1.Caption := 'Random monsters';
     end;
     flp.Clear;
@@ -8386,6 +8524,38 @@ begin
     fdown := true;
   if key = 83 then
     sdown := true;
+  if (key = 37) and (previewstate > 0) then
+  begin
+    key := 0;
+    previewpaused := true;
+    if previewstate > 1 then
+    begin
+      Dec(previewstate);
+      DrawPreviewState(previewstate);
+    end;
+  end;
+  if (key = 39) and (previewstate > 0) then
+  begin
+    key := 0;
+    previewpaused := true;
+    if previewstate < Floor[CheckListBox1.ItemIndex].Unknow[8] then
+    begin
+      Inc(previewstate);
+      DrawPreviewState(previewstate);
+    end;
+  end;
+  if (key = 32) and (previewstate > 0) then
+  begin
+    key := 0;
+    PreviewPaused := not PreviewPaused;
+    DrawMap;
+  end;
+end;
+
+procedure TForm1.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if (key = ' ') and (previewstate > 0) then
+    key := #0;
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -9754,19 +9924,25 @@ begin
 end;
 
 procedure TForm1.Previewmapevent1Click(Sender: TObject);
-var
-  x: integer;
 begin
-   // Set up the map
-  prevx := mpx;
-  prevy := mpy;
-  prevwave := showwave;
+  if Floor[CheckListBox1.ItemIndex].Unknow[8] > 0 then
+  begin
+    // Set up the map and save previous state
+    prevx := mpx;
+    prevy := mpy;
+    prevwave := showwave;
+    prevgroup := showgrp;
 
-  // Set the starting state and start the timer
-  previewstate := 1;
-  tmPreviewTimer(nil);
-  tmPreview.Enabled := false;
-  tmPreview.Enabled := true;
+    // Set the starting state and start the timer
+    previewpaused := false;
+    previewstate := 1;
+    DrawPreviewState(previewstate);
+    Inc(previewstate);
+    tmPreview.Enabled := False;
+    tmPreview.Interval := tmPreview.Interval;
+    tmPreview.Enabled := True;
+    lblPreview.Show;
+  end;
 end;
 
 procedure TForm1.Label5MouseUp(Sender: TObject; Button: TMouseButton;
@@ -10136,10 +10312,7 @@ begin
     placerandom := false;
     if previewstate > 0 then
     begin
-      previewstate := 0;
-      mpx := prevx;
-      mpy := prevy;
-      showwave := prevwave;
+      ResetPreviewState;
       DrawMap;
     end;
   end;
@@ -10157,43 +10330,20 @@ begin
 end;
 
 procedure TForm1.tmPreviewTimer(Sender: TObject);
-var
-  x, y: integer;
 begin
-  if (CheckListBox1.ItemIndex > -1) and (previewstate > 0) then
+  if (previewstate = 0) or (PreviewPaused) then
+    Exit;
+
+  if previewstate > Floor[CheckListBox1.ItemIndex].Unknow[8]
+  then
   begin
-    // Check if the preview is done
-    if previewstate > Floor[CheckListBox1.ItemIndex].Unknow[8] then
-    begin
-      previewstate := 0;
-      mpx := prevx;
-      mpy := prevy;
-      showwave := prevwave;
-      DrawMap;
-      Exit;
-    end;
-
-    // Calculate offset
-    if Floor[CheckListBox1.ItemIndex].Unknow[15] = $32 then
-      y := 16 + (24 * (previewstate - 1))
-    else y := 16 + (20 * (previewstate - 1));
-
-    // Draw current state
-    prevsection :=
-      Floor[CheckListBox1.ItemIndex].Unknow[y + 8] +
-      Floor[CheckListBox1.ItemIndex].Unknow[y + 9] * 256;
-
-    showwave :=
-      Floor[CheckListBox1.ItemIndex].Unknow[y + 10] +
-      Floor[CheckListBox1.ItemIndex].Unknow[y + 11] * 256;
-
-    mpx := round(-MidP[prevsection].x * Zoom);
-    mpy := round(-MidP[prevsection].y * Zoom);
+    ResetPreviewState;
     DrawMap;
-
-    // Move to the next state for next tick
-    Inc(previewstate);
+    Exit;
   end;
+
+  DrawPreviewState(previewstate);
+  Inc(previewstate);
 end;
 
 procedure TForm1.Undo1Click(Sender: TObject);
