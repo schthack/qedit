@@ -10343,7 +10343,7 @@ begin
   if previewstate > Floor[CheckListBox1.ItemIndex].Unknow[8]
   then
   begin
-    ResetPreviewState;
+    previewpaused := true;
     DrawMap;
     Exit;
   end;
