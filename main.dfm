@@ -1839,6 +1839,7 @@ object Form1: TForm1
     end
   end
   object tmPreview: TTimer
+    Interval = 2000
     OnTimer = tmPreviewTimer
     Left = 528
     Top = 8

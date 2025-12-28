@@ -2019,10 +2019,8 @@ begin
     re := 11; // gigobooma
   if (m.Skin = 67) then
     re := 7; // savage woolf
-  if (m.Skin = 67) and (round(m.Unknow10) = 1) then
+  if (m.Skin = 67) and (round(m.Unknow10) >= 1) then
     re := 8; // barbarous wolf
-  if (m.Skin = 67) and (m.Movement_flag = 1) then
-    re := 8; // Ives way D;
   if m.Skin = 65 then
     re := 5; // rappy
   if (m.Skin = 65) and (m.Movement_flag = 1) then

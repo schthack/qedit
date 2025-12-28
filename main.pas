@@ -646,7 +646,7 @@ var
   prevx: integer = 0;
   prevy: integer = 0;
   prevwave: integer = -1;
-  prevgroup: integer = -1;
+  prevfloor: integer = 0;
 
 implementation
 
@@ -941,9 +941,6 @@ begin
     Floor[idx].Unknow[y + 10] +
     Floor[idx].Unknow[y + 11] * 256;
 
-  // Hide all objects
-  showgrp := 65536;
-
   // Parse the actions
   while (Floor[idx].Unknow[z] <> 1) and
         (z < Length(Floor[idx].Unknow) - 5) do
@@ -992,7 +989,6 @@ begin
   mpx := prevx;
   mpy := prevy;
   showwave := prevwave;
-  showgrp := prevgroup;
   form1.lblPreview.Visible := false;
 end;
 
@@ -3078,6 +3074,12 @@ end;
 
 procedure ShowIndicator();
 begin
+  if previewstate > 0 then
+  begin
+    previewpaused := true;
+    form1.DrawMap;
+    exit;
+  end;
   if not Form1.smDisableIndicator.Checked then
   begin
     Form1.lblStatus.Visible := true;
@@ -3086,11 +3088,6 @@ begin
       Form1.lblModifiers.Visible := true;
       Form1.lblStatus.Caption := '[Click to place]';
     end;
-  end;
-  if previewstate > 0 then
-  begin
-    ResetPreviewState;
-    form1.DrawMap;
   end;
 end;
 
@@ -3771,7 +3768,13 @@ begin
   if CheckListBox1.ItemIndex >= 0 then
   begin
     if previewstate > 0 then
-      ResetPreviewState;
+    begin
+      if prevfloor <> CheckListBox1.ItemIndex then
+        ResetPreviewState
+      else previewpaused := true;
+    end;
+    // Save the last selected floor
+    prevfloor := CheckListBox1.ItemIndex;
     HideIndicator();
     Copylastmonster1.Enabled := false;
     Copylastitem1.Enabled := false;
@@ -8547,7 +8550,7 @@ begin
   if (key = 32) and (previewstate > 0) then
   begin
     key := 0;
-    PreviewPaused := not PreviewPaused;
+    previewpaused := not previewpaused;
     DrawMap;
   end;
 end;
@@ -9436,6 +9439,7 @@ begin
   EnemyWave1.Clear;
   tm := TMenuItem.Create(EnemyWave1);
   tm.Caption := GetLanguageString(83);
+  if showwave = -1 then tm.Checked := true;
   tm.tag := -1;
   tm.OnClick := EnemyWave1Click;
   EnemyWave1.Add(tm);
@@ -9444,6 +9448,7 @@ begin
   begin
     tm := TMenuItem.Create(EnemyWave1);
     tm.Caption := GetLanguageString(84) + inttostr(x);
+    if x = showwave then tm.Checked := true;
     tm.tag := x;
     tm.OnClick := EnemyWave1Click;
     EnemyWave1.Add(tm);
@@ -9452,6 +9457,7 @@ begin
   Itemsgroupe1.Clear;
   tm := TMenuItem.Create(Itemsgroupe1);
   tm.Caption := GetLanguageString(83);
+  if showgrp = -1 then tm.Checked := true;
   tm.tag := -1;
   tm.OnClick := Itemsgroupe1Click;
   Itemsgroupe1.Add(tm);
@@ -9460,6 +9466,7 @@ begin
   begin
     tm := TMenuItem.Create(EnemyWave1);
     tm.Caption := GetLanguageString(85) + inttostr(x);
+    if x = showgrp then tm.Checked := true;
     tm.tag := x;
     tm.OnClick := Itemsgroupe1Click;
     Itemsgroupe1.Add(tm);
@@ -9931,7 +9938,6 @@ begin
     prevx := mpx;
     prevy := mpy;
     prevwave := showwave;
-    prevgroup := showgrp;
 
     // Set the starting state and start the timer
     previewpaused := false;
@@ -10331,7 +10337,7 @@ end;
 
 procedure TForm1.tmPreviewTimer(Sender: TObject);
 begin
-  if (previewstate = 0) or (PreviewPaused) then
+  if (previewstate = 0) or (previewpaused) then
     Exit;
 
   if previewstate > Floor[CheckListBox1.ItemIndex].Unknow[8]
