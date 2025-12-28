@@ -646,6 +646,7 @@ var
   prevx: integer = 0;
   prevy: integer = 0;
   prevwave: integer = -1;
+  mapwave: integer = -1;
   prevfloor: integer = 0;
 
 implementation
@@ -937,9 +938,14 @@ begin
     Floor[idx].Unknow[y + 8] +
     Floor[idx].Unknow[y + 9] * 256;
 
-  showwave :=
+  mapwave :=
     Floor[idx].Unknow[y + 10] +
     Floor[idx].Unknow[y + 11] * 256;
+  if Floor[idx].Unknow[15] <> $32 then
+  begin
+    form1.EnemyWave1.Tag := mapwave;
+    form1.EnemyWave1Click(form1.EnemyWave1);
+  end;
 
   // Parse the actions
   while (Floor[idx].Unknow[z] <> 1) and
@@ -988,7 +994,8 @@ begin
   previewstate := 0;
   mpx := prevx;
   mpy := prevy;
-  showwave := prevwave;
+  form1.EnemyWave1.Tag := prevwave;
+  form1.EnemyWave1Click(form1.EnemyWave1);
   form1.lblPreview.Visible := false;
 end;
 
@@ -1246,6 +1253,8 @@ begin
   if (cleantitle <> '') and FileExists(path + 'notes\' + cleantitle + ' notes'+ '.txt') then
     fmScriptTE.txtNotes.Lines.LoadFromFile(path + 'notes\' + cleantitle + ' notes'+ '.txt');
   isedited := false;
+ if previewstate > 0 then
+  ResetPreviewState;
 end;
 
 Procedure LoadShadow;
@@ -2199,7 +2208,7 @@ begin
         BBRelBmp.Canvas.TextOut(5, 5, 'Event ' + previewstring +
          ' (' + inttostr(previewstate) + '/' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[8]) + ')');
       BBRelBmp.Canvas.TextOut(5, 20, 'Section: ' + inttostr(prevsection));
-      BBRelBmp.Canvas.TextOut(5, 35, 'Wave: ' + inttostr(showwave));
+      BBRelBmp.Canvas.TextOut(5, 35, 'Wave: ' + inttostr(mapwave));
       BBRelBmp.Canvas.TextOut(5, 50, delaystring);
       if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then
       begin
@@ -2378,6 +2387,8 @@ begin
   begin
     lastloadformat := OpenDialog1.FilterIndex;
     isedited := false;
+    if previewstate > 0 then
+      ResetPreviewState;
     undocount := 0;
     ClearShadow;
     Button11.Enabled := false;
@@ -2714,6 +2725,8 @@ begin
       if (cleantitle <> '') and FileExists(path + 'notes\' + cleantitle + ' notes'+ '.txt') then
         fmScriptTE.txtNotes.Lines.LoadFromFile(path + 'notes\' + cleantitle + ' notes'+ '.txt');
       isedited := false;
+      if previewstate > 0 then
+        ResetPreviewState;
 
       if pos('_f.', fn) > 0 then
         language := 3;
@@ -7817,6 +7830,8 @@ begin
   FFilter := 1;
   FullQuestFile := '';
   isedited := false;
+  if previewstate > 0 then
+    ResetPreviewState;
   undocount := 0;
   Button11.Enabled := false;
   smUndo.Enabled := false;
@@ -7884,6 +7899,8 @@ begin
   FFilter := 2;
   FullQuestFile := '';
   isedited := false;
+  if previewstate > 0 then
+    ResetPreviewState;
   undocount := 0;
   Button11.Enabled := false;
   smUndo.Enabled := false;
@@ -7952,6 +7969,8 @@ begin
   FFilter := 3;
   FullQuestFile := '';
   isedited := false;
+  if previewstate > 0 then
+    ResetPreviewState;
   undocount := 0;
   Button11.Enabled := false;
   smUndo.Enabled := false;
