@@ -6625,8 +6625,6 @@ procedure TForm1.Button2Click(Sender: TObject);
 var
   x1, z1, x2, z2: Single;
 begin
-  SetUndow;
-
   If stype = 1 then
   begin
     // monster;
@@ -8052,17 +8050,24 @@ end;
 procedure TForm1.SetUndow();
 var
   x: integer;
+  unchanged: Boolean;
 begin
-  Button11.Enabled := true;
-  smUndo.Enabled := true;
-  if undocount = 20 then
+  unchanged := true;
+  if undocount > 0 then
+    unchanged := CompareMem(@Floor[0], @FloorUn[undocount], sizeof(TFloor) * 40);
+  if not unchanged or (undocount = 0) then
   begin
-    dec(undocount);
-    move(FloorUn[1], FloorUn[0], sizeof(TFloor) * 40 * 19);
+    Button11.Enabled := true;
+    smUndo.Enabled := true;
+    if undocount = 20 then
+    begin
+      dec(undocount);
+      move(FloorUn[1], FloorUn[0], sizeof(TFloor) * 40 * 19);
+    end;
+    move(Floor[0], FloorUn[undocount], sizeof(TFloor) * 40);
+    inc(undocount);
+    // Form1.CheckListBox1Click(form1);
   end;
-  move(Floor[0], FloorUn[undocount], sizeof(TFloor) * 40);
-  inc(undocount);
-  // Form1.CheckListBox1Click(form1);
 end;
 
 procedure TForm1.Smallfont1Click(Sender: TObject);

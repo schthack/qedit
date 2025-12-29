@@ -406,6 +406,7 @@ begin
     if inclick then
     if  shift = [ssCtrl,ssleft] then begin
         isedited:=true;
+        if undocount = 0 then form1.SetUndow;
         v.x :=  ( ( ( 2.0 * X ) / Width ) - 1 ) / (2);
         v.y := -( ( ( 2.0 * Y ) / Height ) - 1) / (2);
         v.z :=  1.0;
@@ -806,6 +807,7 @@ begin
     if inclick then
     if  shift = [ssShift,ssleft] then begin
     isedited:=true;
+    if undocount = 0 then form1.SetUndow;
         v.x :=  ( ( ( 2.0 * X ) / Width ) - 1 ) / (2);
         v.y := -( ( ( 2.0 * Y ) / Height ) - 1) / (2);
         v.z :=  1.0;
@@ -853,6 +855,7 @@ begin
     if inclick then
     if  (shift = [ssright,ssleft]) or ((shift = [ssleft]) and rty) then begin
     isedited:=true;
+    if undocount = 0 then form1.SetUndow;
          i:=(lmx-x)*200;
          if stype = 1 then begin
          dec(floor[sfloor].Monster[selected].Direction , i);
@@ -868,6 +871,7 @@ begin
     if inclick then
     if ((shift = [ssleft]) and rtx) then begin
     isedited:=true;
+    if undocount = 0 then form1.SetUndow;
          i:=(lmx-x)*200;
          if stype = 2 then begin
              dec(floor[sfloor].obj[selected].unknow5 , i);
@@ -879,6 +883,7 @@ begin
     if inclick then
     if ((shift = [ssleft]) and rtz) then begin
     isedited:=true;
+    if undocount = 0 then form1.SetUndow;
          i:=(lmx-x)*200;
          if stype = 2 then begin
              dec(floor[sfloor].obj[selected].unknow7 , i);
@@ -935,8 +940,9 @@ begin
                 and (rayOrigin.y >= mymonst[i].Positiony+mymonst[i].SizeDownY)
                 and (rayOrigin.y <= mymonst[i].Positiony+mymonst[i].SizeUpY)
                 and (rayOrigin.z >= mymonst[i].PositionZ+d2) and (rayOrigin.z<=mymonst[i].PositionZ+u2) then begin
-                    form1.SetUndow;
                     selected:=i;
+                    if undocount > 0 then
+                      form1.SetUndow;
                     inclickz:=rayOrigin.y;
                     inclickx:=rayOrigin.x;
                     inclicky:=rayOrigin.z;
@@ -960,8 +966,9 @@ begin
                 and (rayOrigin.y >= MyObj[i].Positiony+MyObj[i].SizeDownY)
                 and (rayOrigin.y <= MyObj[i].Positiony+MyObj[i].SizeUpY)
                 and (rayOrigin.z >= MyObj[i].PositionZ+MyObj[i].SizeDownZ) and (rayOrigin.z<=MyObj[i].PositionZ+MyObj[i].SizeUpZ) then begin
-                    form1.SetUndow;
                     selected:=i;
+                    if undocount > 0 then
+                      form1.SetUndow;
                     inclickz:=rayOrigin.y;
                     inclickx:=rayOrigin.x;
                     inclicky:=rayOrigin.z;

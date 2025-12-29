@@ -287,6 +287,7 @@ end;
 
 procedure TForm7.Button1Click(Sender: TObject);
 begin
+    form1.SetUndow;
     isedited:=true;
     if stype = 1 then begin
         {Floor[sfloor].Monster[selected].Skin:=strtoint64(Form7.StringGrid1.Cells[1,0]);
