@@ -300,6 +300,30 @@ begin
           s := s + 'Auto-Y: Off';
         myscreen.TextOut(s,rect(0,15,640,45),$FFFFFFFF,1);
 
+        if previewstate > 0 then
+        begin
+          MyScreen.TextOut('Event ' + previewstring +
+          ' (' + inttostr(previewstate) + '/' +
+          inttostr(Floor[form1.CheckListBox1.ItemIndex].Unknow[8]) + ')',
+          rect(0,45,640,75),$FFFFFFFF,1);
+          MyScreen.TextOut('Section: ' + inttostr(prevsection),rect(0,60,640,90),$FFFFFFFF,1);
+          MyScreen.TextOut('Wave: ' + inttostr(mapwave),rect(0,75,640,105),$FFFFFFFF,1);
+          MyScreen.TextOut((delaystring),rect(0,90,640,120),$FFFFFFFF,1);
+          if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then
+          begin
+            MyScreen.TextOut((settingstring),rect(0,105,640,135),$FFFFFFFF,1);
+            MyScreen.TextOut((actionstring),rect(0,120,640,150),$FFFFFFFF,1)
+          end
+          else MyScreen.TextOut((actionstring),rect(0,105,640,135),$FFFFFFFF,1);
+          if previewpaused then
+          begin
+            if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then
+              MyScreen.TextOut('Paused',rect(0,150,640,180),$FFFFFFFF,1)
+            else
+              MyScreen.TextOut('Paused',rect(0,135,640,165),$FFFFFFFF,1);
+          end;
+        end;
+
         if ini > 0 then begin
             dec(ini);
             myscreen.TextOut('Q = Forward, A = Backward, D = Toggle data format, F = Toggle fog effect, L/R = Auto-rotate',rect(0,form13.Height-80,640,form13.Height-64),$FFFFFFFF,1);
@@ -1062,6 +1086,32 @@ procedure TForm13.FormKeyDown(Sender: TObject; var Key: Word;
 begin
   if key < 256 then
     Keys[key]:=true;
+  if (key = 37) and (previewstate > 0) then
+  begin
+    key := 0;
+    previewpaused := true;
+    if previewstate > 1 then
+    begin
+      Dec(previewstate);
+      DrawPreviewState(previewstate);
+    end;
+  end;
+  if (key = 39) and (previewstate > 0) then
+  begin
+    key := 0;
+    previewpaused := true;
+    if previewstate < Floor[form1.CheckListBox1.ItemIndex].Unknow[8] then
+    begin
+      Inc(previewstate);
+      DrawPreviewState(previewstate);
+    end;
+  end;
+  if (key = 32) and (previewstate > 0) then
+  begin
+    key := 0;
+    previewpaused := not previewpaused;
+    form1.DrawMap;
+  end;
 end;
 
 procedure TForm13.FormKeyPress(Sender: TObject; var Key: Char);

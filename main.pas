@@ -346,10 +346,11 @@ type
     Button14: TButton;
     Settheme1: TMenuItem;
     N3: TMenuItem;
-    Previewmapevent1: TMenuItem;
-    N13: TMenuItem;
     tmPreview: TTimer;
     lblPreview: TLabel;
+    Previewevents1: TMenuItem;
+    N14: TMenuItem;
+    Previewevents2: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -470,9 +471,10 @@ type
     procedure Button14Click(Sender: TObject);
 
     procedure Button15Click(Sender: TObject);
-    procedure Previewmapevent1Click(Sender: TObject);
     procedure tmPreviewTimer(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure Previewevents1Click(Sender: TObject);
+    procedure Previewevents2Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -511,6 +513,7 @@ function ReplaceTabs(const S: string): string;
 procedure UpdateWindowTitle;
 procedure AddRoomEntry(section: integer; x: double; y: double; z: double);
 procedure SetImage1Colors;
+procedure DrawPreviewState(AState: Integer);
 
 var
   Form1: TForm1;
@@ -643,8 +646,6 @@ var
   actionstring: string;
   delaystring: string;
   prevsection: integer = 0;
-  prevx: integer = 0;
-  prevy: integer = 0;
   prevwave: integer = -1;
   mapwave: integer = -1;
   prevfloor: integer = 0;
@@ -987,13 +988,18 @@ begin
   mpx := Round(-MidP[prevsection].x * Zoom);
   mpy := Round(-MidP[prevsection].y * Zoom);
   form1.DrawMap;
+  if have3d then
+  begin
+    ppx := midpz[prevsection].x;
+    ppy := Form1.YFromBBRELFile(MidP[prevsection].x * zoom, MidP[prevsection].y * zoom) + 15;
+    ppz := -midpz[prevsection].y;
+    myscreen.SetView(ppx, ppy, ppz, vr, vz);
+  end;
 end;
 
 Procedure ResetPreviewState;
 begin
   previewstate := 0;
-  mpx := prevx;
-  mpy := prevy;
   form1.EnemyWave1.Tag := prevwave;
   form1.EnemyWave1Click(form1.EnemyWave1);
   form1.lblPreview.Visible := false;
@@ -2201,12 +2207,8 @@ begin
       BBRelBmp.Canvas.Brush.Color := ClWhite;
     if previewstate > 0 then
     begin
-      if previewstate > Floor[CheckListBox1.ItemIndex].Unknow[8] then
-        BBRelBmp.Canvas.TextOut(5, 5, 'Event ' + previewstring +
-         ' (' + inttostr(previewstate - 1) + '/' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[8]) + ')')
-      else
-        BBRelBmp.Canvas.TextOut(5, 5, 'Event ' + previewstring +
-         ' (' + inttostr(previewstate) + '/' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[8]) + ')');
+      BBRelBmp.Canvas.TextOut(5, 5, 'Event ' + previewstring +
+       ' (' + inttostr(previewstate) + '/' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[8]) + ')');
       BBRelBmp.Canvas.TextOut(5, 20, 'Section: ' + inttostr(prevsection));
       BBRelBmp.Canvas.TextOut(5, 35, 'Wave: ' + inttostr(mapwave));
       BBRelBmp.Canvas.TextOut(5, 50, delaystring);
@@ -2216,7 +2218,13 @@ begin
         BBRelBmp.Canvas.TextOut(5, 80, actionstring)
       end
       else BBRelBmp.Canvas.TextOut(5, 65, actionstring);
-      if previewpaused then BBRelBmp.Canvas.TextOut(5, Image2.Height-20, 'Paused');
+      if previewpaused then
+      begin
+        if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then
+          BBRelBmp.Canvas.TextOut(5, 110, 'Paused')
+        else
+          BBRelBmp.Canvas.TextOut(5, 95, 'Paused');
+      end;
     end
     else
       BBRelBmp.Canvas.TextOut(5, 5, GetLanguageString(54) + ' ' + inttohex(sms, 2));
@@ -5741,7 +5749,7 @@ begin
       form1.Import1.Caption := 'Import...';
       form1.Exporttextfortranslation1.Caption := 'Export text for translation...';
       form1.Importtextfromtranslation1.Caption := 'Import text from translation...';
-      form1.Events1.Caption := 'Map events';
+      form1.Events1.Caption := 'Events';
       form1.Randommonsters1.Caption := 'Random monsters';
     end;
     flp.Clear;
@@ -9954,25 +9962,27 @@ begin
   end;
 end;
 
-procedure TForm1.Previewmapevent1Click(Sender: TObject);
+procedure TForm1.Previewevents1Click(Sender: TObject);
 begin
   if Floor[CheckListBox1.ItemIndex].Unknow[8] > 0 then
   begin
-    // Set up the map and save previous state
-    prevx := mpx;
-    prevy := mpy;
+    // Set up the map and save the previous wave
     prevwave := showwave;
 
     // Set the starting state and start the timer
     previewpaused := false;
     previewstate := 1;
     DrawPreviewState(previewstate);
-    Inc(previewstate);
     tmPreview.Enabled := False;
     tmPreview.Interval := tmPreview.Interval;
     tmPreview.Enabled := True;
     lblPreview.Show;
   end;
+end;
+
+procedure TForm1.Previewevents2Click(Sender: TObject);
+begin
+  PreviewEvents1Click(nil);
 end;
 
 procedure TForm1.Label5MouseUp(Sender: TObject; Button: TMouseButton;
@@ -10326,7 +10336,8 @@ end;
 
 procedure TForm1.Cancelplacement1Click(Sender: TObject);
 begin
-  if (have3d) and (form13.Focused) and (form13.BorderStyle = bsNone) then
+  if (have3d) and (form13.Focused) and (form13.BorderStyle = bsNone)
+  and (previewstate = 0) then
     form13.close
   else if fmScriptTE.Edit2.Focused then
   begin
@@ -10364,16 +10375,18 @@ begin
   if (previewstate = 0) or (previewpaused) then
     Exit;
 
-  if previewstate > Floor[CheckListBox1.ItemIndex].Unknow[8]
+  if previewstate >= Floor[CheckListBox1.ItemIndex].Unknow[8]
   then
   begin
     previewpaused := true;
     DrawMap;
     Exit;
   end;
-
-  DrawPreviewState(previewstate);
-  Inc(previewstate);
+  if previewstate < Floor[CheckListBox1.ItemIndex].Unknow[8] then
+  begin
+    Inc(previewstate);
+    DrawPreviewState(previewstate);
+  end;
 end;
 
 procedure TForm1.Undo1Click(Sender: TObject);
