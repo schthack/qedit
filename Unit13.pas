@@ -90,6 +90,7 @@ end;
 
 procedure AutoRotate;
 begin
+  form1.SetUndow;
   if sType = 1 then
   begin
     floor[sfloor].Monster[selected].Direction := rtinc;
@@ -101,6 +102,7 @@ begin
     myobj[selected].Free;
     Generateobj(floor[sfloor].obj[selected],selected);
   end;
+  form1.DrawMap;
 end;
 
 procedure TForm13.Timer1Timer(Sender: TObject);
@@ -933,6 +935,7 @@ begin
                 and (rayOrigin.y >= mymonst[i].Positiony+mymonst[i].SizeDownY)
                 and (rayOrigin.y <= mymonst[i].Positiony+mymonst[i].SizeUpY)
                 and (rayOrigin.z >= mymonst[i].PositionZ+d2) and (rayOrigin.z<=mymonst[i].PositionZ+u2) then begin
+                    form1.SetUndow;
                     selected:=i;
                     inclickz:=rayOrigin.y;
                     inclickx:=rayOrigin.x;
@@ -957,6 +960,7 @@ begin
                 and (rayOrigin.y >= MyObj[i].Positiony+MyObj[i].SizeDownY)
                 and (rayOrigin.y <= MyObj[i].Positiony+MyObj[i].SizeUpY)
                 and (rayOrigin.z >= MyObj[i].PositionZ+MyObj[i].SizeDownZ) and (rayOrigin.z<=MyObj[i].PositionZ+MyObj[i].SizeUpZ) then begin
+                    form1.SetUndow;
                     selected:=i;
                     inclickz:=rayOrigin.y;
                     inclickx:=rayOrigin.x;
