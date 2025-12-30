@@ -268,15 +268,15 @@ object Form15: TForm15
     Left = 228
     Top = 16
     object Addroom1: TMenuItem
-      Caption = 'Add room...'
+      Caption = 'Add room'
       OnClick = Addroom1Click
     end
     object Editroom1: TMenuItem
-      Caption = 'Edit room...'
+      Caption = 'Edit room'
       OnClick = Editroom1Click
     end
     object Deleteroom1: TMenuItem
-      Caption = 'Delete room...'
+      Caption = 'Delete room'
       Enabled = False
       OnClick = Deleteroom1Click
     end

@@ -349,8 +349,7 @@ type
     tmPreview: TTimer;
     lblPreview: TLabel;
     Previewevents1: TMenuItem;
-    N14: TMenuItem;
-    Previewevents2: TMenuItem;
+    N13: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -5771,8 +5770,6 @@ begin
       form1.Importtextfromtranslation1.Caption := 'Import text from translation...';
       form1.Events1.Caption := 'Events';
       form1.Randommonsters1.Caption := 'Random monsters';
-      form4.Image1.Caption := 'Change image...';
-      form4.Saveimage1.Caption := 'Save image...';
     end;
     flp.Clear;
     CheckShadow;

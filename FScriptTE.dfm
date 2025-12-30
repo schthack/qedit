@@ -156,12 +156,12 @@ object fmScriptTE: TfmScriptTE
         Caption = 'Image'
         object Changeimage1: TMenuItem
           Tag = 2
-          Caption = 'Change...'
+          Caption = 'Change'
           OnClick = AddEditData
         end
         object SaveImage1: TMenuItem
           Tag = 1
-          Caption = 'Save...'
+          Caption = 'Save'
           OnClick = AddEditData
         end
       end

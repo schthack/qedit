@@ -595,6 +595,13 @@ object Form1: TForm1
         Caption = 'Events...'
         OnClick = Button10Click
       end
+      object Previewevents1: TMenuItem
+        Caption = 'Preview events'
+        OnClick = Previewevents1Click
+      end
+      object N13: TMenuItem
+        Caption = '-'
+      end
       object Randommonsters1: TMenuItem
         Caption = 'Random monsters...'
         OnClick = Button12Click
@@ -724,11 +731,6 @@ object Form1: TForm1
         Caption = 'Switch Script Editor'
         ShortCut = 32856
         OnClick = SwitchScriptEditor1Click
-      end
-      object Previewevents2: TMenuItem
-        Caption = 'Preview events'
-        ShortCut = 32848
-        OnClick = Previewevents2Click
       end
     end
   end
@@ -1752,14 +1754,6 @@ object Form1: TForm1
       Enabled = False
       ShortCut = 16474
       OnClick = smUndoClick
-    end
-    object N14: TMenuItem
-      Caption = '-'
-    end
-    object Previewevents1: TMenuItem
-      Caption = 'Preview events'
-      ShortCut = 32848
-      OnClick = Previewevents1Click
     end
     object N11: TMenuItem
       Caption = '-'
