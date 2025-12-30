@@ -42,8 +42,8 @@ object fmRotation: TfmRotation
     OnClick = btnCancelClick
   end
   object chkAutoAxis: TCheckBox
-    Left = 44
-    Top = 108
+    Left = 45
+    Top = 107
     Width = 75
     Height = 17
     Caption = 'Auto-axis'

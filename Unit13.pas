@@ -322,6 +322,7 @@ begin
             else
               MyScreen.TextOut('Paused',rect(0,135,640,165),$FFFFFFFF,1);
           end;
+          myscreen.TextOut('Left arrow = Previous event,  Right arrow = Next event,  Space = Pause/Resume,  ESC = Exit',rect(0,form13.Height-95,640,form13.Height-79),$FFFFFFFF,1);
         end;
 
         if ini > 0 then begin

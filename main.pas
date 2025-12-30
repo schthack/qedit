@@ -645,10 +645,15 @@ var
   settingstring: string;
   actionstring: string;
   delaystring: string;
+  mapwave: integer = -1;
+
   prevsection: integer = 0;
   prevwave: integer = -1;
-  mapwave: integer = -1;
   prevfloor: integer = 0;
+  prevx: integer = 0;
+  prevy: integer = 0;
+  prevzoom: double = 5.0;
+  prevppx, prevppy, prevppz, prevvr, prevvz: single;
 
 implementation
 
@@ -1002,7 +1007,19 @@ begin
   previewstate := 0;
   form1.EnemyWave1.Tag := prevwave;
   form1.EnemyWave1Click(form1.EnemyWave1);
+  // Reset state
+  mpx := prevx;
+  mpy := prevy;
+  ppx := prevppx;
+  ppy := prevppy;
+  ppz := prevppz;
+  vr := prevvr;
+  vz := prevvz;
+  zoom := prevzoom;
   form1.lblPreview.Visible := false;
+  form1.DrawMap;
+  if have3d then
+    myscreen.SetView(ppx,ppy,ppz,vr,vz);
 end;
 
 Procedure ClearShadow;
@@ -5751,6 +5768,8 @@ begin
       form1.Importtextfromtranslation1.Caption := 'Import text from translation...';
       form1.Events1.Caption := 'Events';
       form1.Randommonsters1.Caption := 'Random monsters';
+      form4.Image1.Caption := 'Change image...';
+      form4.Saveimage1.Caption := 'Save image...';
     end;
     flp.Clear;
     CheckShadow;
@@ -9519,10 +9538,24 @@ begin
   if have3d then
   begin
     for x := 0 to Floor[sfloor].MonsterCount - 1 do
-      if (Floor[sfloor].Monster[x].Unknow5 = showwave) or (showwave = -1) then
-        MyMonst[x].Visible := true
+    begin
+      if previewstate > 0 then
+      begin
+        if (Floor[sfloor].Monster[x].Unknow5 = showwave)
+        and (Floor[sfloor].Monster[x].map_section = prevsection)
+        then
+          MyMonst[x].Visible := true
+        else
+          MyMonst[x].Visible := false;
+      end
       else
-        MyMonst[x].Visible := false;
+      begin
+        if (Floor[sfloor].Monster[x].Unknow5 = showwave) or (showwave = -1) then
+          MyMonst[x].Visible := true
+        else
+          MyMonst[x].Visible := false;
+      end;
+    end;
   end;
 end;
 
@@ -9966,8 +9999,16 @@ procedure TForm1.Previewevents1Click(Sender: TObject);
 begin
   if Floor[CheckListBox1.ItemIndex].Unknow[8] > 0 then
   begin
-    // Set up the map and save the previous wave
+    // Set up the map and save the previous state
     prevwave := showwave;
+    prevx := mpx;
+    prevy := mpy;
+    prevppx := ppx;
+    prevppy := ppy;
+    prevppz := ppz;
+    prevvr := vr;
+    prevvz := vz;
+    prevzoom := zoom;
 
     // Set the starting state and start the timer
     previewpaused := false;

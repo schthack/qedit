@@ -1707,12 +1707,12 @@ object Form1: TForm1
     object smNew: TMenuItem
       Caption = 'New'
       object smNewMonster: TMenuItem
-        Caption = 'Monster'
+        Caption = 'Monster...'
         ShortCut = 16462
         OnClick = smNewMonsterClick
       end
       object smNewItem: TMenuItem
-        Caption = 'Object'
+        Caption = 'Object...'
         ShortCut = 32846
         OnClick = smNewItemClick
       end
@@ -1757,7 +1757,7 @@ object Form1: TForm1
       Caption = '-'
     end
     object Previewevents1: TMenuItem
-      Caption = 'Preview events'
+      Caption = 'Event preview'
       ShortCut = 32848
       OnClick = Previewevents1Click
     end

@@ -577,7 +577,7 @@ object Form4: TForm4
         OnClick = Delete2Click
       end
       object Addsymbolechat1: TMenuItem
-        Caption = 'Add Symbol Chat'
+        Caption = 'Add Symbol Chat...'
         OnClick = Addsymbolechat1Click
       end
     end
