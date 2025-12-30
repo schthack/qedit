@@ -5768,7 +5768,7 @@ begin
       form1.Import1.Caption := 'Import...';
       form1.Exporttextfortranslation1.Caption := 'Export text for translation...';
       form1.Importtextfromtranslation1.Caption := 'Import text from translation...';
-      form1.Events1.Caption := 'View events';
+      form1.Events1.Caption := 'Events';
       form1.Randommonsters1.Caption := 'Random monsters';
     end;
     flp.Clear;
@@ -9537,24 +9537,23 @@ begin
   DrawMap;
   if have3d then
   begin
-    for x := 0 to Floor[sfloor].MonsterCount - 1 do
+    if previewstate > 0 then
     begin
-      if previewstate > 0 then
-      begin
+      for x := 0 to Floor[sfloor].MonsterCount - 1 do
         if (Floor[sfloor].Monster[x].Unknow5 = showwave)
         and (Floor[sfloor].Monster[x].map_section = prevsection)
         then
           MyMonst[x].Visible := true
         else
           MyMonst[x].Visible := false;
-      end
-      else
-      begin
+    end
+    else
+    begin
+      for x := 0 to Floor[sfloor].MonsterCount - 1 do
         if (Floor[sfloor].Monster[x].Unknow5 = showwave) or (showwave = -1) then
           MyMonst[x].Visible := true
         else
           MyMonst[x].Visible := false;
-      end;
     end;
   end;
 end;
