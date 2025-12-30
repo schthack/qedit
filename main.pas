@@ -649,6 +649,7 @@ var
 
   prevsection: integer = 0;
   prevwave: integer = -1;
+  prevgroup: integer = -1;
   prevfloor: integer = 0;
   prevx: integer = 0;
   prevy: integer = 0;
@@ -1007,6 +1008,8 @@ begin
   previewstate := 0;
   form1.EnemyWave1.Tag := prevwave;
   form1.EnemyWave1Click(form1.EnemyWave1);
+  form1.Itemsgroupe1.Tag := prevgroup;
+  form1.Itemsgroupe1Click(form1.Itemsgroupe1);
   // Reset state
   mpx := prevx;
   mpy := prevy;
@@ -10001,6 +10004,7 @@ begin
   begin
     // Set up the map and save the previous state
     prevwave := showwave;
+    prevgroup := showgrp;
     prevx := mpx;
     prevy := mpy;
     prevppx := ppx;
