@@ -467,6 +467,10 @@ object Form1: TForm1
           Caption = 'Espa'#241'ol'
           OnClick = spanish1Click
         end
+        object Russian1: TMenuItem
+          Caption = 'Russian'
+          OnClick = Russian1Click
+        end
       end
       object N6: TMenuItem
         Caption = '-'

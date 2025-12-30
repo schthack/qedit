@@ -350,6 +350,7 @@ type
     lblPreview: TLabel;
     Previewevents1: TMenuItem;
     N13: TMenuItem;
+    Russian1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -474,6 +475,7 @@ type
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure Previewevents1Click(Sender: TObject);
     procedure Previewevents2Click(Sender: TObject);
+    procedure Russian1Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -496,7 +498,7 @@ procedure MenueDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selecte
 Function GetMonsterParam(id: integer): tstringlist;
 Function GetMonsterName(id: integer): ansistring;
 procedure ClearShadow;
-Function GetLanguageString(id: integer): ansistring;
+Function GetLanguageString(id: integer): string;
 function FindClosestSection(): integer;
 procedure SetMonsterDefaults();
 procedure SetObjectDefaults();
@@ -665,6 +667,14 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   FSnap, FScriptTE, FReplace, FRotation, FThemes;
 
 {$R *.dfm}
+
+Procedure UncheckLanguages;
+begin
+  form1.English1.Checked := false;
+  form1.French1.Checked := false;
+  form1.Spanish1.Checked := false;
+  form1.Russian1.Checked := false;
+end;
 
 Procedure SetInterfaceText;
 begin
@@ -884,6 +894,13 @@ begin
 
   Form1.Exporttextfortranslation1.Caption := GetLanguageString(294);
   Form1.Importtextfromtranslation1.Caption := GetLanguageString(295);
+
+  form16.Memo1.Lines.Add('');
+  form16.Memo1.Lines.Add('1.0c-2.0c updates:');
+  form16.Memo1.Lines.Add('Alisaryn');
+
+  // Refresh map area text
+  form1.DrawMap;
 end;
 
 procedure DrawPreviewState(AState: Integer);
@@ -1035,10 +1052,10 @@ begin
     deletefile(path + 'temp\_' + s);
 end;
 
-Function GetLanguageString(id: integer): ansistring;
+Function GetLanguageString(id: integer): string;
 var
   x: integer;
-  s: ansistring;
+  s: string;
 begin
   if id - 1 < LanguageString.count then
   begin
@@ -2262,7 +2279,7 @@ end;
 
 procedure TForm1.Quit1Click(Sender: TObject);
 var
-  s: ansistring;
+  s: string;
 begin
   if New1.Caption.Contains('New') then s:='Save current project before quitting?'
   else s:=GetLanguageString(55);
@@ -2280,6 +2297,33 @@ begin
   application.Terminate;
 end;
 
+procedure TForm1.Russian1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+  flp: TMemoryStream;
+begin
+  UncheckLanguages;
+  Russian1.Checked := true;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('Lang', 3);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+    inherited;
+  end;
+  flp := TMemoryStream.Create;
+  flp.LoadFromFile('ru.txt');
+  flp.Position := 0;
+  // Load strings as UTF-8
+  LanguageString.LoadFromStream(flp, TEncoding.UTF8);
+  SetInterfaceText;
+  flp.Free;
+end;
 Function MixKey(user, buff: integer): Boolean;
 var
   esi, edi, eax, ebp, edx: dword;
@@ -2392,7 +2436,8 @@ var
   unp: array [0 .. $8FF] of byte;
   tmp: ansistring;
   tmp2, cleantitle: widestring;
-  fn, g, s: ansistring;
+  fn, g: ansistring;
+  s: string;
   si, ln, eb1, eb2: dword;
   di, da, db: pansichar;
 begin
@@ -3678,7 +3723,10 @@ procedure UpdateWindowTitle;
 var
   tmp2: widestring;
 begin
-  tmp2 := 'Quest Editor v2.0c Public - ' + Title;
+  if isdc then
+    tmp2 := 'Quest Editor v2.0c Public - ' + unitochar(Title,1000)
+  else
+    tmp2 := 'Quest Editor v2.0c Public - ' + Title;
 
   if isdc then
     tmp2 := tmp2 + GetLanguageString(64)
@@ -3698,10 +3746,7 @@ begin
   if AsmMode = 2 then
     tmp2 := tmp2 + GetLanguageString(69);
   tmp2 := tmp2 + #0#0;
-  if isdc then
-    Form1.Caption := unitochar(tmp2, 1000)
-  else
-    Form1.Caption := tmp2;
+  Form1.Caption := tmp2;
 end;
 
 procedure AddRoomEntry(section: integer; x: double; y: double; z: double);
@@ -5461,7 +5506,8 @@ begin
           mylang := Reg.ReadInteger('Lang');
         if mylang = 0 then English1.Checked := true
         else if mylang = 1 then French1.Checked := true
-        else if mylang = 2 then Spanish1.Checked := true;
+        else if mylang = 2 then Spanish1.Checked := true
+        else if mylang = 3 then Russian1.Checked := true;
         if Reg.ValueExists('LoadFrom') then
           lastloadformat := Reg.ReadInteger('LoadFrom');
         if Reg.ValueExists('SaveTo') then
@@ -5660,6 +5706,8 @@ begin
       PikaGetFile(flp, 'fra.txt', path + 'config.ppk', 'Build By Schthack');
     if mylang = 2 then
       PikaGetFile(flp, 'spa.txt', path + 'config.ppk', 'Build By Schthack');
+    if mylang = 3 then
+      flp.LoadFromFile('ru.txt');
 
     if snapenabled then
       FSnapOptions.seDistanceLimit.Enabled := anchorenabled;
@@ -5735,7 +5783,10 @@ begin
     SetCoordSize(coordsize);
 
     flp.Position := 0;
-    LanguageString.LoadFromStream(flp);
+    if mylang = 3 then
+      LanguageString.LoadFromStream(flp, TEncoding.UTF8)
+    else
+      LanguageString.LoadFromStream(flp);
     SetInterfaceText;
     if mylang = 0 then
     begin
@@ -5748,9 +5799,6 @@ begin
       form8.Caption := 'Map events';
       form1.Button10.Caption := 'View map events';
       form10.Caption := 'Add Object';
-      form16.Memo1.Lines.Add('');
-      form16.Memo1.Lines.Add('1.0c-2.0c updates:');
-      form16.Memo1.Lines.Add('Alisaryn');
       form6.Caption := 'Common settings';
       form17.Label2.Caption := 'Frame skip:';
       form17.Label4.Caption := 'Distance:';
@@ -7838,7 +7886,7 @@ end;
 procedure TForm1.Episode11Click(Sender: TObject);
 var
   x: integer;
-  s: ansistring;
+  s: string;
 begin
   if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
   else s:=GetLanguageString(79);
@@ -7907,7 +7955,7 @@ end;
 procedure TForm1.Episode21Click(Sender: TObject);
 var
   x: integer;
-  s: ansistring;
+  s: string;
 begin
   if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
   else s:=GetLanguageString(79);
@@ -7977,7 +8025,7 @@ end;
 procedure TForm1.Episode41Click(Sender: TObject);
 var
   x: integer;
-  s: ansistring;
+  s: string;
 begin
   if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
   else s:=GetLanguageString(79);
@@ -9578,7 +9626,7 @@ procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   Reg: TRegistry;
   flp: TMemoryStream;
-  s: ansistring;
+  s: string;
 begin
   FClosedSuccessfully := False;
   if New1.Caption.Contains('New') then s:='Save current project before quitting?'
@@ -10450,9 +10498,8 @@ var
   Reg: TRegistry;
   flp: TMemoryStream;
 begin
+  UncheckLanguages;
   English1.Checked := true;
-  French1.Checked := false;
-  Spanish1.Checked := false;
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;
@@ -10478,9 +10525,8 @@ var
   Reg: TRegistry;
   flp: TMemoryStream;
 begin
-  English1.Checked := false;
+  UncheckLanguages;
   French1.Checked := true;
-  Spanish1.Checked := false;
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;
@@ -10729,8 +10775,7 @@ var
   Reg: TRegistry;
   flp: TMemoryStream;
 begin
-  English1.Checked := false;
-  French1.Checked := false;
+  UncheckLanguages;
   Spanish1.Checked := true;
   Reg := TRegistry.Create;
   try
