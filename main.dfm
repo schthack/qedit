@@ -1757,7 +1757,7 @@ object Form1: TForm1
       Caption = '-'
     end
     object Previewevents1: TMenuItem
-      Caption = 'Event preview'
+      Caption = 'Preview events'
       ShortCut = 32848
       OnClick = Previewevents1Click
     end
