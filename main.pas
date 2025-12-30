@@ -5768,7 +5768,7 @@ begin
       form1.Import1.Caption := 'Import...';
       form1.Exporttextfortranslation1.Caption := 'Export text for translation...';
       form1.Importtextfromtranslation1.Caption := 'Import text from translation...';
-      form1.Events1.Caption := 'Events';
+      form1.Events1.Caption := 'View events';
       form1.Randommonsters1.Caption := 'Random monsters';
     end;
     flp.Clear;
