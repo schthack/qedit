@@ -475,7 +475,6 @@ type
     procedure tmPreviewTimer(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure Previewevents1Click(Sender: TObject);
-    procedure Previewevents2Click(Sender: TObject);
     procedure Russian1Click(Sender: TObject);
     procedure Japanese1Click(Sender: TObject);
 
@@ -10142,11 +10141,6 @@ begin
     tmPreview.Enabled := True;
     lblPreview.Show;
   end;
-end;
-
-procedure TForm1.Previewevents2Click(Sender: TObject);
-begin
-  PreviewEvents1Click(nil);
 end;
 
 procedure TForm1.Label5MouseUp(Sender: TObject; Button: TMouseButton;
