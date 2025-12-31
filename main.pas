@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  ImgList, Dialogs, Menus, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
+  ImgList, Dialogs, Math, Menus, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
   ShellApi, D3DEngin, registry, Spin, System.ImageList, System.Actions,
   Vcl.ActnList, Vcl.Themes, Vcl.Styles;
 
@@ -921,6 +921,11 @@ begin
 
   // Refresh map area text
   form1.DrawMap;
+
+  // Update the window title
+  if (pos('Unicode',form1.Caption) <> 0) or
+  (pos('ASCII',form1.Caption) <> 0) then
+    UpdateWindowTitle;
 end;
 
 procedure DrawPreviewState(AState: Integer);
@@ -10103,6 +10108,9 @@ begin
 end;
 
 procedure TForm1.Previewevents1Click(Sender: TObject);
+var
+  x, zoomsteps: integer;
+  scale: double;
 begin
   if Floor[CheckListBox1.ItemIndex].Unknow[8] > 0 then
   begin
@@ -10117,6 +10125,13 @@ begin
     prevvr := vr;
     prevvz := vz;
     prevzoom := zoom;
+
+    // Set starting zoom based on map size
+    scale := Min(Image2.Width, Image2.Height) / 213;
+    zoomsteps := Round(Sqrt(scale) * 6);
+    zoom := 5.0;
+      for x := 1 to zoomsteps do
+        Button6Click(nil);
 
     // Set the starting state and start the timer
     previewpaused := false;

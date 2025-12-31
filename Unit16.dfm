@@ -1,7 +1,6 @@
 object Form16: TForm16
   Left = 192
   Top = 114
-  BorderStyle = bsDialog
   Caption = 'About'
   ClientHeight = 304
   ClientWidth = 332
