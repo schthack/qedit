@@ -351,6 +351,7 @@ type
     Previewevents1: TMenuItem;
     N13: TMenuItem;
     Russian1: TMenuItem;
+    Japanese1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -476,6 +477,7 @@ type
     procedure Previewevents1Click(Sender: TObject);
     procedure Previewevents2Click(Sender: TObject);
     procedure Russian1Click(Sender: TObject);
+    procedure Japanese1Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -668,12 +670,30 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
 
 {$R *.dfm}
 
+Procedure SetAutoHotkeys;
+begin
+  form1.MainMenu1.AutoHotkeys := maAutomatic;
+  form1.PopupMenu1.AutoHotkeys := maAutomatic;
+  form1.PopupMenu2.AutoHotkeys := maAutomatic;
+  form4.PopupMenu1.AutoHotkeys := maAutomatic;
+end;
+
+Procedure SetManualHotkeys;
+begin
+  form1.MainMenu1.AutoHotkeys := maManual;
+  form1.PopupMenu1.AutoHotkeys := maManual;
+  form1.PopupMenu2.AutoHotkeys := maManual;
+  form4.PopupMenu1.AutoHotkeys := maManual;
+end;
+
 Procedure UncheckLanguages;
 begin
   form1.English1.Checked := false;
   form1.French1.Checked := false;
   form1.Spanish1.Checked := false;
   form1.Russian1.Checked := false;
+  form1.Japanese1.Checked := false;
+  SetAutoHotkeys;
 end;
 
 Procedure SetInterfaceText;
@@ -2317,13 +2337,15 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  flp.LoadFromFile('ru.txt');
+  if fileexists('ru.txt') then
+    flp.LoadFromFile('ru.txt');
   flp.Position := 0;
   // Load strings as UTF-8
   LanguageString.LoadFromStream(flp, TEncoding.UTF8);
   SetInterfaceText;
   flp.Free;
 end;
+
 Function MixKey(user, buff: integer): Boolean;
 var
   esi, edi, eax, ebp, edx: dword;
@@ -4132,6 +4154,36 @@ begin
   form2.ShowModal;
 end;
 
+procedure TForm1.Japanese1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+  flp: TMemoryStream;
+begin
+  UncheckLanguages;
+  SetManualHotkeys;
+  Japanese1.Checked := true;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('Lang', 4);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+    inherited;
+  end;
+  flp := TMemoryStream.Create;
+  if fileexists('jp.txt') then
+    flp.LoadFromFile('jp.txt');
+  flp.Position := 0;
+  // Load strings as UTF-8
+  LanguageString.LoadFromStream(flp, TEncoding.UTF8);
+  SetInterfaceText;
+  flp.Free;
+end;
+
 procedure TForm1.Delete1Click(Sender: TObject);
 begin
   if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
@@ -5507,7 +5559,13 @@ begin
         if mylang = 0 then English1.Checked := true
         else if mylang = 1 then French1.Checked := true
         else if mylang = 2 then Spanish1.Checked := true
-        else if mylang = 3 then Russian1.Checked := true;
+        else if mylang = 3 then Russian1.Checked := true
+        else if mylang = 4 then
+        begin
+          Japanese1.Checked := true;
+          SetManualHotkeys;
+        end;
+
         if Reg.ValueExists('LoadFrom') then
           lastloadformat := Reg.ReadInteger('LoadFrom');
         if Reg.ValueExists('SaveTo') then
@@ -5706,8 +5764,10 @@ begin
       PikaGetFile(flp, 'fra.txt', path + 'config.ppk', 'Build By Schthack');
     if mylang = 2 then
       PikaGetFile(flp, 'spa.txt', path + 'config.ppk', 'Build By Schthack');
-    if mylang = 3 then
+    if (mylang = 3) and (fileexists('ru.txt')) then
       flp.LoadFromFile('ru.txt');
+    if (mylang = 4) and (fileexists('jp.txt')) then
+      flp.LoadFromFile('jp.txt');
 
     if snapenabled then
       FSnapOptions.seDistanceLimit.Enabled := anchorenabled;
@@ -5783,7 +5843,7 @@ begin
     SetCoordSize(coordsize);
 
     flp.Position := 0;
-    if mylang = 3 then
+    if (mylang = 3) or (mylang = 4) then
       LanguageString.LoadFromStream(flp, TEncoding.UTF8)
     else
       LanguageString.LoadFromStream(flp);
