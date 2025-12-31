@@ -459,21 +459,21 @@ object Form1: TForm1
           Caption = 'English'
           OnClick = English1Click
         end
-        object French1: TMenuItem
-          Caption = 'Fran'#231'ais'
-          OnClick = French1Click
-        end
         object spanish1: TMenuItem
           Caption = 'Espa'#241'ol'
           OnClick = spanish1Click
         end
-        object Russian1: TMenuItem
-          Caption = 'Russian'
-          OnClick = Russian1Click
+        object French1: TMenuItem
+          Caption = 'Fran'#231'ais'
+          OnClick = French1Click
         end
         object Japanese1: TMenuItem
           Caption = 'Japanese'
           OnClick = Japanese1Click
+        end
+        object Russian1: TMenuItem
+          Caption = 'Russian'
+          OnClick = Russian1Click
         end
       end
       object N6: TMenuItem
