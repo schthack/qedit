@@ -266,7 +266,7 @@ T_FUNC/T_DATA の値は 0 ～ 65535 の範囲である必要があります。
 モンスター設定
 設定プール
 情報
-PSO Quest Editor by Schthack
+Schthack による PSO クエストエディタ
 PSO DC, PC, GC, BB をサポート
 クレジット:<cr><cr>コーダー:<cr>Schthack<cr><cr>最初のASMファイル:<cr>Myria<cr>Clara<cr><cr>ASMアップデート:<cr>Lee (asmの50%以上)<cr>Aleron Ives<cr>Gatten<cr>Schthack<cr><cr>クエストファイル形式:<cr>Schthack<cr>Lee (チャレンジモードデータ)<cr><cr>3Dマップ構造:<cr>Schthack<cr><cr>3Dモデル構造:<cr>Kryslin<cr><cr>オブジェクトおよびモンスターモデル調査:<cr>Lee<cr>Schthack<cr>Firefox<cr><cr>スペシャルサンクス:<cr>AleronIves<cr>Lee<cr>Firefox276<cr>提案をしてくれたこと、そして非常に優秀な<cr>テスト役になってくれたことに感謝します<cr>
 アイテム一覧マネージャー
