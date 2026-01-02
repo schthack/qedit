@@ -6095,10 +6095,7 @@ begin
     SetCoordSize(coordsize);
 
     flp.Position := 0;
-    if (mylang = 3) or (mylang = 4) then
-      LanguageString.LoadFromStream(flp, TEncoding.UTF8)
-    else
-      LanguageString.LoadFromStream(flp);
+    LanguageString.LoadFromStream(flp, TEncoding.UTF8);
     SetInterfaceText;
     flp.Clear;
     CheckShadow;
@@ -9825,6 +9822,8 @@ begin
     if x = showwave then tm.Checked := true;
     tm.tag := x;
     tm.OnClick := EnemyWave1Click;
+    if (x > 0) and (x mod 20 = 19) then
+      tm.Break := mbBarBreak;
     EnemyWave1.Add(tm);
   end;
 
@@ -9843,6 +9842,8 @@ begin
     if x = showgrp then tm.Checked := true;
     tm.tag := x;
     tm.OnClick := Itemsgroupe1Click;
+    if (x > 0) and (x mod 20 = 19) then
+      tm.Break := mbBarBreak;
     Itemsgroupe1.Add(tm);
   end;
 end;
@@ -10795,7 +10796,7 @@ begin
   if fileexists('eng.txt') then
     flp.LoadFromFile('eng.txt');
   flp.Position := 0;
-  LanguageString.LoadFromStream(flp);
+  LanguageString.LoadFromStream(flp, TEncoding.UTF8);
   SetInterfaceText;
   flp.Free;
 end;
@@ -10824,7 +10825,7 @@ begin
     flp.LoadFromFile('fra.txt');
   // flp.LoadFromFile('span.txt');
   flp.Position := 0;
-  LanguageString.LoadFromStream(flp);
+  LanguageString.LoadFromStream(flp, TEncoding.UTF8);
   SetInterfaceText;
   flp.Free;
 end;
@@ -11075,7 +11076,7 @@ begin
     flp.LoadFromFile('spa.txt');
   // flp.LoadFromFile('span.txt');
   flp.Position := 0;
-  LanguageString.LoadFromStream(flp);
+  LanguageString.LoadFromStream(flp, TEncoding.UTF8);
   SetInterfaceText;
   flp.Free;
 end;
