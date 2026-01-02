@@ -973,8 +973,6 @@ begin
   form1.smSnapOptions.Caption := GetLanguageString(343);
   form1.lblModifiers.Caption := GetLanguageString(426);
   form1.smDisableIndicator.Caption := GetLanguageString(481);
-  form1.ComboBox1.Items[0] := GetLanguageString(466);
-  form1.ComboBox1.ItemIndex := 0;
   form1.lblPreview.Caption := #8592 + GetLanguageString(327) + '  |  ' +
                               #8594 + GetLanguageString(328) + '  |  ' +
                                       GetLanguageString(329) + '  |  ' +
@@ -1146,6 +1144,9 @@ begin
   fmReplace.Label2.Caption := GetLanguageString(422);
   fmReplace.Selectiononly1.Caption := GetLanguageString(423);
   fmReplace.btnClose.Caption := GetLanguageString(113);
+
+  form17.chkFullscreen.Caption := GetLanguageString(500);
+  form17.chkFollow.Caption := GetLanguageString(501);
 
   // Refresh map area text
   form1.DrawMap;

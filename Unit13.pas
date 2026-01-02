@@ -312,9 +312,9 @@ begin
           if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then
           begin
             MyScreen.TextOut((settingstring),rect(0,105,640,135),$FFFFFFFF,1);
-            MyScreen.TextOut((actionstring),rect(0,120,640,150),$FFFFFFFF,1)
+            MyScreen.TextOut((actionstring),rect(0,120,form13.Width,150),$FFFFFFFF,1)
           end
-          else MyScreen.TextOut((actionstring),rect(0,105,640,135),$FFFFFFFF,1);
+          else MyScreen.TextOut((actionstring),rect(0,105,form13.Width,135),$FFFFFFFF,1);
           if previewpaused then
           begin
             if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then

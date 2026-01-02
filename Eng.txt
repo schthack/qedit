@@ -497,3 +497,5 @@ Square
 Hexa
 Part
 Table :
+Fullscreen mode
+Follow selection
