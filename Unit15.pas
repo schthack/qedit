@@ -398,7 +398,7 @@ end;
 
 procedure TForm15.Addroom1Click(Sender: TObject);
 begin
-  fmRoom.Caption := 'Add room';
+  fmRoom.Caption := GetLanguageString(317);
   fmRoom.SpinEdit1.Value := 0;
   fmRoom.ShowModal;
 end;
@@ -604,9 +604,9 @@ begin
   ItemIndex := form15.ListBox1.ItemIndex;
   if ItemIndex >= form15.ListBox1.Count then Exit;
 
-   choice := MessageDlg('Delete room ' +
+   choice := MessageDlg(GetLanguageString(331) +
    inttostr(roomdata[ItemIndex + 1].roomnum) +
-   ' and all of its entries?', mtConfirmation, [mbYes, mbNo], 0);
+   GetLanguageString(332), mtConfirmation, [mbYes, mbNo], 0);
 
   if choice = mrYes then
   begin
@@ -680,7 +680,7 @@ end;
 
 procedure TForm15.Editroom1Click(Sender: TObject);
 begin
-   fmRoom.Caption := 'Edit room';
+   fmRoom.Caption := GetLanguageString(318);
    fmRoom.SpinEdit1.Value := roomdata[form15.ListBox1.ItemIndex + 1].roomnum;
    fmRoom.ShowModal;
 end;

@@ -26,7 +26,7 @@ var
 
 implementation
 
-uses FScriptTE;
+uses FScriptTE, main;
 
 {$R *.dfm}
 
@@ -35,7 +35,7 @@ var
   i: integer;
   labelfound: Boolean;
 begin
-  if Caption = 'Go To Line' then
+  if Caption = GetLanguageString(381) then
   begin
     fmScriptTE.TextEdit.GoToLineAndSetPosition(SpinEdit1.Value,
     length(fmScriptTE.TextEdit.Lines[SpinEdit1.Value]) + 1);
@@ -60,7 +60,7 @@ begin
     end;
 
     if not labelfound then
-      MessageDlg('Label not found.', mtInformation,[mbOk], 0)
+      MessageDlg(GetLanguageString(447), mtInformation,[mbOk], 0)
     else fmGoto.Close;
   end;
 end;

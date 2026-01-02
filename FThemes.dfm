@@ -64,7 +64,7 @@ object fmThemes: TfmThemes
     Top = 40
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     Default = True
     TabOrder = 2
     OnClick = btnOKClick

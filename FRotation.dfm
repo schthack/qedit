@@ -26,7 +26,7 @@ object fmRotation: TfmRotation
     Top = 136
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     Default = True
     TabOrder = 0
     OnClick = btnOKClick

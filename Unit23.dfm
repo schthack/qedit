@@ -19,7 +19,7 @@ object Form23: TForm23
     Top = 78
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     TabOrder = 2
     OnClick = Button1Click
   end

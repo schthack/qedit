@@ -40,7 +40,7 @@ object fmReplace: TfmReplace
     Top = 137
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     Default = True
     TabOrder = 3
     OnClick = btnOKClick

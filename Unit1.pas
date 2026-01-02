@@ -1210,7 +1210,7 @@ begin
   if fmScriptTE.Visible then
   begin
     fmScriptTE.TextEdit.Lines.Clear;
-    form14.Caption := 'Loading Script';
+    form14.Caption := GetLanguageString(477);
     form14.Label1.Hide;
     form14.Show;
     form14.ProgressBar1.max := Form4.ListBox1.items.count - 1;
@@ -1221,7 +1221,7 @@ begin
       fmScriptTE.TextEdit.Lines.Add(Form4.ListBox1.items[i]);
     end;
     form14.Hide;
-    form14.Caption := '3D Processing';
+    form14.Caption := GetLanguageString(260);
     form14.ProgressBar1.Position := 1;
     form14.Label1.Show;
     fmScriptTE.TextEdit.MoveCaretToBeginning;
@@ -1274,7 +1274,7 @@ begin
         kkk := strtoint(copy(s, 1, y - 1));
         if asmref[kkk] <> $FFFFFFFF then
         begin
-          raise exception.Create('Duplicated label: ' + inttostr(kkk));
+          raise exception.Create(GetLanguageString(475) + inttostr(kkk));
         end;
         asmref[kkk] := p;
         if kkk <> -1 then
@@ -1293,8 +1293,8 @@ begin
       begin
         if kkk = -1 then
         begin
-          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
-          'String data declared without a label', mtInformation, [mbOk], 0);
+          MessageDlg(GetLanguageString(441) + inttostr(x) + #13#10 +
+          GetLanguageString(472), mtInformation, [mbOk], 0);
           form4.Show;
           form4.ListBox1.ItemIndex := x;
         end;
@@ -1302,8 +1302,8 @@ begin
           if datablock[i] = lastsection then break;
         if (datablockT[i] <> T_STRDATA) and (lastsection <> -1) then
         begin
-          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
-          'String data declared in a code or Hex section', mtInformation, [mbOk], 0);
+          MessageDlg(GetLanguageString(441) + inttostr(x) + #13#10 +
+          GetLanguageString(473), mtInformation, [mbOk], 0);
           form4.Show;
           form4.ListBox1.ItemIndex := x;
         end;
@@ -1350,8 +1350,8 @@ begin
           if datablock[i] = lastsection then break;
         if (datablockT[i] <> T_DATA) and (lastsection <> -1) then
         begin
-          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
-          'Hex data declared in a code or String section', mtInformation, [mbOk], 0);
+          MessageDlg(GetLanguageString(441) + inttostr(x) + #13#10 +
+          GetLanguageString(474), mtInformation, [mbOk], 0);
           form4.Show;
           form4.ListBox1.ItemIndex := x;
         end;
@@ -1886,7 +1886,7 @@ begin
     except
       on E: exception do
       begin
-        MessageDlg('Build error at line ' + inttostr(x) + #13#10 + E.Message, mtInformation, [mbOk], 0);
+        MessageDlg(GetLanguageString(442) + inttostr(x) + #13#10 + E.Message, mtInformation, [mbOk], 0);
         form4.Show;
         form4.ListBox1.ItemIndex := x;
         if not directoryexists(path + 'error backup') then

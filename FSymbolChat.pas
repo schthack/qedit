@@ -86,6 +86,8 @@ implementation
 
 {$R *.dfm}
 
+uses main;
+
 procedure DrawSega(src: integer; srcPos: TRect; dst: TCanvas; dstPos: TRect; color: integer; wMirror,hMirror: byte);
 var x,y,w,h,px,py:integer;
     c : dword;
@@ -411,7 +413,20 @@ begin
 end;
 
 procedure TForm33.FormShow(Sender: TObject);
+var
+  x: integer;
 begin
+  combobox1.Items[0] := GetLanguageString(494);
+  combobox1.Items[1] := GetLanguageString(495);
+  combobox1.Items[2] := GetLanguageString(496);
+  combobox1.Items[3] := GetLanguageString(497);
+
+  for x := 0 to 8 do
+    combobox6.Items[x] := GetLanguageString(453) + ' ' + inttostr(x+1);
+
+  for x := 0 to 11 do
+    listbox1.Items[x] := GetLanguageString(498) + ' ' + inttostr(x+1);
+
   listbox1.ItemIndex := 0;
     RadioButton1Click(nil);
     combobox1.ItemIndex := symbolData.face and 3;

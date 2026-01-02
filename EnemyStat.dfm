@@ -121,7 +121,7 @@ object Form21: TForm21
     Top = 156
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     TabOrder = 5
     OnClick = Button2Click
   end

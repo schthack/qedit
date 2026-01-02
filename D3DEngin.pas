@@ -344,7 +344,7 @@ type
         cs:tcriticalsection;
     end;
     TTextData = Record
-        Text:ansistring;
+        Text:string;
         color,over:dword;
         rect:trect;
     end;
@@ -419,7 +419,7 @@ type
         Procedure SetPointLight(id:integer;COLOR:Dword;dx,dy,dz,range,ate:single);
         procedure SetFog(Color:dword;fstart,fend:single);
         procedure SetProjection(ProX,ProY,ScaleX,ScaleY,ScaleZ:single);
-        Procedure TextOut(text:ansistring;pos:trect;color,overall:dword);
+        Procedure TextOut(text:string;pos:trect;color,overall:dword);
         Procedure DisableFog;
         Procedure GetBitmap(var bm:tbitmap);
         Procedure SetClipping(fend:single);
@@ -608,7 +608,7 @@ Function F2DW(F:single):dword;
 
 implementation
 
-uses PikaPackage;
+uses PikaPackage, main;
 
 
 Constructor T3DParticleGenerator.Create(Item:T3Ditem);
@@ -1758,7 +1758,7 @@ begin
 
         for l:=0 to textcount-1 do
           if textdata[l].over = 0 then
-          self.tp.DrawTextA(nil,@textdata[l].text[1],length(textdata[l].text),@textdata[l].rect,DT_LEFT,textdata[l].color);
+          self.tp.DrawTextW(nil,@textdata[l].text[1],length(textdata[l].text),@textdata[l].rect,DT_LEFT,textdata[l].color);
 
 
         amb:=self.AmbientLightColor;
@@ -1776,7 +1776,7 @@ begin
         for l:=0 to textcount-1 do
             if textdata[l].over = 1 then
             if length(textdata[l].text) > 0 then
-            self.tp.DrawTextA(nil,@textdata[l].text[1],length(textdata[l].text),@textdata[l].rect,DT_LEFT,textdata[l].color);
+            self.tp.DrawTextW(nil,@textdata[l].text[1],length(textdata[l].text),@textdata[l].rect,DT_LEFT,textdata[l].color);
 
         g_pd3dDevice.EndScene;
         textcount:=0;
@@ -3524,7 +3524,7 @@ begin
                         self.Area[m].GroupeA[ll].Indexs[f].SurfaceCount:=k-2;
                         if Failed( self.g_pd3dDevice.CreateIndexBuffer(k*2,0,D3DFMT_INDEX16,D3DPOOL_DEFAULT,self.Area[m].GroupeA[ll].Indexs[f].g_pIB,nil)) then
                             begin
-                            showmessage('erreur');
+                            showmessage(GetLanguageString(437));
                             exit;
                             end;
                         self.Area[m].GroupeA[ll].Indexs[f].g_pIB.Lock(0,k*2,pp,0);
@@ -3604,7 +3604,7 @@ begin
                         if Failed( self.g_pd3dDevice.CreateIndexBuffer(
                                 k*2,0,D3DFMT_INDEX16,D3DPOOL_DEFAULT
                                 ,self.Area[m].GroupeB[ll].Indexs[f].g_pIB,nil)) then begin
-                                 showmessage('erreur');
+                                 showmessage(GetLanguageString(437));
                                  exit;
                                  end;
                         self.Area[m].GroupeB[ll].Indexs[f].g_pIB.Lock(0,k*2,pp,0);
@@ -7419,7 +7419,7 @@ begin
 
 end;
 
-Procedure tpikaengine.TextOut(text:ansistring;pos:trect;color,overall:dword);
+Procedure tpikaengine.TextOut(text:string;pos:trect;color,overall:dword);
 begin
     self.g_3DScene.cs.Enter;
     if tp = nil then

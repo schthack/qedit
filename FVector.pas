@@ -56,8 +56,8 @@ begin
     form32.StringGrid1.Cells[0,0] := 'X';
     form32.StringGrid1.Cells[1,0] := 'Y';
     form32.StringGrid1.Cells[2,0] := 'Z';
-    form32.StringGrid1.Cells[3,0] := 'Duration';
-    form32.StringGrid1.Cells[4,0] := 'Distance';
+    form32.StringGrid1.Cells[3,0] := GetLanguageString(449);
+    form32.StringGrid1.Cells[4,0] := GetLanguageString(450);
     for x:=1 to form32.vectorCount-1 do begin
       // calculate distance
       rx := abs(form32.vectors[x-1].x - form32.vectors[x].x);

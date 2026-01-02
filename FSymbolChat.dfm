@@ -768,7 +768,7 @@ object Form33: TForm33
     Top = 360
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     TabOrder = 16
     OnClick = Button1Click
   end

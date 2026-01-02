@@ -807,7 +807,7 @@ begin
     end;
   end;
   form14.Hide;
-  form14.Caption := '3D Processing';
+  form14.Caption := GetLanguageString(260);
   form14.ProgressBar1.Position := 1;
   form14.Label1.Show;
 end;
@@ -1488,7 +1488,7 @@ begin
     if not Decimal1.Checked then
     begin
       if isedited then
-        choice := MessageDlg('Changing the display format will cancel any unsaved changes, continue?',
+        choice := MessageDlg(GetLanguageString(439),
           mtConfirmation, [mbYes, mbNo], 0);
       if (choice = mrYes) or (not isedited) then
       begin
@@ -1519,7 +1519,7 @@ begin
           fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
           fmScriptTE.TextEdit.TopLine := lastline;
         except
-          Showmessage('Error reloading quest data.');
+          Showmessage(GetLanguageString(435));
         end;
       end;
     end;
@@ -2408,7 +2408,7 @@ begin
     if not Hex1.Checked then
     begin
       if isedited then
-        choice := MessageDlg('Changing the display format will cancel any unsaved changes, continue?',
+        choice := MessageDlg(GetLanguageString(439),
           mtConfirmation, [mbYes, mbNo], 0);
       if (choice = mrYes) or (not isedited) then
       begin
@@ -2439,7 +2439,7 @@ begin
           fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
           fmScriptTE.TextEdit.TopLine := lastline;
         except
-          Showmessage('Error reloading quest data.');
+          Showmessage(GetLanguageString(435));
         end;
       end;
     end;
@@ -2451,7 +2451,7 @@ var
   choice, lastcaret, lastline, lastindex: integer;
 begin
       if isedited then
-        choice := MessageDlg('Changing the NOP opcode display will cancel any unsaved changes, continue?',
+        choice := MessageDlg(GetLanguageString(440),
           mtConfirmation, [mbYes, mbNo], 0);
       if (choice = mrYes) or (not isedited) then
       begin
@@ -2480,7 +2480,7 @@ begin
           fmScriptTE.TextEdit.CaretIndex := lastcaret - 1;
           fmScriptTE.TextEdit.TopLine := lastline;
         except
-          Showmessage('Error reloading quest data.');
+          Showmessage(GetLanguageString(435));
         end;
       end;
 end;

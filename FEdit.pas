@@ -262,13 +262,13 @@ begin
   showdata := not showdata;
   if showdata then
   begin
-    btnToggleData.Caption := 'Hide data';
+    btnToggleData.Caption := GetLanguageString(467);
     StringGrid1.Cells[1,11]:=floattostrf(EObjData.unknow8,ffFixed,10,4);
     StringGrid1.Cells[1,13]:=floattostrf(EObjData.unknow10,ffFixed,10,4);
   end
   else
   begin
-    btnToggleData.Caption := 'Show data';
+    btnToggleData.Caption := GetLanguageString(468);
     StringGrid1.Cells[1,11]:=floattostrf(EObjData.unknow8 + warpx,ffFixed,10,4);
     StringGrid1.Cells[1,13]:=floattostrf(EObjData.unknow10 + warpz,ffFixed,10,4);
   end;

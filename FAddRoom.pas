@@ -27,13 +27,13 @@ implementation
 
 {$R *.dfm}
 
-uses unit15;
+uses main, unit15;
 
 procedure TfmRoom.btnOKClick(Sender: TObject);
 var
   idx, x: Integer;
 begin
-  if fmRoom.Caption = 'Add room' then
+  if fmRoom.Caption = GetLanguageString(317) then
   begin
     SetLength(roomdata, Length(roomdata) + 1);
     idx := High(roomdata);
@@ -45,7 +45,7 @@ begin
     end;
     Close;
   end
-  else if fmRoom.Caption = 'Edit room' then
+  else if fmRoom.Caption = GetLanguageString(318) then
   begin
     idx := form15.ListBox1.ItemIndex;
 

@@ -80,7 +80,7 @@ begin
   close;
   if (myscreen <> nil) and screenchanged then
   begin
-     if MessageDlg('Screen size settings will be applied on next restart. Restart now?',
+     if MessageDlg(GetLanguageString(444),
                   mtConfirmation, [mbYes, mbNo], 0) = mrYes then
       begin
         form1.Close;

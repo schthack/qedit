@@ -447,7 +447,7 @@ begin
            if TabControl1.TabIndex = 2 then begin
                 if lowercase(s) = 'nan' then
                 begin
-                  MessageDlg('Floating point value cannot be NAN.', mtInformation,[mbOk], 0);
+                  MessageDlg(GetLanguageString(443), mtInformation,[mbOk], 0);
                   exit;
                 end;
                 y:=0;
@@ -825,7 +825,7 @@ begin
          if (lowercase(combobox1.Text) = lowercase(GetOpcodeName($f891))) then begin
             c:=getepisode;
             if c >= 3 then begin
-                Showmessage('Invalid episode number.');
+                Showmessage(GetLanguageString(436));
             end else begin
                 form23.tag:=c;
                 if form23.showmodal = 1 then

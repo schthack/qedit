@@ -19,7 +19,7 @@ object fmRoom: TfmRoom
     Top = 41
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     Default = True
     TabOrder = 1
     OnClick = btnOKClick

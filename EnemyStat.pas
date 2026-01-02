@@ -71,9 +71,7 @@ begin
     StringGrid2.Cells[0,4]:='EXP';
 
     StringGrid3.Cells[0,0]:=getlanguagestring(114);
-    if form1.New1.Caption.Contains('New') then
-      StringGrid3.Cells[1,0]:='Knockback range'
-    else StringGrid3.Cells[1,0]:=getlanguagestring(115);
+    StringGrid3.Cells[1,0]:=getlanguagestring(115);
     StringGrid3.Cells[2,0]:='Tech';
     Combobox1.ItemIndex:=EnemyStatData.Tech;
 

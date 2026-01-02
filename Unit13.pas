@@ -289,16 +289,16 @@ begin
             myscreen.TextOut('Map section: - Wave: - X: - Y: - Z: - Rotation: - ',rect(0,0,640,30),$FFFFFFFF,1);
         end;
 
-        s := 'Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ';
+        s := GetLanguageString(484) + inttostr(round(movespeed / 3)) + '00%, ';
         if autoadjustsect then
-          s := s + 'Auto-section: On, '
+          s := s + GetLanguageString(485)
         else
-          s := s + 'Auto-section: Off, ';
+          s := s + GetLanguageString(486);
         if autoadjustY then
-          s := s + 'Auto-Y: On'
+          s := s + GetLanguageString(487)
         else
-          s := s + 'Auto-Y: Off';
-        myscreen.TextOut(s,rect(0,15,640,45),$FFFFFFFF,1);
+          s := s + GetLanguageString(488);
+        myscreen.TextOut(s,rect(0,15,form13.Width,45),$FFFFFFFF,1);
 
         if previewstate > 0 then
         begin
@@ -318,20 +318,20 @@ begin
           if previewpaused then
           begin
             if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then
-              MyScreen.TextOut('Paused',rect(0,150,640,180),$FFFFFFFF,1)
+              MyScreen.TextOut(GetLanguageString(482),rect(0,150,form13.Width,180),$FFFFFFFF,1)
             else
-              MyScreen.TextOut('Paused',rect(0,135,640,165),$FFFFFFFF,1);
+              MyScreen.TextOut(GetLanguageString(482),rect(0,135,form13.Width,165),$FFFFFFFF,1);
           end;
-          myscreen.TextOut('Left arrow = Previous event,  Right arrow = Next event,  Space = Pause/Resume,  ESC = Exit',rect(0,form13.Height-95,640,form13.Height-79),$FFFFFFFF,1);
+          myscreen.TextOut(GetLanguageString(489),rect(0,form13.Height-35,form13.Width,form13.Height-19),$FFFFFFFF,1);
         end;
 
         if ini > 0 then begin
             dec(ini);
-            myscreen.TextOut('Q = Forward, A = Backward, D = Toggle data format, F = Toggle fog effect, L/R = Auto-rotate',rect(0,form13.Height-80,640,form13.Height-64),$FFFFFFFF,1);
-            myscreen.TextOut('Scroll = Change movement speed, E = Toggle auto-section adjust, C = Toggle auto-Y adjust',rect(0,form13.Height-65,640,form13.Height-49),$FFFFFFFF,1);
-            myscreen.TextOut('Edit: Hold click + CTRL = Move, + SHIFT = Up/down, + right-click = Rotate, CTRL + S = Snap',rect(0,form13.Height-50,640,form13.Height-34),$FFFFFFFF,1);
-            if borderStyle = bsNone then
-              myscreen.TextOut('ESC = Exit, CTRL + X = Show/hide the main window (Click outside of window to return to 3D)',rect(0,form13.Height-35,640,form13.Height-19),$FFFFFFFF,1);
+            myscreen.TextOut(GetLanguageString(490),rect(0,form13.Height-80,form13.Width,form13.Height-64),$FFFFFFFF,1);
+            myscreen.TextOut(GetLanguageString(491),rect(0,form13.Height-65,form13.Width,form13.Height-49),$FFFFFFFF,1);
+            myscreen.TextOut(GetLanguageString(492),rect(0,form13.Height-50,form13.Width,form13.Height-34),$FFFFFFFF,1);
+            if (borderStyle = bsNone) and (previewstate = 0) then
+              myscreen.TextOut(GetLanguageString(493),rect(0,form13.Height-35,form13.Width,form13.Height-19),$FFFFFFFF,1);
         end;
         myscreen.RenderSurface;
         if Keys[Ord('Q')] then GoForward;

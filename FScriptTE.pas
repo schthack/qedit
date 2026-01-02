@@ -406,7 +406,7 @@ begin
     end;
   end;
   form14.Hide;
-  form14.Caption := '3D Processing';
+  form14.Caption := GetLanguageString(260);
   form14.ProgressBar1.Position := 1;
   form14.Label1.Show;
   TextEdited := false;
@@ -829,7 +829,7 @@ begin
     fmScriptTE.Hide;
     UpdateTextRefs();
     form4.listbox1.Clear;
-    form14.Caption := 'Saving Script';
+    form14.Caption := GetLanguageString(478);
     form14.Label1.Hide;
     form14.Show;
     form14.ProgressBar1.max := TextEdit.Lines.Count - 1;
@@ -844,7 +844,7 @@ begin
       end;
     end;
     form14.Hide;
-    form14.Caption := '3D Processing';
+    form14.Caption := GetLanguageString(260);
     form14.ProgressBar1.Position := 1;
     form14.Label1.Show;
   end;
@@ -917,7 +917,7 @@ begin
         end;
       end;
       JSONOpcodeList := JSONOpcodeList + '"' + 'Unknow_Opcode' + '"';
-      except MessageDlg('Could not generate JSON asm list', mtInformation, [mbOk], 0);
+      except MessageDlg(GetLanguageString(445), mtInformation, [mbOk], 0);
     end;
 
     // JSON list for registers
@@ -928,7 +928,7 @@ begin
       if i < 255 then
         JSONRegisterList := JSONRegisterList + ',' + sLineBreak;
       end;
-      except MessageDlg('Could not generate JSON register list', mtInformation, [mbOk], 0);
+      except MessageDlg(GetLanguageString(446), mtInformation, [mbOk], 0);
     end;
 
     JSONStrings := TStringList.Create;
@@ -1032,7 +1032,7 @@ begin
 
     Form4.Hide;
     TextEdit.Lines.Clear;
-    form14.Caption := 'Loading Script';
+    form14.Caption := GetLanguageString(477);
     form14.Label1.Hide;
     form14.Show;
     form14.ProgressBar1.max := Form4.ListBox1.items.count - 1;
@@ -1046,7 +1046,7 @@ begin
       TextEdit.GoToLineAndSetPosition(scriptline, length(TextEdit.Lines[scriptline])+1);
     TextEdit.TopLine := scriptindex + 1;
     form14.Hide;
-    form14.Caption := '3D Processing';
+    form14.Caption := GetLanguageString(260);
     form14.ProgressBar1.Position := 1;
     form14.Label1.Show;
     if darkmode and TextEdit.HandleAllocated then
@@ -1060,13 +1060,13 @@ end;
 
 procedure TfmScriptTE.GoToLabel1Click(Sender: TObject);
 begin
-  fmGoTo.Caption := 'Go To Label';
+  fmGoTo.Caption := GetLanguageString(380);
   fmGoto.ShowModal;
 end;
 
 procedure TfmScriptTE.GotoLine1Click(Sender: TObject);
 begin
-  fmGoTo.Caption := 'Go To Line';
+  fmGoTo.Caption := GetLanguageString(381);
   fmGoTo.ShowModal;
 end;
 
@@ -1255,7 +1255,7 @@ var
   choice: integer;
   Reg: TRegistry;
 begin
-    choice := MessageDlg('Font and color options for notes will be reset back to their defaults, continue?',
+    choice := MessageDlg(GetLanguageString(395),
       mtConfirmation, [mbYes, mbNo], 0);
 
     if choice = mrYes then
@@ -1368,7 +1368,7 @@ var
   choice: integer;
   Reg: TRegistry;
 begin
-    choice := MessageDlg('Search and replace settings will be reset back to their defaults, continue?',
+    choice := MessageDlg(GetLanguageString(377),
       mtConfirmation, [mbYes, mbNo], 0);
 
     if choice = mrYes then
@@ -1409,7 +1409,7 @@ var
   choice, lastcaret, lastline: integer;
   Reg: TRegistry;
 begin
-    choice := MessageDlg('Font and color options will be reset back to their defaults, continue?',
+    choice := MessageDlg(GetLanguageString(394),
       mtConfirmation, [mbYes, mbNo], 0);
 
     if choice = mrYes then
@@ -1433,7 +1433,7 @@ begin
       TextEdit.Colors.EditorStringForeground:=clBlue;
 
       // Reset theme
-      if DirectoryExists('Text editor\themes') then
+      if DirectoryExists(path + 'Text editor\themes') then
         ChangeTheme(Default1);
 
       // Reset zoom

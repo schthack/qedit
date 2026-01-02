@@ -154,7 +154,7 @@ begin
     end;
 
     if (monsterList[sFloor].count <= 0) and (boxList[sFloor].count <= 0) then
-        Memo1.Lines.Add('This quest is so epic that it doesn''t need monsters or boxes!');
+        Memo1.Lines.Add(GetLanguageString(326));
 end;
 
 end.

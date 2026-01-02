@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   ImgList, Dialogs, Math, Menus, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
-  ShellApi, D3DEngin, registry, Spin, System.ImageList, System.Actions,
+  ShellApi, D3DEngin, registry, Spin, System.ImageList, System.Actions, System.IOUtils,
   Vcl.ActnList, Vcl.Themes, Vcl.Styles;
 
 const
@@ -665,7 +665,7 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   Unit17, Unit18, Unit19, FCompat, MyConst, Unit29, crc32, EnemyStat,
   FEnemyAttack, FEnemyMov, FEnemyResist, FFloatEdit, NPCBuild, Unit22,
   FFFilter, FMonsDet, Unit23, FSymbolChat, FAsmModeSel, FPlacement, FHotkeys,
-  FSnap, FScriptTE, FReplace, FRotation, FThemes;
+  FSnap, FScriptTE, FReplace, FRotation, FThemes, FMonsType, FVector;
 
 {$R *.dfm}
 
@@ -674,7 +674,16 @@ begin
   form1.MainMenu1.AutoHotkeys := maAutomatic;
   form1.PopupMenu1.AutoHotkeys := maAutomatic;
   form1.PopupMenu2.AutoHotkeys := maAutomatic;
+  form1.PopupMenu3.AutoHotkeys := maAutomatic;
+  form1.PopupMenu4.AutoHotkeys := maAutomatic;
   form4.PopupMenu1.AutoHotkeys := maAutomatic;
+  form15.PopupMenu1.AutoHotKeys := maAutomatic;
+  form15.PopupMenu2.AutoHotKeys := maAutomatic;
+  form15.PopupMenu3.AutoHotKeys := maAutomatic;
+  form15.PopupMenu4.AutoHotKeys := maAutomatic;
+  fmScriptTE.MainMenu1.AutoHotkeys := maAutomatic;
+  fmScriptTE.PopupMenu1.AutoHotkeys := maAutomatic;
+  fmScriptTE.PopupMenu2.AutoHotkeys := maAutomatic;
 end;
 
 Procedure SetManualHotkeys;
@@ -682,7 +691,16 @@ begin
   form1.MainMenu1.AutoHotkeys := maManual;
   form1.PopupMenu1.AutoHotkeys := maManual;
   form1.PopupMenu2.AutoHotkeys := maManual;
+  form1.PopupMenu3.AutoHotkeys := maManual;
+  form1.PopupMenu4.AutoHotkeys := maManual;
   form4.PopupMenu1.AutoHotkeys := maManual;
+  form15.PopupMenu1.AutoHotKeys := maManual;
+  form15.PopupMenu2.AutoHotKeys := maManual;
+  form15.PopupMenu3.AutoHotKeys := maManual;
+  form15.PopupMenu4.AutoHotKeys := maManual;
+  fmScriptTE.MainMenu1.AutoHotkeys := maManual;
+  fmScriptTE.PopupMenu1.AutoHotkeys := maManual;
+  fmScriptTE.PopupMenu2.AutoHotkeys := maManual;
 end;
 
 Procedure UncheckLanguages;
@@ -765,7 +783,7 @@ begin
   form26.Button3.Caption := GetLanguageString(116);
   form26.Button1.Caption := GetLanguageString(117);
   form26.Button2.Caption := GetLanguageString(118);
-  form26.Caption := GetLanguageString(126);
+  form26.Caption := GetLanguageString(144);
   form24.Button1.Caption := GetLanguageString(116);
   form24.Button3.Caption := GetLanguageString(117);
   form24.Button2.Caption := GetLanguageString(118);
@@ -862,8 +880,8 @@ begin
   form12.Caption := GetLanguageString(256);
   form12.Label1.Caption := GetLanguageString(257);
   form12.Button1.Caption := GetLanguageString(113);
-  form12.Button2.Caption := GetLanguageString(18);
-  form12.Button3.Caption := GetLanguageString(19);
+  form12.Button2.Caption := GetLanguageString(155);
+  form12.Button3.Caption := GetLanguageString(154);
   form12.Button4.Caption := GetLanguageString(244);
   form12.Button5.Caption := GetLanguageString(152);
   form12.Button6.Caption := GetLanguageString(258);
@@ -899,10 +917,10 @@ begin
   form22.Label1.Caption := GetLanguageString(281);
   form22.Label2.Caption := GetLanguageString(282);
   form22.Label3.Caption := GetLanguageString(283);
+  form22.lblAttack.Caption := GetLanguageString(499);
   form22.Button1.Caption := GetLanguageString(118);
-  form22.Button2.Caption := GetLanguageString(9);
+  form22.Button2.Caption := GetLanguageString(483);
 
-  form26.Caption := GetLanguageString(284);
   form26.Button2.Caption := GetLanguageString(118);
   form26.Button1.Caption := GetLanguageString(117);
 
@@ -911,12 +929,223 @@ begin
   form29.Button1.Caption := GetLanguageString(113);
   form29.Button2.Caption := GetLanguageString(118);
 
+  fmRotation.Caption := GetLanguageString(299);
+  fmRotation.chkAutoAxis.Caption := GetLanguageString(300);
+  form7.chkAutoAxis.Caption := GetLanguageString(300);
+
+  fmThemes.Caption := GetLanguageString(302);
+
+  form1.Settheme1.Caption := GetLanguageString(301);
   Form1.Exporttextfortranslation1.Caption := GetLanguageString(294);
   Form1.Importtextfromtranslation1.Caption := GetLanguageString(295);
+  Form1.Button14.Caption := GetLanguageString(298);
+  form1.Texteditor1.Caption := GetLanguageString(303);
+  form1.Floor1.Caption := GetLanguageString(304);
+  form1.Sort1.Caption := GetLanguageString(305);
+  form1.Monster1.Caption := GetLanguageString(306);
+  form1.Objects1.Caption := GetLanguageString(307);
+  form1.Monstercount1.Caption := GetLanguageString(324);
+  form1.byRoom1.Caption := GetLanguageString(308);
+  form1.byRoom2.Caption := GetLanguageString(308);
+  form1.byWave1.Caption := GetLanguageString(309);
+  form1.byGroup1.Caption := GetLanguageString(310);
+  form1.byType1.Caption := GetLanguageString(311);
+  form1.byType2.Caption := GetLanguageString(311);
+  form1.Exportdata1.Caption := GetLanguageString(312);
+  form1.Importdata1.Caption := GetLanguageString(313);
+  form1.Events1.Caption := GetLanguageString(314);
+  form1.Previewevents1.Caption := GetLanguageString(315);
+  form1.Randommonsters1.Caption := GetLanguageString(316);
+  form1.EnemyWave1.Caption := GetLanguageString(333);
+  form1.Itemsgroupe1.Caption := GetLanguageString(334);
+  form1.smNew.Caption := GetLanguageString(335);
+  form1.smNewMonster.Caption := GetLanguageString(336);
+  form1.smNewItem.Caption := GetLanguageString(337);
+  form1.Copylastmonster1.Caption := GetLanguageString(338);
+  form1.Copylastitem1.Caption := GetLanguageString(339);
+  form1.smDelete.Caption := GetLanguageString(42);
+  form1.smEdit.Caption := GetLanguageString(122);
+  form1.smMove.Caption := GetLanguageString(44);
+  form1.smUndo.Caption := GetLanguageString(45);
+  form1.smDrag.Caption := GetLanguageString(340);
+  form1.Options2.Caption := GetLanguageString(341);
+  form1.smPlacement.Caption := GetLanguageString(342);
+  form1.smSnapOptions.Caption := GetLanguageString(343);
+  form1.lblModifiers.Caption := GetLanguageString(426);
+  form1.smDisableIndicator.Caption := GetLanguageString(481);
+  form1.ComboBox1.Items[0] := GetLanguageString(466);
+  form1.ComboBox1.ItemIndex := 0;
+  form1.lblPreview.Caption := #8592 + GetLanguageString(327) + '  |  ' +
+                              #8594 + GetLanguageString(328) + '  |  ' +
+                                      GetLanguageString(329) + '  |  ' +
+                                      GetLanguageString(330);
 
-  form16.Memo1.Lines.Add('');
-  form16.Memo1.Lines.Add('1.0c-2.0c updates:');
-  form16.Memo1.Lines.Add('Alisaryn');
+  FPlacementOptions.Caption := GetLanguageString(352);
+  FPlacementOptions.Label3.Caption := GetLanguageString(345);
+  FPlacementOptions.Label2.Caption := GetLanguageString(346);
+  FPlacementOptions.Label1.Caption := GetLanguageString(347);
+  FPlacementOptions.Label7.Caption := GetLanguageString(348);
+  FPlacementOptions.Label6.Caption := GetLanguageString(349);
+  FPlacementOptions.Label4.Caption := GetLanguageString(350);
+  FPlacementOptions.Label5.Caption := GetLanguageString(351);
+  FPlacementOptions.btnSave.Caption := GetLanguageString(277);
+  FPlacementOptions.btnReset.Caption := GetLanguageString(344);
+
+  FSnapOptions.Caption := GetLanguageString(353);
+  FSnapOptions.chkSnap.Caption := GetLanguageString(354);
+  FSnapOptions.chkSnapDistance.Caption := GetLanguageString(355);
+  FSnapOptions.chkSnapRotate.Caption := GetLanguageString(356);
+  FSnapOptions.chkSnapYValue.Caption := GetLanguageString(357);
+  FSnapOptions.chkDistancelimit.Caption := GetLanguageString(358);
+  FSnapOptions.Label8.Caption := GetLanguageString(359);
+  FSnapOptions.btnSave.Caption := GetLanguageString(277);
+  FSnapOptions.btnReset.Caption := GetLanguageString(344);
+
+  form15.btnAddRoom.Caption := GetLanguageString(317);
+  form15.Addroom1.Caption := GetLanguageString(317);
+  form15.btnEditRoom.Caption := GetLanguageString(318);
+  form15.Editroom1.Caption := GetLanguageString(318);
+  form15.btnDeleteRoom.Caption := GetLanguageString(319);
+  form15.Deleteroom1.Caption := GetLanguageString(319);
+  form15.btnAddEntry.Caption := GetLanguageString(320);
+  form15.Addrow1.Caption := GetLanguageString(320);
+  form15.btnDeleteEntry.Caption := GetLanguageString(321);
+  form15.Deleterow1.Caption := GetLanguageString(321);
+  form15.Button1.Caption := GetLanguageString(322);
+  form15.Button2.Caption := GetLanguageString(322);
+  form15.btnDeleteRow2.Caption := GetLanguageString(323);
+  form15.btnDeleteRow3.Caption := GetLanguageString(323);
+  form15.Addrow2.Caption := GetLanguageString(322);
+  form15.Addrow3.Caption := GetLanguageString(322);
+  form15.Deleterow2.Caption := GetLanguageString(323);
+  form15.Deleterow3.Caption := GetLanguageString(323);
+  form15.btnSave1.Caption := GetLanguageString(277);
+  form15.btnSave2.Caption := GetLanguageString(277);
+  form15.btnClose1.Caption := GetLanguageString(118);
+  form15.btnClose2.Caption := GetLanguageString(118);
+
+  form23.Caption := GetLanguageString(464);
+  form23.Button2.Caption := GetLanguageString(118);
+
+  fmMonsterType.Caption := GetLanguageString(465);
+  fmmonstertype.Button2.Caption := GetLanguageString(118);
+
+  form31.Caption := GetLanguageString(325);
+  form31.Copy.Caption := GetLanguageString(159);
+  form31.Button1.Caption := GetLanguageString(113);
+
+  form32.Caption := GetLanguageString(448);
+  form32.Button1.Caption := GetLanguageString(148);
+  form32.Button2.Caption := GetLanguageString(149);
+  form32.Button4.Caption := GetLanguageString(151);
+  form32.Button3.Caption := GetLanguageString(152);
+  form32.Button6.Caption := GetLanguageString(118);
+  form32.chkBezier.Caption := GetLanguageString(451);
+
+  Form33.Caption := GetLanguageString(405);
+  form33.Label1.Caption := GetLanguageString(452);
+  form33.Label3.Caption := GetLanguageString(453);
+  form33.Label2.Caption := GetLanguageString(454);
+  form33.Label4.Caption := GetLanguageString(455);
+  form33.chkGCEndian.Caption := GetLanguageString(476);
+  form33.Button2.Caption := GetLanguageString(118);
+
+  fmHotkeys.Caption := GetLanguageString(427);
+  fmHotkeys.Label7.Caption := GetLanguageString(159);
+  fmHotkeys.Label11.Caption := GetLanguageString(428);
+  fmHotkeys.Label12.Caption := GetLanguageString(429);
+  fmHotkeys.Label10.Caption := GetLanguageString(430);
+  fmHotkeys.Label9.Caption := GetLanguageString(431);
+  fmHotkeys.Label8.Caption := GetLanguageString(432);
+  fmHotkeys.Label14.Caption := GetLanguageString(433);
+  fmHotkeys.btnClose.Caption := GetLanguageString(113);
+
+  form4.btnEditText.Caption := GetLanguageString(361);
+  form4.Changedataformat1.Caption := GetLanguageString(415);
+  form4.Hex1.Caption := GetLanguageString(416);
+  form4.Decimal1.Caption := GetLanguageString(417);
+  form4.HideNOPs1.Caption := GetLanguageString(418);
+  form4.Switcheditors1.Caption := GetLanguageString(419);
+  form4.Addsymbolechat1.Caption := GetLanguageString(469);
+  form4.Editsymbolechat1.Caption := GetLanguageString(470);
+  form4.EditVectordata1.Caption := GetLanguageString(471);
+
+  fmScriptTE.Caption := GetLanguageString(360);
+  fmScriptTE.StatusBar1.Panels[0].Text := GetLanguageString(147);
+  fmScriptTE.File1.Caption := GetLanguageString(1);
+  fmScriptTE.Openfromfile1.Caption := GetLanguageString(364);
+  fmScriptTE.Savetofile1.Caption := GetLanguageString(365);
+  fmScriptTE.Exit1.Caption := GetLanguageString(366);
+  fmScriptTE.Edit1.Caption := GetLanguageString(122);
+  fmScriptTE.AddSTRcomment1.Caption := GetLanguageString(367);
+  fmScriptTE.Find1.Caption := GetLanguageString(156);
+  fmScriptTE.Replace1.Caption := GetLanguageString(368);
+  fmScriptTE.Searchreplacesettings1.Caption := GetLanguageString(369);
+  fmScriptTE.Wholewords1.Caption := GetLanguageString(370);
+  fmScriptTE.Matchcase1.Caption := GetLanguageString(371);
+  fmScriptTE.Engine1.Caption := GetLanguageString(372);
+  fmScriptTE.Normal1.Caption := GetLanguageString(479);
+  fmScriptTE.Extended1.Caption := GetLanguageString(373);
+  fmScriptTE.RegularExpression1.Caption := GetLanguageString(374);
+  fmScriptTE.Wildcard1.Caption := GetLanguageString(375);
+  fmScriptTE.Resetsettings1.Caption := GetLanguageString(376);
+  fmScriptTE.GoToLabel1.Caption := GetLanguageString(378);
+  fmScriptTE.GoToLine1.Caption := GetLanguageString(379);
+  fmScriptTE.Format1.Caption := GetLanguageString(362);
+  fmScriptTE.Changefont1.Caption := GetLanguageString(382);
+  fmScriptTE.Changetextcolor1.Caption := GetLanguageString(383);
+  fmScriptTE.Label1.Caption := GetLanguageString(386);
+  fmScriptTE.Opcodes1.Caption := GetLanguageString(387);
+  fmScriptTE.Registers1.Caption := GetLanguageString(388);
+  fmScriptTE.Values1.Caption := GetLanguageString(389);
+  fmScriptTE.StringSTR1.Caption := GetLanguageString(390);
+  fmScriptTE.StringArgument1.Caption := GetLanguageString(391);
+  fmScriptTE.Changetheme1.Caption := GetLanguageString(392);
+  fmScriptTE.Setformattingdefaults1.Caption := GetLanguageString(393);
+  fmScriptTE.View1.Caption := GetLanguageString(363);
+  fmScriptTE.Notes1.Caption := GetLanguageString(396);
+  fmScriptTE.Zoom1.Caption := GetLanguageString(38);
+  fmScriptTE.Help1.Caption := GetLanguageString(27);
+  fmScriptTE.Opcodes2.Caption := GetLanguageString(397);
+  fmScriptTE.ReservedRegisters1.Caption := GetLanguageString(398);
+  fmScriptTE.Functions1.Caption := GetLanguageString(399);
+  fmScriptTE.Panel2.Caption := GetLanguageString(424);
+  fmScriptTE.NotesFont1.Caption := GetLanguageString(382);
+  fmScriptTE.NotesText1.Caption := GetLanguageString(384);
+  fmScriptTE.NotesBackground1.Caption := GetLanguageString(385);
+  fmScriptTE.NotesReset1.Caption := GetLanguageString(480);
+  fmScriptTE.Addeditdata1.Caption := GetLanguageString(400);
+  fmScriptTE.NPC1.Caption := GetLanguageString(401);
+  fmScriptTE.Image1.Caption := GetLanguageString(402);
+  fmScriptTE.Enemy1.Caption := GetLanguageString(403);
+  fmScriptTE.Float1.Caption := GetLanguageString(404);
+  fmScriptTE.Symbolchat1.Caption := GetLanguageString(405);
+  fmScriptTE.Vector1.Caption := GetLanguageString(406);
+  fmScriptTE.Changeimage1.Caption := GetLanguageString(407);
+  fmScriptTE.SaveImage1.Caption := GetLanguageString(277);
+  fmScriptTE.Enemystat1.Caption := GetLanguageString(408);
+  fmScriptTE.EnemyResist1.Caption := GetLanguageString(409);
+  fmScriptTE.EnemyAttack1.Caption := GetLanguageString(410);
+  fmScriptTE.EnemyMovement1.Caption := GetLanguageString(411);
+  fmScriptTE.NewLabel1.Caption := GetLanguageString(412);
+  fmScriptTE.NewRegister1.Caption := GetLanguageString(413);
+  fmScriptTE.AddArgs1.Caption := GetLanguageString(414);
+  fmScriptTE.Argumentformat1.Caption := GetLanguageString(415);
+  fmScriptTE.Hex1.Caption := GetLanguageString(416);
+  fmScriptTE.Decimal1.Caption := GetLanguageString(417);
+  fmScriptTE.HideNOPs1.Caption := GetLanguageString(418);
+  fmScriptTE.Switcheditor1.Caption := GetLanguageString(419);
+  fmScriptTE.Copy1.Caption := GetLanguageString(159);
+  fmScriptTE.Cut1.Caption := GetLanguageString(160);
+  fmScriptTE.Paste1.Caption := GetLanguageString(161);
+  fmScriptTE.Delete1.Caption := GetLanguageString(162);
+  fmScriptTE.Undo1.Caption := GetLanguageString(45);
+
+  fmReplace.Caption := GetLanguageString(420);
+  fmReplace.Label1.Caption := GetLanguageString(421);
+  fmReplace.Label2.Caption := GetLanguageString(422);
+  fmReplace.Selectiononly1.Caption := GetLanguageString(423);
+  fmReplace.btnClose.Caption := GetLanguageString(113);
 
   // Refresh map area text
   form1.DrawMap;
@@ -1082,19 +1311,16 @@ var
   s: string;
 begin
   if id - 1 < LanguageString.count then
+    s := LanguageString.Strings[id - 1]
+  else s := EnglishUIText[id - 1];
+  x := pos('<cr>', s);
+  while x > 0 do
   begin
-    s := LanguageString.Strings[id - 1];
+    delete(s, x, 4);
+    insert(#13#10, s, x);
     x := pos('<cr>', s);
-    while x > 0 do
-    begin
-      delete(s, x, 4);
-      insert(#13#10, s, x);
-      x := pos('<cr>', s);
-    end;
-    result := s;
-  end
-  else
-    result := '<Undefined>';
+  end;
+  result := s;
 end;
 
 Procedure DumpQuest(fn: ansistring);
@@ -2281,9 +2507,9 @@ begin
       if previewpaused then
       begin
         if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then
-          BBRelBmp.Canvas.TextOut(5, 110, 'Paused')
+          BBRelBmp.Canvas.TextOut(5, 110, GetLanguageString(482))
         else
-          BBRelBmp.Canvas.TextOut(5, 95, 'Paused');
+          BBRelBmp.Canvas.TextOut(5, 95, GetLanguageString(482));
       end;
     end
     else
@@ -2305,8 +2531,7 @@ procedure TForm1.Quit1Click(Sender: TObject);
 var
   s: string;
 begin
-  if New1.Caption.Contains('New') then s:='Save current project before quitting?'
-  else s:=GetLanguageString(55);
+  s:=GetLanguageString(55);
 
   if isedited then
   begin
@@ -2467,8 +2692,7 @@ var
   si, ln, eb1, eb2: dword;
   di, da, db: pansichar;
 begin
-  if New1.Caption.Contains('New') then s:='Save current project before opening a new one?'
-  else s:=GetLanguageString(56);
+  s:=GetLanguageString(56);
   if isedited then
   begin
     if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -3197,7 +3421,7 @@ begin
     if not placerandom then
     begin
       Form1.lblModifiers.Visible := true;
-      Form1.lblStatus.Caption := '[Click to place]';
+      Form1.lblStatus.Caption := GetLanguageString(425);
     end;
   end;
 end;
@@ -3757,12 +3981,7 @@ begin
   if isdc then
     tmp2 := tmp2 + GetLanguageString(64)
   else
-  begin
-    if form1.New1.Caption.Contains('New') then
-      tmp2 := tmp2 + ' (Unicode Format)'
-    else
-      tmp2 := tmp2 + GetLanguageString(65);
-  end;
+    tmp2 := tmp2 + GetLanguageString(65);
   if curepi = 0 then
     tmp2 := tmp2 + GetLanguageString(66);
   if curepi = 1 then
@@ -4455,7 +4674,7 @@ begin
       fileread(y, r, 4);
       fileseek(y, r, 0);
       Form1.ComboBox1.Clear;
-      Form1.ComboBox1.Items.Add('Auto');
+      Form1.ComboBox1.Items.Add(GetLanguageString(466));
       for l := 0 to m - 1 do
       begin
         fileread(y, u, $34);
@@ -5479,7 +5698,7 @@ begin
           thememodified := Reg.ReadBool('ThemeModified');
         if Reg.ValueExists('TETheme') then
           texttheme := Reg.ReadInteger('TETheme');
-        if DirectoryExists('Text editor\Themes') then
+        if DirectoryExists(path + 'Text editor\Themes') then
         begin
           with fmScriptTE do
           begin
@@ -5762,16 +5981,45 @@ begin
 
     end;
     flp.Clear;
-    if mylang = 0 then
-      PikaGetFile(flp, 'eng.txt', path + 'config.ppk', 'Build By Schthack');
+    fl.Clear;
+    if fileexists('Eng.txt') then
+    begin
+      fl.LoadFromFile('Eng.txt');
+      flp.LoadFromFile('Eng.txt');
+    end;
+    // Rebuild Eng.txt if it's incomplete or doesn't exist
+    if fl.Count < High(EnglishUIText) + 1 then
+    begin
+      fl.Clear;
+      flp.Clear;
+      for i := 0 to High(EnglishUIText) do
+        fl.add(EnglishUIText[i]);
+      // Back up original
+      if fileexists('Eng.txt') then
+        TFile.Copy(path + 'Eng.txt', path + 'Eng.txt.back', true);
+      fl.SaveToFile('Eng.txt');
+      flp.LoadFromFile('Eng.txt');
+    end;
     if mylang = 1 then
-      PikaGetFile(flp, 'fra.txt', path + 'config.ppk', 'Build By Schthack');
+    begin
+      flp.Clear;
+      flp.LoadFromFile('fra.txt');
+    end;
     if mylang = 2 then
-      PikaGetFile(flp, 'spa.txt', path + 'config.ppk', 'Build By Schthack');
+    begin
+      flp.Clear;
+      flp.LoadFromFile('spa.txt');
+    end;
     if (mylang = 3) and (fileexists('ru.txt')) then
+    begin
+      flp.Clear;
       flp.LoadFromFile('ru.txt');
+    end;
     if (mylang = 4) and (fileexists('jp.txt')) then
+    begin
+      flp.Clear;
       flp.LoadFromFile('jp.txt');
+    end;
 
     if snapenabled then
       FSnapOptions.seDistanceLimit.Enabled := anchorenabled;
@@ -5795,9 +6043,9 @@ begin
     form17.chkFollow.Checked := follow3D;
 
     if showdata then
-      form7.btnToggleData.Caption := 'Hide data'
+      form7.btnToggleData.Caption := GetLanguageString(467)
     else
-      form7.btnToggleData.Caption := 'Show data';
+      form7.btnToggleData.Caption := GetLanguageString(468);
 
     if showdecimal then
     begin
@@ -5852,37 +6100,6 @@ begin
     else
       LanguageString.LoadFromStream(flp);
     SetInterfaceText;
-    if mylang = 0 then
-    begin
-      form4.Past1.Caption := 'Paste';
-      form4.Delete2.Caption := 'Delete chunk';
-      form25.Caption := 'Enemy attack data';
-      form26.Caption := 'Enemy movement data';
-      form22.Label3.Caption := 'Difficulty : ';
-      form4.Section1.Caption := 'Change label flag';
-      form8.Caption := 'Map events';
-      form1.Button10.Caption := 'View map events';
-      form10.Caption := 'Add Object';
-      form6.Caption := 'Common settings';
-      form17.Label2.Caption := 'Frame skip:';
-      form17.Label4.Caption := 'Distance:';
-      form17.CheckBox2.Caption := 'Use skydome';
-      form15.Label2.Caption := 'Spawn points';
-      form15.Label3.Caption := 'Monster settings';
-      form1.Quest1.Caption := 'File';
-      form1.About1.Caption := 'About';
-      form1.Help1.Caption := 'Help';
-      form1.itemslistbb1.Caption := 'Item list (BB quests only)';
-      form19.Caption := 'Item list manager';
-      form1.Load1.Caption := 'Open...';
-      form1.Save1.Caption := 'Save...';
-      form1.Export1.Caption := 'Export...';
-      form1.Import1.Caption := 'Import...';
-      form1.Exporttextfortranslation1.Caption := 'Export text for translation...';
-      form1.Importtextfromtranslation1.Caption := 'Import text from translation...';
-      form1.Events1.Caption := 'View events';
-      form1.Randommonsters1.Caption := 'Random monsters';
-    end;
     flp.Clear;
     CheckShadow;
   end;
@@ -7952,8 +8169,7 @@ var
   x: integer;
   s: string;
 begin
-  if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
-  else s:=GetLanguageString(79);
+  s:=GetLanguageString(79);
   if isedited then
   begin
     if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -8021,8 +8237,7 @@ var
   x: integer;
   s: string;
 begin
-  if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
-  else s:=GetLanguageString(79);
+  s:=GetLanguageString(79);
   if isedited then
   begin
     if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -8091,8 +8306,7 @@ var
   x: integer;
   s: string;
 begin
-  if New1.Caption.Contains('New') then s:='Save current project before creating a new one?'
-  else s:=GetLanguageString(79);
+  s:=GetLanguageString(79);
   if isedited then
   begin
     if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -9331,10 +9545,7 @@ begin
     SetLength(roomdata[x].data, roomdata[x].numentries * 28);
     move(Floor[sfloor].d04[i], roomdata[x].data[0], roomdata[x].numentries * 28);
 
-    if form1.New1.Caption.Contains('New') then
-      form15.ListBox1.Items.Add(inttostr(int and $FFFF) + ' (' + inttostr(int div $10000) + ' entries)')
-    else
-      form15.ListBox1.Items.Add(inttostr(int and $FFFF) + ' (' + inttostr(int div $10000) + GetLanguageString(82));
+    form15.ListBox1.Items.Add(inttostr(int and $FFFF) + ' (' + inttostr(int div $10000) + GetLanguageString(82));
     inc(y, 8);
     inc(i, roomdata[x].numentries * 28);
   end;
@@ -9360,7 +9571,7 @@ begin
   if fmRotation.modalresult = 1 then
   begin
     placerandom := true;
-    lblStatus.Caption := '[Click to place - Esc: cancel]';
+    lblStatus.Caption := GetLanguageString(434);
     if not Form1.smDisableIndicator.Checked then
       lblStatus.Show;
     lblModifiers.Hide;
@@ -9394,7 +9605,7 @@ begin
     end;
     if selectedstyle <> TStyleManager.ActiveStyle.Name then
     begin
-      if MessageDlg('The new theme will be applied on next restart. Restart now?',
+      if MessageDlg(GetLanguageString(438),
       mtConfirmation, [mbYes, mbNo], 0) = mrYes
       then
       begin
@@ -9693,8 +9904,7 @@ var
   s: string;
 begin
   FClosedSuccessfully := False;
-  if New1.Caption.Contains('New') then s:='Save current project before quitting?'
-  else s:=GetLanguageString(55);
+  s:=GetLanguageString(55);
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;
@@ -9836,7 +10046,7 @@ begin
         begin
           if b = '' then
           begin
-            errors.Add('Array of function is missing entries at line ' + inttostr(x));
+            errors.Add(GetLanguageString(457) + inttostr(x));
             break;
           end;
           l := pos(':', b) - 1;
@@ -9847,7 +10057,7 @@ begin
           delete(b, 1, l + 1);
         end;
         if b <> '' then
-          errors.Add('Array of function contains too many entries at line ' + inttostr(x));
+          errors.Add(GetLanguageString(456) + inttostr(x));
       end;
 
       l := pos(' ', s);
@@ -9901,10 +10111,10 @@ begin
           for i := 0 to length(roomdata) - 1 do
           begin
             if roomdata[i].numentries > 32 then
-              warn.Add('Floor ' + inttostr(x)
-              + ' room '
+              warn.Add(GetLanguageString(458) + inttostr(x)
+              + GetLanguageString(459)
               + inttostr(roomdata[i].roomnum)
-              + ' has more than 32 random spawn entries');
+              + GetLanguageString(460));
           end;
         end;
         // Config data
@@ -9913,15 +10123,15 @@ begin
           for i := 1 to form15.StringGrid2.RowCount - 1 do
           begin
             if strtointdef(form15.StringGrid2.Cells[3,i],-1) <= 0 then
-              warn.Add('Invalid random monster weight value at row #' + inttostr(i)
-              + ' on floor '
+              warn.Add(GetLanguageString(461) + inttostr(i)
+              + GetLanguageString(463)
               + inttostr(x));
             for y := 1 to form15.StringGrid1.RowCount - 1 do
               if strtointdef(form15.StringGrid2.Cells[2,i],-1) =
               strtointdef(form15.StringGrid1.Cells[8,y],-2) then break;
             if y >= form15.StringGrid1.RowCount then
-              warn.Add('Invalid random monster config value at row #' + inttostr(i)
-              + ' on floor '
+              warn.Add(GetLanguageString(462) + inttostr(i)
+              + GetLanguageString(463)
               + inttostr(x));
           end;
         end;
@@ -10582,7 +10792,8 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  PikaGetFile(flp, 'eng.txt', path + 'config.ppk', 'Build By Schthack');
+  if fileexists('eng.txt') then
+    flp.LoadFromFile('eng.txt');
   flp.Position := 0;
   LanguageString.LoadFromStream(flp);
   SetInterfaceText;
@@ -10609,7 +10820,8 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  PikaGetFile(flp, 'fra.txt', path + 'config.ppk', 'Build By Schthack');
+  if fileexists('fra.txt') then
+    flp.LoadFromFile('fra.txt');
   // flp.LoadFromFile('span.txt');
   flp.Position := 0;
   LanguageString.LoadFromStream(flp);
@@ -10859,7 +11071,8 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  PikaGetFile(flp, 'spa.txt', path + 'config.ppk', 'Build By Schthack');
+  if fileexists('spa.txt') then
+    flp.LoadFromFile('spa.txt');
   // flp.LoadFromFile('span.txt');
   flp.Position := 0;
   LanguageString.LoadFromStream(flp);
