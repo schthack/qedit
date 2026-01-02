@@ -665,7 +665,8 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   Unit17, Unit18, Unit19, FCompat, MyConst, Unit29, crc32, EnemyStat,
   FEnemyAttack, FEnemyMov, FEnemyResist, FFloatEdit, NPCBuild, Unit22,
   FFFilter, FMonsDet, Unit23, FSymbolChat, FAsmModeSel, FPlacement, FHotkeys,
-  FSnap, FScriptTE, FReplace, FRotation, FThemes, FMonsType, FVector;
+  FSnap, FScriptTE, FReplace, FRotation, FThemes, FMonsType, FVector, FGoTo,
+  FAddRoom;
 
 {$R *.dfm}
 
@@ -1147,6 +1148,18 @@ begin
 
   form17.chkFullscreen.Caption := GetLanguageString(500);
   form17.chkFollow.Caption := GetLanguageString(501);
+
+  // OK buttons
+  form7.Button1.Caption := GetLanguageString(117);
+  form23.Button1.Caption := GetLanguageString(117);
+  form32.Button5.Caption := GetLanguageString(117);
+  form33.Button1.Caption := GetLanguageString(117);
+  fmGoto.btnOK.Caption := GetLanguageString(117);
+  fmReplace.btnOK.Caption := GetLanguageString(117);
+  fmMonsterType.btnOK.Caption := GetLanguageString(117);
+  fmRotation.btnOK.Caption := GetLanguageString(117);
+  fmThemes.btnOK.Caption := GetLanguageString(117);
+  fmRoom.btnOK.Caption := GetLanguageString(117);
 
   // Refresh map area text
   form1.DrawMap;

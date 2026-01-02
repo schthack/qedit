@@ -22,7 +22,7 @@ object fmMonsterType: TfmMonsterType
     Style = csOwnerDrawFixed
     TabOrder = 0
   end
-  object Button1: TButton
+  object btnOK: TButton
     Left = 89
     Top = 48
     Width = 75
@@ -30,7 +30,7 @@ object fmMonsterType: TfmMonsterType
     Caption = 'OK'
     Default = True
     TabOrder = 1
-    OnClick = Button1Click
+    OnClick = btnOKClick
   end
   object Button2: TButton
     Left = 8

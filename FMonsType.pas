@@ -9,11 +9,11 @@ uses
 type
   TfmMonsterType = class(TForm)
     ComboBox1: TComboBox;
-    Button1: TButton;
+    btnOK: TButton;
     Button2: TButton;
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
+    procedure btnOKClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -74,7 +74,7 @@ implementation
 
 uses main;
 
-procedure TfmMonsterType.Button1Click(Sender: TObject);
+procedure TfmMonsterType.btnOKClick(Sender: TObject);
 begin
   modalresult := 1;
 end;
