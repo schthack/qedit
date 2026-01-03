@@ -714,6 +714,20 @@ begin
   SetAutoHotkeys;
 end;
 
+Procedure LoadLanguageStrings(ms: TMemoryStream);
+begin
+    // Load from the stream based on encoding
+    try
+      ms.Position := 0;
+      LanguageString.LoadFromStream(ms, TEncoding.UTF8);
+    except
+      begin
+        ms.Position := 0;
+        LanguageString.LoadFromStream(ms)
+      end;
+    end;
+end;
+
 Procedure SetInterfaceText;
 begin
   Form1.Floorfilter1.Caption := GetLanguageString(296);
@@ -2580,11 +2594,8 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  if fileexists('ru.txt') then
-    flp.LoadFromFile('ru.txt');
-  flp.Position := 0;
-  // Load strings as UTF-8
-  LanguageString.LoadFromStream(flp, TEncoding.UTF8);
+  flp.LoadFromFile('ru.txt');
+  LoadLanguageStrings(flp);
   SetInterfaceText;
   flp.Free;
 end;
@@ -4412,11 +4423,8 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  if fileexists('jp.txt') then
-    flp.LoadFromFile('jp.txt');
-  flp.Position := 0;
-  // Load strings as UTF-8
-  LanguageString.LoadFromStream(flp, TEncoding.UTF8);
+  flp.LoadFromFile('jp.txt');
+  LoadLanguageStrings(flp);
   SetInterfaceText;
   flp.Free;
 end;
@@ -6017,19 +6025,24 @@ begin
     if mylang = 1 then
     begin
       flp.Clear;
-      flp.LoadFromFile('fra.txt');
+      if fileexists('fra.txt') then
+        flp.LoadFromFile('fra.txt')
+      else
+        PikaGetFile(flp, 'fra.txt', path + 'config.ppk', 'Build By Schthack');
     end;
     if mylang = 2 then
     begin
-      flp.Clear;
-      flp.LoadFromFile('spa.txt');
+        if fileexists('spa.txt') then
+          flp.LoadFromFile('spa.txt')
+        else
+          PikaGetFile(flp, 'spa.txt', path + 'config.ppk', 'Build By Schthack');
     end;
-    if (mylang = 3) and (fileexists('ru.txt')) then
+    if mylang = 3 then
     begin
       flp.Clear;
       flp.LoadFromFile('ru.txt');
     end;
-    if (mylang = 4) and (fileexists('jp.txt')) then
+    if mylang = 4 then
     begin
       flp.Clear;
       flp.LoadFromFile('jp.txt');
@@ -6108,8 +6121,7 @@ begin
 
     SetCoordSize(coordsize);
 
-    flp.Position := 0;
-    LanguageString.LoadFromStream(flp, TEncoding.UTF8);
+    LoadLanguageStrings(flp);
     SetInterfaceText;
     flp.Clear;
     CheckShadow;
@@ -10809,8 +10821,7 @@ begin
   flp := TMemoryStream.Create;
   if fileexists('eng.txt') then
     flp.LoadFromFile('eng.txt');
-  flp.Position := 0;
-  LanguageString.LoadFromStream(flp, TEncoding.UTF8);
+  LoadLanguageStrings(flp);
   SetInterfaceText;
   flp.Free;
 end;
@@ -10836,10 +10847,11 @@ begin
   end;
   flp := TMemoryStream.Create;
   if fileexists('fra.txt') then
-    flp.LoadFromFile('fra.txt');
+    flp.LoadFromFile('fra.txt')
+  else
+    PikaGetFile(flp, 'fra.txt', path + 'config.ppk', 'Build By Schthack');
   // flp.LoadFromFile('span.txt');
-  flp.Position := 0;
-  LanguageString.LoadFromStream(flp, TEncoding.UTF8);
+  LoadLanguageStrings(flp);
   SetInterfaceText;
   flp.Free;
 end;
@@ -11087,10 +11099,11 @@ begin
   end;
   flp := TMemoryStream.Create;
   if fileexists('spa.txt') then
-    flp.LoadFromFile('spa.txt');
+    flp.LoadFromFile('spa.txt')
+  else
+    PikaGetFile(flp, 'spa.txt', path + 'config.ppk', 'Build By Schthack');
   // flp.LoadFromFile('span.txt');
-  flp.Position := 0;
-  LanguageString.LoadFromStream(flp, TEncoding.UTF8);
+  LoadLanguageStrings(flp);
   SetInterfaceText;
   flp.Free;
 end;
