@@ -729,6 +729,8 @@ begin
 end;
 
 Procedure SetInterfaceText;
+var
+  width, start: integer;
 begin
   Form1.Floorfilter1.Caption := GetLanguageString(296);
   form30.Caption := GetLanguageString(296);
@@ -986,6 +988,7 @@ begin
   form1.Options2.Caption := GetLanguageString(341);
   form1.smPlacement.Caption := GetLanguageString(342);
   form1.smSnapOptions.Caption := GetLanguageString(343);
+  Form1.lblStatus.Caption := GetLanguageString(425);
   form1.lblModifiers.Caption := GetLanguageString(426);
   form1.smDisableIndicator.Caption := GetLanguageString(481);
   form1.lblPreview.Caption := #8592 + GetLanguageString(327) + '  |  ' +
@@ -1162,6 +1165,14 @@ begin
 
   form17.chkFullscreen.Caption := GetLanguageString(500);
   form17.chkFollow.Caption := GetLanguageString(501);
+
+  // Center zoom text
+  start := form1.Button5.Left + form1.Button5.Width;
+  width := form1.Button6.Left - start;
+  form1.Label6.Left := (start + (width div 2) - (form1.Label6.Width div 2)) + 1;
+
+  // Adjust modifiers label position based on status text width
+  form1.lblModifiers.Left := form1.lblStatus.Left + form1.lblStatus.Width + 6;
 
   // OK buttons
   form7.Button1.Caption := GetLanguageString(117);
@@ -2594,7 +2605,7 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  flp.LoadFromFile('ru.txt');
+  flp.LoadFromFile(path + 'ru.txt');
   LoadLanguageStrings(flp);
   SetInterfaceText;
   flp.Free;
@@ -4423,7 +4434,7 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  flp.LoadFromFile('jp.txt');
+  flp.LoadFromFile(path + 'jp.txt');
   LoadLanguageStrings(flp);
   SetInterfaceText;
   flp.Free;
@@ -4696,7 +4707,7 @@ begin
       fileread(y, r, 4);
       fileseek(y, r, 0);
       Form1.ComboBox1.Clear;
-      Form1.ComboBox1.Items.Add(GetLanguageString(466));
+      Form1.ComboBox1.Items.Add('Auto');
       for l := 0 to m - 1 do
       begin
         fileread(y, u, $34);
@@ -10819,8 +10830,8 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  if fileexists('eng.txt') then
-    flp.LoadFromFile('eng.txt');
+  if fileexists(path + 'eng.txt') then
+    flp.LoadFromFile(path + 'eng.txt');
   LoadLanguageStrings(flp);
   SetInterfaceText;
   flp.Free;
@@ -10846,8 +10857,8 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  if fileexists('fra.txt') then
-    flp.LoadFromFile('fra.txt')
+  if fileexists(path + 'fra.txt') then
+    flp.LoadFromFile(path + 'fra.txt')
   else
     PikaGetFile(flp, 'fra.txt', path + 'config.ppk', 'Build By Schthack');
   // flp.LoadFromFile('span.txt');
@@ -11098,8 +11109,8 @@ begin
     inherited;
   end;
   flp := TMemoryStream.Create;
-  if fileexists('spa.txt') then
-    flp.LoadFromFile('spa.txt')
+  if fileexists(path + 'spa.txt') then
+    flp.LoadFromFile(path + 'spa.txt')
   else
     PikaGetFile(flp, 'spa.txt', path + 'config.ppk', 'Build By Schthack');
   // flp.LoadFromFile('span.txt');
@@ -11130,7 +11141,7 @@ begin
   Label3.Left := 200 + (((Form1.Width - 190) div 2) - 16);
   ListBox2.Width := (((Form1.Width - 190) div 2) - 14);
   ListBox1.Width := (((Form1.Width - 190) div 2) - 14);
-  lblModifiers.Left := lblStatus.Left + 76;
+  lblModifiers.Left := lblStatus.Left + lblStatus.Width + 6;
   DrawMap;
 end;
 

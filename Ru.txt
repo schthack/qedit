@@ -33,7 +33,7 @@
 Случайные монстры
 Монстры:
 Объекты:
-Визуальная карта
+Виз. карта
 Показ ID комнат
 Масштаб
 Размещение ID:
@@ -51,7 +51,7 @@
 Не хватает памяти.
 Ошибка отрисовки монстров.
 Ошибка отрисовки объектов.
-Зона
+Область.
 Сохранить перед выходом?
 Сохранить перед открытием?
 Ошибка распаковки.
@@ -268,7 +268,7 @@ ID секции
 О программе
 Редактор квестов PSO
 Поддержка DC, PC, GC, BB
-Благодарности:<cr><cr>Автор:<cr>Schthack<cr><cr>Первый ASM:<cr>Myria<cr>Clara<cr><cr>Обновления ASM:<cr>Lee 			(>50% кода)<cr>Aleron Ives<cr>Gatten<cr>Schthack<cr><cr>Формат квеста:<cr>Schthack<cr>Lee			(данные)<cr><cr>3D карты:<cr>Schthack<cr><cr>3D модели:<cr>Kryslin<cr><cr>Исследование моделей:<cr>Lee<cr>Schthack<cr>Firefox<cr><cr>Особая благодарность:<cr>AleronIves<cr>Lee<cr>Firefox276<cr>за помощь и тестирование<cr>Обновления 1.0c-2.0c:<cr>Alisaryn<cr>
+Благодарности:<cr><cr>Автор:<cr>Schthack<cr><cr>Первый ASM:<cr>Myria<cr>Clara<cr><cr>Обновления ASM:<cr>Lee 			(>50% кода)<cr>Aleron Ives<cr>Gatten<cr>Schthack<cr><cr>Формат квеста:<cr>Schthack<cr>Lee			(данные)<cr><cr>3D карты:<cr>Schthack<cr><cr>3D модели:<cr>Kryslin<cr><cr>Исследование моделей:<cr>Lee<cr>Schthack<cr>Firefox<cr><cr>Особая благодарность:<cr>AleronIves<cr>Lee<cr>Firefox276<cr>за помощь и тестирование<cr><cr>Обновления 1.0c-2.0c:<cr>Alisaryn<cr>
 Список предметов
 3D Настройки
 Размер экрана:
@@ -473,7 +473,7 @@ Float не может быть NAN.
 Строка в коде или Hex
 Hex в коде или строках
 Дублированная метка: 
-Порядок байт GC
+GC Эндианность
 Загрузка скрипта
 Сохранение скрипта
 Нормальный
