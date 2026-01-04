@@ -477,6 +477,7 @@ type
     procedure Previewevents1Click(Sender: TObject);
     procedure Russian1Click(Sender: TObject);
     procedure Japanese1Click(Sender: TObject);
+    procedure Image2MouseLeave(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -657,6 +658,9 @@ var
   prevy: integer = 0;
   prevzoom: double = 5.0;
   prevppx, prevppy, prevppz, prevvr, prevvz: single;
+
+  showoverlay: Boolean;
+  lastoverlay: TPoint;
 
 implementation
 
@@ -5103,12 +5107,60 @@ begin
   form4.Show;
 end;
 
+procedure DrawDragOverlay(C: TCanvas; const P: TPoint);
+var
+  OldPenMode: TPenMode;
+  OldPenColor: TColor;
+  OldPenStyle: TPenStyle;
+  OldPenWidth: Integer;
+  OldBrushStyle: TBrushStyle;
+begin
+  // Save original canvas state
+  OldPenMode   := C.Pen.Mode;
+  OldPenColor  := C.Pen.Color;
+  OldPenStyle  := C.Pen.Style;
+  OldPenWidth  := C.Pen.Width;
+  OldBrushStyle := C.Brush.Style;
+
+  try
+    // Set the new style
+    C.Pen.Mode  := pmXor;
+    C.Pen.Color := clWhite;
+    C.Pen.Style := psDash;
+    C.Pen.Width := 2;
+    C.Brush.Style := bsClear;
+
+    // Draw the overlay based on monster/object size
+    C.Rectangle(P.X - Round(8 / Zoom), P.Y - Round(8 / Zoom),
+                P.X + Round(8 / Zoom), P.Y + Round(8 / Zoom));
+  finally
+    // Restore the original canvas settings
+    C.Pen.Mode  := OldPenMode;
+    C.Pen.Color := OldPenColor;
+    C.Pen.Style := OldPenStyle;
+    C.Pen.Width := OldPenWidth;
+    C.Brush.Style := OldBrushStyle;
+  end;
+end;
+
 procedure TForm1.Image2MouseMove(Sender: TObject; Shift: TShiftState; x, y: integer);
 var
   t: double;
+  p: TPoint;
 begin
   mpcx := x;
   mpcy := y;
+  if (mdrag = 1) and (selected > -1) then
+  begin
+    p := Point(x, y);
+    if showoverlay then
+      DrawDragOverlay(Image2.Canvas, lastoverlay);
+
+    lastoverlay := p;
+    showoverlay := true;
+
+    DrawDragOverlay(Image2.Canvas, lastoverlay);
+  end;
   Label5.Caption := 'X: ' + inttostr(round(((x - mmx) - (mpx / Zoom)) * Zoom)) + '  Y: ' +
     inttostr(round(YFromBBRELFile(((x - mmx) - (mpx / Zoom)) * Zoom, ((y - mmy) - (mpy / Zoom)) * Zoom))) + '  Z: ' +
     inttostr(round(((y - mmy) - (mpy / Zoom)) * Zoom));
@@ -5262,6 +5314,17 @@ begin
   end
 end;
 
+procedure TForm1.Image2MouseLeave(Sender: TObject);
+begin
+  if (mdrag = 1) and (selected > -1) then
+  begin
+   if showoverlay then
+      DrawDragOverlay(Image2.Canvas, lastoverlay);
+    showoverlay := false;
+    DrawMap;
+  end;
+end;
+
 procedure TForm1.Image2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; x, y: integer);
 begin
   // End of mouse drag
@@ -5276,6 +5339,10 @@ begin
       MoveType := stype;
       isedited := true;
       Image2Click(nil);
+      if showoverlay then
+        DrawDragOverlay(Image2.Canvas, lastoverlay);
+      showoverlay := false;
+      if mdrag = 1 then DrawMap;
       mdrag := 0;
     end;
   end;
@@ -9846,28 +9913,31 @@ var
   tm: TMenuItem;
   x, y: integer;
 begin
-  if previewstate > 0 then
-    EnemyWave1.Enabled := false
-  else EnemyWave1.Enabled := true;
   EnemyWave1.Clear;
-  tm := TMenuItem.Create(EnemyWave1);
-  tm.Caption := GetLanguageString(83);
-  if showwave = -1 then tm.Checked := true;
-  tm.tag := -1;
-  tm.OnClick := EnemyWave1Click;
-  EnemyWave1.Add(tm);
-  y := CountNumberOfWave;
-  for x := 0 to y do
+  if previewstate = 0 then
   begin
+    EnemyWave1.Enabled := true;
     tm := TMenuItem.Create(EnemyWave1);
-    tm.Caption := GetLanguageString(84) + inttostr(x);
-    if x = showwave then tm.Checked := true;
-    tm.tag := x;
+    tm.Caption := GetLanguageString(83);
+    if showwave = -1 then tm.Checked := true;
+    tm.tag := -1;
     tm.OnClick := EnemyWave1Click;
-    if (x > 0) and (x mod 20 = 19) then
-      tm.Break := mbBarBreak;
     EnemyWave1.Add(tm);
-  end;
+    y := CountNumberOfWave;
+    for x := 0 to y do
+    begin
+      tm := TMenuItem.Create(EnemyWave1);
+      tm.Caption := GetLanguageString(84) + inttostr(x);
+      if x = showwave then tm.Checked := true;
+      tm.tag := x;
+      tm.OnClick := EnemyWave1Click;
+      if (x > 0) and (x mod 20 = 19) then
+        tm.Break := mbBarBreak;
+      EnemyWave1.Add(tm);
+    end;
+  end
+  else EnemyWave1.Enabled := false;
+
 
   Itemsgroupe1.Clear;
   tm := TMenuItem.Create(Itemsgroupe1);
