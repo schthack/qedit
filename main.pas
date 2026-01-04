@@ -9846,6 +9846,9 @@ var
   tm: TMenuItem;
   x, y: integer;
 begin
+  if previewstate > 0 then
+    EnemyWave1.Enabled := false
+  else EnemyWave1.Enabled := true;
   EnemyWave1.Clear;
   tm := TMenuItem.Create(EnemyWave1);
   tm.Caption := GetLanguageString(83);
