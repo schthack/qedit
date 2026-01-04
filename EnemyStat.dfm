@@ -59,7 +59,13 @@ object Form21: TForm21
     DefaultRowHeight = 19
     FixedCols = 0
     RowCount = 2
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
     Options = [goVertLine, goHorzLine, goRangeSelect, goEditing]
+    ParentFont = False
     TabOrder = 2
     ColWidths = (
       121

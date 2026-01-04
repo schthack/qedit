@@ -130,7 +130,7 @@ end;
 procedure TForm32.Button3Click(Sender: TObject);
 var i:integer;
 begin
-    if stringgrid1.Selection.Top > -1 then begin
+    if (stringgrid1.Selection.Top > -1) and (stringgrid1.RowCount > 1) then begin
         for i:=stringgrid1.Selection.Top-1 to vectorCount-1 do begin
          vectors[i] := vectors[i+1];
         end;
