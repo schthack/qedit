@@ -389,7 +389,13 @@ object Form1: TForm1
     BevelKind = bkFlat
     Style = csOwnerDrawFixed
     Anchors = [akTop, akRight]
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
     ItemIndex = 0
+    ParentFont = False
     TabOrder = 13
     Text = 'Auto'
     OnChange = ComboBox1Change

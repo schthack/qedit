@@ -995,6 +995,8 @@ begin
                               #8594 + GetLanguageString(328) + '  |  ' +
                                       GetLanguageString(329) + '  |  ' +
                                       GetLanguageString(330);
+  form1.ComboBox1.Items.Strings[0] := GetLanguageString(466);
+  form1.ComboBox1.ItemIndex := 0;
 
   FPlacementOptions.Caption := GetLanguageString(352);
   FPlacementOptions.Label3.Caption := GetLanguageString(345);
@@ -1204,7 +1206,7 @@ begin
   if idx < 0 then Exit;
 
   delaystring := 'Delay: ';
-  actionstring := 'Actions: ';
+  actionstring := '';
   settingstring := 'Wave setting: ';
 
   // Check if the state is in bounds
@@ -1297,7 +1299,7 @@ begin
     end;
     actionstring := actionstring + ' > ';
   end;
-  actionstring := actionstring + 'End';
+  delete(actionstring, length(actionstring)-2, 3);
 
   mpx := Round(-MidP[prevsection].x * Zoom);
   mpy := Round(-MidP[prevsection].y * Zoom);
@@ -2532,7 +2534,7 @@ begin
       BBRelBmp.Canvas.Brush.Color := ClWhite;
     if previewstate > 0 then
     begin
-      BBRelBmp.Canvas.TextOut(5, 5, 'Event ' + previewstring +
+      BBRelBmp.Canvas.TextOut(5, 5, previewstring +
        ' (' + inttostr(previewstate) + '/' + inttostr(Floor[CheckListBox1.ItemIndex].Unknow[8]) + ')');
       BBRelBmp.Canvas.TextOut(5, 20, 'Section: ' + inttostr(prevsection));
       BBRelBmp.Canvas.TextOut(5, 35, 'Wave: ' + inttostr(mapwave));
@@ -4707,7 +4709,7 @@ begin
       fileread(y, r, 4);
       fileseek(y, r, 0);
       Form1.ComboBox1.Clear;
-      Form1.ComboBox1.Items.Add('Auto');
+      Form1.ComboBox1.Items.Add(GetLanguageString(466));
       for l := 0 to m - 1 do
       begin
         fileread(y, u, $34);

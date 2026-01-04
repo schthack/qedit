@@ -302,7 +302,7 @@ begin
 
         if previewstate > 0 then
         begin
-          MyScreen.TextOut('Event ' + previewstring +
+          MyScreen.TextOut(previewstring +
           ' (' + inttostr(previewstate) + '/' +
           inttostr(Floor[form1.CheckListBox1.ItemIndex].Unknow[8]) + ')',
           rect(0,45,640,75),$FFFFFFFF,1);
