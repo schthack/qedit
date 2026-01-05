@@ -271,7 +271,6 @@ object Form1: TForm1
       PopupMenu = PopupMenu1
       OnClick = Image2Click
       OnMouseDown = Image2MouseDown
-      OnMouseLeave = Image2MouseLeave
       OnMouseMove = Image2MouseMove
       OnMouseUp = Image2MouseUp
       ExplicitTop = 3

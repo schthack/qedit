@@ -477,7 +477,6 @@ type
     procedure Previewevents1Click(Sender: TObject);
     procedure Russian1Click(Sender: TObject);
     procedure Japanese1Click(Sender: TObject);
-    procedure Image2MouseLeave(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -5107,14 +5106,17 @@ begin
   form4.Show;
 end;
 
-procedure DrawDragOverlay(C: TCanvas; const P: TPoint);
+procedure DrawDragOverlay(const P: TPoint);
 var
   OldPenMode: TPenMode;
   OldPenColor: TColor;
   OldPenStyle: TPenStyle;
   OldPenWidth: Integer;
   OldBrushStyle: TBrushStyle;
+  C: TCanvas;
 begin
+  C := form1.Image2.Canvas;
+
   // Save original canvas state
   OldPenMode   := C.Pen.Mode;
   OldPenColor  := C.Pen.Color;
@@ -5143,6 +5145,14 @@ begin
   end;
 end;
 
+procedure ClearDragOverlay;
+begin
+  if showoverlay then
+    DrawDragOverlay(lastoverlay);
+  showoverlay := false;
+  form1.DrawMap;
+end;
+
 procedure TForm1.Image2MouseMove(Sender: TObject; Shift: TShiftState; x, y: integer);
 var
   t: double;
@@ -5154,12 +5164,12 @@ begin
   begin
     p := Point(x, y);
     if showoverlay then
-      DrawDragOverlay(Image2.Canvas, lastoverlay);
+      DrawDragOverlay(lastoverlay);
 
     lastoverlay := p;
     showoverlay := true;
 
-    DrawDragOverlay(Image2.Canvas, lastoverlay);
+    DrawDragOverlay(lastoverlay);
   end;
   Label5.Caption := 'X: ' + inttostr(round(((x - mmx) - (mpx / Zoom)) * Zoom)) + '  Y: ' +
     inttostr(round(YFromBBRELFile(((x - mmx) - (mpx / Zoom)) * Zoom, ((y - mmy) - (mpy / Zoom)) * Zoom))) + '  Z: ' +
@@ -5174,6 +5184,7 @@ begin
     mpy := mpy + round(t);
     lmpx := x;
     lmpy := y;
+    mdrag := 0;
     DrawMap;
     mdown := 2;
   end;
@@ -5230,13 +5241,17 @@ begin
             if l = ListBox1.ItemIndex then
             begin
               inedit := true;
+              mdrag := 0;
+              ClearDragOverlay;
               Form1.ListBox1DblClick(Form1)
             end
             else
               Form1.ListBox1Click(Form1);
               if not inedit then
+              begin
                 lastimgclick := gettickcount();
-              mdrag := 1;
+                mdrag := 1;
+              end;
             end;
       end;
       // Drag objects
@@ -5280,13 +5295,17 @@ begin
             if l = ListBox2.ItemIndex then
             begin
               inedit := true;
+              mdrag := 0;
+              ClearDragOverlay;
               Form1.ListBox1DblClick(Form1)
             end
             else
               Form1.ListBox2Click(Form1);
               if not inedit then
+              begin
                 lastimgclick := gettickcount();
-              mdrag := 1;
+                mdrag := 1;
+              end;
             end;
       end;
   end;
@@ -5314,17 +5333,6 @@ begin
   end
 end;
 
-procedure TForm1.Image2MouseLeave(Sender: TObject);
-begin
-  if (mdrag = 1) and (selected > -1) then
-  begin
-   if showoverlay then
-      DrawDragOverlay(Image2.Canvas, lastoverlay);
-    showoverlay := false;
-    DrawMap;
-  end;
-end;
-
 procedure TForm1.Image2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; x, y: integer);
 begin
   // End of mouse drag
@@ -5339,16 +5347,13 @@ begin
       MoveType := stype;
       isedited := true;
       Image2Click(nil);
-      if showoverlay then
-        DrawDragOverlay(Image2.Canvas, lastoverlay);
-      showoverlay := false;
-      if mdrag = 1 then DrawMap;
-      mdrag := 0;
     end;
   end;
   if mdown = 1 then
     Image2.PopupMenu.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
   mdown := 0;
+  mdrag := 0;
+  ClearDragOverlay;
 end;
 
 procedure TForm1.FormShow(Sender: TObject);

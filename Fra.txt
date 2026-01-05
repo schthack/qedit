@@ -193,7 +193,7 @@ Langue :
 Numero de quête :
 Titre de la quête
 Titre :
-Section id
+Section ID
 PNJ: Aucun
 PNJ
 Peau
@@ -202,7 +202,7 @@ Non utiliser
 Visage
 Cheveux
 Habits
-Section id
+Section ID
 Création de PNJ
 Nom de commande invalide
 Le numéro de libellé doit être entre 0 et 65535
