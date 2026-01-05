@@ -499,3 +499,4 @@ Partie
 Tableau :
 Mode plein écran
 Suivre la sélection
+Ajouter des références

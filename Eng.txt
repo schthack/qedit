@@ -499,3 +499,4 @@ Part
 Table :
 Fullscreen mode
 Follow selection
+Adding References

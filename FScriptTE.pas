@@ -319,7 +319,7 @@ begin
   // Remove empty lines
   fmScriptTE.TextEdit.DeleteEmptyLines;
 
-  form14.Caption := 'Adding References';
+  form14.Caption := GetLanguageString(502);
   form14.Label1.Hide;
   form14.Show;
   form14.ProgressBar1.max := fmScriptTE.TextEdit.Lines.Count - 1;

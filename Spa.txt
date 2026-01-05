@@ -1,297 +1,503 @@
-Mision
+Archivo
 Propiedades
-Escritura
+Script
 Herramientas
 Nuevo
-Episodo 1
-Episodo 2
-Episodo 4
-Cargar
-Guardar
+Episodio 1
+Episodio 2
+Episodio 4
+Abrir...
+Guardar...
 Idioma
-Quitar
-Titulo
-Informaci�n
-Descripci�n
-Ajustes
-Mostrar escritura
-Exportar
-Importar
-Gestor de archivos de misiones
-Checar compatibilidad
-Lista de items (Solo misiones de BB)
+Salir
+Título
+Información
+Descripción
+Configuración
+Ver script
+Exportar...
+Importar...
+Gestor de archivos de misión
+Comprobación de compatibilidad
+Lista de objetos (solo misiones BB)
 Vista 3D
-Configuraci�n 3D
-Acerca de...
+Configuración 3D
+Acerca de
 Buscar actualizaciones...
-Ayuda!
+Ayuda
 Mapa :
-Area :
-Exportar pista de datos
-Importar pista de datos
-Visualizar mapa de eventos
-Datos aleatorios de monstruo
-Monstruo :
+Área :
+Exportar datos del piso
+Importar datos del piso
+Ver eventos del mapa
+Datos de monstruos aleatorios
+Monstruos :
 Objetos :
 Mapa visual
-Mostrar el sitio de la ID
+Mostrar ID de sala
 Zoom
-Lugar del sitio de la ID :
-Agregar monstruo
-Agregar objeto
-Borrar
+Colocación del ID de sala :
+Añadir monstruo
+Añadir objeto
+Eliminar
 Editar datos
 Mover
 Deshacer
-Un previo archivo de sombra se ha encontrado para esta Misi�n.<cr>�Quieres restauralo?
-Limpiando los modelos anteriores...
+Se ha encontrado un archivo shadow anterior para esta misión.<cr>¿Desea restaurarlo?
+Limpiando modelos anteriores...
 Generando modelos de monstruos...
 Generando modelos de objetos...
 Cargando mapa...
-No se pudo cargar el mapa D; no hay suficiente memoria.
-Error al hacer monstruos en el mapa.
-Error al hacer objetos en el mapa.
-Area
-�Guardar el proyecto actual antes de salir?
-�Guardar el proyecto actual antes de abrir uno nuevo?
-Error al desempaquetar la misi�n.
-Sin uso
+No se pudo cargar el mapa: memoria insuficiente.
+Error al renderizar monstruos en el mapa.
+Error al renderizar objetos en el mapa.
+Área
+¿Guardar el proyecto actual antes de salir?
+¿Guardar el proyecto actual antes de abrir uno nuevo?
+Error al desempaquetar la misión.
+No usado
 Tipo de grupo desconocido(
-) Desplazamiento
-Error al leer los datos de la misi�n.
-Error al leer los datos binarios.
-Error al desmontar la escritura de la misi�n.
- (Formato DreamCast ASCII)
- (Formato unicode de PC)
+) en el desplazamiento
+Error al leer los datos de la misión.
+Error al leer datos binarios.
+Error al desensamblar el script de la misión.
+ (Formato ASCII Dreamcast)
+ (Formato Unicode)
  - Episodio 1
  - Episodio 2
  - Episodio 4
- - Modo de escritura 2
-Piel desconocida
+ - Modo Script 2
+Skin desconocido
 NPC desconocido
-Error al reproducir el mapa del area
-Error al reproducir el mapa.
+Error al renderizar el área del mapa.
+Error al renderizar el mapa.
 Error al crear el archivo
-Intervalo
+Rango
 Escala X
 Escala Y
 Escala Z
-�Guardar el proyecto actual antes de crear uno nuevo?
+¿Guardar el proyecto actual antes de crear uno nuevo?
 Creando dispositivo 3D...
 No se pudo crear la superficie DirectX.
- Entradas)
+ entradas)
 Todo
-onda #
+Oleada #
 Grupo #
-Funci�n principal (etiqueta 0) no est� definido
-" en linea
- en linea
-Auto conversi�n puede fallar "
-Episodio seleccionado no soportado "
-Opcode no soportado "
-Esta Misi�n est� utilizando una codificaci�n de imagen, aseg�rese de que el formato de la imagen coincide con la versi�n guardada.
-Par�metro de intercambio no permitido en esta versi�n "
-Etiqueta utilizada indefinida.
-Falta marcar el texto en la l�nea de comandos
-Etiqueta indefinida
- Utilizado en NPC #
- En el piso
+La función principal (etiqueta 0) no está definida
+" en la línea
+ en la línea
+La conversión automática puede fallar "
+El episodio seleccionado no es compatible "
+El opcode no es compatible "
+Esta misión utiliza una imagen codificada; asegúrese de que el formato coincida con la versión que está guardando.
+El intercambio de parámetros no está permitido en esta versión "
+Etiqueta no definida utilizada
+Falta la marca de comando de texto en la línea
+Etiqueta no definida
+ utilizada en NPC #
+ en el piso
  Monstruo/NPC
- No funciona en esta versi�n, entrada #
-NPC 51 seleccionado tiene una mala piel y PSO se cerrara, entrada #
- No se debe permitir este piso, entrada #
+ no funciona en esta versión, entrada #
+El skin 51 del NPC es inválido y provocará un fallo de PSO, entrada #
+ no debería estar permitido en este piso, entrada #
 Objeto
 Piso
- Tiene m�s de 400 objetos, esto puede fallar o provocar errores al azar.
- tiene m�s de 400 enemigos,esto podr�a fallar o provocar errores al azar.
-Tira de datos no utilizados:
-No se encuentra el archivo binario.
-No se encuentra el archivo de datos.
- el archivo PVR no se permite en esta versi�n..
-layout del mapa.
-Obteniendo informaci�n de las actualizaciones....
+ Tiene más de 400 objetos, esto puede provocar fallos o errores aleatorios.
+ Tiene más de 400 enemigos, esto puede provocar fallos o errores aleatorios.
+Bloque de datos no usado :
+No se encontró archivo binario.
+No se encontró archivo de conjunto de datos.
+Archivo PVR no permitido en esta versión.
+Diseño del mapa
+Obteniendo información de actualización....
 Cerrar
 Rango de ataque
-Rango de repeler
+Rango de retroceso
 Cargar plantilla
 OK
 Cancelar
-Estado del enemigo
-Checar compatibilidad
-Version :
+Estadísticas del enemigo
+Comprobación de compatibilidad
+Versión :
 Editar
-Posisi�n Y
-Base Y valor de la zona:
+Posición Y
+Valor Y base de la zona:
 Datos de ataque del enemigo
-Editar movimientos del enemigo
+Edición de movimiento del enemigo
 Resistencia del enemigo
-Valor de flotador incorrecto a la entrada #
-Editor de datos del flotador
-Informaci�n de datos
-Informatci�n :
-Funci�n
-Datos/Str
-Registrar
+Valor float incorrecto en la entrada #
+Editor de datos float
+Información de la misión
+Información :
+Función
+Datos/Cadena
+Registro
 Opcode
-Sin uso
-Datos de NPC
-Codigo
+No usado
+Datos NPC
+Código
 Datos de imagen
-Cadena de datos
-Datos fisicos del enemigo
+Datos de cadena
+Datos físicos del enemigo
 Datos de resistencia del enemigo
 Datos de ataque del enemigo
-Datosde movimiento del enemigo
-Datos del flotador
-Escritura
-Linea
+Datos de movimiento del enemigo
+Datos float
+Script
+Línea
 Arriba
 Abajo
 Editar
-Agregar
-Borrar
+Añadir
+Eliminar
 Cambiar fuente
 Importar
 Exportar
 Buscar
 Datos
-Cambiar etiqueta de bandera
+Cambiar bandera de etiqueta
 Copiar
 Cortar
-pegar
-Borrar
-Editar NPC
+Pegar
+Eliminar
+Edición de NPC
 Cambiar imagen
-Guardar image
-Editar datos fisicos del enemigo
+Guardar imagen
+Editar datos físicos del enemigo
 Editar datos de resistencia del enemigo
 Editar datos de ataque del enemigo
-Editar Enemy movement data
-Editar datos del flotador
-Borrar plato
-como codigo 
-Como datos Hex
-Como datos Str
+Editar datos de movimiento del enemigo
+Editar datos float
+Eliminar bloque
+Como código
+Como datos hexadecimales
+Como datos de cadena
 No se pudo crear el archivo
-Este no es un archivo valido unicode.
+Este no es un archivo Unicode válido.
 Texto no encontrado.
-Esta etiqueta no es citada como un NPC de datos,<cr>�A�n quieres editarlo?
-La etiqueta seleccionado actualmente es indefinida,<cr>Es importante definirla antes de guardar / reabrir la misi�n.
-La imagen seleccionada debe ser comprimida antes de ser a�adida.<cr>�Quieres que el editor lo haga ahora?
-Archivo a�adido correctamente.<cr>Tama�o del archivo original :
-<cr>Tama�o despu�s de la compresi�n:
-Archivo a�adido correctamente.<cr>Tamaa�o del archivo :
-Esta etiqueta no es citada como datos f�sicos de un enemigo,<cr>�A�n quieres editarlo?
-Esta etiqueta no es citada como datos de resistencia de un enemigo,<cr>�A�n quieres editarlo?
-Esta etiqueta no es citada como datos de ataque de un enemigo,<cr>�A�n quieres editarlo?
-Esta etiqueta no es citada como datos de movimiento de un enemigo,<cr>�A�n quieres editarlo??
-Cambiar el tipo de etiqueta cancelar� las modificaciones no guardadas,<cr>�quieres continuar?
- Error de desmontaje de escritura!
-Esta etiqueta no es citada como una Flotador de datos,<cr> �A�n quieres editarlo?
-Configuraci�n com�n
+Esta etiqueta no está referenciada como datos NPC,<cr>¿Desea editarla de todos modos?
+La etiqueta seleccionada está actualmente indefinida,<cr>Es importante definirla antes de guardar/reabrir la misión.
+La imagen seleccionada debe comprimirse antes de añadirse.<cr>¿Desea que el editor lo haga ahora?
+Archivo añadido correctamente.<cr>Tamaño del archivo original :
+<cr>Tamaño después de la compresión:
+Archivo añadido correctamente.<cr>Tamaño del archivo :
+Esta etiqueta no está referenciada como datos físicos del enemigo,<cr>¿Desea editarla de todos modos?
+Esta etiqueta no está referenciada como datos de resistencia del enemigo,<cr>¿Desea editarla de todos modos?
+Esta etiqueta no está referenciada como datos de ataque del enemigo,<cr>¿Desea editarla de todos modos?
+Esta etiqueta no está referenciada como datos de movimiento del enemigo,<cr>¿Desea editarla de todos modos?
+Cambiar el tipo de una etiqueta cancelará cualquier cambio no guardado,<cr>¿Desea continuar?
+¡Error de desensamblado del script!
+Esta etiqueta no está referenciada como datos float,<cr>¿Desea editarla de todos modos?
+Configuración común
 Idioma :
-Misi�n Numero :
-Titulo de la misi�n
-Titulo :
-Secci�n id
-Ning�n NPC 
+Número de misión :
+Título de la misión
+Título :
+ID de sección
+NPC Ninguno
 NPC
-Piel
+Skin
 Cabeza
-Sin uso
+No usado
 Cara
 Cabello
-Vestimenta
-Secci�n id
+Traje
+ID de sección
 Constructor de NPC
-Nombre invalido de opcode 
-La etiqueta del n�mero debe estar entre 0 y 65535
-Etiqueta no v�lida
-Campo vac�o.
-Valor Invalido.
+Nombre de opcode inválido
+El número de etiqueta debe estar entre 0 y 65535
+La etiqueta no es un entero válido
+El campo está vacío.
+El valor es inválido.
 El valor debe estar entre 0 y FFFFFFFF.
-El valor para el registro debe estar entre 0 y 255.
-El valor para T_BYTE es invalido.
-El valor para T_BYTE debe estar entre 0 y FF.
-El valor para T_WORD es invalido.
-El valor para T_WORD debe estar entre 0 y FFFF.
-El valor para T_PFLAG es invalido.
-El valor para T_PFLAG debe estar entre 0 y FFFF.
-El valor para T_FUNC/T_DATA debe estar entre 0 y 65535.
-El valor para el registro debe estar entre 0 y 255.
-El n�mero de switchs es diferente.
-El valor para el registro debe estar entre 0 y 255.
+El valor del registro debe estar entre 0 y 255.
+Valor T_BYTE inválido.
+El valor T_BYTE debe estar entre 0 y FF.
+Valor T_WORD inválido.
+El valor T_WORD debe estar entre 0 y FFFF.
+Valor T_PFLAG inválido.
+El valor T_PFLAG debe estar entre 0 y FFFF.
+El valor T_FUNC/T_DATA debe estar entre 0 y 65535.
+El valor del registro debe estar entre 0 y 255.
+El número de switches es diferente.
+El valor del registro debe estar entre 0 y 255.
 El valor debe estar entre 0 y FFFFFFFF.
-Esta etiqueta ya esta en uso y que se define como
-<cr>Porfavor selecciona otra etiqueta.
-Lo sentimos PsoBB EP4 no es soportado desde que Sega aparentemente desactivo esta funci�n.<cr> Lo mismo ocurre en BB ep1 y 2.
-El campo est� vac�o es necesario configurar una etiqueta antes.
-No puedes editar esta etiqueta a�n, Est� indefinida o no hay datos<cr>Pulsa insertar para a�adir este opcode y crear el NPC.
-El campo est� vac�o es necesario configurar una etiqueta antes.
-No pedes editar esta etiqueta a�n, Est� indefinida o no hay datos.<cr>Pulsa insertar para a�adir este opcode y crear los datos fisicos del enemigo.
-El campo est� vac�o es necesario configurar una etiqueta antes.
-No pedes editar esta etiqueta a�n, Est� indefinida o no hay datos.<cr>Pulsa insertar para a�adir este opcode y crear los datos de resistencia del enemigo.
-No pedes editar esta etiqueta a�n, Est� indefinida o no hay datos.<cr>Pulsa insertar para a�adir este opcode y crear los datos de moviento del enemigo.
-No pedes editar esta etiqueta a�n, Est� indefinida o no hay datos.<cr>Pulsa insertar para a�adir este opcode y crear los datos de ataque del enemigo.
-No pedes editar esta etiqueta a�n, Est� indefinida o no hay datos.<cr>Pulsa insertar para a�adir este opcode y crear los datos de imagen.
-No pedes editar esta etiqueta a�n, Est� indefinida o no hay datos.<cr>Pulsa insertar para a�adir este opcode y crear los flotadores.
-Agregar comando
+Esta etiqueta ya está en uso y definida como
+<cr>Por favor seleccione otra etiqueta.
+Lo sentimos, PsoBB ep4 no es compatible ya que Sega aparentemente deshabilitó o dañó esta función.<cr>Lo mismo ocurre con BB ep1 y 2.
+El campo está vacío; primero debe establecer una etiqueta.
+No puede editar esta etiqueta aún, ya que está indefinida o no es un dato.<cr>Presione Insert para añadir este opcode y configurar el NPC.
+El campo está vacío; primero debe establecer una etiqueta.
+No puede editar esta etiqueta aún, ya que está indefinida o no es un dato.<cr>Presione Insert para añadir este opcode y configurar los datos físicos del enemigo.
+El campo está vacío; primero debe establecer una etiqueta.
+No puede editar esta etiqueta aún, ya que está indefinida o no es un dato.<cr>Presione Insert para añadir este opcode y configurar los datos de resistencia del enemigo.
+No puede editar esta etiqueta aún, ya que está indefinida o no es un dato.<cr>Presione Insert para añadir este opcode y configurar los datos de movimiento del enemigo.
+No puede editar esta etiqueta aún, ya que está indefinida o no es un dato.<cr>Presione Insert para añadir este opcode y configurar los datos de ataque del enemigo.
+No puede editar esta etiqueta aún, ya que está indefinida o no es un dato.<cr>Presione Insert para añadir este opcode y configurar los datos de imagen.
+No puede editar esta etiqueta aún, ya que está indefinida o no es un dato.<cr>Presione Insert para añadir este opcode y configurar los datos float.
+Añadir comando
 Opcode :
 Etiqueta
-Insertar
-Agregar objetos
-Selecciona un objeto para a�adir :
-Agregar
-Agregar monstruo
-Selecciona el monstruo para a�adir :
-Ajustar ola :
-Error al crear el evento<cr>
-Mapa de evento
+Insert
+Añadir objeto
+Seleccione un objeto para añadir :
+Añadir
+Añadir monstruo
+Seleccione el monstruo para añadir :
+Asignar a oleada :
+No se pudo crear el evento<cr>
+Eventos del mapa
 Evento:
-Comprobar y Guardar
-Descripci�n
-Descripci�n larga:
+Probar y guardar
+Descripción
+Descripción larga:
  Bytes)
-�Est�s seguro de que deseas eliminar este archivo?
-Gestor de archivos de misiones
+¿Está seguro de que desea eliminar este archivo?
+Gestor de archivos de misión
 Archivos:
-Guardar mision
-Vista en 3D 
-Procesamiento de 3D
-Monstruos aleatorios
-Posici�n del monstruo
-Configuraci�n del enemigo
+Guardar en la misión
+Vista 3D
+Procesamiento 3D
+Aleatoriedad de monstruos
+Posición de monstruos
+Configuración de enemigos
 Salas:
-Engendrar punto
-Ajustes del monstruo
-Configurar recursos
-Acerca
-PSO Editor de misiones por Schthack
-Soporta pso DC, PC, GC, BB
-Creditos:<cr><cr>Coder:<cr>Schthack<cr><cr>Pirmer archivo ASM:<cr>Myria<cr>Clara<cr><cr>Actualizaci�n de ASM:<cr>Lee 			(sobre el 50% del asm)<cr>Aleron Ives<cr>Gatten<cr>Schthack<cr><cr>formato de archivo de misi�n:<cr>Schthack<cr>Lee			(datos de challenge mode)<cr><cr>Estructura de los mapas en 3D:<cr>Schthack<cr><cr>Estructura del modelo en 3D:<cr>Kryslin<cr><cr>Investigacion del modelo de los objetos y monstruos:<cr>Lee<cr>Schthack<cr>Firefox<cr><cr>Agradecimientos especiales a:<cr>AleronIves<cr>Lee<cr>Firefox276<cr>por su buena sugerencia<cr>guinea pigs<cr>
-Gestor de lista de items
-Ajustes 3D
-Tama�o de pantalla:
-Frame skip :
-Distancia :
+Puntos de aparición
+Configuración de monstruos
+Pool de configuración
+Acerca de
+PSO Quest Editor por Schthack
+Compatible con PSO DC, PC, GC, BB
+Créditos:<cr><cr>Programador:<cr>Schthack<cr><cr>Primer archivo ASM:<cr>Myria<cr>Clara<cr><cr>Actualización ASM:<cr>Lee (más del 50 % del ASM)<cr>Aleron Ives<cr>Gatten<cr>Schthack<cr><cr>Formato del archivo de misión:<cr>Schthack<cr>Lee (datos del modo Challenge)<cr><cr>Estructura de mapas 3D:<cr>Schthack<cr><cr>Estructura de modelos 3D:<cr>Kryslin<cr><cr>Investigación de modelos de objetos y monstruos:<cr>Lee<cr>Schthack<cr>Firefox<cr><cr>Agradecimientos especiales:<cr>AleronIves<cr>Lee<cr>Firefox276<cr>por sus sugerencias y gran ayuda<cr><cr>Actualizaciones 1.0c-2.0c:<cr>Alisaryn<cr>
+Gestor de lista de objetos
+Configuración 3D
+Tamaño de pantalla:
+Salto de cuadros:
+Distancia:
 Guardar
-Usar anti-alising
-Usar Skydome
+Usar antialiasing
+Usar skydome
 Cargar plantilla
 Base de datos :
 Monstruo :
 Dificultad :
-Seleccionar monstruo
+Seleccionar el monstruo
 No hay actualizaciones disponibles.
 Actualizar
-Terminado.
-Algunas actualizaciones tendran efecto al reiniciar la aplicaci�n.
-El proyecto actual no esta guardado y la aplicaci�n necesita reiniciar<cr>�quieres continuar?
-Se produjo un error al actualizar los datos
+Hecho.
+Algunas actualizaciones solo tendrán efecto después de reiniciar la aplicación.
+El proyecto actual no está guardado y la aplicación debe reiniciarse,<cr>¿desea continuar?
+Se produjo un error al obtener los datos de actualización.
 Error al obtener el archivo.
-<cr>Manten QEdit Actualizado<cr>Para asegurar su funcionalidad y<cr>obtener todas las mejoras<cr>que se trabajan<cr>
-en las actualizaciones.
-Exportar texto para traducci�n
-Importar texto desde traducci�n
-filtro de plata
-ordenar por:
+<cr>Mantenga QEdit actualizado para<cr>garantizar su funcionalidad y<cr>obtener todas las mejoras<cr>en desarrollo.<cr>
+Actualizaciones
+Exportar texto para traducción...
+Importar texto desde traducción...
+Filtro de piso
+Ordenar por:
+Añadir apariciones aleatorias
+Establecer rotación
+Auto-eje
+Establecer tema...
+Establecer tema
+Editor de texto
+Piso
+Ordenar
+Monstruos
+Objetos
+Por sala
+Por oleada
+Por grupo
+Por tipo
+Exportar datos...
+Importar datos...
+Ver eventos
+Vista previa de eventos
+Monstruos aleatorios
+Añadir sala
+Editar sala
+Eliminar sala
+Añadir entrada
+Eliminar entrada
+Añadir fila
+Eliminar fila
+Conteo de monstruos y cajas
+Detalles de monstruos y cajas
+¡Esta misión es tan épica que no necesita monstruos ni cajas!
+ Anterior
+ Siguiente
+Espacio: Pausa/Reproducir
+Esc: Salir de la vista previa
+Eliminar sala 
+ y todas sus entradas?
+Oleada enemiga
+Grupo de objetos
+Nuevo
+Monstruo...
+Objeto...
+Copiar último monstruo
+Copiar último objeto
+Arrastrar para mover
+Opciones
+Opciones de colocación
+Opciones de ajuste
+Valores predeterminados
+Desplazamiento X:
+Desplazamiento Y:
+Desplazamiento Z:
+Sección predeterminada:
+X predeterminado:
+Y predeterminado:
+Z predeterminado:
+Opciones de colocación
+Opciones de ajuste
+Alineación de ajuste
+Coincidir distancia
+Coincidir rotación
+Coincidir valor Y
+Límite de anclaje (unidades):
+Tolerancia de ajuste (unidades):
+Editor de texto de script
+Editar texto
+Formato
+Ver
+Abrir desde archivo...
+Guardar en archivo...
+Salir
+Añadir comentario STR
+Reemplazar...
+Configuración de búsqueda y reemplazo
+Buscar solo palabras completas y registros
+Coincidir mayúsculas y minúsculas
+Motor
+Extendido
+Expresión regular
+Comodín
+Restablecer...
+La configuración de búsqueda y reemplazo se restablecerá, ¿continuar?
+Ir a etiqueta...
+Ir a línea...
+Ir a etiqueta
+Ir a línea
+Cambiar fuente...
+Cambiar color del texto
+Cambiar color del texto...
+Cambiar color de fondo...
+Etiqueta...
+Opcode...
+Registro...
+Valor...
+Cadena (STR)...
+Cadena (Argumento)...
+Cambiar tema
+Restablecer formato...
+Las opciones de fuente y color se restablecerán, ¿continuar?
+Las opciones de fuente y color para notas se restablecerán, ¿continuar?
+Alternar notas
+Lista de opcodes
+Usos típicos de registros
+Funciones comunes
+Añadir o editar datos
+NPC
+Imagen
+Enemigo
+Float
+Symbol Chat
+Vector
+Cambiar
+Físico
+Resistencia
+Ataque
+Movimiento
+Añadir nueva etiqueta sin usar
+Añadir nuevo registro sin usar
+Anteponer argumentos leti/fleti
+Establecer formato de argumentos
+Hexadecimal
+Decimal
+Ocultar NOPs
+Cambiar editor
+Reemplazar texto
+Reemplazar texto:
+Reemplazar con:
+Solo selección
+Notas
+[Haga clic para colocar]
+(Modificadores)
+Modificadores de colocación
+Desactivar colocación automática Y
+Desactivar colocación automática de sección
+Establecer en posición predeterminada
+Establecer en posición de selección desplazada
+Alineación de ajuste
+Cancelar colocación
+[Haga clic para colocar - Esc: cancelar]
+Error al recargar los datos de la misión.
+Número de episodio inválido.
+Error
+El nuevo tema se aplicará en el próximo reinicio. ¿Reiniciar ahora?
+Cambiar el formato de visualización cancelará los cambios no guardados, ¿continuar?
+Cambiar la visualización de opcodes NOP cancelará los cambios no guardados, ¿continuar?
+Advertencia de compilación en la línea 
+Error de compilación en la línea 
+El valor de punto flotante no puede ser NAN.
+La configuración del tamaño de pantalla se aplicará en el próximo reinicio. ¿Reiniciar ahora?
+No se pudo generar la lista ASM JSON
+No se pudo generar la lista de registros JSON
+Etiqueta no encontrada.
+Lista de vectores
+Duración
+Distancia
+Curva de Bézier
+Cara
+Sonido
+Esquinas
+Partes
+El arreglo de funciones contiene demasiadas entradas en la línea 
+Al arreglo de funciones le faltan entradas en la línea 
+Piso 
+ sala 
+ tiene más de 32 entradas de aparición aleatoria
+Valor de peso de monstruo aleatorio inválido en la fila #
+Valor de configuración de monstruo aleatorio inválido en la fila #
+ piso 
+Cargar datos del enemigo
+Tipo de monstruo
+Auto
+Ocultar datos
+Mostrar datos
+Añadir Symbol Chat
+Editar Symbol Chat
+Editar datos vectoriales
+Datos de cadena declarados sin etiqueta
+Datos de cadena declarados en una sección Código o Hex
+Datos Hex declarados en una sección Código o Cadena
+Etiqueta duplicada:
+Endianness GC
+Cargando script
+Guardando script
+Normal
+Restablecer formato de notas...
+Desactivar indicador de colocación
+En pausa
+Cargar
+Velocidad de movimiento:
+Auto-sección: Activado, 
+Auto-sección: Desactivado, 
+Auto-Y: Activado
+Auto-Y: Desactivado
+Flecha izquierda = evento anterior, flecha derecha = siguiente evento, espacio = pausar/reanudar, ESC = salir
+Q = Avanzar, A = Retroceder, D = Alternar formato de datos, F = Alternar efecto de niebla, L/R = Rotación automática
+Desplazamiento = Cambiar velocidad de movimiento, E = Alternar ajuste automático de sección, C = Alternar ajuste automático Y
+Edición: Mantener clic + CTRL = Mover, + SHIFT = Arriba/abajo, + clic derecho = Rotar, CTRL + S = Ajustar
+ESC = Salir, CTRL + X = Mostrar/ocultar la ventana principal (haga clic fuera de la ventana para volver a 3D)
+Redondo
+Triángulo
+Cuadrado
+Hexágono
+Parte
+Tabla :
+Modo pantalla completa
+Seguir selección
+Añadir referencias
+
