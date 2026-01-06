@@ -10078,8 +10078,9 @@ const
   DefaultLabel2: array [0 .. 18] of integer = (720, 660, 620, 600, 501, 520, 560, 540, 580, 680, 950, 900, 930, 920,
     910, 960, 970, 940, 980); // 10 for the v2
 var
-  x, y, i, c, l, ep, k, d: integer;
+  x, y, i, c, l, ep, k, d, evt, evtcount, offset: integer;
   s, cmd, b: ansistring;
+  mfound: Boolean;
 begin
   errors := tstringlist.Create;
   warn := tstringlist.Create;
@@ -10254,9 +10255,31 @@ begin
           end;
         end;
       end;
+      move(Floor[x].Unknow[8], evtcount, 4);
       for y := 0 to Floor[x].MonsterCount - 1 do
       begin
-
+        // Check that the monster is part of a map event on the floor
+        if (Floor[x].Unknow[15] <> $32) and (evtcount > 0) and
+        (not IsNPC(Floor[x].Monster[y])) then
+        begin
+          offset := 16;
+          mfound := false;
+          for evt := 1 to evtcount do
+          begin
+            if (Floor[x].Monster[y].map_section = (Floor[x].Unknow[offset + 8] +
+                Floor[x].Unknow[offset + 9] * 256)) and
+                (Floor[x].Monster[y].unknow5 = (Floor[x].Unknow[offset + 10] +
+                Floor[x].Unknow[offset + 11] * 256))
+            then
+            begin
+              mfound := true;
+              break;
+            end;
+            inc(offset, 20);
+          end;
+          if not mfound then
+            warn.add(GetLanguageString(503) + inttostr(y) + GetLanguageString(504) + inttostr(x));
+        end;
         for i := 0 to 57 do
           if EnemyID[i] = Floor[x].Monster[y].Skin then
             break;

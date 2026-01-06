@@ -500,3 +500,5 @@ Table :
 Fullscreen mode
 Follow selection
 Adding References
+Monster #
+ is not part of a map event on floor 

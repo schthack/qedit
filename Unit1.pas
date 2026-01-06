@@ -302,6 +302,7 @@ function MakeUni(s: ansistring): ansistring;
 function GetDisplayValue(value: dword; size: byte): ansistring;
 function HexToSignedInt(const hexstring: string; numbits: integer): integer;
 function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
+function IsNPC(m: TMonster): Boolean;
 
 implementation
 
@@ -1998,6 +1999,275 @@ begin
       result := basemonster[0];
 
   end;
+end;
+
+function IsNPC(m: TMonster): Boolean;
+var
+  re: integer;
+begin
+    re := 0; // default none
+  // ep1 monster
+  if (m.Skin = 68) then
+    re := 9; // booma
+  if (m.Skin = 68) and (m.Movement_flag = 1) then
+    re := 10; // gobooma
+  if (m.Skin = 68) and (m.Movement_flag = 2) then
+    re := 11; // gigobooma
+  if (m.Skin = 68) and (m.Movement_flag = 3) then
+    re := 11; // gigobooma
+  if (m.Skin = 67) then
+    re := 7; // savage woolf
+  if (m.Skin = 67) and (round(m.Unknow10) >= 1) then
+    re := 8; // barbarous wolf
+  if m.Skin = 65 then
+    re := 5; // rappy
+  if (m.Skin = 65) and (m.Movement_flag = 1) then
+    re := 6; // AL rappy
+  if m.Skin = 64 then
+    re := 1; // Hildebear
+  if (m.Skin = 128) then
+    re := 24; // dubchic
+  if (m.Skin = 128) and (m.Movement_flag = 1) then
+    re := 50; // glitchic
+  if m.Skin = 129 then
+  begin
+    re := 25; // garanz
+    { for y:=1 to m.unknow2 div $10000 do
+      result.ref[result.count+y]:=result.ref[result.count];
+      inc(result.count,(m.unknow2 div $10000)); }
+  end;
+  if m.Skin = 131 then
+    re := 28; // canadine
+  if m.Skin = 133 then
+    re := 49; // dubwitch
+  if m.Skin = 163 then
+    re := 34; // dubwitch
+  if m.Skin = 97 then
+  begin
+    re := 13; // poison lily
+    if curepi = 1 then
+      if m.unknow3 = 17 then
+        re := 83;
+  end;
+
+  if (m.Skin = 99) then
+    re := 16; // evil shark
+
+  if (m.Skin = 99) and (m.Movement_flag = 1) then
+    re := 17; // pal shark
+  if (m.Skin = 99) and (m.Movement_flag = 2) then
+    re := 18; // guil shark
+  if m.Skin = 98 then
+    re := 15; // nano dragon
+  if m.Skin = 96 then
+    re := 12; // grass assasin
+  if m.Skin = 168 then
+    re := 38; // claw
+  if (m.Skin = 166) then
+    re := 41; // diemen
+  if (m.Skin = 166) and (m.Movement_flag = 1) then
+    re := 42; // la diemen
+  if (m.Skin = 166) and (m.Movement_flag = 2) then
+    re := 43; // so diemen
+  if m.Skin = 165 then
+    re := 37; // dark beltra
+  if m.Skin = 160 then
+    re := 30; // delsabler
+  if m.Skin = 162 then
+    re := 34; // dark gunner
+  if m.Skin = 163 then
+    re := 35; // dark gunner
+  if m.Skin = 164 then
+    re := 36; // Chaos Bringer
+  if m.Skin = 192 then
+    re := 44; // dragon
+  if m.Skin = 197 then
+    re := 46; // vol opt B
+  if m.Skin = 193 then
+  begin // de rol le
+    re := 45;
+  end;
+  if m.Skin = 194 then
+  begin // volopt
+    re := 109;
+  end;
+  if m.Skin = 200 then
+  begin // falz
+    re := 47;
+  end;
+  if m.Skin = 66 then
+  begin // monest
+    re := 4;
+  end;
+  if m.Skin = 132 then
+  begin // canadine army
+    re := 29;
+  end;
+  if m.Skin = 130 then
+  begin // sinow
+    if round(m.Unknow10) = 1 then
+      re := 27 // and 255 = 2 then result.ref[result.count]:=27 //gold
+    else
+      re := 26; // blue
+  end;
+  if m.Skin = 100 then
+  begin // polyfulslim
+    re := 19;
+  end;
+  if m.Skin = 101 then
+  begin // pan arms
+    re := 21;
+  end;
+  if m.Skin = 161 then
+  begin // chaos sorcerer
+    re := 31;
+  end;
+  if m.Skin = 167 then
+  begin // bulclaw
+    re := 40;
+  end;
+
+  // ep2
+
+  if m.Skin = 223 then
+  begin // ReconBox
+    // form1.Memo1.Lines.Add('RaconBox: '+inttostr(m.unknow2 div $10000));
+    re := 67;
+    { for y:=1 to m.unknow2 div $10000 do
+      result.ref[result.count+y]:=68;
+      result.count:=result.count+(m.unknow2 div $10000); }
+  end;
+  if (m.Skin = 213) then
+    re := 52;
+  if (m.Skin = 213) and (m.Movement_flag = 1) then
+    re := 53;
+
+  if (m.Skin = 212) then
+  begin
+    re := 62;
+    if (m.Movement_flag = 1) then
+      re := 63;
+  end;
+
+  if (m.Skin = 215) then
+  begin
+    re := 59;
+    if (m.Movement_flag = 1) then
+      re := 60;
+    if (m.Movement_flag = 2) then
+      re := 60;
+  end;
+  if (m.Skin = 217) then
+    re := 54;
+  if (m.Skin = 218) then
+    re := 55;
+  if (m.Skin = 214) then
+    re := 56;
+  if (m.Skin = 214) and (m.Movement_flag = 1) then
+    re := 57;
+  if (m.Skin = 214) and (m.Movement_flag = 2) then
+    re := 58;
+  if (m.Skin = 222) then
+    re := 66;
+  if (m.Skin = 221) then
+    re := 64;
+  if (m.Skin = 221) and (m.Movement_flag = 1) then
+    re := 65;
+  if (m.Skin = 221) and (m.Movement_flag = 2) then
+    re := 65;
+  if (m.Skin = 225) then
+    re := 82;
+  if (m.Skin = 224) then
+  begin
+    re := 69;
+    if (m.Movement_flag = 1) then
+      re := 70;
+  end;
+  if (m.Skin = 216) then
+    re := 61;
+  if (m.Skin = 219) then
+    re := 71;
+  if (m.Skin = 220) then
+    re := 72;
+
+  if curepi = 1 then
+    if m.Skin = 192 then
+      re := 77; // gal
+
+  if m.Skin = 202 then
+  begin // olga
+    re := 78;
+  end;
+  if (m.Skin = 201) then
+    re := 77;
+  if (m.Skin = 204) then
+  begin
+    re := 76;
+  end;
+  if m.Skin = 203 then
+  begin // Barba Ray
+    re := 73;
+  end;
+
+  // ep4
+  if (m.Skin = 273) and (m.Unknow10 = 0) then
+    re := 90; // sat liz
+  if (m.Skin = 273) then
+    if (round(m.Unknow10) = 1) then
+      re := 89; // yowie
+  if (m.Skin = 277) then
+    re := 96; // boota
+  if (m.Skin = 277) and (m.Movement_flag = 1) then
+    re := 97; // ..boota
+  if (m.Skin = 277) and (m.Movement_flag = 2) then
+    re := 98; // ...boota
+  if (m.Skin = 277) and (m.Movement_flag = 3) then
+    re := 98; // ...boota
+  if (m.Skin = 276) then
+  begin
+    re := 94;
+    if (m.Movement_flag = 1) then
+      re := 95; // AL rappy
+  end;
+  if (m.Skin = 272) then
+    re := 88;
+  if (m.Skin = 278) then
+  begin
+    re := 99;
+    if (m.Movement_flag = 1) then
+      re := 100; // AL rappy
+  end;
+  if (m.Skin = 274) then
+  begin
+    re := 91;
+    if (m.Movement_flag = 1) then
+      re := 92; // AL rappy
+  end;
+  if (m.Skin = 275) then
+    re := 93;
+  if (m.Skin = 281) then
+    re := 106;
+  if (m.Skin = 69) then
+    re := 110;
+
+  if (m.Skin = 279) then
+    re := 101; // Goran
+  if (m.Skin = 279) and (m.Movement_flag = 1) then
+    re := 103; // Goran d
+  if (m.Skin = 279) and (m.Movement_flag = 2) then
+    re := 102; // Pyro
+
+  if curepi = 2 then
+  begin
+    if m.Skin = 65 then
+      re := 104; // rappy     asd
+    if (m.Skin = 65) and (m.Movement_flag = 1) then
+      re := 105; // AL rappy
+  end;
+  if (m.Skin < 64) or ((m.Skin >= $D0) and (m.Skin < 257) and (re = 0)) then
+    result := true
+  else
+    result := false;
 end;
 
 function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
