@@ -1197,7 +1197,10 @@ begin
   for idx := 0 to Screen.FormCount - 1 do
   begin
     if Screen.Forms[idx].Name <> 'fmHotkeys' then
+    begin
       Screen.Forms[idx].Font.Name := 'Microsoft Sans Serif';
+      Screen.Forms[idx].Font.Quality := fqNonAntialiased;
+    end;
     Screen.Forms[idx].Font.Charset := DEFAULT_CHARSET;
   end;
 
