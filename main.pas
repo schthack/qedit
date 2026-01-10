@@ -652,6 +652,8 @@ var
   prevsection: integer = 0;
   prevwave: integer = -1;
   prevgroup: integer = -1;
+  prevmwave: integer = 0;
+  prevroomID: integer = 0;
   prevfloor: integer = 0;
   prevx: integer = 0;
   prevy: integer = 0;
@@ -733,7 +735,7 @@ end;
 
 Procedure SetInterfaceText;
 var
-  width, start: integer;
+  width, start, idx: integer;
 begin
   Form1.Floorfilter1.Caption := GetLanguageString(296);
   form30.Caption := GetLanguageString(296);
@@ -1191,6 +1193,31 @@ begin
   fmThemes.btnOK.Caption := GetLanguageString(117);
   fmRoom.btnOK.Caption := GetLanguageString(117);
 
+  // Set main font for forms
+  for idx := 0 to Screen.FormCount - 1 do
+  begin
+    if Screen.Forms[idx].Name <> 'fmHotkeys' then
+    begin
+      // Use MS Sans Serif for English to keep the default traditional look
+      if form1.English1.Checked then
+      begin
+        form1.CheckListBox1.ParentFont := true;
+        form1.ListBox1.ParentFont := true;
+        form1.ListBox2.ParentFont := true;
+        Screen.Forms[idx].Font.Name := 'MS Sans Serif'
+      end
+      // Otherwise, switch to Tahoma for better Unicode support
+      else
+      begin
+        form1.CheckListBox1.ParentFont := false;
+        form1.ListBox1.ParentFont := false;
+        form1.ListBox2.ParentFont := false;
+        Screen.Forms[idx].Font.Name := 'Tahoma';
+      end;
+    end;
+    Screen.Forms[idx].Font.Charset := DEFAULT_CHARSET;
+  end;
+
   // Refresh map area text
   form1.DrawMap;
 
@@ -1202,8 +1229,7 @@ end;
 
 procedure DrawPreviewState(AState: Integer);
 var
-  y, z, m, u: Integer;
-  idx: Integer;
+  y, z, m, u, idx: integer;
 begin
   idx := form1.CheckListBox1.ItemIndex;
   if idx < 0 then Exit;
@@ -1306,6 +1332,10 @@ begin
 
   mpx := Round(-MidP[prevsection].x * Zoom);
   mpy := Round(-MidP[prevsection].y * Zoom);
+  form9.SpinEdit1.Value := mapwave;
+  for idx := 0 to form1.ComboBox1.Items.Count - 1 do
+    if form1.ComboBox1.Items[idx] = inttostr(prevsection) then break;
+  form1.ComboBox1.ItemIndex := idx;
   form1.DrawMap;
   if have3d then
   begin
@@ -1317,6 +1347,8 @@ begin
 end;
 
 Procedure ResetPreviewState;
+var
+  idx: integer;
 begin
   previewstate := 0;
   form1.EnemyWave1.Tag := prevwave;
@@ -1333,6 +1365,8 @@ begin
   vz := prevvz;
   zoom := prevzoom;
   form1.lblPreview.Visible := false;
+  form9.SpinEdit1.Value := prevmwave;
+  form1.ComboBox1.ItemIndex := prevRoomID;
   form1.DrawMap;
   if have3d then
     myscreen.SetView(ppx,ppy,ppz,vr,vz);
@@ -5145,10 +5179,173 @@ begin
   end;
 end;
 
+procedure DrawGuideLines(Anchor: TPoint);
+var
+  OldPenMode: TPenMode;
+  OldPenColor: TColor;
+  OldPenStyle: TPenStyle;
+  OldPenWidth: Integer;
+  C: TCanvas;
+  px,px2,px3,px4,py,py2,py3,py4,di: double;
+  d, j, x: integer;
+begin
+    C := form1.Image2.Canvas;
+
+    // Save original canvas state
+    OldPenMode   := C.Pen.Mode;
+    OldPenColor  := C.Pen.Color;
+    OldPenStyle  := C.Pen.Style;
+    OldPenWidth  := C.Pen.Width;
+
+    C.Pen.Mode := pmXor;
+    C.Pen.Color := clBlack;
+    C.Pen.Style := psDashDot;
+    C.Pen.Width := 1;
+
+    // Calculate the section coordinates based on the anchor
+    px := mpx;
+    px := px / Zoom;
+    px := anchor.x - mmx - px;
+    py := mpy;
+    py := py / Zoom;
+    py := anchor.y - mmy - py;
+
+    if shiftdw and not placerandom then
+    begin
+      if sType = 1 then
+        d := Floor[sfloor].Monster[selected].map_section;
+      if sType = 2 then
+        d := Floor[sfloor].Obj[selected].map_section;
+    end
+    else
+    begin
+      // find the nearest section
+      d := -1;
+      di := $FFFFFF;
+      for x := 0 to 25566 do
+        if MidPU[x] then
+        begin
+          // find the distance
+          px2 := px - MidP[x].x;
+          py2 := py - MidP[x].y;
+          px2 := (px2 * px2) + (py2 * py2);
+          // record it if nearest
+          if di > px2 then
+          begin
+            di := px2;
+            d := x;
+          end;
+        end;
+
+        if Form1.ComboBox1.ItemIndex > 0 then
+          d := strtoint(Form1.ComboBox1.Items.Strings[Form1.ComboBox1.ItemIndex]);
+    end;
+
+    px2 := px - MidP[d].x;
+    py2 := py - MidP[d].y;
+
+    px := cos(rev[d] / 10430.37835) * px2 - sin(rev[d] / 10430.37835) * py2;
+    py := sin(rev[d] / 10430.37835) * px2 + cos(rev[d] / 10430.37835) * py2;
+
+    px := px * Zoom;
+    py := py * Zoom;
+
+    x := 0;
+
+    if sType = 1 then
+    begin
+      for j := 0 to Floor[sfloor].MonsterCount - 1 do
+      begin
+        if (Floor[sfloor].Monster[j].map_section = d) and
+           ((Floor[sfloor].Monster[j].Unknow5 = showwave) or (showwave = -1)) then
+        begin
+          if (Round(Floor[sfloor].Monster[j].Pos_X) = Round(px)) or
+             (Round(Floor[sfloor].Monster[j].Pos_Y) = Round(py)) then
+          begin
+            if j <> selected then
+            begin
+            if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+            begin
+              MidP[0].y := 0;
+            end;
+            px4 := Floor[sfloor].Monster[j].Pos_X / Zoom;
+            py4 := Floor[sfloor].Monster[j].Pos_Y / Zoom;
+            px3 := cos(-rev[Floor[sfloor].Monster[j].map_section] / 10430.37835) * px4 -
+            sin(-rev[Floor[sfloor].Monster[j].map_section] / 10430.37835) * py4;
+            py3 := sin(-rev[Floor[sfloor].Monster[j].map_section] / 10430.37835) * px4 +
+            cos(-rev[Floor[sfloor].Monster[j].map_section] / 10430.37835) * py4;
+
+            px4 := mpx;
+            px4 := px4 / Zoom;
+            px3 := px3 + mmx + MidP[Floor[sfloor].Monster[j].map_section].x + px4;
+            px4 := mpy;
+            px4 := px4 / Zoom;
+            py3 := py3 + mmy + MidP[Floor[sfloor].Monster[j].map_section].y + px4;
+
+            // Slightly offset each line to avoid self-cancellation using XOR
+            C.MoveTo(Anchor.X + x, Anchor.Y);
+            C.LineTo(Round(px3), Round(py3));
+            inc(x,2);
+          end;
+         end;
+        end;
+      end;
+    end;
+
+
+    if sType = 2 then
+    begin
+      for j := 0 to Floor[sfloor].ObjCount - 1 do
+      begin
+        if (Floor[sfloor].Obj[j].map_section = d) and
+           ((Floor[sfloor].Obj[j].grp = showgrp) or (showgrp = -1)) then
+        begin
+          if (Round(Floor[sfloor].Obj[j].Pos_X) = Round(px)) or
+             (Round(Floor[sfloor].Obj[j].Pos_Y) = Round(py)) then
+          begin
+            if j <> selected then
+            begin
+            if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+            begin
+              MidP[0].y := 0;
+            end;
+            px4 := Floor[sfloor].Obj[j].Pos_X / Zoom;
+            py4 := Floor[sfloor].Obj[j].Pos_Y / Zoom;
+            px3 := cos(-rev[Floor[sfloor].Obj[j].map_section] / 10430.37835) * px4 -
+            sin(-rev[Floor[sfloor].Obj[j].map_section] / 10430.37835) * py4;
+            py3 := sin(-rev[Floor[sfloor].Obj[j].map_section] / 10430.37835) * px4 +
+            cos(-rev[Floor[sfloor].Obj[j].map_section] / 10430.37835) * py4;
+
+            px4 := mpx;
+            px4 := px4 / Zoom;
+            px3 := px3 + mmx + MidP[Floor[sfloor].Obj[j].map_section].x + px4;
+            px4 := mpy;
+            px4 := px4 / Zoom;
+            py3 := py3 + mmy + MidP[Floor[sfloor].Obj[j].map_section].y + px4;
+
+            C.MoveTo(Anchor.X + x, Anchor.Y);
+            C.LineTo(Round(px3), Round(py3));
+            inc(x);
+            end;
+         end;
+        end;
+      end;
+    end;
+
+    // Restore the original canvas settings
+    C.Pen.Mode  := OldPenMode;
+    C.Pen.Color := OldPenColor;
+    C.Pen.Style := OldPenStyle;
+    C.Pen.Width := OldPenWidth;
+end;
+
 procedure ClearDragOverlay;
 begin
   if showoverlay then
+  begin
     DrawDragOverlay(lastoverlay);
+    DrawGuideLines(lastoverlay);
+  end;
   showoverlay := false;
   form1.DrawMap;
 end;
@@ -5164,12 +5361,16 @@ begin
   begin
     p := Point(x, y);
     if showoverlay then
+    begin
       DrawDragOverlay(lastoverlay);
+      DrawGuideLines(lastoverlay);
+    end;
 
     lastoverlay := p;
     showoverlay := true;
 
     DrawDragOverlay(lastoverlay);
+    DrawGuideLines(lastoverlay);
   end;
   Label5.Caption := 'X: ' + inttostr(round(((x - mmx) - (mpx / Zoom)) * Zoom)) + '  Y: ' +
     inttostr(round(YFromBBRELFile(((x - mmx) - (mpx / Zoom)) * Zoom, ((y - mmy) - (mpy / Zoom)) * Zoom))) + '  Z: ' +
@@ -5330,7 +5531,16 @@ begin
     lmpx := x;
     lmpy := y;
     mdown := 1;
-  end
+  end;
+
+   if (mdrag = 1) and (selected > -1) then
+  begin
+    lastoverlay := Point(mpcx,mpcy);
+    showoverlay := true;
+
+    DrawDragOverlay(lastoverlay);
+    DrawGuideLines(lastoverlay);
+  end;
 end;
 
 procedure TForm1.Image2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; x, y: integer);
@@ -10467,6 +10677,8 @@ begin
     // Set up the map and save the previous state
     prevwave := showwave;
     prevgroup := showgrp;
+    prevmwave := form9.SpinEdit1.Value;
+    prevroomID := form1.ComboBox1.ItemIndex;
     prevx := mpx;
     prevy := mpy;
     prevppx := ppx;
