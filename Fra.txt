@@ -500,3 +500,5 @@ Tableau :
 Mode plein écran
 Suivre la sélection
 Ajouter des références
+Monstre n°
+ ne fait pas partie d'un événement de carte à l'étage 

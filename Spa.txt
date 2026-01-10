@@ -500,4 +500,5 @@ Tabla :
 Modo pantalla completa
 Seguir selección
 Añadir referencias
-
+El monstruo n.º
+ no forma parte de un evento del mapa en el piso. 

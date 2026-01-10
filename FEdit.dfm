@@ -102,7 +102,7 @@ object Form7: TForm7
   object chkAutoAxis: TCheckBox
     Left = 371
     Top = 329
-    Width = 75
+    Width = 83
     Height = 17
     Caption = 'Auto-axis'
     TabOrder = 3

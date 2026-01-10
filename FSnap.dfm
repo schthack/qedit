@@ -55,7 +55,7 @@ object FSnapOptions: TFSnapOptions
   object chkSnapDistance: TCheckBox
     Left = 12
     Top = 35
-    Width = 98
+    Width = 173
     Height = 17
     Caption = 'Match distance'
     TabOrder = 1
@@ -63,7 +63,7 @@ object FSnapOptions: TFSnapOptions
   object chkSnapRotate: TCheckBox
     Left = 12
     Top = 58
-    Width = 98
+    Width = 165
     Height = 17
     Caption = 'Match rotation'
     TabOrder = 2
@@ -90,7 +90,7 @@ object FSnapOptions: TFSnapOptions
   object chkSnap: TCheckBox
     Left = 12
     Top = 12
-    Width = 118
+    Width = 177
     Height = 17
     Caption = 'Snap alignment'
     TabOrder = 0
@@ -99,7 +99,7 @@ object FSnapOptions: TFSnapOptions
   object chkSnapYValue: TCheckBox
     Left = 12
     Top = 81
-    Width = 97
+    Width = 165
     Height = 17
     Caption = 'Match Y value'
     TabOrder = 3

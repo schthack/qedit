@@ -44,7 +44,7 @@ object fmRotation: TfmRotation
   object chkAutoAxis: TCheckBox
     Left = 45
     Top = 107
-    Width = 75
+    Width = 108
     Height = 17
     Caption = 'Auto-axis'
     TabOrder = 2

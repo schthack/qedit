@@ -98,7 +98,7 @@ object Form17: TForm17
   object CheckBox1: TCheckBox
     Left = 16
     Top = 160
-    Width = 145
+    Width = 153
     Height = 17
     Caption = 'Use anti-alising'
     TabOrder = 3
@@ -106,7 +106,7 @@ object Form17: TForm17
   object CheckBox2: TCheckBox
     Left = 16
     Top = 184
-    Width = 147
+    Width = 153
     Height = 17
     Caption = 'Use Skydome'
     TabOrder = 4
@@ -114,7 +114,7 @@ object Form17: TForm17
   object chkFullscreen: TCheckBox
     Left = 16
     Top = 207
-    Width = 147
+    Width = 153
     Height = 17
     Caption = 'Fullscreen mode'
     TabOrder = 5
@@ -123,7 +123,7 @@ object Form17: TForm17
   object chkFollow: TCheckBox
     Left = 16
     Top = 230
-    Width = 97
+    Width = 161
     Height = 17
     Caption = 'Follow selection'
     TabOrder = 6
