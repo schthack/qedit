@@ -1197,24 +1197,7 @@ begin
   for idx := 0 to Screen.FormCount - 1 do
   begin
     if Screen.Forms[idx].Name <> 'fmHotkeys' then
-    begin
-      // Use MS Sans Serif for English to keep the default traditional look
-      if form1.English1.Checked then
-      begin
-        form1.CheckListBox1.ParentFont := true;
-        form1.ListBox1.ParentFont := true;
-        form1.ListBox2.ParentFont := true;
-        Screen.Forms[idx].Font.Name := 'MS Sans Serif'
-      end
-      // Otherwise, switch to Tahoma for better Unicode support
-      else
-      begin
-        form1.CheckListBox1.ParentFont := false;
-        form1.ListBox1.ParentFont := false;
-        form1.ListBox2.ParentFont := false;
-        Screen.Forms[idx].Font.Name := 'Tahoma';
-      end;
-    end;
+      Screen.Forms[idx].Font.Name := 'Microsoft Sans Serif';
     Screen.Forms[idx].Font.Charset := DEFAULT_CHARSET;
   end;
 
