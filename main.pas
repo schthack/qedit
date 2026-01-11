@@ -222,7 +222,6 @@ type
     Image1: TImage;
     Label4: TLabel;
     Panel2: TPanel;
-    Image2: TImage;
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
@@ -352,6 +351,7 @@ type
     N13: TMenuItem;
     Russian1: TMenuItem;
     Japanese1: TMenuItem;
+    Image2: TPaintBox;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -477,6 +477,7 @@ type
     procedure Previewevents1Click(Sender: TObject);
     procedure Russian1Click(Sender: TObject);
     procedure Japanese1Click(Sender: TObject);
+    procedure Image2Paint(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -659,9 +660,6 @@ var
   prevy: integer = 0;
   prevzoom: double = 5.0;
   prevppx, prevppy, prevppz, prevvr, prevvz: single;
-
-  showoverlay: Boolean;
-  lastoverlay: TPoint;
 
 implementation
 
@@ -2255,7 +2253,6 @@ Var
   x, i, z: integer;
   rt: word;
   tpt: array [0 .. 2] of TPoint;
-  ts: TMemoryStream;
 begin
   // clear map       a
   if BBRelBmp = nil then
@@ -2582,12 +2579,8 @@ begin
   except
     MessageDlg(GetLanguageString(53), mtInformation, [mbOk], 0);
   end;
-  ts := TMemoryStream.Create;
-  BBRelBmp.SaveToStream(ts);
-  ts.Position := 0;
   // image2.Canvas.Draw(0,0,BBRelBmp);
-  Image2.Picture.Bitmap.LoadFromStream(ts);
-  ts.Free;
+  Image2.Canvas.Draw(0, 0, BBRelBmp);
   // BBRelBmp.Free;
 end;
 
@@ -5146,8 +5139,11 @@ begin
 
   try
     // Set the new style
-    C.Pen.Mode  := pmXor;
-    C.Pen.Color := clWhite;
+    C.Pen.Mode  := pmCopy;
+    if darkmode then
+      C.Pen.Color := clWhite
+    else
+      C.Pen.Color := clBlack;
     C.Pen.Style := psDash;
     C.Pen.Width := 2;
     C.Brush.Style := bsClear;
@@ -5183,7 +5179,7 @@ begin
     OldPenStyle  := C.Pen.Style;
     OldPenWidth  := C.Pen.Width;
 
-    C.Pen.Mode := pmXor;
+    C.Pen.Mode := pmCopy;
     C.Pen.Color := clBlack;
     C.Pen.Style := psDashDot;
     C.Pen.Width := 1;
@@ -5325,17 +5321,6 @@ begin
     C.Pen.Width := OldPenWidth;
 end;
 
-procedure ClearDragOverlay;
-begin
-  if showoverlay then
-  begin
-    DrawDragOverlay(lastoverlay);
-    DrawGuideLines(lastoverlay);
-  end;
-  showoverlay := false;
-  form1.DrawMap;
-end;
-
 procedure TForm1.Image2MouseMove(Sender: TObject; Shift: TShiftState; x, y: integer);
 var
   t: double;
@@ -5345,18 +5330,10 @@ begin
   mpcy := y;
   if (mdrag = 1) and (selected > -1) then
   begin
+    DrawMap;
     p := Point(x, y);
-    if showoverlay then
-    begin
-      DrawDragOverlay(lastoverlay);
-      DrawGuideLines(lastoverlay);
-    end;
-
-    lastoverlay := p;
-    showoverlay := true;
-
-    DrawDragOverlay(lastoverlay);
-    DrawGuideLines(lastoverlay);
+    DrawDragOverlay(p);
+    DrawGuideLines(p);
   end;
   Label5.Caption := 'X: ' + inttostr(round(((x - mmx) - (mpx / Zoom)) * Zoom)) + '  Y: ' +
     inttostr(round(YFromBBRELFile(((x - mmx) - (mpx / Zoom)) * Zoom, ((y - mmy) - (mpy / Zoom)) * Zoom))) + '  Z: ' +
@@ -5381,6 +5358,7 @@ procedure TForm1.Image2MouseDown(Sender: TObject; Button: TMouseButton; Shift: T
 var
   z, l: Integer;
   px, px2, py, py2: Double;
+  p: TPoint;
 begin
   inedit := false;
   // Start of mouse drag
@@ -5429,7 +5407,7 @@ begin
             begin
               inedit := true;
               mdrag := 0;
-              ClearDragOverlay;
+              DrawMap;
               Form1.ListBox1DblClick(Form1)
             end
             else
@@ -5483,7 +5461,7 @@ begin
             begin
               inedit := true;
               mdrag := 0;
-              ClearDragOverlay;
+              DrawMap;
               Form1.ListBox1DblClick(Form1)
             end
             else
@@ -5521,11 +5499,8 @@ begin
 
    if (mdrag = 1) and (selected > -1) then
   begin
-    lastoverlay := Point(mpcx,mpcy);
-    showoverlay := true;
-
-    DrawDragOverlay(lastoverlay);
-    DrawGuideLines(lastoverlay);
+    p := Point(mpcx,mpcy);
+    DrawGuideLines(p);
   end;
 end;
 
@@ -5549,7 +5524,12 @@ begin
     Image2.PopupMenu.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
   mdown := 0;
   mdrag := 0;
-  ClearDragOverlay;
+  DrawMap;
+end;
+
+procedure TForm1.Image2Paint(Sender: TObject);
+begin
+  Image2.Canvas.Draw(0, 0, BBRelBmp);
 end;
 
 procedure TForm1.FormShow(Sender: TObject);

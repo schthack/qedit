@@ -262,7 +262,7 @@ object Form1: TForm1
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvLowered
     TabOrder = 11
-    object Image2: TImage
+    object Image2: TPaintBox
       Left = 1
       Top = 1
       Width = 395
@@ -273,6 +273,7 @@ object Form1: TForm1
       OnMouseDown = Image2MouseDown
       OnMouseMove = Image2MouseMove
       OnMouseUp = Image2MouseUp
+      OnPaint = Image2Paint
       ExplicitTop = 3
     end
   end
