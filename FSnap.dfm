@@ -12,8 +12,10 @@ object FSnapOptions: TFSnapOptions
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   Position = poOwnerFormCenter
   OnCreate = FormCreate
+  OnKeyUp = FormKeyUp
   TextHeight = 13
   object Label8: TLabel
     Left = 12

@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, Grids, Math, StdCtrls, Vcl.Menus, Vcl.ExtCtrls, Vcl.Styles,
-  Vcl.Themes, System.Generics.Collections, system.Generics.Defaults;
+  Vcl.Themes, System.Generics.Collections, system.Generics.Defaults, ShellApi;
 
 type
   TRoomData = record
@@ -103,6 +103,7 @@ type
       var CanSelect: Boolean);
     procedure StringGrid2SelectCell(Sender: TObject; ACol, ARow: LongInt;
       var CanSelect: Boolean);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -683,6 +684,12 @@ begin
    fmRoom.Caption := GetLanguageString(318);
    fmRoom.SpinEdit1.Value := roomdata[form15.ListBox1.ItemIndex + 1].roomnum;
    fmRoom.ShowModal;
+end;
+
+procedure TForm15.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_F1 then
+    shellexecute(0,'open',pchar('http://qedit.info/index.php?title=Randommonsters'),'','',0);
 end;
 
 procedure TForm15.ListBox1Click(Sender: TObject);

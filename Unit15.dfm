@@ -11,7 +11,9 @@ object Form15: TForm15
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   Position = poOwnerFormCenter
+  OnKeyUp = FormKeyUp
   TextHeight = 13
   object PageControl1: TPageControl
     Left = 0

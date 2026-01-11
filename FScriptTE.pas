@@ -207,6 +207,7 @@ type
     procedure NotesText1Click(Sender: TObject);
     procedure NotesBackground1Click(Sender: TObject);
     procedure NotesReset1Click(Sender: TObject);
+    procedure txtNotesKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   private
     { Private declarations }
@@ -2189,6 +2190,13 @@ procedure TfmScriptTE.txtNotesChange(Sender: TObject);
 begin
   isedited := true;
   BuildNoteLookup;
+end;
+
+procedure TfmScriptTE.txtNotesKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_F1 then
+    shellexecute(0,'open',pchar('http://qedit.info/index.php?title=Notes_Panel'),'','',0);
 end;
 
 procedure TfmScriptTE.Undo1Click(Sender: TObject);

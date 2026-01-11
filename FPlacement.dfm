@@ -11,8 +11,10 @@ object FPlacementOptions: TFPlacementOptions
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   Position = poOwnerFormCenter
   OnCreate = FormCreate
+  OnKeyUp = FormKeyUp
   TextHeight = 13
   object Label1: TLabel
     Left = 19

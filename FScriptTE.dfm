@@ -141,6 +141,7 @@ object fmScriptTE: TfmScriptTE
       TabOrder = 1
       StyleElements = [seBorder]
       OnChange = txtNotesChange
+      OnKeyUp = txtNotesKeyUp
     end
   end
   object PopupMenu1: TPopupMenu
