@@ -5232,8 +5232,6 @@ begin
     px := px * Zoom;
     py := py * Zoom;
 
-    x := 0;
-
     if sType = 1 then
     begin
       for j := 0 to Floor[sfloor].MonsterCount - 1 do
@@ -5264,10 +5262,8 @@ begin
             px4 := px4 / Zoom;
             py3 := py3 + mmy + MidP[Floor[sfloor].Monster[j].map_section].y + px4;
 
-            // Slightly offset each line to avoid self-cancellation using XOR
-            C.MoveTo(Anchor.X + x, Anchor.Y);
+            C.MoveTo(Anchor.X, Anchor.Y);
             C.LineTo(Round(px3), Round(py3));
-            inc(x,2);
           end;
          end;
         end;
@@ -5305,9 +5301,8 @@ begin
             px4 := px4 / Zoom;
             py3 := py3 + mmy + MidP[Floor[sfloor].Obj[j].map_section].y + px4;
 
-            C.MoveTo(Anchor.X + x, Anchor.Y);
+            C.MoveTo(Anchor.X, Anchor.Y);
             C.LineTo(Round(px3), Round(py3));
-            inc(x);
             end;
          end;
         end;
