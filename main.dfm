@@ -261,6 +261,7 @@ object Form1: TForm1
     Height = 215
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvLowered
+    ParentBackground = False
     TabOrder = 11
     object Image2: TPaintBox
       Left = 1
