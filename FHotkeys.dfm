@@ -93,42 +93,42 @@ object fmHotkeys: TfmHotkeys
   end
   object Label7: TLabel
     Left = 83
-    Top = 10
+    Top = 11
     Width = 24
     Height = 13
     Caption = 'Copy'
   end
   object Label8: TLabel
     Left = 83
-    Top = 120
+    Top = 121
     Width = 50
     Height = 13
     Caption = 'Snap align'
   end
   object Label9: TLabel
     Left = 83
-    Top = 98
+    Top = 99
     Width = 141
     Height = 13
     Caption = 'Set at offset selection position'
   end
   object Label10: TLabel
     Left = 83
-    Top = 76
+    Top = 77
     Width = 102
     Height = 13
     Caption = 'Set at default position'
   end
   object Label11: TLabel
     Left = 83
-    Top = 32
+    Top = 33
     Width = 146
     Height = 13
     Caption = 'Disable automatic Y placement'
   end
   object Label12: TLabel
     Left = 83
-    Top = 54
+    Top = 55
     Width = 173
     Height = 13
     Caption = 'Disable automatic section placement'
@@ -148,7 +148,7 @@ object fmHotkeys: TfmHotkeys
   end
   object Label14: TLabel
     Left = 83
-    Top = 142
+    Top = 143
     Width = 85
     Height = 13
     Caption = 'Cancel placement'
