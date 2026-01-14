@@ -2373,7 +2373,7 @@ begin
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Monster[x].map_section].y + px2;
         if darkmode then
-           BBRelBmp.Canvas.Brush.Color := RGB(200, 70, 70)
+           BBRelBmp.Canvas.Brush.Color := RGB(170, 55, 55)
         else
           BBRelBmp.Canvas.Brush.Color := ClRed;
         BBRelBmp.Canvas.FillRect(Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
@@ -2479,7 +2479,7 @@ begin
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Obj[x].map_section].y + px2;
         if darkmode then
-          BBRelBmp.Canvas.Brush.Color := RGB(45, 120, 65)
+          BBRelBmp.Canvas.Brush.Color := RGB(40, 110, 60)
         else
           BBRelBmp.Canvas.Brush.Color := ClGreen;
         BBRelBmp.Canvas.FillRect(Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
