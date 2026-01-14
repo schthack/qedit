@@ -8895,6 +8895,10 @@ begin
   end;
   if showbmp.Checked then
   begin
+    // Create the folder if it doesn't exist
+    if not directoryexists(path + 'img') then
+      CreateDir(path + 'img');
+
     form14.Caption := GetLanguageString(506);
     form14.Label1.Hide;
     form14.ProgressBar1.max := preseti - 1;
