@@ -744,6 +744,10 @@ object Form1: TForm1
         ShortCut = 32856
         OnClick = SwitchScriptEditor1Click
       end
+      object Showbitmapoverlays1: TMenuItem
+        Caption = 'Show bitmap overlays'
+        OnClick = Showbitmapoverlays1Click
+      end
     end
   end
   object OpenDialog1: TOpenDialog
@@ -1770,12 +1774,16 @@ object Form1: TForm1
     object N11: TMenuItem
       Caption = '-'
     end
-    object smDrag: TMenuItem
-      Caption = 'Drag to move'
-      OnClick = smDragClick
-    end
     object Options2: TMenuItem
       Caption = 'Options'
+      object smDrag: TMenuItem
+        Caption = 'Drag to move'
+        OnClick = smDragClick
+      end
+      object showbmp: TMenuItem
+        Caption = 'Show icons'
+        OnClick = showbmpClick
+      end
       object smPlacement: TMenuItem
         Caption = 'Placement options'
         ShortCut = 113

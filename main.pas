@@ -5,8 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   ImgList, Dialogs, Math, Menus, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
-  ShellApi, D3DEngin, registry, Spin, System.ImageList, System.Actions, System.IOUtils,
-  Vcl.ActnList, Vcl.Themes, Vcl.Styles;
+  ShellApi, D3DEngin, registry, Spin, System.ImageList, System.Generics.Collections,
+  System.Actions, System.IOUtils, Vcl.ActnList, Vcl.Themes, Vcl.Styles;
 
 const
   gcstring = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!"/$%?&*()_+-=#qazwsxedcrfvtgbyhnujmik,ol.p;^`<>';
@@ -352,6 +352,8 @@ type
     Russian1: TMenuItem;
     Japanese1: TMenuItem;
     Image2: TPaintBox;
+    showbmp: TMenuItem;
+    Showbitmapoverlays1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -478,6 +480,8 @@ type
     procedure Russian1Click(Sender: TObject);
     procedure Japanese1Click(Sender: TObject);
     procedure Image2Paint(Sender: TObject);
+    procedure showbmpClick(Sender: TObject);
+    procedure Showbitmapoverlays1Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -536,7 +540,7 @@ var
   MidPU: array [0 .. 25566] of Boolean;
   // fncoff:array[0..100000] of dword;
   mapfile, mapxvmfile: array [0 .. 40] of ansistring;
-  lmpx, lmpy, mpx, mpy, mdown, mdrag, asmcount: integer;
+  lmpx, lmpy, lmdx, lmdy, mpx, mpy, mdown, mdrag, asmcount: integer;
   asmcode: array [0 .. 1000] of TAsmFnc;
   asmarg: array [0 .. 1000] of TAsmArg;
   AsmRef: array [0 .. 100000] of dword;
@@ -615,6 +619,7 @@ var
   showdecimal: Boolean = false;
   addargs: Boolean = false;
   hidenops: Boolean = true;
+  showbitmaps: Boolean = false;
   searchwholewords: Boolean = false;
   searchmatchcase: Boolean = false;
   searchengine: integer = 0;
@@ -660,6 +665,9 @@ var
   prevy: integer = 0;
   prevzoom: double = 5.0;
   prevppx, prevppy, prevppz, prevvr, prevvz: single;
+
+  BMPCache: TDictionary<string, TBitmap>;
+  objloaded: Boolean = false;
 
 implementation
 
@@ -1000,6 +1008,7 @@ begin
                                       GetLanguageString(330);
   form1.ComboBox1.Items.Strings[0] := GetLanguageString(466);
   form1.ComboBox1.ItemIndex := 0;
+  form1.showbmp.Caption := GetLanguageString(505);
 
   FPlacementOptions.Caption := GetLanguageString(352);
   FPlacementOptions.Label3.Caption := GetLanguageString(345);
@@ -1351,6 +1360,15 @@ begin
   form1.DrawMap;
   if have3d then
     myscreen.SetView(ppx,ppy,ppz,vr,vz);
+end;
+
+Procedure ClearBMPCache;
+var
+  bmp: TBitmap;
+begin
+  for bmp in BMPCache.Values do
+    bmp.Free;
+  BMPCache.Clear;
 end;
 
 Procedure ClearShadow;
@@ -2250,8 +2268,12 @@ Var
   x, i, z: integer;
   rt: word;
   tpt: array [0 .. 2] of TPoint;
+  hs: TMemoryStream;
+  bm: TBitmap;
+  name: ansistring;
+  maprect: TRect;
 begin
-  // clear map       a
+  // clear map
   if BBRelBmp = nil then
     BBRelBmp := TBitmap.Create;
 
@@ -2296,6 +2318,7 @@ begin
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom)));
 
         move(Floor[sfloor].d04[x + 16], rt, 2);
+        if darkmode then BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         rt := -(rev[z] + rt);
         px2 := -(8 / Zoom);
         py2 := -(8 / Zoom);
@@ -2313,10 +2336,10 @@ begin
         py3 := sin(rt / 10430.37835) * px2 + cos(rt / 10430.37835) * py2;
         tpt[2] := point(round(px) + round(px3), round(py) + round(py3));
         BBRelBmp.Canvas.Polyline(tpt);
+        BBRelBmp.Canvas.Pen.Color := clBlack;
         inc(x, 28);
       end;
     except
-      MessageDlg(GetLanguageString(52), mtInformation, [mbOk], 0);
     end;
 
   try
@@ -2361,6 +2384,38 @@ begin
           else
             BBRelBmp.Canvas.Rectangle(Rect(round(px) - 3, round(py) - 3, round(px) + 3, round(py) + 3));
         end;
+        if showbmp.Checked then
+        begin
+          // Attempt to add the bitmap to the cache
+          name := GenerateMonsterName(Floor[sfloor].Monster[x], x, -1) + '.bmp';
+          if not BMPCache.TryGetValue(name, bm) then
+          begin
+            hs := TMemorystream.Create;
+            bm := TBitmap.Create;
+            if fileexists(path + 'img\' + name) then
+              bm.LoadFromFile(path + 'img\' + name)
+            else if PikaGetFile(hs, name, path + 'images.ppk', 'Build By Schthack') = 0 then
+              bm.LoadFromStream(hs)
+            else if PikaGetFile(hs, 'unknow.bmp', path + 'images.ppk', 'Build By Schthack') = 0 then
+              bm.LoadFromStream(hs)
+            else if fileexists(path + 'img\unknow.bmp') then
+              bm.LoadFromFile(path + 'img\unknow.bmp');
+            if Assigned(bm) and not bm.Empty then
+              BMPCache.Add(name, bm)
+            else
+            begin
+              bm.free;
+              bm := nil;
+            end;
+            hs.free;
+          end;
+
+          maprect := Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
+          round(px) + round(6 / Zoom), round(py) + round(6 / Zoom));
+          if Assigned(bm) and not bm.Empty then
+            BBRelBmp.Canvas.StretchDraw(maprect, bm);
+        end;
+        if darkmode then BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         rt := -(rev[Floor[sfloor].Monster[x].map_section] + Floor[sfloor].Monster[x].Direction);
         px2 := -(8 / Zoom);
         py2 := -(8 / Zoom);
@@ -2378,9 +2433,9 @@ begin
         py3 := sin(rt / 10430.37835) * px2 + cos(rt / 10430.37835) * py2;
         tpt[2] := point(round(px) + round(px3), round(py) + round(py3));
         BBRelBmp.Canvas.Polyline(tpt);
+        BBRelBmp.Canvas.Pen.Color := clBlack;
       end;
   except
-    MessageDlg(GetLanguageString(52), mtInformation, [mbOk], 0);
   end;
   try
     for x := 0 to Floor[sfloor].ObjCount - 1 do
@@ -2433,6 +2488,44 @@ begin
               round(px) + round(8 / Zoom), round(py) + round(8 / Zoom)))
           else
             BBRelBmp.Canvas.Rectangle(Rect(round(px) - 3, round(py) - 3, round(px) + 3, round(py) + 3));
+        end;
+        if showbmp.Checked then
+        begin
+          bm := TBitmap.Create;
+          name := inttohex(Floor[sFloor].Obj[x].Skin,2) + '.bmp';
+          if not BMPCache.TryGetValue(name, bm) then
+          begin
+            bm := TBitmap.Create;
+            hs := TMemorystream.Create;
+            if fileexists(path + 'img\i' + name) then
+            begin
+              // Only cache the object bitmap if a valid file was loaded
+              bm.LoadFromFile(path + 'img\i' + name);
+              if Assigned(bm) and not bm.Empty then
+                BMPCache.Add(name, bm);
+            end
+            else if PikaGetFile(hs, name, path + 'images.ppk', 'Build By Schthack') = 0 then
+              bm.LoadFromStream(hs)
+            else if PikaGetFile(hs, 'unknow.bmp', path + 'images.ppk', 'Build By Schthack') = 0 then
+              bm.LoadFromStream(hs)
+            else if fileexists(path + 'img\unknow.bmp') then
+              bm.LoadFromFile(path + 'img\unknow.bmp')
+            else
+            begin
+              bm.free;
+              bm := nil;
+            end;
+            hs.free;
+          end;
+          if Assigned(bm) and (sType = 2) and (selected = x) and objloaded then
+            objscreen.GetBitmap(bm);
+          maprect := Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
+          round(px) + round(6 / Zoom), round(py) + round(6 / Zoom));
+          if Assigned(bm) and not bm.Empty then
+            BBRelBmp.Canvas.StretchDraw(maprect, bm);
+        end;
+        if (stype = 2) and (Selected = x) then
+        begin
           for i := 0 to 12 do
             if ItemRange[i] = Floor[sfloor].Obj[x].Skin then
               break;
@@ -2499,6 +2592,7 @@ begin
           end;
         end;
         // rotation
+        if darkmode then BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         rt := -(rev[Floor[sfloor].Obj[x].map_section] + Floor[sfloor].Obj[x].unknow6);
         px2 := -(8 / Zoom);
         py2 := -(8 / Zoom);
@@ -2516,6 +2610,7 @@ begin
         py3 := sin(rt / 10430.37835) * px2 + cos(rt / 10430.37835) * py2;
         tpt[2] := point(round(px) + round(px3), round(py) + round(py3));
         BBRelBmp.Canvas.Polyline(tpt);
+        BBRelBmp.Canvas.Pen.Color := clBlack;
         // dsfsdf
 
         { if (rt >= $e000) or (rt <= $1fff) then begin
@@ -2574,7 +2669,6 @@ begin
       BBRelBmp.Canvas.TextOut(5, 5, GetLanguageString(54) + ' ' + inttohex(sms, 2));
     BBRelBmp.Canvas.Font.Color := clBlack;
   except
-    MessageDlg(GetLanguageString(53), mtInformation, [mbOk], 0);
   end;
   // image2.Canvas.Draw(0,0,BBRelBmp);
   Image2.Canvas.Draw(0, 0, BBRelBmp);
@@ -4213,6 +4307,7 @@ begin
       if form17.chkFollow.Checked and not inundo and not indelete then
         myscreen.SetView(ppx,ppy,ppz,vr,vz);
     end;
+    ClearBMPCache;
   end;
 end;
 
@@ -4336,6 +4431,7 @@ var
 begin
   if ListBox2.ItemIndex >= 0 then
   begin
+    objloaded := false;
     Selected := ListBox2.ItemIndex;
     HideIndicator();
     MoveSel := -1;
@@ -4386,7 +4482,7 @@ begin
       objitm.SetRotation(15, 0, 0);
       objscreen.RenderSurface;
       objscreen.GetBitmap(bm);
-
+      objloaded := true;
     end
     else
     begin
@@ -5158,7 +5254,7 @@ begin
   end;
 end;
 
-procedure DrawGuideLines(Anchor: TPoint);
+procedure DrawGuideLines(Anchor: TPoint; setsection: Boolean);
 var
   OldPenMode: TPenMode;
   OldPenColor: TColor;
@@ -5189,7 +5285,7 @@ begin
     py := py / Zoom;
     py := anchor.y - mmy - py;
 
-    if shiftdw and not placerandom then
+    if (shiftdw and not placerandom) or setsection then
     begin
       if sType = 1 then
         d := Floor[sfloor].Monster[selected].map_section;
@@ -5320,12 +5416,23 @@ var
 begin
   mpcx := x;
   mpcy := y;
+  // Ready to drag
   if (mdrag = 1) and (selected > -1) then
+  begin
+    // Check within a 6 px radius for mouse movement
+    if ((mpcx - lmdx)*(mpcx - lmdx) +
+        (mpcy - lmdy)*(mpcy - lmdy)) >= (6*6) then
+    begin
+      mdrag := 2;
+    end;
+  end;
+  // Actively dragging
+  if (mdrag = 2) and (selected > -1) then
   begin
     DrawMap;
     p := Point(x, y);
     DrawDragOverlay(p);
-    DrawGuideLines(p);
+    DrawGuideLines(p, false);
   end;
   Label5.Caption := 'X: ' + inttostr(round(((x - mmx) - (mpx / Zoom)) * Zoom)) + '  Y: ' +
     inttostr(round(YFromBBRELFile(((x - mmx) - (mpx / Zoom)) * Zoom, ((y - mmy) - (mpy / Zoom)) * Zoom))) + '  Z: ' +
@@ -5384,6 +5491,9 @@ begin
           begin
             l := ListBox1.ItemIndex;
             ListBox1.ItemIndex := z;
+            lmdx := mpcx;
+            lmdy := mpcy;
+            mdrag := 0;
             if have3d and shiftdown then
             begin
               ppx := midpz[Floor[sfloor].Monster[z].map_section].x;
@@ -5404,12 +5514,13 @@ begin
             end
             else
               Form1.ListBox1Click(Form1);
-              if not inedit then
-              begin
-                lastimgclick := gettickcount();
-                mdrag := 1;
-              end;
+            if not inedit then
+            begin
+              lastimgclick := gettickcount();
+              imgclickstart := gettickcount();
+              mdrag := 1;
             end;
+          end;
       end;
       // Drag objects
       for z := 0 to Floor[sfloor].ObjCount - 1 do
@@ -5438,6 +5549,9 @@ begin
         begin
             l := ListBox2.ItemIndex;
             ListBox2.ItemIndex := z;
+            lmdx := mpcx;
+            lmdy := mpcy;
+            mdrag := 0;
             if have3d and shiftdown then
             begin
               ppx := midpz[Floor[sfloor].Obj[z].map_section].x;
@@ -5458,12 +5572,13 @@ begin
             end
             else
               Form1.ListBox2Click(Form1);
-              if not inedit then
-              begin
-                lastimgclick := gettickcount();
-                mdrag := 1;
-              end;
+            if not inedit then
+            begin
+              lastimgclick := gettickcount();
+              imgclickstart := gettickcount();
+              mdrag := 1;
             end;
+        end;
       end;
   end;
 
@@ -5491,15 +5606,54 @@ begin
 
    if (mdrag = 1) and (selected > -1) then
   begin
-    p := Point(mpcx,mpcy);
-    DrawGuideLines(p);
+    if stype = 1 then
+    begin
+      if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+      begin
+        MidP[0].y := 0;
+      end;
+      px2 := Floor[sfloor].Monster[selected].Pos_X / Zoom;
+      py2 := Floor[sfloor].Monster[selected].Pos_Y / Zoom;
+      px := cos(-rev[Floor[sfloor].Monster[selected].map_section] / 10430.37835) * px2 -
+        sin(-rev[Floor[sfloor].Monster[selected].map_section] / 10430.37835) * py2;
+      py := sin(-rev[Floor[sfloor].Monster[selected].map_section] / 10430.37835) * px2 +
+        cos(-rev[Floor[sfloor].Monster[selected].map_section] / 10430.37835) * py2;
+
+      px2 := mpx;
+      px2 := px2 / Zoom;
+      px := px + mmx + MidP[Floor[sfloor].Monster[selected].map_section].x + px2;
+      px2 := mpy;
+      px2 := px2 / Zoom;
+      py := py + mmy + MidP[Floor[sfloor].Monster[selected].map_section].y + px2;
+    end;
+    if stype = 2 then
+    begin
+      if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+      begin
+        MidP[0].y := 0;
+      end;
+      px2 := Floor[sfloor].Obj[selected].Pos_X / Zoom;
+      py2 := Floor[sfloor].Obj[selected].Pos_Y / Zoom;
+      px := cos(-rev[Floor[sfloor].Obj[selected].map_section] / 10430.37835) * px2 -
+        sin(-rev[Floor[sfloor].Obj[selected].map_section] / 10430.37835) * py2;
+      py := sin(-rev[Floor[sfloor].Obj[selected].map_section] / 10430.37835) * px2 +
+        cos(-rev[Floor[sfloor].Obj[selected].map_section] / 10430.37835) * py2;
+
+      px2 := mpx;
+      px2 := px2 / Zoom;
+      px := px + mmx + MidP[Floor[sfloor].Obj[selected].map_section].x + px2;
+      px2 := mpy;
+      px2 := px2 / Zoom;
+      py := py + mmy + MidP[Floor[sfloor].Obj[selected].map_section].y + px2;
+    end;
+    p := Point(Round(px),Round(py));
+    DrawGuideLines(p, true);
   end;
 end;
 
 procedure TForm1.Image2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; x, y: integer);
 begin
-  // End of mouse drag
-  if (Button = mbleft) and (smDrag.Checked) and (mdrag = 1) and (gettickcount() - imgclickstart >= 300) then
+  if (Button = mbleft) and (smDrag.Checked) and (mdrag = 2) then
   begin
     MoveSel := -1;
     HideIndicator();
@@ -5513,7 +5667,11 @@ begin
     end;
   end;
   if mdown = 1 then
+  begin
     Image2.PopupMenu.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
+    mpcx := mouse.CursorPos.x;
+    mpcy := mouse.CursorPos.y;
+  end;
   mdown := 0;
   mdrag := 0;
   DrawMap;
@@ -5536,6 +5694,9 @@ var
 begin
   If tag = 0 then
   begin
+    showbmp.ShortCut := TextToShortCut('`');
+    showbitmapoverlays1.ShortCut := TextToShortCut('`');
+    BMPCache := TDictionary<string, TBitmap>.Create;
     mylang := 0;
     FormatSettings.DecimalSeparator := '.';
     LanguageString := tstringlist.Create;
@@ -6116,6 +6277,8 @@ begin
           addargs := Reg.ReadBool('AddArgs');
         if Reg.ValueExists('HideNOPs') then
           hidenops := Reg.ReadBool('HideNOPs');
+        if Reg.ValueExists('ShowBMP') then
+          showbitmaps := Reg.ReadBool('ShowBMP');
         if Reg.ValueExists('SearchWholeWords') then
           searchwholewords := Reg.ReadBool('SearchWholeWords');
         if Reg.ValueExists('SearchMatchCase') then
@@ -6345,6 +6508,8 @@ begin
     fmScriptTE.AddArgs1.Checked := addargs;
     form4.HideNOPs1.Checked := hidenops;
     fmScriptTE.HideNOPs1.Checked := hidenops;
+
+    form1.showbmp.Checked := showbitmaps;
 
     FSnapOptions.seDistanceLimit.Value := distancelimit;
     FPlacementOptions.nbOffsetX.Value := OffsetX;
@@ -8699,6 +8864,86 @@ begin
   end;
 end;
 
+procedure TForm1.Showbitmapoverlays1Click(Sender: TObject);
+begin
+  showbmpclick(nil);
+end;
+
+procedure TForm1.showbmpClick(Sender: TObject);
+var
+  x: integer;
+  t: single;
+  bm: TBitmap;
+  Reg: TRegistry;
+begin
+  showbmp.Checked := not showbmp.Checked;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+  begin
+    Reg.WriteBool('ShowBMP', showbmp.Checked);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
+  if showbmp.Checked then
+  begin
+    form14.Caption := GetLanguageString(506);
+    form14.Label1.Hide;
+    form14.ProgressBar1.max := preseti - 1;
+    // Generate new object bitmaps if they don't exist
+    for x := 0 to preseti - 1 do
+    begin
+      form14.ProgressBar1.Position := x;
+      form14.Repaint;
+      if not fileexists(path + 'img\i' + inttohex(ObjTemplate[x].data.Skin, 2) + '.bmp') then
+      begin
+        form14.Show;
+        if objscreen = nil then
+        begin
+          objscreen := TPikaEngine.Create(form10.Panel1.Handle, 177, 151, 1);
+          if objscreen.Enable then
+          begin
+            objscreen.AlphaEnabled := true;
+            objscreen.AlphaTestValue := 16;
+            objscreen.Antializing := true;
+            objscreen.ViewDistance := 0;
+            objscreen.TextureMirrored := true;
+            objscreen.BackGroundColor := $FFA0A0A0;
+            objitm := t3ditem.Create(objscreen);
+            form10.Timer1.Enabled := true;
+          end;
+        end;
+        if objscreen.Enable then
+        begin
+          objscreen.BackGroundColor := $FFA0A0A0;
+          if objitm <> nil then
+            objitm.Free;
+          objitm := nil;
+          objitm := t3ditem.Create(objscreen);
+          Generateobj(ObjTemplate[x].data, -2);
+          if objitm.Color and $FFFFFF = $FFFFFF then
+            objitm.Color := $FEFEFE;
+          objitm.Visible := true;
+          t := objitm.GetLargessVertex;
+          objscreen.LookAt(0, t, -(t * 1.7), 0, t / 2, 0);
+          objitm.SetRotation(15, 0, 0);
+          objscreen.RenderSurface;
+          objscreen.GetBitmap(bm);
+          bm.SaveToFile(path + 'img\i' + inttohex(ObjTemplate[x].data.Skin, 2) + '.bmp');
+        end
+      end;
+    end;
+  end;
+  Drawmap;
+  form14.Hide;
+  form14.Caption := GetLanguageString(260);
+  form14.ProgressBar1.Position := 1;
+  form14.Label1.Show;
+end;
+
 procedure TForm1.Smallfont1Click(Sender: TObject);
 begin
   SetCoordSize(0);
@@ -10223,6 +10468,8 @@ begin
     objscreen.Free3d;
   ClearShadow;
   FClosedSuccessfully := True;
+  // Free the BMP cache
+  ClearBMPCache;
 end;
 
 Function LookForLabel2(s: ansistring): integer;
