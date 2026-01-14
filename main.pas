@@ -2313,7 +2313,10 @@ begin
         px2 := mpy;
         px2 := px2 / Zoom;
         py := py + mmy + MidP[z].y + px2;
-        BBRelBmp.Canvas.Brush.Color := $018AFF;
+        if darkmode then
+          BBRelBmp.Canvas.Brush.Color := RGB(190, 100, 30)
+        else
+          BBRelBmp.Canvas.Brush.Color := $018AFF;
         BBRelBmp.Canvas.FillRect(Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom)));
 
@@ -2415,7 +2418,8 @@ begin
           if Assigned(bm) and not bm.Empty then
             BBRelBmp.Canvas.StretchDraw(maprect, bm);
         end;
-        if darkmode then BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
+        if darkmode and not ((sType = 1) and (selected = x)) then
+          BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         rt := -(rev[Floor[sfloor].Monster[x].map_section] + Floor[sfloor].Monster[x].Direction);
         px2 := -(8 / Zoom);
         py2 := -(8 / Zoom);
@@ -2475,7 +2479,7 @@ begin
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Obj[x].map_section].y + px2;
         if darkmode then
-          BBRelBmp.Canvas.Brush.Color := RGB(80, 180, 120)
+          BBRelBmp.Canvas.Brush.Color := RGB(40, 110, 60)
         else
           BBRelBmp.Canvas.Brush.Color := ClGreen;
         BBRelBmp.Canvas.FillRect(Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
@@ -2592,7 +2596,8 @@ begin
           end;
         end;
         // rotation
-        if darkmode then BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
+        if darkmode and not ((sType = 2) and (selected = x)) then
+          BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         rt := -(rev[Floor[sfloor].Obj[x].map_section] + Floor[sfloor].Obj[x].unknow6);
         px2 := -(8 / Zoom);
         py2 := -(8 / Zoom);
