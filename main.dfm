@@ -1784,6 +1784,25 @@ object Form1: TForm1
         Caption = 'Show icons'
         OnClick = showbmpClick
       end
+      object Markerbrightness1: TMenuItem
+        Caption = 'Map marker brightness'
+        object Default1: TMenuItem
+          Caption = 'Default'
+          Checked = True
+          OnClick = Default1Click
+        end
+        object High1: TMenuItem
+          Caption = 'High'
+          OnClick = High1Click
+        end
+        object Veryhigh1: TMenuItem
+          Caption = 'Very high'
+          OnClick = Veryhigh1Click
+        end
+      end
+      object N14: TMenuItem
+        Caption = '-'
+      end
       object smPlacement: TMenuItem
         Caption = 'Placement options'
         ShortCut = 113

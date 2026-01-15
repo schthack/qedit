@@ -504,3 +504,7 @@ Monster #
  is not part of a map event on floor 
 Show icon overlays
 Creating Bitmaps
+Map marker brightness
+Default
+High
+Very high

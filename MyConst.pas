@@ -3,7 +3,7 @@ unit MyConst;
 interface
 
   Const
-    EnglishUIText: array[0..505] of string = (
+    EnglishUIText: array[0..509] of string = (
     'File',                                                                     // 1
     'Properties',                                                               // 2
     'Script',                                                                   // 3
@@ -509,7 +509,11 @@ interface
     'Monster #',                                                                // 503
     ' is not part of a map event on floor ',                                    // 504
     'Show icon overlays',                                                       // 505
-    'Creating Bitmaps'                                                          // 506
+    'Creating Bitmaps',                                                         // 506
+    'Map marker brightness',                                                    // 507
+    'Default',                                                                  // 508
+    'High',                                                                     // 509
+    'Very high'                                                                 // 510
   );
 
 Const FloorFog: array[0..46] of byte = (

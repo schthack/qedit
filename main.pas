@@ -354,6 +354,11 @@ type
     Image2: TPaintBox;
     showbmp: TMenuItem;
     Showbitmapoverlays1: TMenuItem;
+    Markerbrightness1: TMenuItem;
+    Default1: TMenuItem;
+    High1: TMenuItem;
+    Veryhigh1: TMenuItem;
+    N14: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -482,6 +487,9 @@ type
     procedure Image2Paint(Sender: TObject);
     procedure showbmpClick(Sender: TObject);
     procedure Showbitmapoverlays1Click(Sender: TObject);
+    procedure Default1Click(Sender: TObject);
+    procedure High1Click(Sender: TObject);
+    procedure Veryhigh1Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -620,6 +628,7 @@ var
   addargs: Boolean = false;
   hidenops: Boolean = true;
   showbitmaps: Boolean = false;
+  markerbrightness: integer = 0;
   searchwholewords: Boolean = false;
   searchmatchcase: Boolean = false;
   searchengine: integer = 0;
@@ -680,6 +689,86 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   FAddRoom;
 
 {$R *.dfm}
+
+Procedure SetBrightness(value: integer);
+var
+  Reg: TRegistry;
+begin
+  markerbrightness := value;
+
+  form1.Default1.Checked := false;
+  form1.High1.Checked := false;
+  form1.Veryhigh1.Checked := false;
+
+  if value = 1 then
+    form1.High1.Checked := true
+  else if value = 2 then
+    form1.Veryhigh1.Checked := true
+  else
+    form1.Default1.Checked := true;
+
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('MarkerBrightness', value);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+
+  form1.DrawMap;
+end;
+
+Function GetMonsterColor(value: integer): TColor;
+begin
+  if darkmode then
+  begin
+    if value = 1 then result := RGB(190, 70, 70)      // High
+    else if value = 2 then result := RGB(210, 85, 85) // Very High
+    else result := RGB(170, 55, 55);                  // Default
+  end
+  else
+  begin
+    if value = 1 then result := RGB(255, 100, 100)     // High
+    else if value = 2 then result := RGB(255, 160, 160) // Very High
+    else result := clRed;                              // Default
+  end;
+end;
+
+Function GetObjectColor(value: integer): TColor;
+begin
+  if darkmode then
+  begin
+    if value = 1 then result := RGB(50, 130, 75)      // High
+    else if value = 2 then result := RGB(60, 150, 90) // Very High
+    else result := RGB(40, 110, 60);                  // Default
+  end
+  else
+  begin
+    if value = 1 then result := RGB(0, 180, 0)        // High
+    else if value = 2 then result := RGB(0, 220, 50)  // Very High
+    else result := clGreen;                           // Default
+  end;
+end;
+
+Function GetSpawnColor(value: integer): TColor;
+begin
+  if darkmode then
+  begin
+    if value = 1 then result := RGB(210, 120, 45)     // High
+    else if value = 2 then result := RGB(230, 140, 60) // Very High
+    else result := RGB(190, 100, 30);                 // Default
+  end
+  else
+  begin
+    if value = 1 then result := RGB(255, 150, 0)      // High
+    else if value = 2 then result := RGB(255, 180, 30) // Very High
+    else result := $018AFF;                           // Default
+  end;
+end;
 
 Procedure SetAutoHotkeys;
 begin
@@ -1009,6 +1098,10 @@ begin
   form1.ComboBox1.Items.Strings[0] := GetLanguageString(466);
   form1.ComboBox1.ItemIndex := 0;
   form1.showbmp.Caption := GetLanguageString(505);
+  form1.Markerbrightness1.Caption := GetLanguageString(507);
+  form1.Default1.Caption := GetLanguageString(508);
+  form1.High1.Caption := GetLanguageString(509);
+  form1.Veryhigh1.Caption := GetLanguageString(510);
 
   FPlacementOptions.Caption := GetLanguageString(352);
   FPlacementOptions.Label3.Caption := GetLanguageString(345);
@@ -2313,10 +2406,7 @@ begin
         px2 := mpy;
         px2 := px2 / Zoom;
         py := py + mmy + MidP[z].y + px2;
-        if darkmode then
-          BBRelBmp.Canvas.Brush.Color := RGB(190, 100, 30)
-        else
-          BBRelBmp.Canvas.Brush.Color := $018AFF;
+        BBRelBmp.Canvas.Brush.Color := GetSpawnColor(markerbrightness);
         BBRelBmp.Canvas.FillRect(Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom)));
 
@@ -2372,10 +2462,7 @@ begin
         px2 := mpy;
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Monster[x].map_section].y + px2;
-        if darkmode then
-           BBRelBmp.Canvas.Brush.Color := RGB(170, 55, 55)
-        else
-          BBRelBmp.Canvas.Brush.Color := ClRed;
+        BBRelBmp.Canvas.Brush.Color := GetMonsterColor(markerbrightness);
         BBRelBmp.Canvas.FillRect(Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom)));
         if (stype = 1) and (Selected = x) then
@@ -2478,10 +2565,7 @@ begin
         px2 := mpy;
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Obj[x].map_section].y + px2;
-        if darkmode then
-          BBRelBmp.Canvas.Brush.Color := RGB(40, 110, 60)
-        else
-          BBRelBmp.Canvas.Brush.Color := ClGreen;
+        BBRelBmp.Canvas.Brush.Color := GetObjectColor(markerbrightness);
         BBRelBmp.Canvas.FillRect(Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom)));
         if (stype = 2) and (Selected = x) then
@@ -4556,6 +4640,11 @@ begin
   flp.Free;
 end;
 
+procedure TForm1.Default1Click(Sender: TObject);
+begin
+  SetBrightness(0);
+end;
+
 procedure TForm1.Delete1Click(Sender: TObject);
 begin
   if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
@@ -5210,6 +5299,11 @@ begin
     fmScriptTE.Edit2.CopyToClipboard
   else if fmScriptTE.txtNotes.Focused then
     fmScriptTE.txtNotes.CopyToClipboard
+end;
+
+procedure TForm1.Veryhigh1Click(Sender: TObject);
+begin
+  SetBrightness(2);
 end;
 
 procedure TForm1.ViewScrypt1Click(Sender: TObject);
@@ -6284,6 +6378,8 @@ begin
           hidenops := Reg.ReadBool('HideNOPs');
         if Reg.ValueExists('ShowBMP') then
           showbitmaps := Reg.ReadBool('ShowBMP');
+        if Reg.ValueExists('MarkerBrightness') then
+          markerbrightness := Reg.ReadInteger('MarkerBrightness');
         if Reg.ValueExists('SearchWholeWords') then
           searchwholewords := Reg.ReadBool('SearchWholeWords');
         if Reg.ValueExists('SearchMatchCase') then
@@ -6515,6 +6611,7 @@ begin
     fmScriptTE.HideNOPs1.Checked := hidenops;
 
     form1.showbmp.Checked := showbitmaps;
+    SetBrightness(markerbrightness);
 
     FSnapOptions.seDistanceLimit.Value := distancelimit;
     FPlacementOptions.nbOffsetX.Value := OffsetX;
@@ -10128,6 +10225,11 @@ begin
       if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
       begin
         Reg.WriteInteger('MainTheme', idx);
+        // Reset the marker brightness if switching between dark and light mode
+        if (darkmode and (TStyleManager.Style[selectedstyle].GetStyleColor(scListBox) = clWhite))
+        or (not darkmode and (TStyleManager.Style[selectedstyle].GetStyleColor(scListBox) <> clWhite))
+        or (darkmode and (selectedstyle = 'Windows')) then
+          Reg.WriteInteger('MarkerBrightness', 0);
         Reg.CloseKey;
       end;
     finally
@@ -10297,6 +10399,11 @@ begin
     if form4.Visible then form4.BringToFront;
     if fmScriptTE.Visible then fmScriptTE.BringToFront;
    end;
+end;
+
+procedure TForm1.High1Click(Sender: TObject);
+begin
+  SetBrightness(1);
 end;
 
 procedure TForm1.Hotkeys1Click(Sender: TObject);
