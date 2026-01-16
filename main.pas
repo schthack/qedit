@@ -359,6 +359,11 @@ type
     High1: TMenuItem;
     Veryhigh1: TMenuItem;
     N14: TMenuItem;
+    Outlinewidth1: TMenuItem;
+    Width1: TMenuItem;
+    Width2: TMenuItem;
+    Width3: TMenuItem;
+    N15: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -490,6 +495,9 @@ type
     procedure Default1Click(Sender: TObject);
     procedure High1Click(Sender: TObject);
     procedure Veryhigh1Click(Sender: TObject);
+    procedure Width1Click(Sender: TObject);
+    procedure Width2Click(Sender: TObject);
+    procedure Width3Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -629,6 +637,7 @@ var
   hidenops: Boolean = true;
   showbitmaps: Boolean = false;
   markerbrightness: integer = 0;
+  outlinewidth: integer = 1;
   searchwholewords: Boolean = false;
   searchmatchcase: Boolean = false;
   searchengine: integer = 0;
@@ -768,6 +777,38 @@ begin
     else if value = 2 then result := RGB(255, 180, 30) // Very High
     else result := $018AFF;                           // Default
   end;
+end;
+
+Procedure SetOutlineWidth(value: integer);
+var
+  Reg: TRegistry;
+begin
+  outlinewidth := value;
+
+  form1.Width1.Checked := false;
+  form1.Width2.Checked := false;
+  form1.Width3.Checked := false;
+
+  if value = 2 then
+    form1.Width2.Checked := true
+  else if value = 3 then
+    form1.Width3.Checked := true
+  else
+    form1.Width1.Checked := true;
+
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('OutlineWidth', value);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+
+  form1.DrawMap;
 end;
 
 Procedure SetAutoHotkeys;
@@ -1102,6 +1143,8 @@ begin
   form1.Default1.Caption := GetLanguageString(508);
   form1.High1.Caption := GetLanguageString(509);
   form1.Veryhigh1.Caption := GetLanguageString(510);
+  form1.Outlinewidth1.Caption := GetLanguageString(511);
+  form1.Width1.Caption := GetLanguageString(508) + ' (1px)';
 
   FPlacementOptions.Caption := GetLanguageString(352);
   FPlacementOptions.Label3.Caption := GetLanguageString(345);
@@ -2412,6 +2455,7 @@ begin
 
         move(Floor[sfloor].d04[x + 16], rt, 2);
         if darkmode then BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
+        BBRelBmp.Canvas.Pen.Width := outlinewidth;
         rt := -(rev[z] + rt);
         px2 := -(8 / Zoom);
         py2 := -(8 / Zoom);
@@ -2430,6 +2474,7 @@ begin
         tpt[2] := point(round(px) + round(px3), round(py) + round(py3));
         BBRelBmp.Canvas.Polyline(tpt);
         BBRelBmp.Canvas.Pen.Color := clBlack;
+        BBRelBmp.Canvas.Pen.Width := 1;
         inc(x, 28);
       end;
     except
@@ -2507,6 +2552,7 @@ begin
         end;
         if darkmode and not ((sType = 1) and (selected = x)) then
           BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
+        BBRelBmp.Canvas.Pen.Width := outlinewidth;
         rt := -(rev[Floor[sfloor].Monster[x].map_section] + Floor[sfloor].Monster[x].Direction);
         px2 := -(8 / Zoom);
         py2 := -(8 / Zoom);
@@ -2525,6 +2571,7 @@ begin
         tpt[2] := point(round(px) + round(px3), round(py) + round(py3));
         BBRelBmp.Canvas.Polyline(tpt);
         BBRelBmp.Canvas.Pen.Color := clBlack;
+        BBRelBmp.Canvas.Pen.Width := 1;
       end;
   except
   end;
@@ -2682,6 +2729,7 @@ begin
         // rotation
         if darkmode and not ((sType = 2) and (selected = x)) then
           BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
+        BBRelBmp.Canvas.Pen.Width := outlinewidth;
         rt := -(rev[Floor[sfloor].Obj[x].map_section] + Floor[sfloor].Obj[x].unknow6);
         px2 := -(8 / Zoom);
         py2 := -(8 / Zoom);
@@ -2700,6 +2748,7 @@ begin
         tpt[2] := point(round(px) + round(px3), round(py) + round(py3));
         BBRelBmp.Canvas.Polyline(tpt);
         BBRelBmp.Canvas.Pen.Color := clBlack;
+        BBRelBmp.Canvas.Pen.Width := 1;
         // dsfsdf
 
         { if (rt >= $e000) or (rt <= $1fff) then begin
@@ -4645,6 +4694,11 @@ begin
   SetBrightness(0);
 end;
 
+procedure TForm1.Width1Click(Sender: TObject);
+begin
+  SetOutlineWidth(1);
+end;
+
 procedure TForm1.Delete1Click(Sender: TObject);
 begin
   if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
@@ -6380,6 +6434,8 @@ begin
           showbitmaps := Reg.ReadBool('ShowBMP');
         if Reg.ValueExists('MarkerBrightness') then
           markerbrightness := Reg.ReadInteger('MarkerBrightness');
+        if Reg.ValueExists('OutlineWidth') then
+          outlinewidth := Reg.ReadInteger('OutlineWidth');
         if Reg.ValueExists('SearchWholeWords') then
           searchwholewords := Reg.ReadBool('SearchWholeWords');
         if Reg.ValueExists('SearchMatchCase') then
@@ -6612,6 +6668,7 @@ begin
 
     form1.showbmp.Checked := showbitmaps;
     SetBrightness(markerbrightness);
+    SetOutlineWidth(outlinewidth);
 
     FSnapOptions.seDistanceLimit.Value := distancelimit;
     FPlacementOptions.nbOffsetX.Value := OffsetX;
@@ -9945,6 +10002,11 @@ begin
   load3d;
 end;
 
+procedure TForm1.Width3Click(Sender: TObject);
+begin
+  SetOutlineWidth(3);
+end;
+
 procedure TForm1.Newitem1Click(Sender: TObject);
 begin
   Button4Click(nil);
@@ -10256,6 +10318,11 @@ end;
 procedure TForm1.About1Click(Sender: TObject);
 begin
   form16.ShowModal;
+end;
+
+procedure TForm1.Width2Click(Sender: TObject);
+begin
+  SetOutlineWidth(2);
 end;
 
 procedure TForm1.N3DSetup1Click(Sender: TObject);

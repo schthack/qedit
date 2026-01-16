@@ -3,7 +3,7 @@ unit MyConst;
 interface
 
   Const
-    EnglishUIText: array[0..509] of string = (
+    EnglishUIText: array[0..510] of string = (
     'File',                                                                     // 1
     'Properties',                                                               // 2
     'Script',                                                                   // 3
@@ -513,7 +513,8 @@ interface
     'Map marker brightness',                                                    // 507
     'Default',                                                                  // 508
     'High',                                                                     // 509
-    'Very high'                                                                 // 510
+    'Very high',                                                                // 510
+    'Orientation line width'                                                    // 511
   );
 
 Const FloorFog: array[0..46] of byte = (
