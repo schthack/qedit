@@ -1795,15 +1795,15 @@ object Form1: TForm1
       object Outlinewidth1: TMenuItem
         Caption = 'Orientation line width'
         object Width1: TMenuItem
-          Caption = 'Default (1px)'
+          Caption = 'Default (1 px)'
           OnClick = Width1Click
         end
         object Width2: TMenuItem
-          Caption = '2px'
+          Caption = '2 px'
           OnClick = Width2Click
         end
         object Width3: TMenuItem
-          Caption = '3px'
+          Caption = '3 px'
           OnClick = Width3Click
         end
       end

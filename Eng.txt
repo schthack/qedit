@@ -508,4 +508,4 @@ Map marker brightness
 Default
 High
 Very high
-Rotation outline width
+Orientation line width

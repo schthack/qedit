@@ -1144,7 +1144,7 @@ begin
   form1.High1.Caption := GetLanguageString(509);
   form1.Veryhigh1.Caption := GetLanguageString(510);
   form1.Outlinewidth1.Caption := GetLanguageString(511);
-  form1.Width1.Caption := GetLanguageString(508) + ' (1px)';
+  form1.Width1.Caption := GetLanguageString(508) + ' (1 px)';
 
   FPlacementOptions.Caption := GetLanguageString(352);
   FPlacementOptions.Label3.Caption := GetLanguageString(345);
