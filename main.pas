@@ -6765,10 +6765,18 @@ end;
 
 procedure TForm1.Button7Click(Sender: TObject);
 var // h:TNPCGroupeHeader;
-  f: integer;
+  f, idx, room: integer;
+  s: string;
 begin
-  SaveDialog1.Filter := 'All chunks|*.*|Objects only|*o.dat|Monsters only|*e.dat|Events only|*.evt' +
+  s := 'All chunks|*.*|Objects only|*o.dat|Monsters only|*e.dat|Events only|*.evt' +
                         '|Random spawn data only|*r.dat';
+  if Combobox1.ItemIndex > 0 then
+  begin
+    room := strtoint(Combobox1.Items[Combobox1.ItemIndex]);
+    s := s + '|Section ' + inttostr(room) + ' objects only|*s' + inttostr(room) + 'o.dat';
+    s := s + '|Section ' + inttostr(room) + ' monsters only|*s' + inttostr(room) + 'e.dat';
+  end;
+  SaveDialog1.Filter := s;
   if CheckListBox1.ItemIndex > -1 then
     if SaveDialog1.Execute then
     begin
@@ -6799,6 +6807,23 @@ begin
         filewrite(f, Floor[CheckListBox1.ItemIndex].d05[0], Floor[CheckListBox1.ItemIndex].d05count);
         fileclose(f);
       end;
+      if SaveDialog1.FilterIndex = 6 then
+      begin
+        f := filecreate(SaveDialog1.filename + 's' + inttostr(room) + 'o.dat');
+        for idx := 0 to Floor[CheckListBox1.ItemIndex].ObjCount - 1 do
+          if Floor[CheckListBox1.ItemIndex].Obj[idx].map_section = room then
+            filewrite(f, Floor[CheckListBox1.ItemIndex].Obj[idx], $44);
+        fileclose(f);
+      end;
+      if SaveDialog1.FilterIndex = 7 then
+      begin
+        f := filecreate(SaveDialog1.filename + 's' + inttostr(room) + 'e.dat');
+        for idx := 0 to Floor[CheckListBox1.ItemIndex].MonsterCount - 1 do
+          if Floor[CheckListBox1.ItemIndex].Monster[idx].map_section = room then
+            filewrite(f, Floor[CheckListBox1.ItemIndex].Monster[idx], $48);
+        fileclose(f);
+      end;
+
       { f:=filecreate(SaveDialog1.FileName);
         h.Flag:=1;
         h.TotalSize:=(Floor[checklistbox1.ItemIndex].ObjCount * $44) + 16;

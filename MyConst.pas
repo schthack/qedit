@@ -514,7 +514,7 @@ interface
     'Default',                                                                  // 508
     'High',                                                                     // 509
     'Very high',                                                                // 510
-    'Orientation line width'                                                    // 511
+    'Rotation outline width'                                                    // 511
   );
 
 Const FloorFog: array[0..46] of byte = (
