@@ -1776,6 +1776,17 @@ object Form1: TForm1
     end
     object Options2: TMenuItem
       Caption = 'Options'
+      object smDrag: TMenuItem
+        Caption = 'Drag to move'
+        OnClick = smDragClick
+      end
+      object showbmp: TMenuItem
+        Caption = 'Show icons'
+        OnClick = showbmpClick
+      end
+      object N15: TMenuItem
+        Caption = '-'
+      end
       object Markerbrightness1: TMenuItem
         Caption = 'Map marker brightness'
         object Default1: TMenuItem
@@ -1806,17 +1817,6 @@ object Form1: TForm1
           Caption = '3 px'
           OnClick = Width3Click
         end
-      end
-      object N15: TMenuItem
-        Caption = '-'
-      end
-      object smDrag: TMenuItem
-        Caption = 'Drag to move'
-        OnClick = smDragClick
-      end
-      object showbmp: TMenuItem
-        Caption = 'Show icons'
-        OnClick = showbmpClick
       end
       object N14: TMenuItem
         Caption = '-'
