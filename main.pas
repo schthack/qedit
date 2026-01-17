@@ -4444,7 +4444,16 @@ begin
       load3d;
       if form17.chkFollow.Checked and not inundo and not indelete then
         myscreen.SetView(ppx,ppy,ppz,vr,vz);
+
+      if inundo then
+      begin
+        EnemyWave1.Tag := showwave;
+        EnemyWave1Click(EnemyWave1);
+        Itemsgroupe1.Tag := showgrp;
+        Itemsgroupe1Click(Itemsgroupe1);
+      end;
     end;
+
     ClearBMPCache;
     sType := -1;
   end;
