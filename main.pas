@@ -2299,6 +2299,9 @@ begin
         myscreen.SetAdvancedFog(PikaVector(0, 0, 0), PikaVector(0, 0, 0), $33333333, '');
     // myscreen.SetAdvancedFog(0,20,$40404040,'obj\fog.bmp');
     myscreen.SetFog(fogCol, fogstart, fogend);
+
+    if previewstate > 0 then
+      DrawPreviewState(previewstate);
   end;
   form14.hide;
 end;
@@ -4442,10 +4445,11 @@ begin
     if have3d then
     begin
       load3d;
-      if form17.chkFollow.Checked and not inundo and not indelete then
+      if form17.chkFollow.Checked and not inundo and not indelete
+      and (previewstate = 0) then
         myscreen.SetView(ppx,ppy,ppz,vr,vz);
 
-      if inundo then
+      if inundo and (previewstate = 0) then
       begin
         EnemyWave1.Tag := showwave;
         EnemyWave1Click(EnemyWave1);
