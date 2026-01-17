@@ -4446,6 +4446,7 @@ begin
         myscreen.SetView(ppx,ppy,ppz,vr,vz);
     end;
     ClearBMPCache;
+    sType := -1;
   end;
 end;
 
@@ -6773,8 +6774,8 @@ begin
   if Combobox1.ItemIndex > 0 then
   begin
     room := strtoint(Combobox1.Items[Combobox1.ItemIndex]);
-    s := s + '|Section ' + inttostr(room) + ' objects only|*s' + inttostr(room) + 'o.dat';
-    s := s + '|Section ' + inttostr(room) + ' monsters only|*s' + inttostr(room) + 'e.dat';
+    s := s + '|Section ' + inttostr(room) + ' objects only|*s' + inttostr(room) + '_o.dat';
+    s := s + '|Section ' + inttostr(room) + ' monsters only|*s' + inttostr(room) + '_e.dat';
   end;
   SaveDialog1.Filter := s;
   if CheckListBox1.ItemIndex > -1 then
@@ -6809,7 +6810,7 @@ begin
       end;
       if SaveDialog1.FilterIndex = 6 then
       begin
-        f := filecreate(SaveDialog1.filename + 's' + inttostr(room) + 'o.dat');
+        f := filecreate(SaveDialog1.filename + 's' + inttostr(room) + '_o.dat');
         for idx := 0 to Floor[CheckListBox1.ItemIndex].ObjCount - 1 do
           if Floor[CheckListBox1.ItemIndex].Obj[idx].map_section = room then
             filewrite(f, Floor[CheckListBox1.ItemIndex].Obj[idx], $44);
@@ -6817,7 +6818,7 @@ begin
       end;
       if SaveDialog1.FilterIndex = 7 then
       begin
-        f := filecreate(SaveDialog1.filename + 's' + inttostr(room) + 'e.dat');
+        f := filecreate(SaveDialog1.filename + 's' + inttostr(room) + '_e.dat');
         for idx := 0 to Floor[CheckListBox1.ItemIndex].MonsterCount - 1 do
           if Floor[CheckListBox1.ItemIndex].Monster[idx].map_section = room then
             filewrite(f, Floor[CheckListBox1.ItemIndex].Monster[idx], $48);
