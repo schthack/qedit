@@ -39,7 +39,6 @@ var
   ini:integer=1024;
   dta:integer=0;
   fog:integer=1;
-  rtinc:integer=0;
   rtx,rty,rtz:boolean;
   
   fogCol:dword;
@@ -88,7 +87,34 @@ begin
     myscreen.SetView(ppx,ppy,ppz,vr,vz);
 end;
 
-procedure AutoRotate;
+function ClosestRot(rt: dword): integer;
+var
+  rtvalues: array of integer;
+  closest,diff,diffmin,i: integer;
+begin
+  // Static rotation values
+  rtvalues := [0, 4096, 8192, 12288, 16384, 20480, 24576, 28672,
+              32768, 36864, 40960, 45056, 49152, 53248, 57344, 61440, 65536,
+              -4096, -8192, -12288, -16384, -20480, -24576, -28672, -32768,
+              -36864, -40960, -45056, -49152, -53248, -57344, -61440, -65536];
+
+    // Find the closest rotation value to the user's selection
+    closest := rtvalues[0];
+    diffmin := abs(rtvalues[0] - rt);
+    for i := 0 to High(rtvalues) do
+    begin
+      diff := abs(rt - rtvalues[i]);
+      if diff < diffmin then
+      begin
+        diffmin := diff;
+        closest := i;
+      end;
+    end;
+    // Return the new value
+    result := rtvalues[closest];
+end;
+
+procedure AutoRotate(rtinc: integer);
 begin
   form1.SetUndow;
   if sType = 1 then
@@ -1118,6 +1144,7 @@ end;
 procedure TForm13.FormKeyPress(Sender: TObject; var Key: Char);
 var
   Reg: TRegistry;
+  rtinc: integer;
 begin
     // Change and save auto-adjust settings to the registry
     if key = 'e' then
@@ -1174,21 +1201,31 @@ begin
     // Auto-rotate monster/object clockwise 22.5 degrees
     if (key = 'l') and (selected > -1) then
     begin
+      if sType = 1 then
+        rtinc := ClosestRot(Floor[sFloor].Monster[selected].Direction);
+      if sType = 2 then
+        rtinc := ClosestRot(Floor[sFloor].Obj[selected].unknow6);
+
       // Decrement for next rotation
       if rtinc > 0 then
         rtinc := rtinc - 4096
       else rtinc := 61440;
-      AutoRotate;
+      AutoRotate(rtinc);
     end;
 
     // Auto-rotate monster/object counter-clockwise 22.5 degrees
     if (key = 'r') and (selected > -1) then
     begin
+      if sType = 1 then
+        rtinc := ClosestRot(Floor[sFloor].Monster[selected].Direction);
+      if sType = 2 then
+        rtinc := ClosestRot(Floor[sFloor].Obj[selected].unknow6);
+
       // Increment for next rotation
-      if rtinc < 61440 then
+      if (rtinc >= -65536) and (rtinc <= 61440) then
         rtinc := rtinc + 4096
       else rtinc := 0;
-      AutoRotate;
+      AutoRotate(rtinc);
     end;
 end;
 
