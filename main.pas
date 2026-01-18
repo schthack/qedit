@@ -10574,6 +10574,8 @@ begin
     if showwave = 65536 then tm.Checked := true;
     tm.tag := 65536;
     tm.OnClick := EnemyWave1Click;
+    if (x > 0) and (x mod 20 = 19) then
+        tm.Break := mbBarBreak;
     EnemyWave1.Add(tm);
   end
   else EnemyWave1.Enabled := false;
@@ -10603,6 +10605,8 @@ begin
   if showgrp = 65536 then tm.Checked := true;
   tm.tag := 65536;
   tm.OnClick := Itemsgroupe1Click;
+  if (x > 0) and (x mod 20 = 19) then
+        tm.Break := mbBarBreak;
   Itemsgroupe1.Add(tm);
 end;
 
