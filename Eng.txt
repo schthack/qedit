@@ -509,5 +509,5 @@ Default
 High
 Very high
 Orientation line width
-Clear unused NPC labels
-All unused NPC labels will be set to 0.<cr>If this quest will be used on BB, it's recommended to make a backup first if you don't already have one.<cr>Continue?
+Clear undefined NPC labels
+All undefined NPC labels will be set to 0.<cr>If this quest will be used on BB, it's important to select "No" and make a backup before continuing if you don't already have one.<cr>Continue?
