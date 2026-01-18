@@ -1147,7 +1147,7 @@ var
   rtinc: integer;
 begin
     // Change and save auto-adjust settings to the registry
-    if key = 'e' then
+    if key = 's' then
     begin
         autoadjustsect := not autoadjustsect;
         Reg := TRegistry.Create;
@@ -1162,7 +1162,7 @@ begin
           Reg.Free;
         end;
     end;
-    if key = 'c' then
+    if key = 'y' then
     begin
         autoadjustY := not autoadjustY;
         Reg := TRegistry.Create;

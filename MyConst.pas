@@ -494,7 +494,7 @@ interface
     'Auto-Y: Off',                                                              // 488
     'Left arrow = Previous event,  Right arrow = Next event,  Space = Pause/Resume,  ESC = Exit',  // 489
     'Q = Forward, A = Backward, D = Toggle data format, F = Toggle fog effect, L/R = Auto-rotate', // 490
-    'Scroll = Change movement speed, E = Toggle auto-section adjust, C = Toggle auto-Y adjust',    // 491
+    'Scroll = Change movement speed, S = Toggle auto-section adjust, Y = Toggle auto-Y adjust',    // 491
     'Edit: Hold click + CTRL = Move, + SHIFT = Up/down, + right-click = Rotate, CTRL + S = Snap',  // 492
     'ESC = Exit, CTRL + X = Show/hide the main window (Click outside of window to return to 3D)',  // 493
     'Round',                                                                    // 494
