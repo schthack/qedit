@@ -4462,7 +4462,6 @@ begin
     end;
 
     ClearBMPCache;
-    sType := -1;
   end;
 end;
 

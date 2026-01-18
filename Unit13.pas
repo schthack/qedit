@@ -481,7 +481,7 @@ begin
         diffmin := Double.MaxValue;
         closest := -1;
 
-        if stype = 1 then begin
+        if (stype = 1) and (selected > -1) then begin
             mymonst[selected].PositionX:=rayOrigin.x;
             mymonst[selected].PositionZ:=rayOrigin.z;
 
@@ -633,7 +633,7 @@ begin
                 floor[sfloor].Monster[selected].Pos_z+miz[Floor[sfloor].Monster[selected].map_section]+0.5,
                 mymonst[selected].Positionz );
         end;
-        if stype = 2 then begin
+        if (stype = 2) and (selected > -1) then begin
             MyObj[selected].PositionX:=rayOrigin.x;
             MyObj[selected].PositionZ:=rayOrigin.z;
             
