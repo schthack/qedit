@@ -537,6 +537,7 @@ procedure UpdateWindowTitle;
 procedure AddRoomEntry(section: integer; x: double; y: double; z: double);
 procedure SetImage1Colors;
 procedure DrawPreviewState(AState: Integer);
+Function LookForLabel2(s: ansistring): integer;
 
 var
   Form1: TForm1;
@@ -686,6 +687,7 @@ var
 
   BMPCache: TDictionary<string, TBitmap>;
   objloaded: Boolean = false;
+  unusedlabel: Boolean = false;
 
 implementation
 
@@ -930,6 +932,7 @@ begin
   form27.Caption := GetLanguageString(120);
   form27.Label1.Caption := GetLanguageString(121);
   form27.Button1.Caption := GetLanguageString(113);
+  form27.Clearunusedlabels1.Caption := GetLanguageString(512);
   form7.Caption := GetLanguageString(122);
   form7.Label1.Caption := GetLanguageString(123);
   form7.Label2.Caption := GetLanguageString(124);
@@ -10718,6 +10721,7 @@ var
   x, y, i, c, l, ep, k, d, evt, evtcount, offset: integer;
   s, cmd, b: ansistring;
   mfound: Boolean;
+  Rect: TRect;
 begin
   errors := tstringlist.Create;
   warn := tstringlist.Create;
@@ -10948,8 +10952,12 @@ begin
             end;
             if c = 0 then
               if LookForLabel2(inttostr(round(Floor[x].Monster[y].Action))) = 0 then
+              begin
                 warn.Add(GetLanguageString(96) + ' ' + inttostr(round(Floor[x].Monster[y].Action)) +
                   GetLanguageString(97) + inttostr(y) + GetLanguageString(98) + ' ' + inttostr(x));
+                // Enable compatibility check extra buttons
+                unusedlabel := true;
+              end;
           end;
         end;
         if Floor[x].Monster[y].Skin = 51 then
@@ -11039,18 +11047,22 @@ begin
   form27.wa[2] := form27.wa[1];
   TestCompatibility(2, form27.er[3], form27.wa[3]);
   TestCompatibility(3, form27.er[4], form27.wa[4]);
-  form27.ListBox1.ItemIndex := 0;
+  // Keep the current index if it's a refresh
+  if Sender <> form27 then
+    form27.ListBox1.ItemIndex := 0;
   form27.ListBox1Click(form27);
-  form27.ShowModal;
-
-  form27.er[0].Free;
-  form27.er[1].Free;
-  form27.er[3].Free;
-  form27.er[4].Free;
-  form27.wa[0].Free;
-  form27.wa[1].Free;
-  form27.wa[3].Free;
-  form27.wa[4].Free;
+  if Sender <> form27 then
+  begin
+    form27.ShowModal;
+    form27.er[0].Free;
+    form27.er[1].Free;
+    form27.er[3].Free;
+    form27.er[4].Free;
+    form27.wa[0].Free;
+    form27.wa[1].Free;
+    form27.wa[3].Free;
+    form27.wa[4].Free;
+  end;
 end;
 
 {

@@ -3,7 +3,7 @@ unit MyConst;
 interface
 
   Const
-    EnglishUIText: array[0..510] of string = (
+    EnglishUIText: array[0..512] of string = (
     'File',                                                                     // 1
     'Properties',                                                               // 2
     'Script',                                                                   // 3
@@ -514,7 +514,9 @@ interface
     'Default',                                                                  // 508
     'High',                                                                     // 509
     'Very high',                                                                // 510
-    'Orientation line width'                                                    // 511
+    'Orientation line width',                                                   // 511
+    'Clear unused NPC labels',                                                  // 512
+    'All unused NPC labels will be set to 0.<cr>If this quest will be used on BB, it''s recommended to make a backup first if you don''t already have one.<cr>Continue?' // 513
   );
 
 Const FloorFog: array[0..46] of byte = (
