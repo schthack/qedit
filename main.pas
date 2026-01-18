@@ -2729,6 +2729,8 @@ begin
             BBRelBmp.Canvas.lineto(i + 10, z);
             BBRelBmp.Canvas.PenPos := point(i, z - 10);
             BBRelBmp.Canvas.lineto(i, z + 10);
+            BBRelBmp.Canvas.PenPos := point(round(px), round(py));
+            BBRelBmp.Canvas.lineto(i, z);
             BBRelBmp.Canvas.Pen.Color := clblack;
           end;
         end;
