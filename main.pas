@@ -4451,14 +4451,6 @@ begin
       if form17.chkFollow.Checked and not inundo and not indelete
       and (previewstate = 0) then
         myscreen.SetView(ppx,ppy,ppz,vr,vz);
-
-      if inundo and (previewstate = 0) then
-      begin
-        EnemyWave1.Tag := showwave;
-        EnemyWave1Click(EnemyWave1);
-        Itemsgroupe1.Tag := showgrp;
-        Itemsgroupe1Click(Itemsgroupe1);
-      end;
     end;
 
     ClearBMPCache;
@@ -10577,6 +10569,12 @@ begin
         tm.Break := mbBarBreak;
       EnemyWave1.Add(tm);
     end;
+    tm := TMenuItem.Create(EnemyWave1);
+    tm.Caption := GetLanguageString(514);
+    if showwave = 65536 then tm.Checked := true;
+    tm.tag := 65536;
+    tm.OnClick := EnemyWave1Click;
+    EnemyWave1.Add(tm);
   end
   else EnemyWave1.Enabled := false;
 
@@ -10600,6 +10598,12 @@ begin
       tm.Break := mbBarBreak;
     Itemsgroupe1.Add(tm);
   end;
+  tm := TMenuItem.Create(Itemsgroupe1);
+  tm.Caption := GetLanguageString(514);
+  if showgrp = 65536 then tm.Checked := true;
+  tm.tag := 65536;
+  tm.OnClick := Itemsgroupe1Click;
+  Itemsgroupe1.Add(tm);
 end;
 
 procedure TForm1.Edit1Click(Sender: TObject);

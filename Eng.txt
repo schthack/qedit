@@ -511,3 +511,4 @@ Very high
 Orientation line width
 Clear undefined NPC labels
 All undefined NPC labels will be set to 0.<cr>If this quest will be used on BB, it's important to select "No" and make a backup before continuing if you don't already have one.<cr>Continue?
+None

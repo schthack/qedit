@@ -3,7 +3,7 @@ unit MyConst;
 interface
 
   Const
-    EnglishUIText: array[0..512] of string = (
+    EnglishUIText: array[0..513] of string = (
     'File',                                                                     // 1
     'Properties',                                                               // 2
     'Script',                                                                   // 3
@@ -516,7 +516,8 @@ interface
     'Very high',                                                                // 510
     'Orientation line width',                                                   // 511
     'Clear undefined NPC labels',                                               // 512
-    'All undefined NPC labels will be set to 0.<cr>If this quest will be used on BB, it''s important to select "No" and make a backup before continuing if you don''t already have one.<cr>Continue?' // 513
+    'All undefined NPC labels will be set to 0.<cr>If this quest will be used on BB, it''s important to select "No" and make a backup before continuing if you don''t already have one.<cr>Continue?', // 513
+    'None'                                                                      // 514
   );
 
 Const FloorFog: array[0..46] of byte = (
