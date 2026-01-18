@@ -97,6 +97,7 @@ begin
       // Refresh the list and clear the buttons
       form1.Compatibilitycheck1Click(form27);
       unusedlabel := false;
+      Listbox1.Invalidate;
     end;
 end;
 
