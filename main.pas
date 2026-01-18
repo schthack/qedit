@@ -11048,6 +11048,7 @@ procedure TForm1.Compatibilitycheck1Click(Sender: TObject);
 begin
   if fmScriptTE.Visible then
     form4.Show;
+  unusedlabel := false;
   TestCompatibility(0, form27.er[0], form27.wa[0]);
   TestCompatibility(1, form27.er[1], form27.wa[1]);
   form27.er[2] := form27.er[1];
