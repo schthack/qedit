@@ -12090,7 +12090,7 @@ end;
 
 procedure TForm1.SwitchScriptEditor1Click(Sender: TObject);
 begin
-  if GetForegroundWindow = form1.Handle then
+  if (GetForegroundWindow = form1.Handle) or form13.Focused then
     form1.MirrorXposition1Click(nil)
   else
   begin
