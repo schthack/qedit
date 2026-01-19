@@ -4443,6 +4443,7 @@ begin
     smEdit.Enabled := false;
     smDelete.Enabled := false;
     smMove.Enabled := false;
+    transform1.Enabled := false;
     sfloor := CheckListBox1.ItemIndex;
     for x := 0 to Floor[sfloor].MonsterCount - 1 do
     begin
@@ -4524,6 +4525,7 @@ begin
     smEdit.Enabled := true;
     smDelete.Enabled := true;
     smMove.Enabled := true;
+    transform1.Enabled := true;
     sms := Floor[sfloor].Monster[Selected].map_section;
     DrawMap;
     SetImage1Colors;
@@ -4608,6 +4610,7 @@ begin
     smEdit.Enabled := true;
     smDelete.Enabled := true;
     smMove.Enabled := true;
+    transform1.Enabled := true;
     ListBox1.ItemIndex := -1;
     sms := Floor[sfloor].Obj[Selected].map_section;
     stype := 2;
@@ -5653,10 +5656,11 @@ begin
       py := py + mmy + MidP[Floor[sfloor].Obj[selected].map_section].y + px2;
     end;
 
-    // X-axis - left-right
     if darkmode then
       image2.Canvas.Pen.Color := $BA55D3
     else image2.Canvas.Pen.Color := $9932CC;
+
+    // X-axis - left-right
     if xdown then
     begin
       p := Point(x, Round(py));
@@ -5673,6 +5677,7 @@ begin
     else p := Point(x, y);
     DrawDragOverlay(p);
     DrawGuideLines(p, false);
+    image2.Canvas.Pen.Color := clBlack;
   end;
   Label5.Caption := 'X: ' + inttostr(round(((x - mmx) - (mpx / Zoom)) * Zoom)) + '  Y: ' +
     inttostr(round(YFromBBRELFile(((x - mmx) - (mpx / Zoom)) * Zoom, ((y - mmy) - (mpy / Zoom)) * Zoom))) + '  Z: ' +
@@ -7926,6 +7931,7 @@ begin
         smEdit.Enabled := true;
         smDelete.Enabled := true;
         smMove.Enabled := true;
+        transform1.Enabled := true;
       end;
     end;
     if stype = 2 then
@@ -7940,6 +7946,7 @@ begin
         smEdit.Enabled := true;
         smDelete.Enabled := true;
         smMove.Enabled := true;
+        transform1.Enabled := true;
       end;
     end;
     DrawMap;

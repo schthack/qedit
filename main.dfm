@@ -1734,6 +1734,7 @@ object Form1: TForm1
     end
     object Transform1: TMenuItem
       Caption = 'Transform'
+      Enabled = False
       object InvertYrotation1: TMenuItem
         Caption = 'Invert Y rotation'
         ShortCut = 32854
