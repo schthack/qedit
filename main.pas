@@ -5654,9 +5654,7 @@ begin
       py := py + mmy + MidP[Floor[sfloor].Obj[selected].map_section].y + px2;
     end;
 
-    if darkmode then
-      image2.Canvas.Pen.Color := $BA55D3
-    else image2.Canvas.Pen.Color := $9932CC;
+    image2.Canvas.Pen.Color := RGB(0, 160, 200);
 
     // X-axis - left-right
     if xdown then
