@@ -516,5 +516,3 @@ Transform
 Invert Y rotation
 Mirror X position
 Mirror Z position
-Lock section X-axis
-Lock section Z-axis

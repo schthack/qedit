@@ -1245,8 +1245,6 @@ begin
   fmHotkeys.Label8.Caption := GetLanguageString(432);
   fmHotkeys.Label14.Caption := GetLanguageString(433);
   fmHotkeys.btnClose.Caption := GetLanguageString(113);
-  fmHotkeys.lblLockX.Caption := GetLanguageString(519);
-  fmHotkeys.lblLockZ.Caption := GetLanguageString(520);
 
   form4.btnEditText.Caption := GetLanguageString(361);
   form4.Changedataformat1.Caption := GetLanguageString(415);

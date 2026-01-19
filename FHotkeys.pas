@@ -23,10 +23,6 @@ type
     Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
-    lblX: TLabel;
-    lblZ: TLabel;
-    lblLockZ: TLabel;
-    lblLockX: TLabel;
     procedure btnCloseClick(Sender: TObject);
 
   private
