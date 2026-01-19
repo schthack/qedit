@@ -364,6 +364,14 @@ type
     Width2: TMenuItem;
     Width3: TMenuItem;
     N15: TMenuItem;
+    InvertYrotation1: TMenuItem;
+    MirrorXposition1: TMenuItem;
+    MirrorZposition1: TMenuItem;
+    Transform1: TMenuItem;
+    N17: TMenuItem;
+    InvertYrotation2: TMenuItem;
+    MirrorZposition2: TMenuItem;
+    N16: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -498,6 +506,11 @@ type
     procedure Width1Click(Sender: TObject);
     procedure Width2Click(Sender: TObject);
     procedure Width3Click(Sender: TObject);
+    procedure InvertYrotation1Click(Sender: TObject);
+    procedure InvertYrotation2Click(Sender: TObject);
+    procedure MirrorZposition2Click(Sender: TObject);
+    procedure MirrorXposition1Click(Sender: TObject);
+    procedure MirrorZposition1Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -566,7 +579,7 @@ var
   regis: array [0 .. 255] of dword;
   AsmMode: integer;
   curepi: integer;
-  ctrldw, shiftdw, altdw, ddown, fdown, sdown, firstdrop: Boolean;
+  ctrldw, shiftdw, altdw, ddown, fdown, sdown, xdown, zdown, firstdrop: Boolean;
   ObjTemplate: array [0 .. 400] of TObjTemplate;
   MonsterTemplate: array [0 .. 400] of TMonsterTemplate;
   player: array [0 .. 1] of TPlayer;
@@ -1148,6 +1161,10 @@ begin
   form1.Veryhigh1.Caption := GetLanguageString(510);
   form1.Outlinewidth1.Caption := GetLanguageString(511);
   form1.Width1.Caption := GetLanguageString(508) + ' (1 px)';
+  form1.Transform1.Caption := GetLanguageString(515);
+  form1.InvertYrotation1.Caption := GetLanguageString(516);
+  form1.MirrorXposition1.Caption := GetLanguageString(517);
+  form1.MirrorZposition1.Caption := GetLanguageString(518);
 
   FPlacementOptions.Caption := GetLanguageString(352);
   FPlacementOptions.Label3.Caption := GetLanguageString(345);
@@ -1228,6 +1245,8 @@ begin
   fmHotkeys.Label8.Caption := GetLanguageString(432);
   fmHotkeys.Label14.Caption := GetLanguageString(433);
   fmHotkeys.btnClose.Caption := GetLanguageString(113);
+  fmHotkeys.lblLockX.Caption := GetLanguageString(519);
+  fmHotkeys.lblLockZ.Caption := GetLanguageString(520);
 
   form4.btnEditText.Caption := GetLanguageString(361);
   form4.Changedataformat1.Caption := GetLanguageString(415);
@@ -5574,7 +5593,7 @@ end;
 
 procedure TForm1.Image2MouseMove(Sender: TObject; Shift: TShiftState; x, y: integer);
 var
-  t: double;
+  t, px, px2, py, py2: double;
   p: TPoint;
 begin
   mpcx := x;
@@ -5593,7 +5612,65 @@ begin
   if (mdrag = 2) and (selected > -1) then
   begin
     DrawMap;
-    p := Point(x, y);
+    if stype = 1 then
+    begin
+      if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+      begin
+        MidP[0].y := 0;
+      end;
+      px2 := Floor[sfloor].Monster[selected].Pos_X / Zoom;
+      py2 := Floor[sfloor].Monster[selected].Pos_Y / Zoom;
+      px := cos(-rev[Floor[sfloor].Monster[selected].map_section] / 10430.37835) * px2 -
+        sin(-rev[Floor[sfloor].Monster[selected].map_section] / 10430.37835) * py2;
+      py := sin(-rev[Floor[sfloor].Monster[selected].map_section] / 10430.37835) * px2 +
+        cos(-rev[Floor[sfloor].Monster[selected].map_section] / 10430.37835) * py2;
+
+      px2 := mpx;
+      px2 := px2 / Zoom;
+      px := px + mmx + MidP[Floor[sfloor].Monster[selected].map_section].x + px2;
+      px2 := mpy;
+      px2 := px2 / Zoom;
+      py := py + mmy + MidP[Floor[sfloor].Monster[selected].map_section].y + px2;
+    end;
+    if stype = 2 then
+    begin
+      if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+      begin
+        MidP[0].y := 0;
+      end;
+      px2 := Floor[sfloor].Obj[selected].Pos_X / Zoom;
+      py2 := Floor[sfloor].Obj[selected].Pos_Y / Zoom;
+      px := cos(-rev[Floor[sfloor].Obj[selected].map_section] / 10430.37835) * px2 -
+        sin(-rev[Floor[sfloor].Obj[selected].map_section] / 10430.37835) * py2;
+      py := sin(-rev[Floor[sfloor].Obj[selected].map_section] / 10430.37835) * px2 +
+        cos(-rev[Floor[sfloor].Obj[selected].map_section] / 10430.37835) * py2;
+
+      px2 := mpx;
+      px2 := px2 / Zoom;
+      px := px + mmx + MidP[Floor[sfloor].Obj[selected].map_section].x + px2;
+      px2 := mpy;
+      px2 := px2 / Zoom;
+      py := py + mmy + MidP[Floor[sfloor].Obj[selected].map_section].y + px2;
+    end;
+
+    // X-axis - left-right
+    if darkmode then
+      image2.Canvas.Pen.Color := $BA55D3
+    else image2.Canvas.Pen.Color := $9932CC;
+    if xdown then
+    begin
+      p := Point(x, Round(py));
+      image2.Canvas.MoveTo(0, Round(py));
+      image2.Canvas.LineTo(Image2.Width, Round(py));
+    end
+    // Z-axis - up-down
+    else if zdown then
+    begin
+      p := Point(Round(px), y);
+      image2.Canvas.MoveTo(Round(px), 0);
+      image2.Canvas.LineTo(Round(px), Image2.Height);
+    end
+    else p := Point(x, y);
     DrawDragOverlay(p);
     DrawGuideLines(p, false);
   end;
@@ -8191,7 +8268,7 @@ end;
 procedure TForm1.Image2Click(Sender: TObject);
 var
   x, d, pz, i, z, y, j, k, l, closest: integer;
-  lastwarpx, lastwarpz: single;
+  lastwarpx, lastwarpz, lastposx, lastposz: single;
   px, py, px2, py2, di, pz2, diff, diffmin: double;
 begin
   if MoveSel > -1 then
@@ -8249,7 +8326,7 @@ begin
     py := mpcy - mmy - py;
 
     // py:=py+116+midp[Floor[sfloor].Monster[x].map_section].y+px2;
-    if shiftdw and not placerandom then
+    if (shiftdw and not placerandom) or (xdown or zdown) then
     begin
       if MoveType = 1 then
         d := Floor[sfloor].Monster[MoveSel].map_section;
@@ -8310,6 +8387,8 @@ begin
 
     if MoveType = 1 then
     begin
+      lastposx :=  Floor[sfloor].Monster[MoveSel].Pos_X;
+      lastposz := Floor[sfloor].Monster[MoveSel].Pos_Y;
       Floor[sfloor].Monster[MoveSel].map_section := d;
       Floor[sfloor].Monster[MoveSel].Pos_X := px;
       Floor[sfloor].Monster[MoveSel].Pos_Y := py;
@@ -8411,6 +8490,12 @@ begin
         Floor[sfloor].Monster[MoveSel].Pos_Z := FPlacementOptions.nbDefaultY.Value;
       end;
 
+      // Revert values if the X or Z keys are pressed
+      if (Selected > -1) and (zdown) then
+        Floor[sfloor].Monster[MoveSel].Pos_X := lastposx
+      else if (Selected > -1) and (xdown) then
+        Floor[sfloor].Monster[MoveSel].Pos_Y := lastposz;
+
       if have3d then
       begin
         GenerateMonsterName(Floor[sfloor].Monster[MoveSel], MoveSel, 2);
@@ -8420,6 +8505,8 @@ begin
     if MoveType = 2 then
     begin
       Floor[sfloor].Obj[MoveSel].map_section := d;
+      lastposx :=  Floor[sfloor].Obj[MoveSel].Pos_X;
+      lastposz := Floor[sfloor].Obj[MoveSel].Pos_Y;
       Floor[sfloor].Obj[MoveSel].Pos_X := px;
       Floor[sfloor].Obj[MoveSel].Pos_Y := py;
       if not altdw or firstdrop then
@@ -8542,6 +8629,12 @@ begin
         Floor[sfloor].Obj[MoveSel].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
         Floor[sfloor].Obj[MoveSel].Pos_Z := FPlacementOptions.nbDefaultY.Value;
       end;
+
+      // Revert values if the X or Z keys are pressed
+      if (Selected > -1) and (zdown) then
+        Floor[sfloor].Obj[MoveSel].Pos_X := lastposx
+      else if (Selected > -1) and (xdown) then
+        Floor[sfloor].Obj[MoveSel].Pos_Y := lastposz;
 
       // Calculate warp offsets when moving to a new section
       if ((Floor[sfloor].Obj[MoveSel].Skin = 3) or (Floor[sfloor].Obj[MoveSel].Skin = 321) or (Floor[sfloor].Obj[MoveSel].Skin = 697))
@@ -9605,6 +9698,44 @@ begin
   form11.ShowModal;
 end;
 
+procedure TForm1.InvertYrotation1Click(Sender: TObject);
+begin
+  if selected > -1 then
+  begin
+    SetUndow;
+    isedited := true;
+    if sType = 1 then
+    begin
+      Floor[sFloor].Monster[selected].Direction :=
+      Floor[sFloor].Monster[selected].Direction + 32768;
+      Floor[sFloor].Monster[selected].Direction :=
+      Floor[sFloor].Monster[selected].Direction mod 65536;
+
+      if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
+    end;
+    if sType = 2 then
+    begin
+      Floor[sFloor].Obj[selected].unknow6 :=
+      Floor[sFloor].Obj[selected].unknow6 + 32768;
+      Floor[sFloor].Obj[selected].unknow6 :=
+      Floor[sFloor].Obj[selected].unknow6 mod 65536;
+
+      if have3d then
+      begin
+         myobj[selected].Free;
+         Generateobj(Floor[sfloor].obj[selected],selected);
+      end;
+    end;
+    DrawMap;
+  end;
+end;
+
+procedure TForm1.InvertYrotation2Click(Sender: TObject);
+begin
+  InvertYrotation1Click(nil);
+end;
+
 procedure TForm1.FormCreate(Sender: TObject);
 var
   s: ansistring;
@@ -9623,6 +9754,10 @@ begin
     fdown := true;
   if key = 83 then
     sdown := true;
+  if key = 88 then
+    xdown := true;
+  if key = 90 then
+    zdown := true;
   if (key = 37) and (previewstate > 0) then
   begin
     key := 0;
@@ -9662,6 +9797,8 @@ begin
   ddown := false;
   fdown := false;
   sdown := false;
+  xdown := false;
+  zdown := false;
 end;
 
 procedure TForm1.DrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
@@ -9697,6 +9834,69 @@ begin
   b.Free;
   DrawMenuBar(Handle);
 
+end;
+
+procedure TForm1.MirrorXposition1Click(Sender: TObject);
+begin
+  if selected > -1 then
+  begin
+    SetUndow;
+    isedited := true;
+    if sType = 1 then
+    begin
+      Floor[sFloor].Monster[selected].Pos_X :=
+      -Floor[sFloor].Monster[selected].Pos_X;
+
+      if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
+    end;
+    if sType = 2 then
+    begin
+      Floor[sFloor].Obj[selected].Pos_X :=
+      -Floor[sFloor].Obj[selected].Pos_X;
+
+      if have3d then
+      begin
+         myobj[selected].Free;
+         Generateobj(Floor[sfloor].obj[selected],selected);
+      end;
+    end;
+    DrawMap;
+  end;
+end;
+
+procedure TForm1.MirrorZposition1Click(Sender: TObject);
+begin
+  if selected > -1 then
+  begin
+    SetUndow;
+    isedited := true;
+    if sType = 1 then
+    begin
+      Floor[sFloor].Monster[selected].Pos_Y :=
+      -Floor[sFloor].Monster[selected].Pos_Y;
+
+      if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
+    end;
+    if sType = 2 then
+    begin
+      Floor[sFloor].Obj[selected].Pos_Y :=
+      -Floor[sFloor].Obj[selected].Pos_Y;
+
+      if have3d then
+      begin
+         myobj[selected].Free;
+         Generateobj(Floor[sfloor].obj[selected],selected);
+      end;
+    end;
+    DrawMap;
+  end;
+end;
+
+procedure TForm1.MirrorZposition2Click(Sender: TObject);
+begin
+  MirrorZposition1Click(nil);
 end;
 
 procedure TForm1.Monstercount1Click(Sender: TObject);
@@ -11885,10 +12085,15 @@ end;
 
 procedure TForm1.SwitchScriptEditor1Click(Sender: TObject);
 begin
-  if fmScriptTE.Visible then
-    form4.Show
-  else if form4.Visible then
-    fmScriptTE.Show;
+  if GetForegroundWindow = form1.Handle then
+    form1.MirrorXposition1Click(nil)
+  else
+  begin
+    if fmScriptTE.Visible then
+      form4.Show
+    else if form4.Visible then
+      fmScriptTE.Show;
+  end;
 end;
 
 procedure TForm1.Floorfilter1Click(Sender: TObject);

@@ -3,7 +3,7 @@ object fmHotkeys: TfmHotkeys
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Placement Modifiers'
-  ClientHeight = 211
+  ClientHeight = 251
   ClientWidth = 274
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -135,7 +135,7 @@ object fmHotkeys: TfmHotkeys
   end
   object Label13: TLabel
     Left = 16
-    Top = 140
+    Top = 184
     Width = 41
     Height = 16
     Caption = '[Esc]:'
@@ -148,14 +148,54 @@ object fmHotkeys: TfmHotkeys
   end
   object Label14: TLabel
     Left = 83
-    Top = 143
+    Top = 187
     Width = 85
     Height = 13
     Caption = 'Cancel placement'
   end
+  object lblX: TLabel
+    Left = 16
+    Top = 140
+    Width = 24
+    Height = 16
+    Caption = '[X]:'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object lblZ: TLabel
+    Left = 16
+    Top = 162
+    Width = 24
+    Height = 16
+    Caption = '[Z]:'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object lblLockZ: TLabel
+    Left = 83
+    Top = 165
+    Width = 92
+    Height = 13
+    Caption = 'Lock section Z-axis'
+  end
+  object lblLockX: TLabel
+    Left = 83
+    Top = 143
+    Width = 92
+    Height = 13
+    Caption = 'Lock section X-axis'
+  end
   object btnClose: TButton
     Left = 106
-    Top = 171
+    Top = 213
     Width = 75
     Height = 25
     Caption = 'Close'

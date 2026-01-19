@@ -677,7 +677,7 @@ object Form1: TForm1
       end
     end
     object Hotkeys1: TMenuItem
-      Caption = '[Hotkeys]'
+      Caption = '[Global Hotkeys]'
       Visible = False
       object Newmonster1: TMenuItem
         Caption = 'New monster'
@@ -747,6 +747,16 @@ object Form1: TForm1
       object Showbitmapoverlays1: TMenuItem
         Caption = 'Show bitmap overlays'
         OnClick = Showbitmapoverlays1Click
+      end
+      object InvertYrotation2: TMenuItem
+        Caption = 'Invert Y rotation'
+        ShortCut = 32854
+        OnClick = InvertYrotation2Click
+      end
+      object MirrorZposition2: TMenuItem
+        Caption = 'Mirror Z position'
+        ShortCut = 32858
+        OnClick = MirrorZposition2Click
       end
     end
   end
@@ -1718,6 +1728,30 @@ object Form1: TForm1
     end
     object Itemsgroupe1: TMenuItem
       Caption = 'Object group'
+    end
+    object N17: TMenuItem
+      Caption = '-'
+    end
+    object Transform1: TMenuItem
+      Caption = 'Transform'
+      object InvertYrotation1: TMenuItem
+        Caption = 'Invert Y rotation'
+        ShortCut = 32854
+        OnClick = InvertYrotation1Click
+      end
+      object N16: TMenuItem
+        Caption = '-'
+      end
+      object MirrorXposition1: TMenuItem
+        Caption = 'Mirror X position'
+        ShortCut = 32856
+        OnClick = MirrorXposition1Click
+      end
+      object MirrorZposition1: TMenuItem
+        Caption = 'Mirror Z position'
+        ShortCut = 32858
+        OnClick = MirrorZposition1Click
+      end
     end
     object N10: TMenuItem
       Caption = '-'
