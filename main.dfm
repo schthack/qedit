@@ -1729,31 +1729,6 @@ object Form1: TForm1
     object Itemsgroupe1: TMenuItem
       Caption = 'Object group'
     end
-    object N17: TMenuItem
-      Caption = '-'
-    end
-    object Transform1: TMenuItem
-      Caption = 'Transform'
-      Enabled = False
-      object InvertYrotation1: TMenuItem
-        Caption = 'Invert Y rotation'
-        ShortCut = 32854
-        OnClick = InvertYrotation1Click
-      end
-      object N16: TMenuItem
-        Caption = '-'
-      end
-      object MirrorXposition1: TMenuItem
-        Caption = 'Mirror X position'
-        ShortCut = 32856
-        OnClick = MirrorXposition1Click
-      end
-      object MirrorZposition1: TMenuItem
-        Caption = 'Mirror Z position'
-        ShortCut = 32858
-        OnClick = MirrorZposition1Click
-      end
-    end
     object N10: TMenuItem
       Caption = '-'
     end
@@ -1793,6 +1768,28 @@ object Form1: TForm1
       Enabled = False
       ShortCut = 32837
       OnClick = smEditClick
+    end
+    object Transform1: TMenuItem
+      Caption = 'Transform'
+      Enabled = False
+      object InvertYrotation1: TMenuItem
+        Caption = 'Invert Y rotation'
+        ShortCut = 32854
+        OnClick = InvertYrotation1Click
+      end
+      object N16: TMenuItem
+        Caption = '-'
+      end
+      object MirrorXposition1: TMenuItem
+        Caption = 'Mirror X position'
+        ShortCut = 32856
+        OnClick = MirrorXposition1Click
+      end
+      object MirrorZposition1: TMenuItem
+        Caption = 'Mirror Z position'
+        ShortCut = 32858
+        OnClick = MirrorZposition1Click
+      end
     end
     object smMove: TMenuItem
       Caption = 'Move'

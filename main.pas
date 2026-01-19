@@ -368,7 +368,6 @@ type
     MirrorXposition1: TMenuItem;
     MirrorZposition1: TMenuItem;
     Transform1: TMenuItem;
-    N17: TMenuItem;
     InvertYrotation2: TMenuItem;
     MirrorZposition2: TMenuItem;
     N16: TMenuItem;
