@@ -623,6 +623,12 @@ object Form1: TForm1
           OnClick = Grids1Click
         end
       end
+      object Switchgridtab1: TMenuItem
+        Caption = 'Switch grid'
+        ShortCut = 9
+        Visible = False
+        OnClick = Switchgridtab1Click
+      end
       object N17: TMenuItem
         Caption = '-'
       end

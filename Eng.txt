@@ -520,3 +520,4 @@ View
 Lists
 Grids
 Show:
+Switch grid

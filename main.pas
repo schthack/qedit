@@ -428,6 +428,7 @@ type
     ClientDataSet2Param1: TSingleField;
     ClientDataSet2Param2: TSingleField;
     ClientDataSet2Param3: TSingleField;
+    Switchgridtab1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -587,6 +588,7 @@ type
     procedure DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure FormActivate(Sender: TObject);
+    procedure Switchgridtab1Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -806,6 +808,7 @@ begin
   form1.PageControl1.Visible := true;
   form1.Lists1.Checked := false;
   form1.Grids1.Checked := true;
+  form1.Switchgridtab1.Visible := true;
 end;
 
 Procedure HideGrids;
@@ -818,6 +821,7 @@ begin
   form1.PageControl1.Visible := false;
   form1.Lists1.Checked := true;
   form1.Grids1.Checked := false;
+  form1.Switchgridtab1.Visible := false;
 end;
 
 Procedure SetBrightness(value: integer);
@@ -1044,6 +1048,7 @@ begin
   Form1.Button2.Caption := GetLanguageString(43);
   Form1.Button1.Caption := GetLanguageString(44);
   Form1.Button11.Caption := GetLanguageString(45);
+  form1.Switchgridtab1.Caption := GetLanguageString(523);
   form21.Button1.Caption := GetLanguageString(116);
   form21.Button2.Caption := GetLanguageString(117);
   form21.Button3.Caption := GetLanguageString(118);
@@ -12556,6 +12561,15 @@ begin
   LoadLanguageStrings(flp);
   SetInterfaceText;
   flp.Free;
+end;
+
+procedure TForm1.Switchgridtab1Click(Sender: TObject);
+begin
+  if (GetForegroundWindow = form1.Handle) and showgrid then
+  begin
+    if pagecontrol1.ActivePage = tabsheet1 then pagecontrol1.ActivePage := tabsheet2
+    else pagecontrol1.ActivePage := tabsheet1;
+  end;
 end;
 
 procedure TForm1.SwitchScriptEditor1Click(Sender: TObject);
