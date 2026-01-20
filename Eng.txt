@@ -519,5 +519,5 @@ Mirror Z position
 View
 Lists
 Grids
-Show:
+Filter:
 Switch grid

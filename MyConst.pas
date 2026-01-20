@@ -525,7 +525,7 @@ interface
     'View',                                                                     // 519
     'Lists',                                                                    // 520
     'Grids',                                                                    // 521
-    'Show:',                                                                    // 522
+    'Filter:',                                                                  // 522
     'Switch grid'                                                               // 523
   );
 
