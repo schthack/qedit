@@ -586,8 +586,6 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
-    procedure DBGrid2Enter(Sender: TObject);
-    procedure DBGrid1Enter(Sender: TObject);
     procedure FormActivate(Sender: TObject);
 
   private
@@ -2613,9 +2611,15 @@ begin
       if selected > -1 then
       begin
         if sType = 1 then
+        begin
           ClientDataSet1.Locate('#', selected, []);
+          monsterselected := true;
+        end;
         if sType = 2 then
+        begin
           ClientDataSet2.Locate('#', selected, []);
+          objectselected := true;
+        end;
       end
       else
       begin
@@ -2623,6 +2627,8 @@ begin
           ClientDataSet1.First
         else
           ClientDataSet2.First;
+        monsterselected := false;
+        objectselected := false;
       end;
 
       // Left align all cells
@@ -4812,8 +4818,14 @@ begin
       vz := 0;
       myscreen.SetView(ppx, ppy, ppz, vr, vz);
     end;
-    LoadFloorGrids;
-    PageControl1.ActivePage := TabSheet1;
+    if sender <> DBGrid1 then
+    begin
+      LoadFloorGrids;
+      PageControl1.ActivePage := TabSheet1;
+      clientdataset1.DisableControls;
+      clientdataset1.Locate('#', selected, []);
+      clientdataset1.EnableControls;
+    end;
   end;
 end;
 
@@ -4916,8 +4928,14 @@ begin
       vz := 0;
       myscreen.SetView(ppx, ppy, ppz, vr, vz);
     end;
-    LoadFloorGrids;
-    PageControl1.ActivePage := TabSheet2;
+    if sender <> DBGrid2 then
+    begin
+      LoadFloorGrids;
+      PageControl1.ActivePage := TabSheet2;
+      clientdataset2.DisableControls;
+      clientdataset2.Locate('#', selected, []);
+      clientdataset2.EnableControls;
+    end;
   end;
 end;
 
@@ -4960,8 +4978,8 @@ begin
   begin
     selected := strtoint(DBGrid1.DataSource.DataSet.FieldByName('#').AsString);
     listbox1.ItemIndex := selected;
-    sType := 1;
-    Listbox1click(nil);
+    Listbox1click(DBGrid1);
+    DBGrid1.Invalidate;
   end;
 end;
 
@@ -5005,11 +5023,6 @@ begin
   end;
 end;
 
-procedure TForm1.DBGrid1Enter(Sender: TObject);
-begin
-  LoadFloorGrids;
-end;
-
 procedure TForm1.DBGrid1TitleClick(Column: TColumn);
 begin
   ClientDataSet1.IndexFieldNames := Column.FieldName;
@@ -5022,8 +5035,8 @@ begin
   begin
     selected := strtoint(DBGrid2.DataSource.DataSet.FieldByName('#').AsString);
     listbox2.ItemIndex := selected;
-    sType := 2;
-    Listbox2click(nil);
+    Listbox2click(DBGrid2);
+    DBGrid2.Invalidate;
   end;
 end;
 
@@ -5065,11 +5078,6 @@ begin
 
     Grid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
   end;
-end;
-
-procedure TForm1.DBGrid2Enter(Sender: TObject);
-begin
-  LoadFloorGrids;
 end;
 
 procedure TForm1.DBGrid2TitleClick(Column: TColumn);

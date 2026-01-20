@@ -440,7 +440,6 @@ object Form1: TForm1
         OnCellClick = DBGrid1CellClick
         OnDrawColumnCell = DBGrid1DrawColumnCell
         OnDblClick = DBGrid1DblClick
-        OnEnter = DBGrid1Enter
         OnTitleClick = DBGrid1TitleClick
       end
     end
@@ -465,7 +464,6 @@ object Form1: TForm1
         OnCellClick = DBGrid2CellClick
         OnDrawColumnCell = DBGrid2DrawColumnCell
         OnDblClick = DBGrid2DblClick
-        OnEnter = DBGrid2Enter
         OnTitleClick = DBGrid2TitleClick
       end
     end
