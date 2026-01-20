@@ -232,6 +232,7 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     ItemHeight = 13
+    PopupMenu = popupObjects
     TabOrder = 1
     OnClick = ListBox2Click
     OnDblClick = ListBox1DblClick
@@ -406,9 +407,65 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     ItemHeight = 13
+    PopupMenu = popupMonsters
     TabOrder = 14
     OnClick = ListBox1Click
     OnDblClick = ListBox1DblClick
+  end
+  object PageControl1: TPageControl
+    Left = 189
+    Top = 8
+    Width = 526
+    Height = 162
+    ActivePage = TabSheet1
+    TabOrder = 15
+    object TabSheet1: TTabSheet
+      Caption = 'Monsters'
+      object DBGrid1: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 518
+        Height = 134
+        Align = alClient
+        DataSource = DataSource1
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        ReadOnly = True
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+        OnCellClick = DBGrid1CellClick
+        OnDrawColumnCell = DBGrid1DrawColumnCell
+        OnDblClick = DBGrid1DblClick
+        OnTitleClick = DBGrid1TitleClick
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'Objects'
+      ImageIndex = 1
+      object DBGrid2: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 518
+        Height = 134
+        Align = alClient
+        DataSource = DataSource2
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        ReadOnly = True
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+        OnCellClick = DBGrid2CellClick
+        OnDrawColumnCell = DBGrid2DrawColumnCell
+        OnDblClick = DBGrid2DblClick
+        OnTitleClick = DBGrid2TitleClick
+      end
+    end
   end
   object MainMenu1: TMainMenu
     Images = ImageList1
@@ -554,6 +611,20 @@ object Form1: TForm1
     end
     object Floor1: TMenuItem
       Caption = 'Floor'
+      object View1: TMenuItem
+        Caption = 'Data view'
+        object Lists1: TMenuItem
+          Caption = 'List'
+          OnClick = Lists1Click
+        end
+        object Grids1: TMenuItem
+          Caption = 'Grid'
+          OnClick = Grids1Click
+        end
+      end
+      object N17: TMenuItem
+        Caption = '-'
+      end
       object Sort1: TMenuItem
         Caption = 'Sort'
         object Monster1: TMenuItem
@@ -1932,5 +2003,164 @@ object Form1: TForm1
     OnTimer = tmPreviewTimer
     Left = 528
     Top = 8
+  end
+  object ClientDataSet1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 273
+    Top = 88
+    object ClientDataSet1Field: TIntegerField
+      FieldName = '#'
+    end
+    object ClientDataSet1Name: TStringField
+      FieldName = 'Name'
+    end
+    object ClientDataSet1Skin: TWordField
+      FieldName = 'Skin'
+    end
+    object ClientDataSet1Section: TWordField
+      FieldName = 'Section'
+    end
+    object ClientDataSet1Wave: TWordField
+      FieldName = 'Wave'
+    end
+    object ClientDataSet1PositionX: TSingleField
+      FieldName = 'Pos X'
+    end
+    object ClientDataSet1PositionY: TSingleField
+      FieldName = 'Pos Y'
+    end
+    object ClientDataSet1PositionZ: TSingleField
+      FieldName = 'Pos Z'
+    end
+    object ClientDataSet1RotationY: TIntegerField
+      FieldName = 'Rot Y'
+    end
+    object ClientDataSet1Param1: TIntegerField
+      FieldName = 'Param 1'
+    end
+    object ClientDataSet1Param2: TSingleField
+      FieldName = 'Param 2'
+    end
+    object ClientDataSet1Param3: TSingleField
+      FieldName = 'Param 3'
+    end
+    object ClientDataSet1Param4: TSingleField
+      FieldName = 'Param 4'
+    end
+    object ClientDataSet1Param5: TSingleField
+      FieldName = 'Param 5'
+    end
+    object ClientDataSet1Param6: TSingleField
+      FieldName = 'Param 6'
+    end
+    object ClientDataSet1Param7: TIntegerField
+      FieldName = 'Param 7'
+    end
+  end
+  object ClientDataSet2: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 369
+    Top = 88
+    object ClientDataSet2Field: TIntegerField
+      FieldName = '#'
+    end
+    object ClientDataSet2Name: TStringField
+      FieldName = 'Name'
+    end
+    object ClientDataSet2Skin: TWordField
+      FieldName = 'Skin'
+    end
+    object ClientDataSet2Section: TWordField
+      FieldName = 'Section'
+    end
+    object ClientDataSet2Group: TWordField
+      FieldName = 'Group'
+    end
+    object ClientDataSet2PosX: TSingleField
+      FieldName = 'Pos X'
+    end
+    object ClientDataSet2PosY: TSingleField
+      FieldName = 'Pos Y'
+    end
+    object ClientDataSet2PosZ: TSingleField
+      FieldName = 'Pos Z'
+    end
+    object ClientDataSet2RotX: TSingleField
+      FieldName = 'Rot X'
+    end
+    object ClientDataSet2RotY: TSingleField
+      FieldName = 'Rot Y'
+    end
+    object ClientDataSet2RotZ: TSingleField
+      FieldName = 'Rot Z'
+    end
+    object ClientDataSet2Param1: TSingleField
+      FieldName = 'Param 1'
+    end
+    object ClientDataSet2Param2: TSingleField
+      FieldName = 'Param 2'
+    end
+    object ClientDataSet2Param3: TSingleField
+      FieldName = 'Param 3'
+    end
+    object ClientDataSet2Param4: TIntegerField
+      FieldName = 'Param 4'
+    end
+    object ClientDataSet2Param5: TIntegerField
+      FieldName = 'Param 5'
+    end
+    object ClientDataSet2Param6: TIntegerField
+      FieldName = 'Param 6'
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = ClientDataSet1
+    Left = 505
+    Top = 88
+  end
+  object DataSource2: TDataSource
+    DataSet = ClientDataSet2
+    Left = 593
+    Top = 88
+  end
+  object popupMonsters: TPopupMenu
+    Left = 438
+    Top = 12
+    object Sort2: TMenuItem
+      Caption = 'Sort'
+      object byRoom3: TMenuItem
+        Caption = 'by Room'
+        OnClick = byRoom3Click
+      end
+      object byWave2: TMenuItem
+        Caption = 'by Wave'
+        OnClick = byWave2Click
+      end
+      object byType3: TMenuItem
+        Caption = 'by Type'
+        OnClick = byType3Click
+      end
+    end
+  end
+  object popupObjects: TPopupMenu
+    Left = 454
+    Top = 12
+    object Sort3: TMenuItem
+      Caption = 'Sort'
+      object byRoom4: TMenuItem
+        Caption = 'by Room'
+        OnClick = byRoom4Click
+      end
+      object byGroup2: TMenuItem
+        Caption = 'by Group'
+        OnClick = byGroup2Click
+      end
+      object byType4: TMenuItem
+        Caption = 'by Type'
+        OnClick = byType4Click
+      end
+    end
   end
 end

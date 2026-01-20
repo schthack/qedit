@@ -11,9 +11,15 @@ type
     Memo1: TMemo;
     Button1: TButton;
     Copy: TButton;
+    Button2: TButton;
+    SaveDialog1: TSaveDialog;
+    cbShow: TComboBox;
+    Label1: TLabel;
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure CopyClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure cbShowChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -77,29 +83,24 @@ begin
     boxList[floor].entrys[i].cnt:=1;
 end;
 
-procedure TForm31.Button1Click(Sender: TObject);
-begin
-  close;
-end;
-
-procedure TForm31.CopyClick(Sender: TObject);
-begin
-  memo1.SelStart:=0;
-  memo1.SelLength:=length(memo1.Text);
-  memo1.CopyToClipboard;
-end;
-
-procedure TForm31.FormShow(Sender: TObject);
+procedure LoadCounts;
 var x,sfloor:integer;
 begin
+  with form31 do
+  begin
     for x:=0 to 40 do monsterList[x].count:=0;
+    if (cbShow.ItemIndex = 0) or (cbShow.ItemIndex = 1) then
+     begin
     for sfloor:=1 to 39 do
         for x:=0 to Floor[sfloor].MonsterCount-1 do begin
             addmonster(GenerateMonsterName( Floor[sfloor].Monster[x],x,0),sfloor);
             addmonster(GenerateMonsterName( Floor[sfloor].Monster[x],x,0),40);
         end;
+     end;
 
     for x:=0 to 40 do boxList[x].count:=0;
+    if (cbShow.ItemIndex = 0) or (cbShow.ItemIndex = 2) then
+    begin
     for sfloor:=1 to 39 do
         for x:=0 to Floor[sfloor].ObjCount-1 do begin
           if (Floor[sfloor].Obj[x].Skin = 136) or (Floor[sfloor].Obj[x].Skin = 145)
@@ -114,6 +115,7 @@ begin
               addBox(GetObjName(Floor[sFloor].Obj[x].Skin),40);
           end;
         end;
+    end;
 
     memo1.Clear;
 
@@ -125,7 +127,7 @@ begin
             Memo1.Lines.Add(#9+inttostr(monsterList[sfloor].entrys[x].cnt)+#9+monsterList[sfloor].entrys[x].name);
           end;
       end;
-      if (Floor[sfloor].MonsterCount > 0) and (boxList[sfloor].count > 0) then Memo1.Lines.Add('');
+      if (Floor[sfloor].MonsterCount > 0) and (boxList[sfloor].count > 0)  and (cbshow.itemindex <> 2) then Memo1.Lines.Add('');
       if boxList[sfloor].count > 0 then begin
           for x:=0 to boxList[sfloor].count-1 do begin
             Memo1.Lines.Add(#9+inttostr(boxList[sfloor].entrys[x].cnt)+#9+boxList[sfloor].entrys[x].name);
@@ -155,6 +157,37 @@ begin
 
     if (monsterList[sFloor].count <= 0) and (boxList[sFloor].count <= 0) then
         Memo1.Lines.Add(GetLanguageString(326));
+  end;
+end;
+
+procedure TForm31.Button1Click(Sender: TObject);
+begin
+  close;
+end;
+
+procedure TForm31.Button2Click(Sender: TObject);
+begin
+  if savedialog1.Execute then
+  begin
+    memo1.Lines.SaveToFile(savedialog1.FileName);
+  end;
+end;
+
+procedure TForm31.cbShowChange(Sender: TObject);
+begin
+  LoadCounts;
+end;
+
+procedure TForm31.CopyClick(Sender: TObject);
+begin
+  memo1.SelStart:=0;
+  memo1.SelLength:=length(memo1.Text);
+  memo1.CopyToClipboard;
+end;
+
+procedure TForm31.FormShow(Sender: TObject);
+begin
+   LoadCounts;
 end;
 
 end.

@@ -352,6 +352,7 @@ begin
 
     end;
     Form1.DrawMap;
+    Form1.LoadFloorGrids;
     close;
 end;
 

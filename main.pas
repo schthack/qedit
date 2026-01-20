@@ -6,7 +6,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   ImgList, Dialogs, Math, Menus, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
   ShellApi, D3DEngin, registry, Spin, System.ImageList, System.Generics.Collections,
-  System.Actions, System.IOUtils, Vcl.ActnList, Vcl.Themes, Vcl.Styles;
+  System.Actions, System.IOUtils, Vcl.ActnList, Vcl.Themes, Vcl.Styles, Data.DB,
+  Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.DBCtrls;
 
 const
   gcstring = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!"/$%?&*()_+-=#qazwsxedcrfvtgbyhnujmik,ol.p;^`<>';
@@ -371,10 +372,67 @@ type
     InvertYrotation2: TMenuItem;
     MirrorZposition2: TMenuItem;
     N16: TMenuItem;
+    View1: TMenuItem;
+    Lists1: TMenuItem;
+    Grids1: TMenuItem;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    DBGrid1: TDBGrid;
+    DBGrid2: TDBGrid;
+    ClientDataSet1: TClientDataSet;
+    ClientDataSet2: TClientDataSet;
+    DataSource1: TDataSource;
+    DataSource2: TDataSource;
+    ClientDataSet1Field: TIntegerField;
+    ClientDataSet1Name: TStringField;
+    ClientDataSet2Field: TIntegerField;
+    ClientDataSet2Name: TStringField;
+    ClientDataSet1Section: TWordField;
+    ClientDataSet1Skin: TWordField;
+    ClientDataSet1Wave: TWordField;
+    ClientDataSet1PositionX: TSingleField;
+    ClientDataSet1PositionY: TSingleField;
+    ClientDataSet1PositionZ: TSingleField;
+    ClientDataSet1RotationY: TIntegerField;
+    popupMonsters: TPopupMenu;
+    popupObjects: TPopupMenu;
+    Sort2: TMenuItem;
+    byRoom3: TMenuItem;
+    byWave2: TMenuItem;
+    byType3: TMenuItem;
+    Sort3: TMenuItem;
+    byRoom4: TMenuItem;
+    byGroup2: TMenuItem;
+    byType4: TMenuItem;
+    N17: TMenuItem;
+    ClientDataSet2Skin: TWordField;
+    ClientDataSet2Section: TWordField;
+    ClientDataSet2Group: TWordField;
+    ClientDataSet2PosX: TSingleField;
+    ClientDataSet2PosY: TSingleField;
+    ClientDataSet2PosZ: TSingleField;
+    ClientDataSet2RotX: TSingleField;
+    ClientDataSet2RotY: TSingleField;
+    ClientDataSet2RotZ: TSingleField;
+    ClientDataSet1Param1: TIntegerField;
+    ClientDataSet2Param4: TIntegerField;
+    ClientDataSet2Param5: TIntegerField;
+    ClientDataSet2Param6: TIntegerField;
+    ClientDataSet1Param7: TIntegerField;
+    ClientDataSet1Param2: TSingleField;
+    ClientDataSet1Param3: TSingleField;
+    ClientDataSet1Param4: TSingleField;
+    ClientDataSet1Param5: TSingleField;
+    ClientDataSet1Param6: TSingleField;
+    ClientDataSet2Param1: TSingleField;
+    ClientDataSet2Param2: TSingleField;
+    ClientDataSet2Param3: TSingleField;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
     procedure DrawMap;
+    procedure LoadFloorGrids;
     procedure Button6Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure ListBox1Click(Sender: TObject);
@@ -510,6 +568,24 @@ type
     procedure MirrorZposition2Click(Sender: TObject);
     procedure MirrorXposition1Click(Sender: TObject);
     procedure MirrorZposition1Click(Sender: TObject);
+    procedure Lists1Click(Sender: TObject);
+    procedure Grids1Click(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+    procedure DBGrid1TitleClick(Column: TColumn);
+    procedure byRoom3Click(Sender: TObject);
+    procedure byWave2Click(Sender: TObject);
+    procedure byType3Click(Sender: TObject);
+    procedure byRoom4Click(Sender: TObject);
+    procedure byGroup2Click(Sender: TObject);
+    procedure byType4Click(Sender: TObject);
+    procedure DBGrid2CellClick(Column: TColumn);
+    procedure DBGrid2TitleClick(Column: TColumn);
+    procedure DBGrid1DblClick(Sender: TObject);
+    procedure DBGrid2DblClick(Sender: TObject);
+    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
 
   private
     FClosedSuccessfully: Boolean;
@@ -646,6 +722,7 @@ var
   follow3D: Boolean = false;
   showdata: Boolean = false;
   showdecimal: Boolean = false;
+  showgrid: Boolean = false;
   addargs: Boolean = false;
   hidenops: Boolean = true;
   showbitmaps: Boolean = false;
@@ -701,6 +778,9 @@ var
   objloaded: Boolean = false;
   unusedlabel: Boolean = false;
 
+  lastmonstersort: string = '';
+  lastobjsort: string = '';
+
 implementation
 
 uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
@@ -712,6 +792,30 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   FAddRoom;
 
 {$R *.dfm}
+
+Procedure ShowGrids;
+begin
+  form1.label2.Visible := false;
+  form1.label3.Visible := false;
+  form1.ListBox1.Visible := false;
+  form1.ListBox2.Visible := false;
+  form1.Sort1.Visible := false;
+  form1.PageControl1.Visible := true;
+  form1.Lists1.Checked := false;
+  form1.Grids1.Checked := true;
+end;
+
+Procedure HideGrids;
+begin
+  form1.label2.Visible := true;
+  form1.label3.Visible := true;
+  form1.ListBox1.Visible := true;
+  form1.ListBox2.Visible := true;
+  form1.Sort1.Visible := true;
+  form1.PageControl1.Visible := false;
+  form1.Lists1.Checked := true;
+  form1.Grids1.Checked := false;
+end;
 
 Procedure SetBrightness(value: integer);
 var
@@ -1115,6 +1219,8 @@ begin
   form1.Texteditor1.Caption := GetLanguageString(303);
   form1.Floor1.Caption := GetLanguageString(304);
   form1.Sort1.Caption := GetLanguageString(305);
+  form1.Sort2.Caption := GetLanguageString(305);
+  form1.Sort3.Caption := GetLanguageString(305);
   form1.Monster1.Caption := GetLanguageString(306);
   form1.Objects1.Caption := GetLanguageString(307);
   form1.Monstercount1.Caption := GetLanguageString(324);
@@ -1124,6 +1230,12 @@ begin
   form1.byGroup1.Caption := GetLanguageString(310);
   form1.byType1.Caption := GetLanguageString(311);
   form1.byType2.Caption := GetLanguageString(311);
+  form1.byRoom3.Caption := GetLanguageString(308);
+  form1.byRoom4.Caption := GetLanguageString(308);
+  form1.byWave2.Caption := GetLanguageString(309);
+  form1.byGroup2.Caption := GetLanguageString(310);
+  form1.byType3.Caption := GetLanguageString(311);
+  form1.byType4.Caption := GetLanguageString(311);
   form1.Exportdata1.Caption := GetLanguageString(312);
   form1.Importdata1.Caption := GetLanguageString(313);
   form1.Events1.Caption := GetLanguageString(314);
@@ -1164,6 +1276,11 @@ begin
   form1.InvertYrotation1.Caption := GetLanguageString(516);
   form1.MirrorXposition1.Caption := GetLanguageString(517);
   form1.MirrorZposition1.Caption := GetLanguageString(518);
+  form1.View1.Caption := GetLanguageString(519);
+  form1.Lists1.Caption := GetLanguageString(520);
+  form1.Grids1.Caption := GetLanguageString(521);
+  form1.TabSheet1.Caption := GetLanguageString(306);
+  form1.TabSheet2.Caption := GetLanguageString(307);
 
   FPlacementOptions.Caption := GetLanguageString(352);
   FPlacementOptions.Label3.Caption := GetLanguageString(345);
@@ -1218,6 +1335,9 @@ begin
   form31.Caption := GetLanguageString(325);
   form31.Copy.Caption := GetLanguageString(159);
   form31.Button1.Caption := GetLanguageString(113);
+  form31.Label1.Caption := GetLanguageString(522);
+  form31.Button2.Caption := GetLanguageString(155);
+
 
   form32.Caption := GetLanguageString(448);
   form32.Button1.Caption := GetLanguageString(148);
@@ -2419,6 +2539,89 @@ begin
   // result:=re;
 end;
 
+Procedure TForm1.LoadFloorGrids;
+var
+  i: integer;
+begin
+  with form1 do
+  begin
+    // Clear the data sets
+    ClientDataSet1.EmptyDataSet;
+    ClientDataSet2.EmptyDataSet;
+
+    // Load monsters
+    for i := 0 to Floor[sFloor].MonsterCount - 1 do
+    begin
+      ClientDataSet1.Append;
+      ClientDataSet1.FieldByName('#').AsInteger := i;
+      ClientDataSet1.FieldByName('Name').AsString := GenerateMonsterName(Floor[sfloor].Monster[i], i, 0);
+      ClientDataSet1.FieldByName('Skin').AsInteger := Floor[sFloor].Monster[i].Skin;
+      ClientDataSet1.FieldByName('Section').AsInteger := Floor[sFloor].Monster[i].map_section;
+      ClientDataSet1.FieldByName('Wave').AsInteger := Floor[sFloor].Monster[i].unknow5;
+      ClientDataSet1.FieldByName('Pos X').AsSingle := Floor[sFloor].Monster[i].Pos_X;
+      ClientDataSet1.FieldByName('Pos Y').AsSingle := Floor[sFloor].Monster[i].Pos_Z;
+      ClientDataSet1.FieldByName('Pos Z').AsSingle := Floor[sFloor].Monster[i].Pos_Y;
+      ClientDataSet1.FieldByName('Rot Y').AsInteger := Floor[sFloor].Monster[i].Direction;
+      ClientDataSet1.FieldByName('Param 1').AsInteger := Floor[sFloor].Monster[i].unknow8;
+      ClientDataSet1.FieldByName('Param 2').AsSingle := Floor[sFloor].Monster[i].Movement_data;
+      ClientDataSet1.FieldByName('Param 3').AsSingle := Floor[sFloor].Monster[i].Unknow10;
+      ClientDataSet1.FieldByName('Param 4').AsSingle := Floor[sFloor].Monster[i].unknow11;
+      ClientDataSet1.FieldByName('Param 5').AsSingle := Floor[sFloor].Monster[i].Char_id;
+      ClientDataSet1.FieldByName('Param 6').AsSingle := Floor[sFloor].Monster[i].Action;
+      ClientDataSet1.FieldByName('Param 7').AsInteger := Floor[sFloor].Monster[i].Movement_flag;
+      ClientDataSet1.Post;
+    end;
+
+    // Load objects
+    for i := 0 to Floor[sFloor].ObjCount - 1 do
+    begin
+      ClientDataSet2.Append;
+      ClientDataSet2.FieldByName('#').AsInteger := i;
+      ClientDataSet2.FieldByName('Name').AsString := GetObjName(Floor[sFloor].Obj[i].Skin);
+      ClientDataSet2.FieldByName('Skin').AsInteger := Floor[sFloor].Obj[i].Skin;
+      ClientDataSet2.FieldByName('Section').AsInteger := Floor[sFloor].Obj[i].map_section;
+      ClientDataSet2.FieldByName('Group').AsInteger := Floor[sFloor].Obj[i].grp;
+      ClientDataSet2.FieldByName('Pos X').AsSingle := Floor[sFloor].Obj[i].Pos_X;
+      ClientDataSet2.FieldByName('Pos Y').AsSingle := Floor[sFloor].Obj[i].Pos_Z;
+      ClientDataSet2.FieldByName('Pos Z').AsSingle := Floor[sFloor].Obj[i].Pos_Y;
+      ClientDataSet2.FieldByName('Rot X').AsInteger := Floor[sFloor].Obj[i].unknow5;
+      ClientDataSet2.FieldByName('Rot Y').AsInteger := Floor[sFloor].Obj[i].unknow6;
+      ClientDataSet2.FieldByName('Rot Z').AsInteger := Floor[sFloor].Obj[i].unknow7;
+      ClientDataSet2.FieldByName('Param 1').AsSingle := Floor[sFloor].Obj[i].unknow8;
+      ClientDataSet2.FieldByName('Param 2').AsSingle := Floor[sFloor].Obj[i].unknow9;
+      ClientDataSet2.FieldByName('Param 3').AsSingle := Floor[sFloor].Obj[i].Unknow10;
+      ClientDataSet2.FieldByName('Param 4').AsInteger := Floor[sFloor].Obj[i].obj_id;
+      ClientDataSet2.FieldByName('Param 5').AsInteger := Floor[sFloor].Obj[i].Action;
+      ClientDataSet2.FieldByName('Param 6').AsInteger := Floor[sFloor].Obj[i].unknow13;
+      ClientDataSet2.Post;
+    end;
+
+    ClientDataSet1.IndexFieldNames := lastmonstersort;
+    ClientDataSet2.IndexFieldNames := lastobjsort;
+
+    if selected > -1 then
+    begin
+      if sType = 1 then
+        ClientDataSet1.Locate('#', selected, []);
+      if sType = 2 then
+        ClientDataSet2.Locate('#', selected, []);
+    end
+    else
+    begin
+      if pagecontrol1.ActivePage = tabsheet1 then
+        ClientDataSet1.Locate('#', 0, [])
+      else
+        ClientDataSet2.Locate('#', 0, []);
+    end;
+
+    // Left align all cells
+    for i := 0 to DBGrid1.Columns.Count - 1 do
+      DBGrid1.Columns[i].Alignment := taLeftJustify;
+    for i := 0 to DBGrid2.Columns.Count - 1 do
+      DBGrid2.Columns[i].Alignment := taLeftJustify;
+  end;
+end;
+
 Procedure TForm1.DrawMap;
 Var
   px, py, px2, py2, px3, py3: double;
@@ -2545,7 +2748,7 @@ begin
         begin
           // Attempt to add the bitmap to the cache
           name := GenerateMonsterName(Floor[sfloor].Monster[x], x, -1) + '.bmp';
-          if not BMPCache.TryGetValue(name, bm) then
+          if not BMPCache.TryGetValue('monster_' + name, bm) then
           begin
             hs := TMemorystream.Create;
             bm := TBitmap.Create;
@@ -2558,7 +2761,7 @@ begin
             else if fileexists(path + 'img\unknow.bmp') then
               bm.LoadFromFile(path + 'img\unknow.bmp');
             if Assigned(bm) and not bm.Empty then
-              BMPCache.Add(name, bm)
+              BMPCache.Add('monster_' + name, bm)
             else
             begin
               bm.free;
@@ -2650,7 +2853,9 @@ begin
         begin
           bm := TBitmap.Create;
           name := inttohex(Floor[sFloor].Obj[x].Skin,2) + '.bmp';
-          if not BMPCache.TryGetValue(name, bm) then
+          //if x = selected then showmessage(name);
+
+          if not BMPCache.TryGetValue('object_' + name, bm) then
           begin
             bm := TBitmap.Create;
             hs := TMemorystream.Create;
@@ -2659,7 +2864,7 @@ begin
               // Only cache the object bitmap if a valid file was loaded
               bm.LoadFromFile(path + 'img\i' + name);
               if Assigned(bm) and not bm.Empty then
-                BMPCache.Add(name, bm);
+                BMPCache.Add('object_' + name, bm);
             end
             else if PikaGetFile(hs, name, path + 'images.ppk', 'Build By Schthack') = 0 then
               bm.LoadFromStream(hs)
@@ -3452,6 +3657,11 @@ begin
     if isdc and (AsmMode = 2) then
       FFilter := 2;
     CheckShadow;
+
+    LoadFloorGrids;
+    form1.ClientDataSet2.Locate('#', 0, []);
+    form1.ClientDataSet1.Locate('#', 0, []);
+    form1.PageControl1.ActivePage := tabsheet1;
   end;
 end;
 
@@ -4410,8 +4620,6 @@ begin
         ResetPreviewState
       else previewpaused := true;
     end;
-    // Save the last selected floor
-    prevfloor := CheckListBox1.ItemIndex;
     HideIndicator();
     Copylastmonster1.Enabled := false;
     Copylastitem1.Enabled := false;
@@ -4473,6 +4681,14 @@ begin
     end;
 
     ClearBMPCache;
+    LoadFloorGrids;
+    if prevfloor <> CheckListBox1.ItemIndex then
+    begin
+      form1.ClientDataSet2.Locate('#', 0, []);
+      form1.ClientDataSet1.Locate('#', 0, []);
+    end;
+    // Save the last selected floor
+    prevfloor := CheckListBox1.ItemIndex;
   end;
 end;
 
@@ -4581,6 +4797,8 @@ begin
       vz := 0;
       myscreen.SetView(ppx, ppy, ppz, vr, vz);
     end;
+    PageControl1.ActivePage := TabSheet1;
+    ClientDataSet1.Locate('#', selected, []);
   end;
 end;
 
@@ -4682,6 +4900,8 @@ begin
       vz := 0;
       myscreen.SetView(ppx, ppy, ppz, vr, vz);
     end;
+    PageControl1.ActivePage := TabSheet2;
+    ClientDataSet2.Locate('#', selected, []);
   end;
 end;
 
@@ -4716,6 +4936,88 @@ begin
   LoadLanguageStrings(flp);
   SetInterfaceText;
   flp.Free;
+end;
+
+procedure TForm1.DBGrid1CellClick(Column: TColumn);
+begin
+  if not ClientDataSet1.isEmpty then
+  begin
+    selected := strtoint(DBGrid1.DataSource.DataSet.FieldByName('#').AsString);
+    listbox1.ItemIndex := selected;
+    sType := 1;
+    Listbox1click(nil);
+  end;
+end;
+
+procedure TForm1.DBGrid1DblClick(Sender: TObject);
+begin
+  Listbox1DblClick(nil);
+end;
+
+procedure TForm1.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+  DataCol: Integer; Column: TColumn; State: TGridDrawState);
+var
+  Grid: TDBGrid;
+begin
+  Grid := Sender as TDBGrid;
+
+
+  if gdSelected in State then
+  begin
+    Grid.Canvas.Brush.Color :=
+      TStyleManager.ActiveStyle.GetStyleColor(scListBox);
+    Grid.Canvas.Font.Color :=
+      TStyleManager.ActiveStyle.GetStyleFontColor(sfTextLabelNormal);
+  end;
+
+  Grid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+
+procedure TForm1.DBGrid1TitleClick(Column: TColumn);
+begin
+  ClientDataSet1.IndexFieldNames := Column.FieldName;
+  lastmonstersort := Column.FieldName;
+end;
+
+procedure TForm1.DBGrid2CellClick(Column: TColumn);
+begin
+  if not ClientDataSet2.isEmpty then
+  begin
+    selected := strtoint(DBGrid2.DataSource.DataSet.FieldByName('#').AsString);
+    listbox2.ItemIndex := selected;
+    sType := 2;
+    Listbox2click(nil);
+  end;
+end;
+
+procedure TForm1.DBGrid2DblClick(Sender: TObject);
+begin
+  Listbox1DblClick(nil);
+end;
+
+procedure TForm1.DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
+  DataCol: Integer; Column: TColumn; State: TGridDrawState);
+var
+  Grid: TDBGrid;
+begin
+  Grid := Sender as TDBGrid;
+
+
+  if gdSelected in State then
+  begin
+    Grid.Canvas.Brush.Color :=
+      TStyleManager.ActiveStyle.GetStyleColor(scListBox);
+    Grid.Canvas.Font.Color :=
+      TStyleManager.ActiveStyle.GetStyleFontColor(sfTextLabelNormal);
+  end;
+
+  Grid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+
+procedure TForm1.DBGrid2TitleClick(Column: TColumn);
+begin
+  ClientDataSet2.IndexFieldNames := Column.FieldName;
+  lastobjsort := Column.FieldName;
 end;
 
 procedure TForm1.Default1Click(Sender: TObject);
@@ -5328,6 +5630,7 @@ begin
       MoveSel := -1;
       HideIndicator();
     end;
+    LoadFloorGrids;
   end;
 end;
 
@@ -5366,6 +5669,7 @@ begin
       MoveSel := -1;
       HideIndicator();
     end;
+    LoadFloorGrids;
   end;
 end;
 
@@ -5934,6 +6238,8 @@ var
 begin
   If tag = 0 then
   begin
+    clientdataset1.CreateDataSet;
+    clientdataset2.CreateDataSet;
     showbmp.ShortCut := TextToShortCut('`');
     showbitmapoverlays1.ShortCut := TextToShortCut('`');
     BMPCache := TDictionary<string, TBitmap>.Create;
@@ -6513,6 +6819,8 @@ begin
           showdata := Reg.ReadBool('ShowData');
         if Reg.ValueExists('ShowDecimal') then
           ShowDecimal := Reg.ReadBool('ShowDecimal');
+        if Reg.ValueExists('ShowGrid') then
+          ShowGrid := Reg.ReadBool('ShowGrid');
        if Reg.ValueExists('AddArgs') then
           addargs := Reg.ReadBool('AddArgs');
         if Reg.ValueExists('HideNOPs') then
@@ -6748,6 +7056,11 @@ begin
       fmScriptTE.Hex1.Checked := true;
       fmScriptTE.Decimal1.Checked := false;
     end;
+
+    if showgrid then
+      ShowGrids
+    else
+      HideGrids;
 
     fmScriptTE.AddArgs1.Checked := addargs;
     form4.HideNOPs1.Checked := hidenops;
@@ -7927,6 +8240,8 @@ begin
         smDelete.Enabled := true;
         smMove.Enabled := true;
         transform1.Enabled := true;
+        if showgrid then
+          Listbox1Click(nil);
       end;
     end;
     if stype = 2 then
@@ -7942,6 +8257,8 @@ begin
         smDelete.Enabled := true;
         smMove.Enabled := true;
         transform1.Enabled := true;
+        if showgrid then
+          Listbox2Click(nil);
       end;
     end;
     DrawMap;
@@ -8039,6 +8356,7 @@ begin
       MoveSel := -1;
       HideIndicator();
     end;
+    LoadFloorGrids;
     // CheckListBox1Click(form1);
   end;
 
@@ -8126,6 +8444,7 @@ begin
       MoveSel := -1;
       HideIndicator();
     end;
+    LoadFloorGrids;
   end;
 end;
 
@@ -8150,6 +8469,11 @@ begin
   end;
   move(m[0], Floor[sfloor].Obj[0], sizeof(TObj) * Floor[sfloor].ObjCount);
   CheckListBox1Click(Form1);
+end;
+
+procedure TForm1.byGroup2Click(Sender: TObject);
+begin
+  bygroup1Click(nil);
 end;
 
 procedure TForm1.Byroom1Click(Sender: TObject);
@@ -8198,6 +8522,16 @@ begin
   CheckListBox1Click(Form1);
 end;
 
+procedure TForm1.byRoom3Click(Sender: TObject);
+begin
+  byroom1Click(nil);
+end;
+
+procedure TForm1.byRoom4Click(Sender: TObject);
+begin
+  byroom2Click(nil);
+end;
+
 procedure TForm1.byType1Click(Sender: TObject);
 var
   x, i, v: integer;
@@ -8244,6 +8578,16 @@ begin
   CheckListBox1Click(Form1);
 end;
 
+procedure TForm1.byType3Click(Sender: TObject);
+begin
+  bytype1Click(nil);
+end;
+
+procedure TForm1.byType4Click(Sender: TObject);
+begin
+  bytype2Click(nil);
+end;
+
 procedure TForm1.byWave1Click(Sender: TObject);
 var
   x, i, v: integer;
@@ -8265,6 +8609,11 @@ begin
   end;
   move(m[0], Floor[sfloor].Monster[0], sizeof(TMonster) * Floor[sfloor].MonsterCount);
   CheckListBox1Click(Form1);
+end;
+
+procedure TForm1.byWave2Click(Sender: TObject);
+begin
+  bywave1Click(nil);
 end;
 
 procedure TForm1.Image2Click(Sender: TObject);
@@ -8960,6 +9309,7 @@ begin
   curepi := 0;
 
   UpdateWindowTitle;
+  LoadFloorGrids;
 end;
 
 procedure TForm1.Episode21Click(Sender: TObject);
@@ -9029,6 +9379,7 @@ begin
   end;
   curepi := 1;
   UpdateWindowTitle;
+  LoadFloorGrids;
 end;
 
 procedure TForm1.Episode41Click(Sender: TObject);
@@ -9107,6 +9458,7 @@ begin
   end;
   curepi := 2;
   UpdateWindowTitle;
+  LoadFloorGrids;
 end;
 
 procedure TForm1.Button11Click(Sender: TObject);
@@ -9128,6 +9480,7 @@ begin
   Form1.CheckListBox1Click(Form1);
   inundo := false;
   ctrldw := false;
+  LoadFloorGrids;
 end;
 
 procedure TForm1.SetUndow();
@@ -9252,6 +9605,7 @@ begin
     MoveSel := Selected;
     MoveType := stype;
     isedited := true;
+    LoadFloorGrids;
   end;
 end;
 
@@ -10585,6 +10939,25 @@ begin
   form18.Memo1.Lines.Add(s);
 end;
 
+procedure TForm1.Lists1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  HideGrids;
+
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteBool('ShowGrid', false);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+end;
+
 procedure TForm1.Itemslistbb1Click(Sender: TObject);
 var
   i, x: integer;
@@ -11833,6 +12206,25 @@ begin
   flp.Free;
 end;
 
+procedure TForm1.Grids1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  ShowGrids;
+
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteBool('ShowGrid', true);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+end;
+
 procedure TForm1.Exporttextfortranslation1Click(Sender: TObject);
 var
   s, b: widestring;
@@ -12112,6 +12504,7 @@ begin
   Label3.Left := 200 + (((Form1.Width - 190) div 2) - 16);
   ListBox2.Width := (((Form1.Width - 190) div 2) - 14);
   ListBox1.Width := (((Form1.Width - 190) div 2) - 14);
+  pagecontrol1.Width := (((Form1.Width - 190)) - 14);
   lblModifiers.Left := lblStatus.Left + lblStatus.Width + 6;
   DrawMap;
 end;

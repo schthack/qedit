@@ -994,6 +994,7 @@ begin
                     selected:=i;
                     if undocount > 0 then
                       form1.SetUndow;
+                    form1.LoadFloorGrids;
                     inclickz:=rayOrigin.y;
                     inclickx:=rayOrigin.x;
                     inclicky:=rayOrigin.z;
@@ -1020,6 +1021,7 @@ begin
                     selected:=i;
                     if undocount > 0 then
                       form1.SetUndow;
+                    form1.LoadFloorGrids;
                     inclickz:=rayOrigin.y;
                     inclickx:=rayOrigin.x;
                     inclicky:=rayOrigin.z;
