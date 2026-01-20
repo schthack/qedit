@@ -587,8 +587,8 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
-    procedure FormActivate(Sender: TObject);
     procedure Switchgridtab1Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -2628,10 +2628,8 @@ begin
       end
       else
       begin
-        if pagecontrol1.ActivePage = tabsheet1 then
-          ClientDataSet1.First
-        else
-          ClientDataSet2.First;
+        ClientDataSet1.First;
+        ClientDataSet2.First;
         monsterselected := false;
         objectselected := false;
       end;
@@ -3682,9 +3680,6 @@ begin
     if isdc and (AsmMode = 2) then
       FFilter := 2;
     CheckShadow;
-
-    ClientDataSet1.First;
-    ClientDataSet2.First;
   end;
 end;
 
@@ -4705,11 +4700,6 @@ begin
 
     ClearBMPCache;
     LoadFloorGrids;
-    if prevfloor <> CheckListBox1.ItemIndex then
-    begin
-      ClientDataSet1.First;
-      ClientDataSet2.First;
-    end;
     // Save the last selected floor
     prevfloor := CheckListBox1.ItemIndex;
     monsterselected := false;
@@ -4823,7 +4813,7 @@ begin
       vz := 0;
       myscreen.SetView(ppx, ppy, ppz, vr, vz);
     end;
-    if sender <> DBGrid1 then
+    if (sender <> DBGrid1) and showgrid then
     begin
       LoadFloorGrids;
       PageControl1.ActivePage := TabSheet1;
@@ -4933,7 +4923,7 @@ begin
       vz := 0;
       myscreen.SetView(ppx, ppy, ppz, vr, vz);
     end;
-    if sender <> DBGrid2 then
+    if (sender <> DBGrid2) and showgrid then
     begin
       LoadFloorGrids;
       PageControl1.ActivePage := TabSheet2;
@@ -8312,9 +8302,12 @@ begin
         smMove.Enabled := true;
         transform1.Enabled := true;
         monsterselected := true;
-        ClientDataSet1.DisableControls;
-        ClientDataSet1.Locate('#', selected, []);
-        ClientDataSet1.EnableControls;
+        if showgrid then
+        begin
+          ClientDataSet1.DisableControls;
+          ClientDataSet1.Locate('#', selected, []);
+          ClientDataSet1.EnableControls;
+        end;
       end;
     end;
     if stype = 2 then
@@ -8331,9 +8324,12 @@ begin
         smMove.Enabled := true;
         transform1.Enabled := true;
         objectselected := true;
-        ClientDataSet2.DisableControls;
-        ClientDataSet2.Locate('#', selected, []);
-        ClientDataSet2.EnableControls;
+        if showgrid then
+        begin
+          ClientDataSet2.DisableControls;
+          ClientDataSet2.Locate('#', selected, []);
+          ClientDataSet2.EnableControls;
+        end;
       end;
     end;
     DrawMap;
