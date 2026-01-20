@@ -1000,7 +1000,8 @@ begin
                     inclick:=true;
                     stype:=1;
                     form1.ListBox1.ItemIndex:=i;
-                    form1.PageControl1.ActivePage := form1.tabsheet1;
+                    if showgrid then
+                      form1.PageControl1.ActivePage := form1.tabsheet1;
                     form1.LoadFloorGrids;
                     form1.drawmap;
                     if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
@@ -1028,7 +1029,8 @@ begin
                     inclick:=true;
                     stype:=2;
                     form1.ListBox2.ItemIndex:=i;
-                    form1.PageControl1.ActivePage := form1.tabsheet2;
+                    if showgrid then
+                      form1.PageControl1.ActivePage := form1.tabsheet2;
                     form1.LoadFloorGrids;
                     form1.drawmap;
                     if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
