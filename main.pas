@@ -2618,11 +2618,13 @@ begin
         if sType = 1 then
         begin
           ClientDataSet1.Locate('#', selected, []);
+          ClientDataSet2.Locate('#', Listbox2.ItemIndex, []);
           monsterselected := true;
         end;
         if sType = 2 then
         begin
           ClientDataSet2.Locate('#', selected, []);
+          ClientDataSet1.Locate('#', Listbox1.ItemIndex, []);
           objectselected := true;
         end;
       end
@@ -9094,6 +9096,7 @@ begin
           ListBox1.Items.Add('#' + inttostr(MoveSel) + ' - ' + GenerateMonsterName(Floor[sfloor].Monster[MoveSel],
             MoveSel, 0));
         Selected := MoveSel;
+        LoadFloorGrids;
       end;
       if MoveType = 2 then
       begin
@@ -9102,7 +9105,7 @@ begin
         if not firstdrop then
           ListBox2.Items.Add('#' + inttostr(MoveSel) + ' - ' + GetObjName(Floor[sfloor].Obj[MoveSel].Skin));
         Selected := MoveSel;
-
+        LoadFloorGrids;
       end;
       DrawMap;
     end;
