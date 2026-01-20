@@ -5024,6 +5024,7 @@ procedure TForm1.DBGrid1TitleClick(Column: TColumn);
 begin
   ClientDataSet1.IndexFieldNames := Column.FieldName;
   lastmonstersort := Column.FieldName;
+  LoadFloorGrids;
 end;
 
 procedure TForm1.DBGrid2CellClick(Column: TColumn);
@@ -5081,6 +5082,7 @@ procedure TForm1.DBGrid2TitleClick(Column: TColumn);
 begin
   ClientDataSet2.IndexFieldNames := Column.FieldName;
   lastobjsort := Column.FieldName;
+  LoadFloorGrids;
 end;
 
 procedure TForm1.Default1Click(Sender: TObject);
