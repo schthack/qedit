@@ -516,8 +516,8 @@ Transform
 Invert Y rotation
 Mirror X position
 Mirror Z position
-View
-Lists
-Grids
+View mode
+List
+Grid
 Filter:
 Switch grid

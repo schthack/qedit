@@ -522,9 +522,9 @@ interface
     'Invert Y rotation',                                                        // 516
     'Mirror X position',                                                        // 517
     'Mirror Z position',                                                        // 518
-    'View',                                                                     // 519
-    'Lists',                                                                    // 520
-    'Grids',                                                                    // 521
+    'View mode',                                                                // 519
+    'List',                                                                     // 520
+    'Grid',                                                                     // 521
     'Filter:',                                                                  // 522
     'Switch grid'                                                               // 523
   );

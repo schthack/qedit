@@ -405,7 +405,6 @@ type
     byRoom4: TMenuItem;
     byGroup2: TMenuItem;
     byType4: TMenuItem;
-    N17: TMenuItem;
     ClientDataSet2Skin: TWordField;
     ClientDataSet2Section: TWordField;
     ClientDataSet2Group: TWordField;
@@ -591,6 +590,20 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure Switchgridtab1Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure ClientDataSet1AfterScroll(DataSet: TDataSet);
+    procedure ClientDataSet2AfterScroll(DataSet: TDataSet);
+    procedure DBGrid1Enter(Sender: TObject);
+    procedure DBGrid1Exit(Sender: TObject);
+    procedure DBGrid1MouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure DBGrid2Enter(Sender: TObject);
+    procedure DBGrid2Exit(Sender: TObject);
+    procedure DBGrid2MouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure DBGrid1MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure DBGrid2MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
 
   private
     FClosedSuccessfully: Boolean;
@@ -786,6 +799,8 @@ var
   lastmonstersort: string = '';
   lastobjsort: string = '';
   gridtype: integer = -1;
+  monstgridfocused: Boolean = false;
+  objgridfocused: Boolean = false;
 
 implementation
 
@@ -810,6 +825,7 @@ begin
   form1.Lists1.Checked := false;
   form1.Grids1.Checked := true;
   form1.Switchgridtab1.Visible := true;
+  form1.CheckListBox1Click(nil);
 end;
 
 Procedure HideGrids;
@@ -823,6 +839,9 @@ begin
   form1.Lists1.Checked := true;
   form1.Grids1.Checked := false;
   form1.Switchgridtab1.Visible := false;
+  form1.CheckListBox1Click(nil);
+  form1.ListBox1.ItemIndex := -1;
+  form1.ListBox2.ItemIndex := -1;
 end;
 
 Procedure SetBrightness(value: integer);
@@ -2636,6 +2655,14 @@ begin
         ClientDataSet1.First;
         ClientDataSet2.First;
         gridtype := -1;
+
+        if indelete then
+        begin
+          if sType = 1 then
+            ClientDataSet1.Last;
+          if sType = 2 then
+            ClientDataSet2.Last;
+        end
       end;
 
       ClientDataSet1.EnableControls;
@@ -4622,6 +4649,7 @@ begin
     form1.Image1.Canvas.Brush.Color := TStyleManager.ActiveStyle.GetStyleColor(scListBox);
     form1.Image1.Canvas.Font.Color := clBlack;
   end;
+  form1.Panel1.Color := TStyleManager.ActiveStyle.GetStyleColor(scListBox);
 end;
 
 procedure TForm1.CheckListBox1Click(Sender: TObject);
@@ -4656,7 +4684,6 @@ begin
       if CheckListBox1.ItemIndex = 14 then mapfilename:=path+'map\map_darkfalz00c.rel';
       if (CheckListBox1.ItemIndex > 2) and (CheckListBox1.ItemIndex < 11) then }
     mapfilenam := mapfile[CheckListBox1.ItemIndex];
-    SetImage1Colors;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     Button2.Enabled := false;
     Button1.Enabled := false;
@@ -4701,8 +4728,32 @@ begin
     // Save the last selected floor
     prevfloor := CheckListBox1.ItemIndex;
     gridtype := -1;
-    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
-    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+  end;
+end;
+
+procedure TForm1.ClientDataSet1AfterScroll(DataSet: TDataSet);
+begin
+  if not ClientDataSet1.isEmpty and (selected > -1) and monstgridfocused then
+  begin
+    sType := 1;
+    gridtype := 1;
+    selected := strtointdef(DBGrid1.DataSource.DataSet.FieldByName('#').AsString, -1);
+    listbox1.ItemIndex := selected;
+    listbox2.ItemIndex := -1;
+    Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2AfterScroll(DataSet: TDataSet);
+begin
+  if not ClientDataSet2.isEmpty and (selected > -1) and objgridfocused then
+  begin
+    sType := 2;
+    gridtype := 2;
+    selected := strtointdef(DBGrid2.DataSource.DataSet.FieldByName('#').AsString, -1);
+    listbox2.ItemIndex := selected;
+    listbox1.ItemIndex := -1;
+    Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
   end;
 end;
 
@@ -4820,8 +4871,6 @@ begin
       clientdataset1.Locate('#', selected, []);
       clientdataset1.EnableControls;
     end;
-    DBGrid1.Options := DBGrid1.Options + [dgIndicator];
-    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
   end;
 end;
 
@@ -4932,8 +4981,6 @@ begin
       clientdataset2.Locate('#', selected, []);
       clientdataset2.EnableControls;
     end;
-    DBGrid2.Options := DBGrid2.Options + [dgIndicator];
-    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
   end;
 end;
 
@@ -5021,6 +5068,28 @@ begin
   end;
 end;
 
+procedure TForm1.DBGrid1Enter(Sender: TObject);
+begin
+  monstgridfocused := true;
+end;
+
+procedure TForm1.DBGrid1Exit(Sender: TObject);
+begin
+  monstgridfocused := false;
+end;
+
+procedure TForm1.DBGrid1MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  monstgridfocused := true;
+end;
+
+procedure TForm1.DBGrid1MouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+  monstgridfocused := true;
+end;
+
 procedure TForm1.DBGrid1TitleClick(Column: TColumn);
 begin
   ClientDataSet1.IndexFieldNames := Column.FieldName;
@@ -5077,6 +5146,28 @@ begin
 
     Grid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
   end;
+end;
+
+procedure TForm1.DBGrid2Enter(Sender: TObject);
+begin
+  objgridfocused := true;
+end;
+
+procedure TForm1.DBGrid2Exit(Sender: TObject);
+begin
+  objgridfocused := false;
+end;
+
+procedure TForm1.DBGrid2MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  objgridfocused := true;
+end;
+
+procedure TForm1.DBGrid2MouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+  objgridfocused := true;
 end;
 
 procedure TForm1.DBGrid2TitleClick(Column: TColumn);
@@ -6304,6 +6395,7 @@ var
 begin
   If tag = 0 then
   begin
+    SetImage1Colors;
     clientdataset1.CreateDataSet;
     clientdataset2.CreateDataSet;
     showbmp.ShortCut := TextToShortCut('`');
@@ -8312,8 +8404,7 @@ begin
           ClientDataSet1.DisableControls;
           ClientDataSet1.Locate('#', selected, []);
           ClientDataSet1.EnableControls;
-          DBGrid1.Options := DBGrid1.Options + [dgIndicator];
-          DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+          Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
         end;
       end;
     end;
@@ -8336,8 +8427,7 @@ begin
           ClientDataSet2.DisableControls;
           ClientDataSet2.Locate('#', selected, []);
           ClientDataSet2.EnableControls;
-          DBGrid2.Options := DBGrid2.Options + [dgIndicator];
-          DBGrid1.Options := DBGrid1.Options - [dgIndicator];
+          Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
         end;
       end;
     end;

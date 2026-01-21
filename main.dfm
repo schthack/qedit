@@ -246,7 +246,11 @@ object Form1: TForm1
     Anchors = [akLeft, akTop, akRight]
     BevelOuter = bvSpace
     Color = clWhite
+    DoubleBuffered = True
+    ParentBackground = False
+    ParentDoubleBuffered = False
     TabOrder = 10
+    StyleElements = [seFont, seBorder]
     object Image1: TImage
       Left = 1
       Top = 1
@@ -429,7 +433,7 @@ object Form1: TForm1
         Height = 134
         Align = alClient
         DataSource = DataSource1
-        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
         ReadOnly = True
         TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
@@ -440,6 +444,10 @@ object Form1: TForm1
         OnCellClick = DBGrid1CellClick
         OnDrawColumnCell = DBGrid1DrawColumnCell
         OnDblClick = DBGrid1DblClick
+        OnEnter = DBGrid1Enter
+        OnExit = DBGrid1Exit
+        OnMouseDown = DBGrid1MouseDown
+        OnMouseWheel = DBGrid1MouseWheel
         OnTitleClick = DBGrid1TitleClick
       end
     end
@@ -453,7 +461,7 @@ object Form1: TForm1
         Height = 134
         Align = alClient
         DataSource = DataSource2
-        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
         ReadOnly = True
         TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
@@ -464,6 +472,10 @@ object Form1: TForm1
         OnCellClick = DBGrid2CellClick
         OnDrawColumnCell = DBGrid2DrawColumnCell
         OnDblClick = DBGrid2DblClick
+        OnEnter = DBGrid2Enter
+        OnExit = DBGrid2Exit
+        OnMouseDown = DBGrid2MouseDown
+        OnMouseWheel = DBGrid2MouseWheel
         OnTitleClick = DBGrid2TitleClick
       end
     end
@@ -628,9 +640,6 @@ object Form1: TForm1
         ShortCut = 9
         Visible = False
         OnClick = Switchgridtab1Click
-      end
-      object N17: TMenuItem
-        Caption = '-'
       end
       object Sort1: TMenuItem
         Caption = 'Sort'
@@ -2014,6 +2023,7 @@ object Form1: TForm1
   object ClientDataSet1: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterScroll = ClientDataSet1AfterScroll
     Left = 273
     Top = 88
     object ClientDataSet1Field: TIntegerField
@@ -2087,6 +2097,7 @@ object Form1: TForm1
   object ClientDataSet2: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterScroll = ClientDataSet2AfterScroll
     Left = 369
     Top = 88
     object ClientDataSet2Field: TIntegerField
