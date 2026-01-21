@@ -526,7 +526,7 @@ interface
     'List',                                                                     // 520
     'Grid',                                                                     // 521
     'Filter:',                                                                  // 522
-    'Switch grid'                                                               // 523
+    'Switch tab'                                                                // 523
   );
 
 Const FloorFog: array[0..46] of byte = (

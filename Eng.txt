@@ -520,4 +520,4 @@ View mode
 List
 Grid
 Filter:
-Switch grid
+Switch tab
