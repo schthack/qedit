@@ -433,7 +433,7 @@ object Form1: TForm1
         Height = 134
         Align = alClient
         DataSource = DataSource1
-        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
         ReadOnly = True
         TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
@@ -461,7 +461,7 @@ object Form1: TForm1
         Height = 134
         Align = alClient
         DataSource = DataSource2
-        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
         ReadOnly = True
         TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
@@ -2060,6 +2060,7 @@ object Form1: TForm1
     object ClientDataSet1RotationY: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'Rot Y'
+      OnGetText = ClientDataSet1RotationYGetText
     end
     object ClientDataSet1Param1: TIntegerField
       Alignment = taLeftJustify
@@ -2134,14 +2135,17 @@ object Form1: TForm1
     object ClientDataSet2RotX: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Rot X'
+      OnGetText = ClientDataSet2RotXGetText
     end
     object ClientDataSet2RotY: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Rot Y'
+      OnGetText = ClientDataSet2RotYGetText
     end
     object ClientDataSet2RotZ: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Rot Z'
+      OnGetText = ClientDataSet2RotZGetText
     end
     object ClientDataSet2Param1: TSingleField
       Alignment = taLeftJustify

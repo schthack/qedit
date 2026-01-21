@@ -65,7 +65,7 @@ object Form31: TForm31
     OnClick = Button2Click
   end
   object cbShow: TComboBox
-    Left = 50
+    Left = 49
     Top = 448
     Width = 122
     Height = 22

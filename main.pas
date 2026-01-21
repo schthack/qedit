@@ -604,6 +604,14 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure DBGrid2MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure ClientDataSet1RotationYGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure ClientDataSet2RotXGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure ClientDataSet2RotYGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure ClientDataSet2RotZGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
 
   private
     FClosedSuccessfully: Boolean;
@@ -825,6 +833,7 @@ begin
   form1.Lists1.Checked := false;
   form1.Grids1.Checked := true;
   form1.Switchgridtab1.Visible := true;
+  form1.Switchgridtab1.Enabled := true;
   form1.CheckListBox1Click(nil);
 end;
 
@@ -839,6 +848,7 @@ begin
   form1.Lists1.Checked := true;
   form1.Grids1.Checked := false;
   form1.Switchgridtab1.Visible := false;
+  form1.Switchgridtab1.Enabled := false;
   form1.CheckListBox1Click(nil);
   form1.ListBox1.ItemIndex := -1;
   form1.ListBox2.ItemIndex := -1;
@@ -2595,7 +2605,7 @@ begin
         ClientDataSet1.FieldByName('Pos X').AsSingle := Floor[sFloor].Monster[i].Pos_X;
         ClientDataSet1.FieldByName('Pos Y').AsSingle := Floor[sFloor].Monster[i].Pos_Z;
         ClientDataSet1.FieldByName('Pos Z').AsSingle := Floor[sFloor].Monster[i].Pos_Y;
-        ClientDataSet1.FieldByName('Rot Y').AsInteger := Floor[sFloor].Monster[i].Direction;
+        ClientDataSet1.FieldByName('Rot Y').AsInteger := (Floor[sFloor].Monster[i].Direction) and $FFFF div 182;
         ClientDataSet1.FieldByName('Param 1').AsInteger := Floor[sFloor].Monster[i].unknow8;
         ClientDataSet1.FieldByName('Param 2').AsSingle := Floor[sFloor].Monster[i].Movement_data;
         ClientDataSet1.FieldByName('Param 3').AsSingle := Floor[sFloor].Monster[i].Unknow10;
@@ -2619,9 +2629,9 @@ begin
         ClientDataSet2.FieldByName('Pos X').AsSingle := Floor[sFloor].Obj[i].Pos_X;
         ClientDataSet2.FieldByName('Pos Y').AsSingle := Floor[sFloor].Obj[i].Pos_Z;
         ClientDataSet2.FieldByName('Pos Z').AsSingle := Floor[sFloor].Obj[i].Pos_Y;
-        ClientDataSet2.FieldByName('Rot X').AsInteger := Floor[sFloor].Obj[i].unknow5;
-        ClientDataSet2.FieldByName('Rot Y').AsInteger := Floor[sFloor].Obj[i].unknow6;
-        ClientDataSet2.FieldByName('Rot Z').AsInteger := Floor[sFloor].Obj[i].unknow7;
+        ClientDataSet2.FieldByName('Rot X').AsInteger := (Floor[sFloor].Obj[i].unknow5) and $FFFF div 182;;
+        ClientDataSet2.FieldByName('Rot Y').AsInteger := (Floor[sFloor].Obj[i].unknow6) and $FFFF div 182;;
+        ClientDataSet2.FieldByName('Rot Z').AsInteger := (Floor[sFloor].Obj[i].unknow7) and $FFFF div 182;;
         ClientDataSet2.FieldByName('Param 1').AsSingle := Floor[sFloor].Obj[i].unknow8;
         ClientDataSet2.FieldByName('Param 2').AsSingle := Floor[sFloor].Obj[i].unknow9;
         ClientDataSet2.FieldByName('Param 3').AsSingle := Floor[sFloor].Obj[i].Unknow10;
@@ -4744,6 +4754,15 @@ begin
   end;
 end;
 
+procedure TForm1.ClientDataSet1RotationYGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if not Sender.IsNull then
+  begin
+    Text := Sender.AsString + '°';
+  end;
+end;
+
 procedure TForm1.ClientDataSet2AfterScroll(DataSet: TDataSet);
 begin
   if not ClientDataSet2.isEmpty and (selected > -1) and objgridfocused then
@@ -4754,6 +4773,33 @@ begin
     listbox2.ItemIndex := selected;
     listbox1.ItemIndex := -1;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2RotXGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if not Sender.IsNull then
+  begin
+    Text := Sender.AsString + '°';
+  end;
+end;
+
+procedure TForm1.ClientDataSet2RotYGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if not Sender.IsNull then
+  begin
+    Text := Sender.AsString + '°';
+  end;
+end;
+
+procedure TForm1.ClientDataSet2RotZGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if not Sender.IsNull then
+  begin
+    Text := Sender.AsString + '°';
   end;
 end;
 
