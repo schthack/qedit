@@ -246,7 +246,6 @@ object Form1: TForm1
     Anchors = [akLeft, akTop, akRight]
     BevelOuter = bvSpace
     Color = clWhite
-    ParentBackground = False
     TabOrder = 10
     object Image1: TImage
       Left = 1
