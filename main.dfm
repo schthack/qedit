@@ -254,7 +254,6 @@ object Form1: TForm1
       Width = 529
       Height = 47
       Align = alClient
-      Transparent = True
       ExplicitWidth = 523
     end
   end
