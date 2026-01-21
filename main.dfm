@@ -639,7 +639,7 @@ object Form1: TForm1
       end
       object Switchgridtab1: TMenuItem
         Caption = 'Switch grid'
-        ShortCut = 9
+        ShortCut = 8201
         Visible = False
         OnClick = Switchgridtab1Click
       end

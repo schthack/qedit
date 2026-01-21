@@ -9559,6 +9559,10 @@ begin
   UpdateWindowTitle;
   ClientDataSet1.EmptyDataSet;
   ClientDataSet2.EmptyDataSet;
+  DBGrid1.Options := DBGrid1.Options - [dgIndicator];
+  DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+  Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
+  DrawMap;
 end;
 
 procedure TForm1.Episode21Click(Sender: TObject);
@@ -9630,6 +9634,10 @@ begin
   UpdateWindowTitle;
   ClientDataSet1.EmptyDataSet;
   ClientDataSet2.EmptyDataSet;
+  DBGrid1.Options := DBGrid1.Options - [dgIndicator];
+  DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+  Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
+  DrawMap;
 end;
 
 procedure TForm1.Episode41Click(Sender: TObject);
@@ -9710,6 +9718,10 @@ begin
   UpdateWindowTitle;
   ClientDataSet1.EmptyDataSet;
   ClientDataSet2.EmptyDataSet;
+  DBGrid1.Options := DBGrid1.Options - [dgIndicator];
+  DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+  Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
+  DrawMap;
 end;
 
 procedure TForm1.Button11Click(Sender: TObject);
