@@ -429,6 +429,8 @@ type
     ClientDataSet2Param2: TSingleField;
     ClientDataSet2Param3: TSingleField;
     Switchgridtab1: TMenuItem;
+    ClientDataSet2ID: TWordField;
+    ClientDataSet1ChildCount: TWordField;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -783,8 +785,7 @@ var
 
   lastmonstersort: string = '';
   lastobjsort: string = '';
-  monsterselected: Boolean = false;
-  objectselected: Boolean = false;
+  gridtype: integer = -1;
 
 implementation
 
@@ -2583,6 +2584,7 @@ begin
         ClientDataSet1.FieldByName('Param 5').AsSingle := Floor[sFloor].Monster[i].Char_id;
         ClientDataSet1.FieldByName('Param 6').AsSingle := Floor[sFloor].Monster[i].Action;
         ClientDataSet1.FieldByName('Param 7').AsInteger := Floor[sFloor].Monster[i].Movement_flag;
+        ClientDataSet1.FieldByName('Child Count').AsInteger := Floor[sFloor].Monster[i].Unknow2 div $10000;
         ClientDataSet1.Post;
       end;
 
@@ -2607,6 +2609,7 @@ begin
         ClientDataSet2.FieldByName('Param 4').AsInteger := Floor[sFloor].Obj[i].obj_id;
         ClientDataSet2.FieldByName('Param 5').AsInteger := Floor[sFloor].Obj[i].Action;
         ClientDataSet2.FieldByName('Param 6').AsInteger := Floor[sFloor].Obj[i].unknow13;
+        ClientDataSet2.FieldByName('ID').AsInteger := Floor[sFloor].Obj[i].id;
         ClientDataSet2.Post;
       end;
 
@@ -2619,28 +2622,21 @@ begin
         begin
           ClientDataSet1.Locate('#', selected, []);
           ClientDataSet2.Locate('#', Listbox2.ItemIndex, []);
-          monsterselected := true;
+          gridtype := 1;
         end;
         if sType = 2 then
         begin
           ClientDataSet2.Locate('#', selected, []);
           ClientDataSet1.Locate('#', Listbox1.ItemIndex, []);
-          objectselected := true;
+          gridtype := 2;
         end;
       end
       else
       begin
         ClientDataSet1.First;
         ClientDataSet2.First;
-        monsterselected := false;
-        objectselected := false;
+        gridtype := -1;
       end;
-
-      // Left align all cells
-      for i := 0 to DBGrid1.Columns.Count - 1 do
-        DBGrid1.Columns[i].Alignment := taLeftJustify;
-      for i := 0 to DBGrid2.Columns.Count - 1 do
-        DBGrid2.Columns[i].Alignment := taLeftJustify;
 
       ClientDataSet1.EnableControls;
       ClientDataSet2.EnableControls;
@@ -4704,8 +4700,7 @@ begin
     LoadFloorGrids;
     // Save the last selected floor
     prevfloor := CheckListBox1.ItemIndex;
-    monsterselected := false;
-    objectselected := false;
+    gridtype := -1;
   end;
 end;
 
@@ -4749,7 +4744,7 @@ begin
     MoveSel := -1;
     HideIndicator();
     stype := 1;
-    monsterselected := true;
+    gridtype := 1;
     Button2.Enabled := true;
     Button1.Enabled := true;
     Button3.Enabled := true;
@@ -4853,7 +4848,7 @@ begin
     ListBox1.ItemIndex := -1;
     sms := Floor[sfloor].Obj[Selected].map_section;
     stype := 2;
-    objectselected := true;
+    gridtype := 2;
     DrawMap;
     SetImage1Colors;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
@@ -4976,6 +4971,7 @@ begin
     selected := strtoint(DBGrid1.DataSource.DataSet.FieldByName('#').AsString);
     listbox1.ItemIndex := selected;
     Listbox1click(DBGrid1);
+    DBGrid1.Options := DBGrid1.Options + [dgIndicator];
     DBGrid1.Invalidate;
   end;
 end;
@@ -4990,8 +4986,11 @@ procedure TForm1.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
 var
   Grid: TDBGrid;
 begin
-  if not monsterselected then
+  if gridtype = 1 then
+    DBGrid1.Options := DBGrid1.Options + [dgIndicator];
+  if (gridtype <> 1) or ClientDataSet1.IsEmpty then
   begin
+    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     Grid := Sender as TDBGrid;
 
     if gdSelected in State then
@@ -5034,6 +5033,7 @@ begin
     selected := strtoint(DBGrid2.DataSource.DataSet.FieldByName('#').AsString);
     listbox2.ItemIndex := selected;
     Listbox2click(DBGrid2);
+    DBGrid2.Options := DBGrid2.Options + [dgIndicator];
     DBGrid2.Invalidate;
   end;
 end;
@@ -5048,8 +5048,11 @@ procedure TForm1.DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
 var
   Grid: TDBGrid;
 begin
-  if not objectselected then
+  if gridtype = 2 then
+    DBGrid2.Options := DBGrid2.Options + [dgIndicator];
+  if (gridtype <> 2) or ClientDataSet2.IsEmpty then
   begin
+    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
     Grid := Sender as TDBGrid;
 
     if gdSelected in State then
@@ -8305,7 +8308,7 @@ begin
         smDelete.Enabled := true;
         smMove.Enabled := true;
         transform1.Enabled := true;
-        monsterselected := true;
+        gridtype := 1;
         if showgrid then
         begin
           ClientDataSet1.DisableControls;
@@ -8327,7 +8330,7 @@ begin
         smDelete.Enabled := true;
         smMove.Enabled := true;
         transform1.Enabled := true;
-        objectselected := true;
+        gridtype := 2;
         if showgrid then
         begin
           ClientDataSet2.DisableControls;

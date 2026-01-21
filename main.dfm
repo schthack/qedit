@@ -246,6 +246,7 @@ object Form1: TForm1
     Anchors = [akLeft, akTop, akRight]
     BevelOuter = bvSpace
     Color = clWhite
+    ParentBackground = False
     TabOrder = 10
     object Image1: TImage
       Left = 1
@@ -253,6 +254,7 @@ object Form1: TForm1
       Width = 529
       Height = 47
       Align = alClient
+      Transparent = True
       ExplicitWidth = 523
     end
   end
@@ -2017,52 +2019,71 @@ object Form1: TForm1
     Left = 273
     Top = 88
     object ClientDataSet1Field: TIntegerField
+      Alignment = taLeftJustify
       FieldName = '#'
     end
     object ClientDataSet1Name: TStringField
       FieldName = 'Name'
     end
     object ClientDataSet1Skin: TWordField
+      Alignment = taLeftJustify
       FieldName = 'Skin'
     end
     object ClientDataSet1Section: TWordField
+      Alignment = taLeftJustify
       FieldName = 'Section'
     end
     object ClientDataSet1Wave: TWordField
+      Alignment = taLeftJustify
       FieldName = 'Wave'
     end
     object ClientDataSet1PositionX: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Pos X'
     end
     object ClientDataSet1PositionY: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Pos Y'
     end
     object ClientDataSet1PositionZ: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Pos Z'
     end
     object ClientDataSet1RotationY: TIntegerField
+      Alignment = taLeftJustify
       FieldName = 'Rot Y'
     end
     object ClientDataSet1Param1: TIntegerField
+      Alignment = taLeftJustify
       FieldName = 'Param 1'
     end
     object ClientDataSet1Param2: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Param 2'
     end
     object ClientDataSet1Param3: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Param 3'
     end
     object ClientDataSet1Param4: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Param 4'
     end
     object ClientDataSet1Param5: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Param 5'
     end
     object ClientDataSet1Param6: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Param 6'
     end
     object ClientDataSet1Param7: TIntegerField
+      Alignment = taLeftJustify
       FieldName = 'Param 7'
+    end
+    object ClientDataSet1ChildCount: TWordField
+      Alignment = taLeftJustify
+      FieldName = 'Child Count'
     end
   end
   object ClientDataSet2: TClientDataSet
@@ -2071,55 +2092,75 @@ object Form1: TForm1
     Left = 369
     Top = 88
     object ClientDataSet2Field: TIntegerField
+      Alignment = taLeftJustify
       FieldName = '#'
     end
     object ClientDataSet2Name: TStringField
       FieldName = 'Name'
     end
     object ClientDataSet2Skin: TWordField
+      Alignment = taLeftJustify
       FieldName = 'Skin'
     end
     object ClientDataSet2Section: TWordField
+      Alignment = taLeftJustify
       FieldName = 'Section'
     end
     object ClientDataSet2Group: TWordField
+      Alignment = taLeftJustify
       FieldName = 'Group'
     end
     object ClientDataSet2PosX: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Pos X'
     end
     object ClientDataSet2PosY: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Pos Y'
     end
     object ClientDataSet2PosZ: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Pos Z'
     end
     object ClientDataSet2RotX: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Rot X'
     end
     object ClientDataSet2RotY: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Rot Y'
     end
     object ClientDataSet2RotZ: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Rot Z'
     end
     object ClientDataSet2Param1: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Param 1'
     end
     object ClientDataSet2Param2: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Param 2'
     end
     object ClientDataSet2Param3: TSingleField
+      Alignment = taLeftJustify
       FieldName = 'Param 3'
     end
     object ClientDataSet2Param4: TIntegerField
+      Alignment = taLeftJustify
       FieldName = 'Param 4'
     end
     object ClientDataSet2Param5: TIntegerField
+      Alignment = taLeftJustify
       FieldName = 'Param 5'
     end
     object ClientDataSet2Param6: TIntegerField
+      Alignment = taLeftJustify
       FieldName = 'Param 6'
+    end
+    object ClientDataSet2ID: TWordField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
     end
   end
   object DataSource1: TDataSource
