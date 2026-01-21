@@ -433,7 +433,7 @@ object Form1: TForm1
         Height = 134
         Align = alClient
         DataSource = DataSource1
-        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
+        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
         ReadOnly = True
         TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
@@ -447,6 +447,7 @@ object Form1: TForm1
         OnEnter = DBGrid1Enter
         OnExit = DBGrid1Exit
         OnMouseDown = DBGrid1MouseDown
+        OnMouseLeave = DBGrid1MouseLeave
         OnMouseWheel = DBGrid1MouseWheel
         OnTitleClick = DBGrid1TitleClick
       end
@@ -461,7 +462,7 @@ object Form1: TForm1
         Height = 134
         Align = alClient
         DataSource = DataSource2
-        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
+        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
         ReadOnly = True
         TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
@@ -475,6 +476,7 @@ object Form1: TForm1
         OnEnter = DBGrid2Enter
         OnExit = DBGrid2Exit
         OnMouseDown = DBGrid2MouseDown
+        OnMouseLeave = DBGrid2MouseLeave
         OnMouseWheel = DBGrid2MouseWheel
         OnTitleClick = DBGrid2TitleClick
       end

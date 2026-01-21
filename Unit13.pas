@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Registry, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, D3Dx9, StdCtrls;
+  Dialogs, ExtCtrls, D3Dx9, StdCtrls, Vcl.DBGrids;
 
 type
   TForm13 = class(TForm)
@@ -1000,8 +1000,8 @@ begin
                     inclick:=true;
                     stype:=1;
                     form1.ListBox1.ItemIndex:=i;
-                    if showgrid then
-                      form1.PageControl1.ActivePage := form1.tabsheet1;
+                    form1.DBGrid1.Options := form1.DBGrid1.Options - [dgIndicator];
+                    form1.DBGrid2.Options := form1.DBGrid2.Options - [dgIndicator];
                     form1.LoadFloorGrids;
                     form1.drawmap;
                     if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
@@ -1029,8 +1029,8 @@ begin
                     inclick:=true;
                     stype:=2;
                     form1.ListBox2.ItemIndex:=i;
-                    if showgrid then
-                      form1.PageControl1.ActivePage := form1.tabsheet2;
+                    form1.DBGrid1.Options := form1.DBGrid1.Options - [dgIndicator];
+                    form1.DBGrid2.Options := form1.DBGrid2.Options - [dgIndicator];
                     form1.LoadFloorGrids;
                     form1.drawmap;
                     if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then

@@ -612,6 +612,8 @@ type
       DisplayText: Boolean);
     procedure ClientDataSet2RotZGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure DBGrid2MouseLeave(Sender: TObject);
+    procedure DBGrid1MouseLeave(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -4737,13 +4739,19 @@ begin
     LoadFloorGrids;
     // Save the last selected floor
     prevfloor := CheckListBox1.ItemIndex;
-    gridtype := -1;
+    if showgrid then
+    begin
+      DBGrid1.Options := DBGrid1.Options - [dgIndicator];
+      DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+      gridtype := -1;
+    end;
   end;
 end;
 
 procedure TForm1.ClientDataSet1AfterScroll(DataSet: TDataSet);
 begin
-  if not ClientDataSet1.isEmpty and (selected > -1) and monstgridfocused then
+  if not ClientDataSet1.isEmpty and (selected > -1) and monstgridfocused
+  and showgrid then
   begin
     sType := 1;
     gridtype := 1;
@@ -4751,6 +4759,8 @@ begin
     listbox1.ItemIndex := selected;
     listbox2.ItemIndex := -1;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
+    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
+    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
   end;
 end;
 
@@ -4765,7 +4775,8 @@ end;
 
 procedure TForm1.ClientDataSet2AfterScroll(DataSet: TDataSet);
 begin
-  if not ClientDataSet2.isEmpty and (selected > -1) and objgridfocused then
+  if not ClientDataSet2.isEmpty and (selected > -1) and objgridfocused
+  and showgrid then
   begin
     sType := 2;
     gridtype := 2;
@@ -4773,6 +4784,8 @@ begin
     listbox2.ItemIndex := selected;
     listbox1.ItemIndex := -1;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
+    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
+    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
   end;
 end;
 
@@ -4838,6 +4851,8 @@ var
 begin
   if ListBox1.ItemIndex >= 0 then
   begin
+    monstgridfocused := false;
+    objgridfocused := false;
     Selected := ListBox1.ItemIndex;
     ListBox2.ItemIndex := -1;
     MoveSel := -1;
@@ -4917,6 +4932,8 @@ begin
       clientdataset1.Locate('#', selected, []);
       clientdataset1.EnableControls;
     end;
+    DBGrid1.Options := DBGrid1.Options + [dgIndicator];
+    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
   end;
 end;
 
@@ -4933,6 +4950,8 @@ var
 begin
   if ListBox2.ItemIndex >= 0 then
   begin
+    monstgridfocused := false;
+    objgridfocused := false;
     objloaded := false;
     Selected := ListBox2.ItemIndex;
     HideIndicator();
@@ -5027,6 +5046,8 @@ begin
       clientdataset2.Locate('#', selected, []);
       clientdataset2.EnableControls;
     end;
+    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
+    DBGrid2.Options := DBGrid2.Options + [dgIndicator];
   end;
 end;
 
@@ -5130,6 +5151,11 @@ begin
   monstgridfocused := true;
 end;
 
+procedure TForm1.DBGrid1MouseLeave(Sender: TObject);
+begin
+  monstgridfocused := false;
+end;
+
 procedure TForm1.DBGrid1MouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
 begin
@@ -5208,6 +5234,11 @@ procedure TForm1.DBGrid2MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   objgridfocused := true;
+end;
+
+procedure TForm1.DBGrid2MouseLeave(Sender: TObject);
+begin
+  objgridfocused := false;
 end;
 
 procedure TForm1.DBGrid2MouseWheel(Sender: TObject; Shift: TShiftState;
