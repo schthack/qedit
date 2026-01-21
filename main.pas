@@ -4701,6 +4701,8 @@ begin
     // Save the last selected floor
     prevfloor := CheckListBox1.ItemIndex;
     gridtype := -1;
+    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
+    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
   end;
 end;
 
@@ -4818,6 +4820,8 @@ begin
       clientdataset1.Locate('#', selected, []);
       clientdataset1.EnableControls;
     end;
+    DBGrid1.Options := DBGrid1.Options + [dgIndicator];
+    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
   end;
 end;
 
@@ -4928,6 +4932,8 @@ begin
       clientdataset2.Locate('#', selected, []);
       clientdataset2.EnableControls;
     end;
+    DBGrid2.Options := DBGrid2.Options + [dgIndicator];
+    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
   end;
 end;
 
@@ -4971,7 +4977,6 @@ begin
     selected := strtoint(DBGrid1.DataSource.DataSet.FieldByName('#').AsString);
     listbox1.ItemIndex := selected;
     Listbox1click(DBGrid1);
-    DBGrid1.Options := DBGrid1.Options + [dgIndicator];
     DBGrid1.Invalidate;
   end;
 end;
@@ -4986,11 +4991,8 @@ procedure TForm1.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
 var
   Grid: TDBGrid;
 begin
-  if gridtype = 1 then
-    DBGrid1.Options := DBGrid1.Options + [dgIndicator];
   if (gridtype <> 1) or ClientDataSet1.IsEmpty then
   begin
-    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     Grid := Sender as TDBGrid;
 
     if gdSelected in State then
@@ -5033,7 +5035,6 @@ begin
     selected := strtoint(DBGrid2.DataSource.DataSet.FieldByName('#').AsString);
     listbox2.ItemIndex := selected;
     Listbox2click(DBGrid2);
-    DBGrid2.Options := DBGrid2.Options + [dgIndicator];
     DBGrid2.Invalidate;
   end;
 end;
@@ -5048,11 +5049,8 @@ procedure TForm1.DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
 var
   Grid: TDBGrid;
 begin
-  if gridtype = 2 then
-    DBGrid2.Options := DBGrid2.Options + [dgIndicator];
   if (gridtype <> 2) or ClientDataSet2.IsEmpty then
   begin
-    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
     Grid := Sender as TDBGrid;
 
     if gdSelected in State then
@@ -8314,6 +8312,8 @@ begin
           ClientDataSet1.DisableControls;
           ClientDataSet1.Locate('#', selected, []);
           ClientDataSet1.EnableControls;
+          DBGrid1.Options := DBGrid1.Options + [dgIndicator];
+          DBGrid2.Options := DBGrid2.Options - [dgIndicator];
         end;
       end;
     end;
@@ -8336,6 +8336,8 @@ begin
           ClientDataSet2.DisableControls;
           ClientDataSet2.Locate('#', selected, []);
           ClientDataSet2.EnableControls;
+          DBGrid2.Options := DBGrid2.Options + [dgIndicator];
+          DBGrid1.Options := DBGrid1.Options - [dgIndicator];
         end;
       end;
     end;
