@@ -208,6 +208,7 @@ type
     procedure NotesBackground1Click(Sender: TObject);
     procedure NotesReset1Click(Sender: TObject);
     procedure txtNotesKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormActivate(Sender: TObject);
 
   private
     { Private declarations }
@@ -812,6 +813,11 @@ end;
 procedure TfmScriptTE.Wildcard1Click(Sender: TObject);
 begin
   SetSearchEngine(3);
+end;
+
+procedure TfmScriptTE.FormActivate(Sender: TObject);
+begin
+  form1.Switchgridtab1.Enabled := false;
 end;
 
 procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);

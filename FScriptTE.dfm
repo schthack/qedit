@@ -12,6 +12,7 @@ object fmScriptTE: TfmScriptTE
   Font.Style = []
   Menu = MainMenu1
   Position = poMainFormCenter
+  OnActivate = FormActivate
   OnClose = FormClose
   OnDestroy = FormDestroy
   OnDeactivate = FormDeactivate

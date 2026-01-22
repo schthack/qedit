@@ -203,6 +203,11 @@ type
     data: TObj;
   end;
 
+  TGridScrollPos = record
+    Horz: Integer;
+    Vert: Integer;
+  end;
+
   TForm1 = class(Tform)
     GroupBox1: TGroupBox;
     CheckListBox1: TCheckListBox;
@@ -836,7 +841,6 @@ begin
   form1.Grids1.Checked := true;
   form1.Switchgridtab1.Visible := true;
   form1.Switchgridtab1.Enabled := true;
-  form1.CheckListBox1Click(nil);
 end;
 
 Procedure HideGrids;
@@ -851,9 +855,6 @@ begin
   form1.Grids1.Checked := false;
   form1.Switchgridtab1.Visible := false;
   form1.Switchgridtab1.Enabled := false;
-  form1.CheckListBox1Click(nil);
-  form1.ListBox1.ItemIndex := -1;
-  form1.ListBox2.ItemIndex := -1;
 end;
 
 Procedure SetBrightness(value: integer);
@@ -2579,14 +2580,52 @@ begin
   // result:=re;
 end;
 
+// Low-level functions to save/restore DBGrid scroll positions
+function GetDBGridScrollPos(Grid: TDBGrid): TGridScrollPos;
+var
+  si: TScrollInfo;
+begin
+  ZeroMemory(@si, SizeOf(si));
+  si.cbSize := SizeOf(si);
+  si.fMask := SIF_POS;
+
+  GetScrollInfo(Grid.Handle, SB_HORZ, si);
+  Result.Horz := si.nPos;
+
+  GetScrollInfo(Grid.Handle, SB_VERT, si);
+  Result.Vert := si.nPos;
+end;
+
+procedure SetDBGridScrollPos(Grid: TDBGrid; const Pos: TGridScrollPos);
+var
+  si: TScrollInfo;
+begin
+  ZeroMemory(@si, SizeOf(si));
+  si.cbSize := SizeOf(si);
+  si.fMask := SIF_POS;
+
+  si.nPos := Pos.Horz;
+  SetScrollInfo(Grid.Handle, SB_HORZ, si, True);
+
+  si.nPos := Pos.Vert;
+  SetScrollInfo(Grid.Handle, SB_VERT, si, True);
+
+  // Repaint
+  Grid.Perform(WM_HSCROLL, MakeWParam(SB_THUMBPOSITION, Pos.Horz), 0);
+  Grid.Perform(WM_VSCROLL, MakeWParam(SB_THUMBPOSITION, Pos.Vert), 0);
+end;
+
 Procedure TForm1.LoadFloorGrids;
 var
   i: integer;
+  ScrollPos1, ScrollPos2: TGridScrollPos;
 begin
   if showgrid then
   begin
     with form1 do
     begin
+      ScrollPos1 := GetDBGridScrollPos(DBGrid1);
+      ScrollPos2 := GetDBGridScrollPos(DBGrid2);
       // Disable controls for smoother updating
       ClientDataSet1.DisableControls;
       ClientDataSet2.DisableControls;
@@ -2667,18 +2706,13 @@ begin
         ClientDataSet1.First;
         ClientDataSet2.First;
         gridtype := -1;
-
-        if indelete then
-        begin
-          if sType = 1 then
-            ClientDataSet1.Last;
-          if sType = 2 then
-            ClientDataSet2.Last;
-        end
       end;
 
       ClientDataSet1.EnableControls;
       ClientDataSet2.EnableControls;
+
+      SetDBGridScrollPos(DBGrid1, ScrollPos1);
+      SetDBGridScrollPos(DBGrid2, ScrollPos2);
     end;
   end;
 end;
@@ -5097,7 +5131,8 @@ end;
 
 procedure TForm1.DBGrid1DblClick(Sender: TObject);
 begin
-  Listbox1DblClick(nil);
+  if (selected > -1) and not ClientDataSet1.IsEmpty then
+    Listbox1DblClick(nil);
 end;
 
 procedure TForm1.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -5182,7 +5217,8 @@ end;
 
 procedure TForm1.DBGrid2DblClick(Sender: TObject);
 begin
-  Listbox1DblClick(nil);
+  if (selected > -1) and not ClientDataSet2.IsEmpty then
+    Listbox1DblClick(nil);
 end;
 
 procedure TForm1.DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -8412,11 +8448,33 @@ end;
 
 procedure TForm1.Button3Click(Sender: TObject);
 var
-  x, y, s: integer;
+  x, y, s, next: integer;
   p1, p2: pansichar;
 begin
   if Selected > -1 then
   begin
+    ClientDataSet1.DisableControls;
+    ClientDataSet2.DisableControls;
+    if showgrid then
+    begin
+      if sType = 1 then
+      begin
+       if not ClientDataSet1.Eof then
+          ClientDataSet1.Next;
+        next := strtointdef(DBGrid1.DataSource.DataSet.FieldByName('#').AsString, -1);
+      end;
+      if sType = 2 then
+      begin
+        if not ClientDataSet2.Eof then
+          ClientDataSet2.Next;
+          next := strtointdef(DBGrid2.DataSource.DataSet.FieldByName('#').AsString, -1);
+      end;
+
+      if next > Selected then
+        Dec(next);
+      if next < 0 then
+        next := 0;
+    end;
     s := Selected;
     isedited := true;
     HideIndicator();
@@ -8475,14 +8533,6 @@ begin
         smDelete.Enabled := true;
         smMove.Enabled := true;
         transform1.Enabled := true;
-        gridtype := 1;
-        if showgrid then
-        begin
-          ClientDataSet1.DisableControls;
-          ClientDataSet1.Locate('#', selected, []);
-          ClientDataSet1.EnableControls;
-          Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
-        end;
       end;
     end;
     if stype = 2 then
@@ -8498,16 +8548,32 @@ begin
         smDelete.Enabled := true;
         smMove.Enabled := true;
         transform1.Enabled := true;
-        gridtype := 2;
-        if showgrid then
-        begin
-          ClientDataSet2.DisableControls;
-          ClientDataSet2.Locate('#', selected, []);
-          ClientDataSet2.EnableControls;
-          Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
-        end;
       end;
     end;
+
+    if showgrid then
+    begin
+      if sType = 1 then
+      begin
+        gridtype := 1;
+        Selected := next;
+        if selected > -1 then
+          form1.Listbox1.ItemIndex := selected;
+        LoadFloorGrids;
+      end;
+      if sType = 2 then
+      begin
+        gridtype := 2;
+        Selected := next;
+        if selected > -1 then
+          form1.Listbox2.ItemIndex := selected;
+        LoadFloorGrids;
+      end;
+      Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
+      ClientDataSet1.EnableControls;
+      ClientDataSet2.EnableControls;
+    end;
+
     DrawMap;
     ctrldw := false;
   end;
@@ -11505,6 +11571,8 @@ end;
 procedure TForm1.FormActivate(Sender: TObject);
 begin
   LoadFloorGrids;
+  if showgrid then
+    form1.Switchgridtab1.Enabled := true;
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
