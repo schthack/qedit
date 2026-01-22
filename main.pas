@@ -439,6 +439,11 @@ type
     Rowselection1: TMenuItem;
     Celledit1: TMenuItem;
     N17: TMenuItem;
+    popupGrid: TPopupMenu;
+    Gridmode2: TMenuItem;
+    Switchtab1: TMenuItem;
+    Edit2: TMenuItem;
+    Selection1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -661,6 +666,9 @@ type
     procedure ClientDataSet2Param5SetText(Sender: TField; const Text: string);
     procedure ClientDataSet2Param6SetText(Sender: TField; const Text: string);
     procedure ClientDataSet2IDSetText(Sender: TField; const Text: string);
+    procedure Switchtab1Click(Sender: TObject);
+    procedure Edit2Click(Sender: TObject);
+    procedure Selection1Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -913,7 +921,9 @@ begin
     DBGrid1.ReadOnly := true;
     DBGrid2.ReadOnly := true;
     Rowselection1.Checked := true;
+    Selection1.Checked := true;
     Celledit1.Checked := false;
+    Edit2.Checked := false;
   end;
 end;
 
@@ -928,7 +938,9 @@ begin
     DBGrid1.ReadOnly := false;
     DBGrid2.ReadOnly := false;
     Rowselection1.Checked := false;
+    Selection1.Checked := false;
     Celledit1.Checked := true;
+    Edit2.Checked := true;
   end;
 end;
 
@@ -1160,6 +1172,10 @@ begin
   form1.Gridmode1.Caption := GetLanguageString(524);
   form1.Rowselection1.Caption := GetLanguageString(525);
   form1.Celledit1.Caption := GetLanguageString(526);
+  form1.Switchtab1.Caption := GetLanguageString(523);
+  form1.Gridmode2.Caption := GetLanguageString(524);
+  form1.Selection1.Caption := GetLanguageString(525);
+  form1.Edit2.Caption := GetLanguageString(526);
   form21.Button1.Caption := GetLanguageString(116);
   form21.Button2.Caption := GetLanguageString(117);
   form21.Button3.Caption := GetLanguageString(118);
@@ -1442,8 +1458,8 @@ begin
   form15.Deleterow3.Caption := GetLanguageString(323);
   form15.btnSave1.Caption := GetLanguageString(277);
   form15.btnSave2.Caption := GetLanguageString(277);
-  form15.btnClose1.Caption := GetLanguageString(118);
-  form15.btnClose2.Caption := GetLanguageString(118);
+  form15.btnClose1.Caption := GetLanguageString(113);
+  form15.btnClose2.Caption := GetLanguageString(113);
 
   form23.Caption := GetLanguageString(464);
   form23.Button2.Caption := GetLanguageString(118);
@@ -8707,6 +8723,11 @@ begin
   end;
 end;
 
+procedure TForm1.Selection1Click(Sender: TObject);
+begin
+  Rowselection1Click(nil);
+end;
+
 procedure TForm1.Setting1Click(Sender: TObject);
 begin
   form6.ComboBox1.ItemIndex := language;
@@ -11902,6 +11923,7 @@ begin
     EnemyWave1.Enabled := true;
     tm := TMenuItem.Create(EnemyWave1);
     tm.Caption := GetLanguageString(83);
+    tm.RadioItem := true;
     if showwave = -1 then tm.Checked := true;
     tm.tag := -1;
     tm.OnClick := EnemyWave1Click;
@@ -11911,6 +11933,7 @@ begin
     begin
       tm := TMenuItem.Create(EnemyWave1);
       tm.Caption := GetLanguageString(84) + inttostr(x);
+      tm.RadioItem := true;
       if x = showwave then tm.Checked := true;
       tm.tag := x;
       tm.OnClick := EnemyWave1Click;
@@ -11920,6 +11943,7 @@ begin
     end;
     tm := TMenuItem.Create(EnemyWave1);
     tm.Caption := GetLanguageString(514);
+    tm.RadioItem := true;
     if showwave = 65536 then tm.Checked := true;
     tm.tag := 65536;
     tm.OnClick := EnemyWave1Click;
@@ -11933,6 +11957,7 @@ begin
   Itemsgroupe1.Clear;
   tm := TMenuItem.Create(Itemsgroupe1);
   tm.Caption := GetLanguageString(83);
+  tm.RadioItem := true;
   if showgrp = -1 then tm.Checked := true;
   tm.tag := -1;
   tm.OnClick := Itemsgroupe1Click;
@@ -11942,6 +11967,7 @@ begin
   begin
     tm := TMenuItem.Create(EnemyWave1);
     tm.Caption := GetLanguageString(85) + inttostr(x);
+    tm.RadioItem := true;
     if x = showgrp then tm.Checked := true;
     tm.tag := x;
     tm.OnClick := Itemsgroupe1Click;
@@ -11951,6 +11977,7 @@ begin
   end;
   tm := TMenuItem.Create(Itemsgroupe1);
   tm.Caption := GetLanguageString(514);
+  tm.RadioItem := true;
   if showgrp = 65536 then tm.Checked := true;
   tm.tag := 65536;
   tm.OnClick := Itemsgroupe1Click;
@@ -11962,6 +11989,11 @@ end;
 procedure TForm1.Edit1Click(Sender: TObject);
 begin
   Button2Click(nil);
+end;
+
+procedure TForm1.Edit2Click(Sender: TObject);
+begin
+  Celledit1Click(nil);
 end;
 
 procedure TForm1.EnemyWave1Click(Sender: TObject);
@@ -12464,6 +12496,9 @@ begin
   begin
     tm := TMenuItem.Create(PopupMenu2);
     tm.tag := x - 1;
+    tm.RadioItem := true;
+    if mapfile[CheckListBox1.ItemIndex] = path + 'map\' + mapfilename[mapid[Floor[CheckListBox1.ItemIndex].floorid] + x-1] then
+      tm.Checked := true;
     tm.Caption := GetLanguageString(111) + ' ' + inttostr(x);
     tm.OnClick := Layout11Click;
     PopupMenu2.Items.Add(tm);
@@ -13297,6 +13332,11 @@ begin
     else if form4.Visible then
       fmScriptTE.Show;
   end;
+end;
+
+procedure TForm1.Switchtab1Click(Sender: TObject);
+begin
+  Switchgridtab1Click(nil);
 end;
 
 procedure TForm1.Floorfilter1Click(Sender: TObject);

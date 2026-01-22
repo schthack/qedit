@@ -231,10 +231,12 @@ object fmScriptTE: TfmScriptTE
       Caption = 'Set argument format'
       object Hex1: TMenuItem
         Caption = 'Hex'
+        RadioItem = True
         OnClick = Hex1Click
       end
       object Decimal1: TMenuItem
         Caption = 'Decimal'
+        RadioItem = True
         OnClick = Decimal1Click
       end
     end
@@ -340,18 +342,22 @@ object fmScriptTE: TfmScriptTE
           Caption = 'Engine'
           object Normal1: TMenuItem
             Caption = 'Normal'
+            RadioItem = True
             OnClick = Normal1Click
           end
           object Extended1: TMenuItem
             Caption = 'Extended'
+            RadioItem = True
             OnClick = Extended1Click
           end
           object RegularExpression1: TMenuItem
             Caption = 'Regular Expression'
+            RadioItem = True
             OnClick = RegularExpression1Click
           end
           object Wildcard1: TMenuItem
             Caption = 'Wildcard'
+            RadioItem = True
             OnClick = Wildcard1Click
           end
         end
@@ -427,6 +433,7 @@ object fmScriptTE: TfmScriptTE
         object Default1: TMenuItem
           Tag = -1
           Caption = 'Default'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object N4: TMenuItem
@@ -434,106 +441,127 @@ object fmScriptTE: TfmScriptTE
         end
         object Blue1: TMenuItem
           Caption = 'Blue'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Classic1: TMenuItem
           Tag = 1
           Caption = 'Classic'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Darcula1: TMenuItem
           Tag = 2
           Caption = 'Darcula'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object DarkIcon1: TMenuItem
           Tag = 3
           Caption = 'Dark Icon'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Dark1: TMenuItem
           Tag = 4
           Caption = 'Dark'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Darker1: TMenuItem
           Tag = 5
           Caption = 'Darker'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Dracula1: TMenuItem
           Tag = 6
           Caption = 'Dracula'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object FluentNight1: TMenuItem
           Tag = 7
           Caption = 'Fluent Night'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object GitHubDark1: TMenuItem
           Tag = 8
           Caption = 'GitHub Dark'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object MonokaiDistilled1: TMenuItem
           Tag = 9
           Caption = 'Monokai Distilled'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Monokai1: TMenuItem
           Tag = 10
           Caption = 'Monokai'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Oblivion1: TMenuItem
           Tag = 11
           Caption = 'Oblivion'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Obsid1: TMenuItem
           Tag = 12
           Caption = 'Obsidian'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Ocean1: TMenuItem
           Tag = 13
           Caption = 'Ocean'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Oceanic1: TMenuItem
           Tag = 14
           Caption = 'Oceanic'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Okaidia1: TMenuItem
           Tag = 15
           Caption = 'Okaidia'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Purple1: TMenuItem
           Tag = 16
           Caption = 'Purple'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Twilight1: TMenuItem
           Tag = 17
           Caption = 'Twilight'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object VisualStudioDark1: TMenuItem
           Tag = 18
           Caption = 'Visual Studio Dark'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object VisualStudio1: TMenuItem
           Tag = 19
           Caption = 'Visual Studio'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Windows11Dark1: TMenuItem
           Tag = 20
           Caption = 'Windows 11 Dark'
+          RadioItem = True
           OnClick = ChangeTheme
         end
       end
@@ -558,23 +586,28 @@ object fmScriptTE: TfmScriptTE
         ImageIndex = 21
         object Z100: TMenuItem
           Caption = '100 %'
+          RadioItem = True
           OnClick = Z100Click
         end
         object Z125: TMenuItem
           Caption = '125 %'
           Checked = True
+          RadioItem = True
           OnClick = Z125Click
         end
         object Z150: TMenuItem
           Caption = '150 %'
+          RadioItem = True
           OnClick = Z150Click
         end
         object Z200: TMenuItem
           Caption = '200 %'
+          RadioItem = True
           OnClick = Z200Click
         end
         object Z300: TMenuItem
           Caption = '300 %'
+          RadioItem = True
           OnClick = Z300Click
         end
       end

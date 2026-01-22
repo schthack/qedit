@@ -433,6 +433,7 @@ object Form1: TForm1
         Align = alClient
         DataSource = DataSource1
         Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        PopupMenu = popupGrid
         ReadOnly = True
         TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
@@ -462,6 +463,7 @@ object Form1: TForm1
         Align = alClient
         DataSource = DataSource2
         Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        PopupMenu = popupGrid
         ReadOnly = True
         TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
@@ -530,22 +532,27 @@ object Form1: TForm1
         Caption = 'Language'
         object English1: TMenuItem
           Caption = 'English'
+          RadioItem = True
           OnClick = English1Click
         end
         object spanish1: TMenuItem
           Caption = 'Espa'#241'ol'
+          RadioItem = True
           OnClick = spanish1Click
         end
         object French1: TMenuItem
           Caption = 'Fran'#231'ais'
+          RadioItem = True
           OnClick = French1Click
         end
         object Japanese1: TMenuItem
           Caption = 'Japanese'
+          RadioItem = True
           OnClick = Japanese1Click
         end
         object Russian1: TMenuItem
           Caption = 'Russian'
+          RadioItem = True
           OnClick = Russian1Click
         end
       end
@@ -629,10 +636,12 @@ object Form1: TForm1
         Caption = 'Data view'
         object Lists1: TMenuItem
           Caption = 'List'
+          RadioItem = True
           OnClick = Lists1Click
         end
         object Grids1: TMenuItem
           Caption = 'Grid'
+          RadioItem = True
           OnClick = Grids1Click
         end
       end
@@ -643,10 +652,12 @@ object Form1: TForm1
         Caption = 'Grid mode'
         object Celledit1: TMenuItem
           Caption = 'Cell edit'
+          RadioItem = True
           OnClick = Celledit1Click
         end
         object Rowselection1: TMenuItem
           Caption = 'Row selection'
+          RadioItem = True
           OnClick = Rowselection1Click
         end
       end
@@ -1926,14 +1937,17 @@ object Form1: TForm1
         object Default1: TMenuItem
           Caption = 'Default'
           Checked = True
+          RadioItem = True
           OnClick = Default1Click
         end
         object High1: TMenuItem
           Caption = 'High'
+          RadioItem = True
           OnClick = High1Click
         end
         object Veryhigh1: TMenuItem
           Caption = 'Very high'
+          RadioItem = True
           OnClick = Veryhigh1Click
         end
       end
@@ -1941,14 +1955,17 @@ object Form1: TForm1
         Caption = 'Orientation line width'
         object Width1: TMenuItem
           Caption = 'Default (1 px)'
+          RadioItem = True
           OnClick = Width1Click
         end
         object Width2: TMenuItem
           Caption = '2 px'
+          RadioItem = True
           OnClick = Width2Click
         end
         object Width3: TMenuItem
           Caption = '3 px'
+          RadioItem = True
           OnClick = Width3Click
         end
       end
@@ -1980,7 +1997,7 @@ object Form1: TForm1
   object Timer1: TTimer
     Interval = 60000
     OnTimer = Timer1Timer
-    Left = 570
+    Left = 650
     Top = 8
   end
   object SaveDialog3: TSaveDialog
@@ -1994,7 +2011,7 @@ object Form1: TForm1
     Top = 40
   end
   object ActionList1: TActionList
-    Left = 608
+    Left = 566
     Top = 8
     object Action1: TAction
       Caption = 'undo'
@@ -2013,26 +2030,29 @@ object Form1: TForm1
     end
   end
   object PopupMenu4: TPopupMenu
-    Left = 418
+    Left = 426
     Top = 11
     object Smallfont1: TMenuItem
       Caption = '100%'
       Checked = True
+      RadioItem = True
       OnClick = Smallfont1Click
     end
     object Mediumfont1: TMenuItem
       Caption = '125%'
+      RadioItem = True
       OnClick = Mediumfont1Click
     end
     object Largefont1: TMenuItem
       Caption = '150%'
+      RadioItem = True
       OnClick = Largefont1Click
     end
   end
   object tmPreview: TTimer
     Interval = 2000
     OnTimer = tmPreviewTimer
-    Left = 528
+    Left = 616
     Top = 8
   end
   object ClientDataSet1: TClientDataSet
@@ -2224,16 +2244,16 @@ object Form1: TForm1
   end
   object DataSource1: TDataSource
     DataSet = ClientDataSet1
-    Left = 505
+    Left = 513
     Top = 88
   end
   object DataSource2: TDataSource
     DataSet = ClientDataSet2
-    Left = 593
+    Left = 601
     Top = 88
   end
   object popupMonsters: TPopupMenu
-    Left = 438
+    Left = 454
     Top = 12
     object Sort2: TMenuItem
       Caption = 'Sort'
@@ -2252,7 +2272,7 @@ object Form1: TForm1
     end
   end
   object popupObjects: TPopupMenu
-    Left = 454
+    Left = 486
     Top = 12
     object Sort3: TMenuItem
       Caption = 'Sort'
@@ -2268,6 +2288,28 @@ object Form1: TForm1
         Caption = 'by Type'
         OnClick = byType4Click
       end
+    end
+  end
+  object popupGrid: TPopupMenu
+    Left = 515
+    Top = 12
+    object Gridmode2: TMenuItem
+      Caption = 'Grid mode'
+      object Edit2: TMenuItem
+        Caption = 'Edit'
+        RadioItem = True
+        OnClick = Edit2Click
+      end
+      object Selection1: TMenuItem
+        Caption = 'Selection'
+        RadioItem = True
+        OnClick = Selection1Click
+      end
+    end
+    object Switchtab1: TMenuItem
+      Caption = 'Switch tab'
+      ShortCut = 8201
+      OnClick = Switchtab1Click
     end
   end
 end

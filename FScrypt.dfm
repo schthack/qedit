@@ -524,8 +524,8 @@ object Form4: TForm4
   end
   object PopupMenu1: TPopupMenu
     OnPopup = PopupMenu1Popup
-    Left = 460
-    Top = 88
+    Left = 412
+    Top = 208
     object Data1: TMenuItem
       Caption = 'Data'
       object NPCEdit1: TMenuItem
@@ -602,10 +602,12 @@ object Form4: TForm4
       Caption = 'Set argument format'
       object Hex1: TMenuItem
         Caption = 'Hex'
+        RadioItem = True
         OnClick = Hex1Click
       end
       object Decimal1: TMenuItem
         Caption = 'Decimal'
+        RadioItem = True
         OnClick = Decimal1Click
       end
     end
