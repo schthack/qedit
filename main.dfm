@@ -250,7 +250,6 @@ object Form1: TForm1
     ParentBackground = False
     ParentDoubleBuffered = False
     TabOrder = 10
-    StyleElements = [seFont, seBorder]
     object Image1: TImage
       Left = 1
       Top = 1
@@ -418,10 +417,10 @@ object Form1: TForm1
     OnDblClick = ListBox1DblClick
   end
   object PageControl1: TPageControl
-    Left = 189
+    Left = 190
     Top = 8
-    Width = 526
-    Height = 162
+    Width = 531
+    Height = 160
     ActivePage = TabSheet1
     TabOrder = 15
     object TabSheet1: TTabSheet
@@ -429,8 +428,8 @@ object Form1: TForm1
       object DBGrid1: TDBGrid
         Left = 0
         Top = 0
-        Width = 518
-        Height = 134
+        Width = 523
+        Height = 132
         Align = alClient
         DataSource = DataSource1
         Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -458,8 +457,8 @@ object Form1: TForm1
       object DBGrid2: TDBGrid
         Left = 0
         Top = 0
-        Width = 518
-        Height = 134
+        Width = 523
+        Height = 132
         Align = alClient
         DataSource = DataSource2
         Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -635,6 +634,20 @@ object Form1: TForm1
         object Grids1: TMenuItem
           Caption = 'Grid'
           OnClick = Grids1Click
+        end
+      end
+      object N17: TMenuItem
+        Caption = '-'
+      end
+      object Gridmode1: TMenuItem
+        Caption = 'Grid mode'
+        object Celledit1: TMenuItem
+          Caption = 'Cell edit'
+          OnClick = Celledit1Click
+        end
+        object Rowselection1: TMenuItem
+          Caption = 'Row selection'
+          OnClick = Rowselection1Click
         end
       end
       object Switchgridtab1: TMenuItem
@@ -2038,63 +2051,78 @@ object Form1: TForm1
     object ClientDataSet1Skin: TWordField
       Alignment = taLeftJustify
       FieldName = 'Skin'
+      OnSetText = ClientDataSet1SkinSetText
     end
     object ClientDataSet1Section: TWordField
       Alignment = taLeftJustify
       FieldName = 'Section'
+      OnSetText = ClientDataSet1SectionSetText
     end
     object ClientDataSet1Wave: TWordField
       Alignment = taLeftJustify
       FieldName = 'Wave'
+      OnSetText = ClientDataSet1WaveSetText
     end
     object ClientDataSet1PositionX: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos X'
+      OnSetText = ClientDataSet1PositionXSetText
     end
     object ClientDataSet1PositionY: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Y'
+      OnSetText = ClientDataSet1PositionYSetText
     end
     object ClientDataSet1PositionZ: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Z'
+      OnSetText = ClientDataSet1PositionZSetText
     end
     object ClientDataSet1RotationY: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'Rot Y'
       OnGetText = ClientDataSet1RotationYGetText
+      OnSetText = ClientDataSet1RotationYSetText
     end
     object ClientDataSet1Param1: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'Param 1'
+      OnSetText = ClientDataSet1Param1SetText
     end
     object ClientDataSet1Param2: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 2'
+      OnSetText = ClientDataSet1Param2SetText
     end
     object ClientDataSet1Param3: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 3'
+      OnSetText = ClientDataSet1Param3SetText
     end
     object ClientDataSet1Param4: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 4'
+      OnSetText = ClientDataSet1Param4SetText
     end
     object ClientDataSet1Param5: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 5'
+      OnSetText = ClientDataSet1Param5SetText
     end
     object ClientDataSet1Param6: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 6'
+      OnSetText = ClientDataSet1Param6SetText
     end
     object ClientDataSet1Param7: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'Param 7'
+      OnSetText = ClientDataSet1Param7SetText
     end
     object ClientDataSet1ChildCount: TWordField
       Alignment = taLeftJustify
       FieldName = 'Child Count'
+      OnSetText = ClientDataSet1ChildCountSetText
     end
   end
   object ClientDataSet2: TClientDataSet
@@ -2113,69 +2141,85 @@ object Form1: TForm1
     object ClientDataSet2Skin: TWordField
       Alignment = taLeftJustify
       FieldName = 'Skin'
+      OnSetText = ClientDataSet2SkinSetText
     end
     object ClientDataSet2Section: TWordField
       Alignment = taLeftJustify
       FieldName = 'Section'
+      OnSetText = ClientDataSet2SectionSetText
     end
     object ClientDataSet2Group: TWordField
       Alignment = taLeftJustify
       FieldName = 'Group'
+      OnSetText = ClientDataSet2GroupSetText
     end
     object ClientDataSet2PosX: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos X'
+      OnSetText = ClientDataSet2PosXSetText
     end
     object ClientDataSet2PosY: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Y'
+      OnSetText = ClientDataSet2PosYSetText
     end
     object ClientDataSet2PosZ: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Z'
+      OnSetText = ClientDataSet2PosZSetText
     end
     object ClientDataSet2RotX: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Rot X'
       OnGetText = ClientDataSet2RotXGetText
+      OnSetText = ClientDataSet2RotXSetText
     end
     object ClientDataSet2RotY: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Rot Y'
       OnGetText = ClientDataSet2RotYGetText
+      OnSetText = ClientDataSet2RotYSetText
     end
     object ClientDataSet2RotZ: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Rot Z'
       OnGetText = ClientDataSet2RotZGetText
+      OnSetText = ClientDataSet2RotZSetText
     end
     object ClientDataSet2Param1: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 1'
+      OnSetText = ClientDataSet2Param1SetText
     end
     object ClientDataSet2Param2: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 2'
+      OnSetText = ClientDataSet2Param2SetText
     end
     object ClientDataSet2Param3: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 3'
+      OnSetText = ClientDataSet2Param3SetText
     end
     object ClientDataSet2Param4: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'Param 4'
+      OnSetText = ClientDataSet2Param4SetText
     end
     object ClientDataSet2Param5: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'Param 5'
+      OnSetText = ClientDataSet2Param5SetText
     end
     object ClientDataSet2Param6: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'Param 6'
+      OnSetText = ClientDataSet2Param6SetText
     end
     object ClientDataSet2ID: TWordField
       Alignment = taLeftJustify
       FieldName = 'ID'
+      OnSetText = ClientDataSet2IDSetText
     end
   end
   object DataSource1: TDataSource

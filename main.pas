@@ -435,6 +435,10 @@ type
     Switchgridtab1: TMenuItem;
     ClientDataSet2ID: TWordField;
     ClientDataSet1ChildCount: TWordField;
+    Gridmode1: TMenuItem;
+    Rowselection1: TMenuItem;
+    Celledit1: TMenuItem;
+    N17: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -619,6 +623,44 @@ type
       DisplayText: Boolean);
     procedure DBGrid2MouseLeave(Sender: TObject);
     procedure DBGrid1MouseLeave(Sender: TObject);
+    procedure Celledit1Click(Sender: TObject);
+    procedure Rowselection1Click(Sender: TObject);
+    procedure ClientDataSet1SkinSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet1SectionSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet1WaveSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet1PositionXSetText(Sender: TField;
+      const Text: string);
+    procedure ClientDataSet1PositionYSetText(Sender: TField;
+      const Text: string);
+    procedure ClientDataSet1PositionZSetText(Sender: TField;
+      const Text: string);
+    procedure ClientDataSet1RotationYSetText(Sender: TField;
+      const Text: string);
+    procedure ClientDataSet1Param1SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet1Param2SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet1Param3SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet1Param4SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet1Param6SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet1Param7SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet1ChildCountSetText(Sender: TField;
+      const Text: string);
+    procedure ClientDataSet1Param5SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2SkinSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2SectionSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2GroupSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2PosXSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2PosYSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2PosZSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2RotXSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2RotYSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2RotZSetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2Param1SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2Param2SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2Param3SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2Param4SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2Param5SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2Param6SetText(Sender: TField; const Text: string);
+    procedure ClientDataSet2IDSetText(Sender: TField; const Text: string);
 
   private
     FClosedSuccessfully: Boolean;
@@ -756,6 +798,7 @@ var
   showdata: Boolean = false;
   showdecimal: Boolean = false;
   showgrid: Boolean = false;
+  editgrid: Boolean = false;
   addargs: Boolean = false;
   hidenops: Boolean = true;
   showbitmaps: Boolean = false;
@@ -841,6 +884,7 @@ begin
   form1.Grids1.Checked := true;
   form1.Switchgridtab1.Visible := true;
   form1.Switchgridtab1.Enabled := true;
+  form1.Gridmode1.Visible := true;
 end;
 
 Procedure HideGrids;
@@ -855,6 +899,37 @@ begin
   form1.Grids1.Checked := false;
   form1.Switchgridtab1.Visible := false;
   form1.Switchgridtab1.Enabled := false;
+  form1.Gridmode1.Visible := false;
+end;
+
+Procedure DisableGridEdit;
+begin
+  with form1 do
+  begin
+    DBGrid1.Options := DBGrid1.Options + [dgRowSelect];
+    DBGrid1.Options := DBGrid1.Options - [dgEditing];
+    DBGrid2.Options := DBGrid2.Options + [dgRowSelect];
+    DBGrid2.Options := DBGrid2.Options - [dgEditing];
+    DBGrid1.ReadOnly := true;
+    DBGrid2.ReadOnly := true;
+    Rowselection1.Checked := true;
+    Celledit1.Checked := false;
+  end;
+end;
+
+Procedure EnableGridEdit;
+begin
+  with form1 do
+  begin
+    DBGrid1.Options := DBGrid1.Options - [dgRowSelect];
+    DBGrid1.Options := DBGrid1.Options + [dgEditing];
+    DBGrid2.Options := DBGrid2.Options - [dgRowSelect];
+    DBGrid2.Options := DBGrid2.Options + [dgEditing];
+    DBGrid1.ReadOnly := false;
+    DBGrid2.ReadOnly := false;
+    Rowselection1.Checked := false;
+    Celledit1.Checked := true;
+  end;
 end;
 
 Procedure SetBrightness(value: integer);
@@ -1082,6 +1157,9 @@ begin
   Form1.Button1.Caption := GetLanguageString(44);
   Form1.Button11.Caption := GetLanguageString(45);
   form1.Switchgridtab1.Caption := GetLanguageString(523);
+  form1.Gridmode1.Caption := GetLanguageString(524);
+  form1.Rowselection1.Caption := GetLanguageString(525);
+  form1.Celledit1.Caption := GetLanguageString(526);
   form21.Button1.Caption := GetLanguageString(116);
   form21.Button2.Caption := GetLanguageString(117);
   form21.Button3.Caption := GetLanguageString(118);
@@ -2624,8 +2702,10 @@ begin
   begin
     with form1 do
     begin
+      // Save scroll positions
       ScrollPos1 := GetDBGridScrollPos(DBGrid1);
       ScrollPos2 := GetDBGridScrollPos(DBGrid2);
+
       // Disable controls for smoother updating
       ClientDataSet1.DisableControls;
       ClientDataSet2.DisableControls;
@@ -2633,6 +2713,12 @@ begin
       // Clear the data sets
       ClientDataSet1.EmptyDataSet;
       ClientDataSet2.EmptyDataSet;
+
+      // Temporarily disable read-only fields for writing
+      DBGrid1.Fields[0].ReadOnly := false;
+      DBGrid2.Fields[0].ReadOnly := false;
+      DBGrid1.Fields[1].ReadOnly := false;
+      DBGrid2.Fields[1].ReadOnly := false;
 
       // Load monsters
       for i := 0 to Floor[sFloor].MonsterCount - 1 do
@@ -2646,7 +2732,12 @@ begin
         ClientDataSet1.FieldByName('Pos X').AsSingle := Floor[sFloor].Monster[i].Pos_X;
         ClientDataSet1.FieldByName('Pos Y').AsSingle := Floor[sFloor].Monster[i].Pos_Z;
         ClientDataSet1.FieldByName('Pos Z').AsSingle := Floor[sFloor].Monster[i].Pos_Y;
-        ClientDataSet1.FieldByName('Rot Y').AsInteger := (Floor[sFloor].Monster[i].Direction) and $FFFF div 182;
+
+        if editgrid then
+          ClientDataSet1.FieldByName('Rot Y').AsInteger := Floor[sFloor].Monster[i].Direction
+        else
+          ClientDataSet1.FieldByName('Rot Y').AsInteger := (Floor[sFloor].Monster[i].Direction) and $FFFF div 182;
+
         ClientDataSet1.FieldByName('Param 1').AsInteger := Floor[sFloor].Monster[i].unknow8;
         ClientDataSet1.FieldByName('Param 2').AsSingle := Floor[sFloor].Monster[i].Movement_data;
         ClientDataSet1.FieldByName('Param 3').AsSingle := Floor[sFloor].Monster[i].Unknow10;
@@ -2670,9 +2761,20 @@ begin
         ClientDataSet2.FieldByName('Pos X').AsSingle := Floor[sFloor].Obj[i].Pos_X;
         ClientDataSet2.FieldByName('Pos Y').AsSingle := Floor[sFloor].Obj[i].Pos_Z;
         ClientDataSet2.FieldByName('Pos Z').AsSingle := Floor[sFloor].Obj[i].Pos_Y;
-        ClientDataSet2.FieldByName('Rot X').AsInteger := (Floor[sFloor].Obj[i].unknow5) and $FFFF div 182;;
-        ClientDataSet2.FieldByName('Rot Y').AsInteger := (Floor[sFloor].Obj[i].unknow6) and $FFFF div 182;;
-        ClientDataSet2.FieldByName('Rot Z').AsInteger := (Floor[sFloor].Obj[i].unknow7) and $FFFF div 182;;
+
+        if editgrid then
+        begin
+          ClientDataSet2.FieldByName('Rot X').AsInteger := Floor[sFloor].Obj[i].unknow5;
+          ClientDataSet2.FieldByName('Rot Y').AsInteger := Floor[sFloor].Obj[i].unknow6;
+          ClientDataSet2.FieldByName('Rot Z').AsInteger := Floor[sFloor].Obj[i].unknow7;
+        end
+        else
+        begin
+          ClientDataSet2.FieldByName('Rot X').AsInteger := (Floor[sFloor].Obj[i].unknow5) and $FFFF div 182;
+          ClientDataSet2.FieldByName('Rot Y').AsInteger := (Floor[sFloor].Obj[i].unknow6) and $FFFF div 182;
+          ClientDataSet2.FieldByName('Rot Z').AsInteger := (Floor[sFloor].Obj[i].unknow7) and $FFFF div 182;
+        end;
+
         ClientDataSet2.FieldByName('Param 1').AsSingle := Floor[sFloor].Obj[i].unknow8;
         ClientDataSet2.FieldByName('Param 2').AsSingle := Floor[sFloor].Obj[i].unknow9;
         ClientDataSet2.FieldByName('Param 3').AsSingle := Floor[sFloor].Obj[i].Unknow10;
@@ -2683,9 +2785,11 @@ begin
         ClientDataSet2.Post;
       end;
 
+      // Save sort settings
       ClientDataSet1.IndexFieldNames := lastmonstersort;
       ClientDataSet2.IndexFieldNames := lastobjsort;
 
+      // Find and set the original selection
       if selected > -1 then
       begin
         if sType = 1 then
@@ -2708,11 +2812,17 @@ begin
         gridtype := -1;
       end;
 
+      // Done writing; cleanup and revert original settings
       ClientDataSet1.EnableControls;
       ClientDataSet2.EnableControls;
 
       SetDBGridScrollPos(DBGrid1, ScrollPos1);
       SetDBGridScrollPos(DBGrid2, ScrollPos2);
+
+      DBGrid1.Fields[0].ReadOnly := true;
+      DBGrid2.Fields[0].ReadOnly := true;
+      DBGrid1.Fields[1].ReadOnly := true;
+      DBGrid2.Fields[1].ReadOnly := true;
     end;
   end;
 end;
@@ -3153,6 +3263,26 @@ begin
   end;
   ClearShadow;
   application.Terminate;
+end;
+
+procedure TForm1.Rowselection1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  DisableGridEdit;
+  editgrid := false;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteBool('EditGrid', false);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+  LoadFloorGrids;
 end;
 
 procedure TForm1.Russian1Click(Sender: TObject);
@@ -4696,6 +4826,7 @@ begin
     form1.Image1.Canvas.Font.Color := clBlack;
   end;
   form1.Panel1.Color := TStyleManager.ActiveStyle.GetStyleColor(scListBox);
+  form1.Image1.Canvas.FillRect(form1.Image1.Canvas.ClipRect);
 end;
 
 procedure TForm1.CheckListBox1Click(Sender: TObject);
@@ -4798,12 +4929,161 @@ begin
   end;
 end;
 
+procedure TForm1.ClientDataSet1ChildCountSetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].unknow2 := strtoint(Text) * $10000;
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1Param1SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow8 := strtoint(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1Param2SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Movement_data := strtofloat(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1Param3SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow10 := strtofloat(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1Param4SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow11 := strtofloat(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1Param5SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Char_id := strtofloat(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1Param6SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Action := strtofloat(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1Param7SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Movement_flag := strtoint(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1PositionXSetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Pos_X := strtofloat(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1PositionYSetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Pos_Z := strtofloat(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1PositionZSetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Pos_Y := strtofloat(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
 procedure TForm1.ClientDataSet1RotationYGetText(Sender: TField;
   var Text: string; DisplayText: Boolean);
 begin
-  if not Sender.IsNull then
+  if not Sender.IsNull and not editgrid then
   begin
     Text := Sender.AsString + '°';
+  end
+  else Text := Sender.AsString;
+end;
+
+procedure TForm1.ClientDataSet1RotationYSetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Direction := strtoint(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1SectionSetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].map_section := strtoint(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1SkinSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Skin := strtoint(Text);
+    Listbox1Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet1WaveSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow5 := strtoint(Text);
+    Listbox1Click(nil);
   end;
 end;
 
@@ -4823,30 +5103,184 @@ begin
   end;
 end;
 
+procedure TForm1.ClientDataSet2GroupSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].grp := strtoint(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2IDSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].id := strtoint(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2Param1SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].unknow8 := strtofloat(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2Param2SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].unknow9 := strtofloat(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2Param3SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow10 := strtofloat(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2Param4SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].obj_id := strtoint(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2Param5SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Action := strtoint(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2Param6SetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].unknow13 := strtoint(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2PosXSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Pos_X := strtofloat(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2PosYSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Pos_Z := strtofloat(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2PosZSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Pos_Y := strtofloat(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
 procedure TForm1.ClientDataSet2RotXGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
-  if not Sender.IsNull then
+  if not Sender.IsNull and not editgrid then
   begin
     Text := Sender.AsString + '°';
+  end
+  else Text := Sender.AsString;
+end;
+
+procedure TForm1.ClientDataSet2RotXSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow5 := strtoint(Text);
+    Listbox2Click(nil);
   end;
 end;
 
 procedure TForm1.ClientDataSet2RotYGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
-  if not Sender.IsNull then
+  if not Sender.IsNull and not editgrid then
   begin
     Text := Sender.AsString + '°';
+  end
+  else Text := Sender.AsString;
+end;
+
+procedure TForm1.ClientDataSet2RotYSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow6 := strtoint(Text);
+    Listbox2Click(nil);
   end;
 end;
 
 procedure TForm1.ClientDataSet2RotZGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
-  if not Sender.IsNull then
+  if not Sender.IsNull and not editgrid then
   begin
     Text := Sender.AsString + '°';
+  end
+  else Text := Sender.AsString;
+end;
+
+procedure TForm1.ClientDataSet2RotZSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow7 := strtoint(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2SectionSetText(Sender: TField;
+  const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].map_section := strtoint(Text);
+    Listbox2Click(nil);
+  end;
+end;
+
+procedure TForm1.ClientDataSet2SkinSetText(Sender: TField; const Text: string);
+begin
+  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
+  begin
+    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Skin := strtoint(Text);
+    Listbox2Click(nil);
   end;
 end;
 
@@ -5131,7 +5565,7 @@ end;
 
 procedure TForm1.DBGrid1DblClick(Sender: TObject);
 begin
-  if (selected > -1) and not ClientDataSet1.IsEmpty then
+  if (selected > -1) and not ClientDataSet1.IsEmpty and not editgrid then
     Listbox1DblClick(nil);
 end;
 
@@ -5217,7 +5651,7 @@ end;
 
 procedure TForm1.DBGrid2DblClick(Sender: TObject);
 begin
-  if (selected > -1) and not ClientDataSet2.IsEmpty then
+  if (selected > -1) and not ClientDataSet2.IsEmpty and not editgrid then
     Listbox1DblClick(nil);
 end;
 
@@ -7092,7 +7526,9 @@ begin
           ShowDecimal := Reg.ReadBool('ShowDecimal');
         if Reg.ValueExists('ShowGrid') then
           ShowGrid := Reg.ReadBool('ShowGrid');
-       if Reg.ValueExists('AddArgs') then
+        if Reg.ValueExists('EditGrid') then
+          editgrid := Reg.ReadBool('EditGrid');
+        if Reg.ValueExists('AddArgs') then
           addargs := Reg.ReadBool('AddArgs');
         if Reg.ValueExists('HideNOPs') then
           hidenops := Reg.ReadBool('HideNOPs');
@@ -7332,6 +7768,11 @@ begin
       ShowGrids
     else
       HideGrids;
+
+    if editgrid then
+      EnableGridEdit
+    else
+      DisableGridEdit;
 
     fmScriptTE.AddArgs1.Checked := addargs;
     form4.HideNOPs1.Checked := hidenops;
@@ -12442,6 +12883,26 @@ begin
   end;
 end;
 
+procedure TForm1.Celledit1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  EnableGridEdit;
+  editgrid := true;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteBool('EditGrid', true);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+  LoadFloorGrids;
+end;
+
 procedure TForm1.CheckBox1Click(Sender: TObject);
 begin
   DrawMap;
@@ -12852,7 +13313,10 @@ begin
   Label3.Left := 200 + (((Form1.Width - 190) div 2) - 16);
   ListBox2.Width := (((Form1.Width - 190) div 2) - 14);
   ListBox1.Width := (((Form1.Width - 190) div 2) - 14);
-  pagecontrol1.Width := (((Form1.Width - 190)) - 14);
+  if TStyleManager.IsCustomStyleActive then
+    pagecontrol1.Width := (((Form1.Width - 190)) - 18)
+  else
+    pagecontrol1.Width := (((Form1.Width - 190)) - 14);
   lblModifiers.Left := lblStatus.Left + lblStatus.Width + 6;
   DrawMap;
 end;

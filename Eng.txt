@@ -521,3 +521,6 @@ List
 Grid
 Filter:
 Switch tab
+Grid mode
+Selection
+Edit
