@@ -2710,16 +2710,11 @@ end;
 Procedure TForm1.LoadFloorGrids;
 var
   i: integer;
-  ScrollPos1, ScrollPos2: TGridScrollPos;
 begin
   if showgrid then
   begin
     with form1 do
     begin
-      // Save scroll positions
-      ScrollPos1 := GetDBGridScrollPos(DBGrid1);
-      ScrollPos2 := GetDBGridScrollPos(DBGrid2);
-
       // Disable controls for smoother updating
       ClientDataSet1.DisableControls;
       ClientDataSet2.DisableControls;
@@ -2828,9 +2823,6 @@ begin
       // Done writing; cleanup and revert original settings
       ClientDataSet1.EnableControls;
       ClientDataSet2.EnableControls;
-
-      SetDBGridScrollPos(DBGrid1, ScrollPos1);
-      SetDBGridScrollPos(DBGrid2, ScrollPos2);
 
       DBGrid1.Fields[0].ReadOnly := true;
       DBGrid2.Fields[0].ReadOnly := true;
@@ -4935,7 +4927,6 @@ begin
     gridtype := 1;
     selected := strtointdef(DBGrid1.DataSource.DataSet.FieldByName('#').AsString, -1);
     listbox1.ItemIndex := selected;
-    listbox2.ItemIndex := -1;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
@@ -5109,7 +5100,6 @@ begin
     gridtype := 2;
     selected := strtointdef(DBGrid2.DataSource.DataSet.FieldByName('#').AsString, -1);
     listbox2.ItemIndex := selected;
-    listbox1.ItemIndex := -1;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
@@ -5557,22 +5547,33 @@ begin
 end;
 
 procedure TForm1.DBGrid1CellClick(Column: TColumn);
+var
+  ScrollPos: TGridScrollPos;
 begin
   if not ClientDataSet1.isEmpty then
   begin
+    ScrollPos := GetDBGridScrollPos(DBGrid1);
     selected := strtoint(DBGrid1.DataSource.DataSet.FieldByName('#').AsString);
     listbox1.ItemIndex := selected;
     Listbox1click(DBGrid1);
     if editgrid then
       DBGrid1.SelectedIndex := Column.ID - 1;
     DBGrid1.Invalidate;
+    SetDBGridScrollPos(DBGrid1, ScrollPos);
   end;
 end;
 
 procedure TForm1.DBGrid1DblClick(Sender: TObject);
+var
+  ScrollPos: TGridScrollPos;
 begin
-  if (selected > -1) and not ClientDataSet1.IsEmpty and not editgrid then
-    Listbox1DblClick(nil);
+  if (selected > -1) and not ClientDataSet1.IsEmpty then
+  begin
+    ScrollPos := GetDBGridScrollPos(DBGrid1);
+    if not editgrid then
+      Listbox1DblClick(nil);
+    SetDBGridScrollPos(DBGrid1, ScrollPos);
+  end;
 end;
 
 procedure TForm1.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -5645,22 +5646,33 @@ begin
 end;
 
 procedure TForm1.DBGrid2CellClick(Column: TColumn);
+var
+  ScrollPos: TGridScrollPos;
 begin
   if not ClientDataSet2.isEmpty then
   begin
+    ScrollPos := GetDBGridScrollPos(DBGrid2);
     selected := strtoint(DBGrid2.DataSource.DataSet.FieldByName('#').AsString);
     listbox2.ItemIndex := selected;
     Listbox2click(DBGrid2);
     if editgrid then
       DBGrid2.SelectedIndex := Column.ID - 1;
     DBGrid2.Invalidate;
+    SetDBGridScrollPos(DBGrid2, ScrollPos);
   end;
 end;
 
 procedure TForm1.DBGrid2DblClick(Sender: TObject);
+var
+  ScrollPos: TGridScrollPos;
 begin
-  if (selected > -1) and not ClientDataSet2.IsEmpty and not editgrid then
-    Listbox1DblClick(nil);
+  if (selected > -1) and not ClientDataSet2.IsEmpty then
+  begin
+    ScrollPos := GetDBGridScrollPos(DBGrid2);
+    if not editgrid then
+      Listbox1DblClick(nil);
+    SetDBGridScrollPos(DBGrid2, ScrollPos);
+  end;
 end;
 
 procedure TForm1.DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
