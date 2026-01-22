@@ -432,7 +432,7 @@ object Form1: TForm1
         Height = 132
         Align = alClient
         DataSource = DataSource1
-        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
         PopupMenu = popupGrid
         ReadOnly = True
         TabOrder = 0
@@ -462,7 +462,7 @@ object Form1: TForm1
         Height = 132
         Align = alClient
         DataSource = DataSource2
-        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
         PopupMenu = popupGrid
         ReadOnly = True
         TabOrder = 0
