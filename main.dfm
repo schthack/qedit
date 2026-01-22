@@ -2236,11 +2236,6 @@ object Form1: TForm1
       FieldName = 'Param 6'
       OnSetText = ClientDataSet2Param6SetText
     end
-    object ClientDataSet2ID: TWordField
-      Alignment = taLeftJustify
-      FieldName = 'ID'
-      OnSetText = ClientDataSet2IDSetText
-    end
   end
   object DataSource1: TDataSource
     DataSet = ClientDataSet1

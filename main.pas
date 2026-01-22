@@ -433,7 +433,6 @@ type
     ClientDataSet2Param2: TSingleField;
     ClientDataSet2Param3: TSingleField;
     Switchgridtab1: TMenuItem;
-    ClientDataSet2ID: TWordField;
     ClientDataSet1ChildCount: TWordField;
     Gridmode1: TMenuItem;
     Rowselection1: TMenuItem;
@@ -665,7 +664,6 @@ type
     procedure ClientDataSet2Param4SetText(Sender: TField; const Text: string);
     procedure ClientDataSet2Param5SetText(Sender: TField; const Text: string);
     procedure ClientDataSet2Param6SetText(Sender: TField; const Text: string);
-    procedure ClientDataSet2IDSetText(Sender: TField; const Text: string);
     procedure Switchtab1Click(Sender: TObject);
     procedure Edit2Click(Sender: TObject);
     procedure Selection1Click(Sender: TObject);
@@ -2797,7 +2795,6 @@ begin
         ClientDataSet2.FieldByName('Param 4').AsInteger := Floor[sFloor].Obj[i].obj_id;
         ClientDataSet2.FieldByName('Param 5').AsInteger := Floor[sFloor].Obj[i].Action;
         ClientDataSet2.FieldByName('Param 6').AsInteger := Floor[sFloor].Obj[i].unknow13;
-        ClientDataSet2.FieldByName('ID').AsInteger := Floor[sFloor].Obj[i].id;
         ClientDataSet2.Post;
       end;
 
@@ -5124,15 +5121,6 @@ begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].grp := strtoint(Text);
-    Listbox2Click(nil);
-  end;
-end;
-
-procedure TForm1.ClientDataSet2IDSetText(Sender: TField; const Text: string);
-begin
-  if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
-  begin
-    Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].id := strtoint(Text);
     Listbox2Click(nil);
   end;
 end;
