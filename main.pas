@@ -5563,6 +5563,8 @@ begin
     selected := strtoint(DBGrid1.DataSource.DataSet.FieldByName('#').AsString);
     listbox1.ItemIndex := selected;
     Listbox1click(DBGrid1);
+    if editgrid then
+      DBGrid1.SelectedIndex := Column.ID - 1;
     DBGrid1.Invalidate;
   end;
 end;
@@ -5649,6 +5651,8 @@ begin
     selected := strtoint(DBGrid2.DataSource.DataSet.FieldByName('#').AsString);
     listbox2.ItemIndex := selected;
     Listbox2click(DBGrid2);
+    if editgrid then
+      DBGrid2.SelectedIndex := Column.ID - 1;
     DBGrid2.Invalidate;
   end;
 end;
