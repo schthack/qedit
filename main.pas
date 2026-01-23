@@ -448,6 +448,8 @@ type
     procedure CheckListBox1Click(Sender: TObject);
     procedure DrawMap;
     procedure LoadFloorGrids;
+    function GetDBGridScrollPos(Grid: TDBGrid): TGridScrollPos;
+    procedure SetDBGridScrollPos(Grid: TDBGrid; const Pos: TGridScrollPos);
     procedure Button6Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure ListBox1Click(Sender: TObject);
@@ -2671,7 +2673,7 @@ begin
 end;
 
 // Low-level functions to save/restore DBGrid scroll positions
-function GetDBGridScrollPos(Grid: TDBGrid): TGridScrollPos;
+function TForm1.GetDBGridScrollPos(Grid: TDBGrid): TGridScrollPos;
 var
   si: TScrollInfo;
 begin
@@ -2686,7 +2688,7 @@ begin
   Result.Vert := si.nPos;
 end;
 
-procedure SetDBGridScrollPos(Grid: TDBGrid; const Pos: TGridScrollPos);
+procedure TForm1.SetDBGridScrollPos(Grid: TDBGrid; const Pos: TGridScrollPos);
 var
   si: TScrollInfo;
 begin
@@ -2725,6 +2727,10 @@ begin
       // Clear the data sets
       ClientDataSet1.EmptyDataSet;
       ClientDataSet2.EmptyDataSet;
+
+      // Apply sort settings
+      ClientDataSet1.IndexFieldNames := lastmonstersort;
+      ClientDataSet2.IndexFieldNames := lastobjsort;
 
       // Temporarily disable read-only fields for writing
       DBGrid1.Fields[0].ReadOnly := false;
@@ -2795,10 +2801,6 @@ begin
         ClientDataSet2.FieldByName('Param 6').AsInteger := Floor[sFloor].Obj[i].unknow13;
         ClientDataSet2.Post;
       end;
-
-      // Save sort settings
-      ClientDataSet1.IndexFieldNames := lastmonstersort;
-      ClientDataSet2.IndexFieldNames := lastobjsort;
 
       // Find and set the original selection
       if selected > -1 then
@@ -5560,14 +5562,19 @@ begin
 end;
 
 procedure TForm1.DBGrid1CellClick(Column: TColumn);
+var
+  scrollpos: TGridScrollPos;
 begin
   if not ClientDataSet1.isEmpty then
   begin
     selected := strtoint(DBGrid1.DataSource.DataSet.FieldByName('#').AsString);
     listbox1.ItemIndex := selected;
+    scrollpos := GetDBGridScrollPos(DBGrid1);
     Listbox1click(DBGrid1);
     if editgrid then
-      DBGrid1.SelectedIndex := Column.ID - 1;
+      DBGrid1.SelectedIndex := Column.ID - 1
+    else
+      form1.SetDBGridScrollPos(DBGrid1, scrollpos);
     DBGrid1.Invalidate;
   end;
 end;
@@ -5637,20 +5644,24 @@ end;
 
 procedure TForm1.DBGrid1TitleClick(Column: TColumn);
 begin
-  ClientDataSet1.IndexFieldNames := Column.FieldName;
   lastmonstersort := Column.FieldName;
   LoadFloorGrids;
 end;
 
 procedure TForm1.DBGrid2CellClick(Column: TColumn);
+var
+  scrollpos: TGridScrollPos;
 begin
   if not ClientDataSet2.isEmpty then
   begin
     selected := strtoint(DBGrid2.DataSource.DataSet.FieldByName('#').AsString);
     listbox2.ItemIndex := selected;
+    scrollpos := GetDBGridScrollPos(DBGrid2);
     Listbox2click(DBGrid2);
     if editgrid then
-      DBGrid2.SelectedIndex := Column.ID - 1;
+      DBGrid2.SelectedIndex := Column.ID - 1
+    else
+      SetDBGridScrollPos(DBGrid2, scrollpos);
     DBGrid2.Invalidate;
   end;
 end;
@@ -5720,7 +5731,6 @@ end;
 
 procedure TForm1.DBGrid2TitleClick(Column: TColumn);
 begin
-  ClientDataSet2.IndexFieldNames := Column.FieldName;
   lastobjsort := Column.FieldName;
   LoadFloorGrids;
 end;

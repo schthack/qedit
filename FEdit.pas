@@ -286,6 +286,8 @@ begin
 end;
 
 procedure TForm7.Button1Click(Sender: TObject);
+var
+  scrollpos1, scrollpos2: TGridScrollPos;
 begin
     form1.SetUndow;
     isedited:=true;
@@ -352,7 +354,11 @@ begin
 
     end;
     Form1.DrawMap;
+    scrollpos1 := form1.GetDBGridScrollPos(form1.DBGrid1);
+    scrollpos2 := form1.GetDBGridScrollPos(form1.DBGrid2);
     Form1.LoadFloorGrids;
+    form1.SetDBGridScrollPos(form1.DBGrid1, scrollpos1);
+    form1.SetDBGridScrollPos(form1.DBGrid2, scrollpos2);
     close;
 end;
 
