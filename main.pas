@@ -669,6 +669,12 @@ type
     procedure Selection1Click(Sender: TObject);
     procedure DBGrid1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure DBGrid2KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DBGrid1KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure DBGrid2KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
 
   private
     FClosedSuccessfully: Boolean;
@@ -910,6 +916,8 @@ begin
   form1.Switchgridtab1.Visible := false;
   form1.Switchgridtab1.Enabled := false;
   form1.Gridmode1.Visible := false;
+  form1.DBGrid1.Options := form1.DBGrid1.Options - [dgMultiSelect];
+  form1.DBGrid2.Options := form1.DBGrid2.Options - [dgMultiSelect];
 end;
 
 Procedure DisableGridEdit;
@@ -5679,6 +5687,15 @@ end;
 procedure TForm1.DBGrid1Exit(Sender: TObject);
 begin
   monstgridfocused := false;
+  DBGrid1.Options := DBGrid1.Options - [dgMultiSelect];
+  DBGrid2.Options := DBGrid2.Options - [dgMultiSelect];
+end;
+
+procedure TForm1.DBGrid1KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (ssShift in Shift) or (ssCtrl in Shift) then
+    DBGrid1.Options := DBGrid1.Options + [dgMultiSelect];
 end;
 
 procedure TForm1.DBGrid1KeyUp(Sender: TObject; var Key: Word;
@@ -5686,6 +5703,7 @@ procedure TForm1.DBGrid1KeyUp(Sender: TObject; var Key: Word;
 begin
   if (Key = VK_UP) or (Key = VK_DOWN) then
     ClientDataSet1AfterScroll(nil);
+  if (Key = VK_ESCAPE) then DBGrid1.Options := DBGrid1.Options - [dgMultiSelect];
 end;
 
 procedure TForm1.DBGrid1MouseDown(Sender: TObject; Button: TMouseButton;
@@ -5773,6 +5791,15 @@ end;
 procedure TForm1.DBGrid2Exit(Sender: TObject);
 begin
   objgridfocused := false;
+  DBGrid1.Options := DBGrid1.Options - [dgMultiSelect];
+  DBGrid2.Options := DBGrid2.Options - [dgMultiSelect];
+end;
+
+procedure TForm1.DBGrid2KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (ssShift in Shift) or (ssCtrl in Shift) then
+    DBGrid2.Options := DBGrid2.Options + [dgMultiSelect];
 end;
 
 procedure TForm1.DBGrid2KeyUp(Sender: TObject; var Key: Word;
@@ -5780,6 +5807,7 @@ procedure TForm1.DBGrid2KeyUp(Sender: TObject; var Key: Word;
 begin
   if (Key = VK_UP) or (Key = VK_DOWN) then
     ClientDataSet2AfterScroll(nil);
+  if (Key = VK_ESCAPE) then DBGrid2.Options := DBGrid2.Options - [dgMultiSelect];
 end;
 
 procedure TForm1.DBGrid2MouseDown(Sender: TObject; Button: TMouseButton;
@@ -5816,10 +5844,50 @@ begin
 end;
 
 procedure TForm1.Delete1Click(Sender: TObject);
+var
+  Grid: TDBGrid;
+  i: Integer;
+  bm: TBookmark;
+  Dataset: TClientDataSet;
 begin
   if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
   and not fmScriptTE.txtNotes.Focused then
-    Button3Click(nil)
+  begin
+    if not (dgMultiSelect in DBGrid1.Options) and not (dgMultiSelect in DBGrid2.Options) then
+      Button3Click(nil)
+    else
+    begin
+      if pagecontrol1.ActivePage = tabsheet1 then
+      begin
+        Grid := DBGrid1;
+        Dataset := ClientDataSet1;
+      end;
+      if pagecontrol1.ActivePage = tabsheet2 then
+      begin
+        Grid := DBGrid2;
+        Dataset := ClientDataSet2;
+      end;
+      Dataset.DisableControls;
+      try
+        // Delete from bottom to top
+        for i := Grid.SelectedRows.Count - 1 downto 0 do
+        begin
+          bm := Grid.SelectedRows[i];
+          Dataset.GotoBookmark(bm);
+
+          Selected := Dataset.FieldByName('#').AsInteger;
+
+          // Call single-row delete on selection
+          Button3Click(nil);
+        end;
+      finally
+        Grid.SelectedRows.Clear;
+        Grid.Options := Grid.Options - [dgMultiSelect];
+        Grid.Options := Grid.Options - [dgMultiSelect];
+        Dataset.EnableControls;
+      end;
+    end;
+  end
   else if form4.edit1.Focused then
     form4.edit1.Clear
   else if fmScriptTE.TextEdit.Focused then
@@ -11944,6 +12012,13 @@ end;
 procedure TForm1.Hotkeys1Click(Sender: TObject);
 begin
   fmHotkeys.ShowModal;
+end;
+
+procedure TForm1.FormMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  DBGrid1.Options := DBGrid1.Options - [dgMultiSelect];
+  DBGrid2.Options := DBGrid2.Options - [dgMultiSelect];
 end;
 
 procedure TForm1.FormMouseUp(Sender: TObject; Button: TMouseButton;
