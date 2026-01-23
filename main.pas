@@ -1480,7 +1480,6 @@ begin
   form31.Caption := GetLanguageString(325);
   form31.Copy.Caption := GetLanguageString(159);
   form31.Button1.Caption := GetLanguageString(113);
-  form31.Label1.Caption := GetLanguageString(522);
   form31.Button2.Caption := GetLanguageString(155);
 
 

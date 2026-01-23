@@ -15,13 +15,6 @@ object Form31: TForm31
     516
     487)
   TextHeight = 13
-  object Label1: TLabel
-    Left = 18
-    Top = 452
-    Width = 28
-    Height = 13
-    Caption = 'Filter:'
-  end
   object Memo1: TMemo
     Left = 0
     Top = 0
@@ -65,7 +58,7 @@ object Form31: TForm31
     OnClick = Button2Click
   end
   object cbShow: TComboBox
-    Left = 49
+    Left = 17
     Top = 448
     Width = 122
     Height = 22

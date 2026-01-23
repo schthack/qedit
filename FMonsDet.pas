@@ -14,7 +14,6 @@ type
     Button2: TButton;
     SaveDialog1: TSaveDialog;
     cbShow: TComboBox;
-    Label1: TLabel;
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure CopyClick(Sender: TObject);
