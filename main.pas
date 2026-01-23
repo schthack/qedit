@@ -5499,7 +5499,7 @@ begin
       clientdataset1.EnableControls;
     end;
     if showgrid and editgrid then
-        Checklistbox1.SetFocus;
+        form1.GroupBox1.SetFocus;
     DBGrid1.Options := DBGrid1.Options + [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
   end;
@@ -5617,7 +5617,7 @@ begin
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options + [dgIndicator];
     if showgrid and editgrid then
-        Checklistbox1.SetFocus;
+        form1.GroupBox1.SetFocus;
   end;
 end;
 
