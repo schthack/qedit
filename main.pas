@@ -2779,6 +2779,16 @@ begin
   begin
     with form1 do
     begin
+      // Disable editing if the tables are blank
+      if Floor[Checklistbox1.ItemIndex].MonsterCount <= 0 then
+        DBGrid1.Options := DBGrid1.Options - [dgEditing]
+      else if editgrid then
+        DBGrid1.Options := DBGrid1.Options + [dgEditing];
+      if Floor[Checklistbox1.ItemIndex].ObjCount <= 0 then
+        DBGrid2.Options := DBGrid2.Options - [dgEditing]
+      else if editgrid then
+        DBGrid2.Options := DBGrid2.Options + [dgEditing];
+
       // Save scroll positions
       ScrollPos1 := GetDBGridScrollPos(DBGrid1);
       ScrollPos2 := GetDBGridScrollPos(DBGrid2);
@@ -2902,7 +2912,7 @@ begin
       DBGrid2.Fields[0].ReadOnly := true;
       DBGrid1.Fields[1].ReadOnly := true;
       DBGrid2.Fields[1].ReadOnly := true;
-      if editgrid then
+      if editgrid and ((sType = 1) or (sType = 2)) then
         Checklistbox1.SetFocus;
     end;
   end;
@@ -9049,10 +9059,10 @@ var
 begin
   if Selected > -1 then
   begin
-    ClientDataSet1.DisableControls;
-    ClientDataSet2.DisableControls;
     if showgrid then
     begin
+      ClientDataSet1.DisableControls;
+      ClientDataSet2.DisableControls;
       if sType = 1 then
       begin
        if not ClientDataSet1.Eof then
@@ -9152,7 +9162,10 @@ begin
       if sType = 1 then
       begin
         gridtype := 1;
-        Selected := next;
+        if Floor[sfloor].MonsterCount = 0 then
+          Selected := -1
+        else
+          Selected := next;
         if selected > -1 then
           form1.Listbox1.ItemIndex := selected;
         LoadFloorGrids;
@@ -9160,7 +9173,10 @@ begin
       if sType = 2 then
       begin
         gridtype := 2;
-        Selected := next;
+        if Floor[sfloor].ObjCount = 0 then
+          Selected := -1
+        else
+          Selected := next;
         if selected > -1 then
           form1.Listbox2.ItemIndex := selected;
         LoadFloorGrids;
