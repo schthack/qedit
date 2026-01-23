@@ -872,6 +872,8 @@ var
   lastobjsort: string = '';
   decmonstsort: Boolean = false;
   decobjsort: Boolean = false;
+  grid1col: integer = 0;
+  grid2col: integer = 0;
   gridtype: integer = -1;
   monstgridfocused: Boolean = false;
   objgridfocused: Boolean = false;
@@ -2922,8 +2924,6 @@ begin
       DBGrid2.Fields[0].ReadOnly := true;
       DBGrid1.Fields[1].ReadOnly := true;
       DBGrid2.Fields[1].ReadOnly := true;
-      if editgrid and ((sType = 1) or (sType = 2)) then
-        Checklistbox1.SetFocus;
     end;
   end;
 end;
@@ -5027,6 +5027,8 @@ begin
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+    if editgrid then
+      DBGrid1.SelectedIndex := grid1col;
     DrawMap;
   end;
 end;
@@ -5202,6 +5204,8 @@ begin
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+    if editgrid then
+      DBGrid2.SelectedIndex := grid2col;
     DrawMap;
   end;
 end;
@@ -5494,6 +5498,8 @@ begin
       clientdataset1.Locate('#', selected, []);
       clientdataset1.EnableControls;
     end;
+    if showgrid and editgrid then
+        Checklistbox1.SetFocus;
     DBGrid1.Options := DBGrid1.Options + [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
   end;
@@ -5610,6 +5616,8 @@ begin
     end;
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options + [dgIndicator];
+    if showgrid and editgrid then
+        Checklistbox1.SetFocus;
   end;
 end;
 
@@ -5656,6 +5664,7 @@ begin
     listbox1.ItemIndex := selected;
     scrollpos := GetDBGridScrollPos(DBGrid1);
     Listbox1click(DBGrid1);
+    grid1col := Column.ID - 1;
     if editgrid then
       DBGrid1.SelectedIndex := Column.ID - 1
     else
@@ -5763,6 +5772,7 @@ begin
     listbox2.ItemIndex := selected;
     scrollpos := GetDBGridScrollPos(DBGrid2);
     Listbox2click(DBGrid2);
+    grid2col := Column.ID - 1;
     if editgrid then
       DBGrid2.SelectedIndex := Column.ID - 1
     else
