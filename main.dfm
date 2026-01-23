@@ -450,6 +450,7 @@ object Form1: TForm1
         OnKeyDown = DBGrid1KeyDown
         OnKeyUp = DBGrid1KeyUp
         OnMouseDown = DBGrid1MouseDown
+        OnMouseEnter = DBGrid1MouseEnter
         OnMouseLeave = DBGrid1MouseLeave
         OnMouseWheel = DBGrid1MouseWheel
         OnTitleClick = DBGrid1TitleClick
@@ -481,6 +482,7 @@ object Form1: TForm1
         OnKeyDown = DBGrid2KeyDown
         OnKeyUp = DBGrid2KeyUp
         OnMouseDown = DBGrid2MouseDown
+        OnMouseEnter = DBGrid2MouseEnter
         OnMouseLeave = DBGrid2MouseLeave
         OnMouseWheel = DBGrid2MouseWheel
         OnTitleClick = DBGrid2TitleClick

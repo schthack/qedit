@@ -675,6 +675,8 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure DBGrid2KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure DBGrid2MouseEnter(Sender: TObject);
+    procedure DBGrid1MouseEnter(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -5745,6 +5747,12 @@ begin
   monstgridfocused := true;
 end;
 
+procedure TForm1.DBGrid1MouseEnter(Sender: TObject);
+begin
+   if editgrid then
+    DBGrid1.SetFocus;
+end;
+
 procedure TForm1.DBGrid1MouseLeave(Sender: TObject);
 begin
   monstgridfocused := false;
@@ -5850,6 +5858,12 @@ procedure TForm1.DBGrid2MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   objgridfocused := true;
+end;
+
+procedure TForm1.DBGrid2MouseEnter(Sender: TObject);
+begin
+  if editgrid then
+    DBGrid2.SetFocus;
 end;
 
 procedure TForm1.DBGrid2MouseLeave(Sender: TObject);
