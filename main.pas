@@ -901,6 +901,16 @@ begin
   form1.Switchgridtab1.Visible := true;
   form1.Switchgridtab1.Enabled := true;
   form1.Gridmode1.Visible := true;
+  if selected > -1 then
+  begin
+    if sType = 1 then
+      form1.PageControl1.ActivePage := form1.tabsheet1;
+    if sType = 2 then
+      form1.PageControl1.ActivePage := form1.tabsheet2;
+    form1.ClientDataSet1.Locate('#', form1.Listbox1.Itemindex, []);
+    form1.ClientDataSet2.Locate('#', form1.Listbox2.ItemIndex, []);
+    gridtype := sType;
+  end;
 end;
 
 Procedure HideGrids;
@@ -5683,7 +5693,10 @@ begin
   begin
     Grid := Sender as TDBGrid;
 
-    if gdSelected in State then
+    if (gdSelected in State) or
+    ((dgMultiSelect in Grid.Options)
+    and Grid.SelectedRows.CurrentRowSelected)
+    then
     begin
       Grid.Canvas.Brush.Color :=
         clHighlight;
@@ -5787,7 +5800,9 @@ begin
   begin
     Grid := Sender as TDBGrid;
 
-    if gdSelected in State then
+    if (gdSelected in State) or
+    ((dgMultiSelect in Grid.Options)
+    and Grid.SelectedRows.CurrentRowSelected) then
     begin
       Grid.Canvas.Brush.Color :=
         clHighlight;
@@ -9163,22 +9178,38 @@ begin
       begin
         gridtype := 1;
         if Floor[sfloor].MonsterCount = 0 then
-          Selected := -1
+        begin
+          Selected := -1;
+          Button2.Enabled := false;
+          Button1.Enabled := false;
+          Button3.Enabled := false;
+          smEdit.Enabled := false;
+          smDelete.Enabled := false;
+          smMove.Enabled := false;
+          transform1.Enabled := false;
+        end
         else
           Selected := next;
-        if selected > -1 then
-          form1.Listbox1.ItemIndex := selected;
+        form1.Listbox1.ItemIndex := selected;
         LoadFloorGrids;
       end;
       if sType = 2 then
       begin
         gridtype := 2;
         if Floor[sfloor].ObjCount = 0 then
-          Selected := -1
+        begin
+          Selected := -1;
+          Button2.Enabled := false;
+          Button1.Enabled := false;
+          Button3.Enabled := false;
+          smEdit.Enabled := false;
+          smDelete.Enabled := false;
+          smMove.Enabled := false;
+          transform1.Enabled := false;
+        end
         else
           Selected := next;
-        if selected > -1 then
-          form1.Listbox2.ItemIndex := selected;
+        form1.Listbox2.ItemIndex := selected;
         LoadFloorGrids;
       end;
       Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
