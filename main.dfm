@@ -258,6 +258,7 @@ object Form1: TForm1
       Height = 47
       Align = alClient
       ExplicitWidth = 523
+      Transparent = True
     end
   end
   object Panel2: TPanel
