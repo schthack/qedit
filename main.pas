@@ -667,6 +667,8 @@ type
     procedure Switchtab1Click(Sender: TObject);
     procedure Edit2Click(Sender: TObject);
     procedure Selection1Click(Sender: TObject);
+    procedure DBGrid1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DBGrid2KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   private
     FClosedSuccessfully: Boolean;
@@ -4985,8 +4987,8 @@ end;
 
 procedure TForm1.ClientDataSet1AfterScroll(DataSet: TDataSet);
 begin
-  if not ClientDataSet1.isEmpty and (selected > -1) and monstgridfocused
-  and showgrid then
+  if (not ClientDataSet1.isEmpty and (selected > -1) and monstgridfocused
+  and showgrid) or (DataSet = nil) then
   begin
     sType := 1;
     gridtype := 1;
@@ -5160,8 +5162,8 @@ end;
 
 procedure TForm1.ClientDataSet2AfterScroll(DataSet: TDataSet);
 begin
-  if not ClientDataSet2.isEmpty and (selected > -1) and objgridfocused
-  and showgrid then
+  if (not ClientDataSet2.isEmpty and (selected > -1) and objgridfocused
+  and showgrid) or (DataSet = nil) then
   begin
     sType := 2;
     gridtype := 2;
@@ -5679,6 +5681,13 @@ begin
   monstgridfocused := false;
 end;
 
+procedure TForm1.DBGrid1KeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = VK_UP) or (Key = VK_DOWN) then
+    ClientDataSet1AfterScroll(nil);
+end;
+
 procedure TForm1.DBGrid1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
@@ -5764,6 +5773,13 @@ end;
 procedure TForm1.DBGrid2Exit(Sender: TObject);
 begin
   objgridfocused := false;
+end;
+
+procedure TForm1.DBGrid2KeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = VK_UP) or (Key = VK_DOWN) then
+    ClientDataSet2AfterScroll(nil);
 end;
 
 procedure TForm1.DBGrid2MouseDown(Sender: TObject; Button: TMouseButton;
