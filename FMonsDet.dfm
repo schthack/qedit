@@ -63,6 +63,7 @@ object Form31: TForm31
     Width = 122
     Height = 22
     Style = csOwnerDrawFixed
+    Anchors = [akLeft, akBottom]
     ItemIndex = 0
     TabOrder = 4
     Text = 'Monsters and boxes'
