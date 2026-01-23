@@ -444,7 +444,6 @@ object Form1: TForm1
         OnCellClick = DBGrid1CellClick
         OnDrawColumnCell = DBGrid1DrawColumnCell
         OnDblClick = DBGrid1DblClick
-        OnEnter = DBGrid1Enter
         OnExit = DBGrid1Exit
         OnMouseDown = DBGrid1MouseDown
         OnMouseLeave = DBGrid1MouseLeave
@@ -474,7 +473,6 @@ object Form1: TForm1
         OnCellClick = DBGrid2CellClick
         OnDrawColumnCell = DBGrid2DrawColumnCell
         OnDblClick = DBGrid2DblClick
-        OnEnter = DBGrid2Enter
         OnExit = DBGrid2Exit
         OnMouseDown = DBGrid2MouseDown
         OnMouseLeave = DBGrid2MouseLeave
