@@ -5497,9 +5497,9 @@ begin
       clientdataset1.DisableControls;
       clientdataset1.Locate('#', selected, []);
       clientdataset1.EnableControls;
-    end;
-    if showgrid and editgrid then
+      if editgrid then
         form1.GroupBox1.SetFocus;
+    end;
     DBGrid1.Options := DBGrid1.Options + [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
   end;
@@ -5613,11 +5613,11 @@ begin
       clientdataset2.DisableControls;
       clientdataset2.Locate('#', selected, []);
       clientdataset2.EnableControls;
+      if editgrid then
+        form1.GroupBox1.SetFocus;
     end;
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options + [dgIndicator];
-    if showgrid and editgrid then
-        form1.GroupBox1.SetFocus;
   end;
 end;
 
