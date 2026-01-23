@@ -2903,6 +2903,8 @@ begin
       DBGrid2.Fields[0].ReadOnly := true;
       DBGrid1.Fields[1].ReadOnly := true;
       DBGrid2.Fields[1].ReadOnly := true;
+      if editgrid then
+        Checklistbox1.SetFocus;
     end;
   end;
 end;
