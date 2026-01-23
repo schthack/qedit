@@ -862,6 +862,8 @@ var
 
   lastmonstersort: string = '';
   lastobjsort: string = '';
+  decmonstsort: Boolean = false;
+  decobjsort: Boolean = false;
   gridtype: integer = -1;
   monstgridfocused: Boolean = false;
   objgridfocused: Boolean = false;
@@ -2707,6 +2709,58 @@ begin
   Grid.Perform(WM_VSCROLL, MakeWParam(SB_THUMBPOSITION, Pos.Vert), 0);
 end;
 
+procedure ApplyMonsterSort(const s: string);
+begin
+  with Form1.ClientDataSet1 do
+  begin
+    // Clear current index
+    IndexName := '';
+    try
+      DeleteIndex('temp_idx');
+    except
+      // Index doesn't exist yet; ignore exception
+    end;
+
+    // Create new index with the current setting
+    if decmonstsort then
+      AddIndex('temp_idx', s, [ixDescending])
+    else
+      AddIndex('temp_idx', s, []);
+
+    // Toggle the setting
+    decmonstsort := not decmonstsort;
+
+    // Apply the index
+    IndexName := 'temp_idx';
+  end;
+end;
+
+procedure ApplyObjectSort(const s: string);
+begin
+  with Form1.ClientDataSet2 do
+  begin
+    // Clear current index
+    IndexName := '';
+    try
+      DeleteIndex('temp_idx');
+    except
+      // Index doesn't exist yet; ignore exception
+    end;
+
+    // Create new index with the current setting
+    if decobjsort then
+      AddIndex('temp_idx', s, [ixDescending])
+    else
+      AddIndex('temp_idx', s, []);
+
+    // Toggle the setting
+    decobjsort := not decobjsort;
+
+    // Apply the index
+    IndexName := 'temp_idx';
+  end;
+end;
+
 Procedure TForm1.LoadFloorGrids;
 var
   i: integer;
@@ -2729,8 +2783,8 @@ begin
       ClientDataSet2.EmptyDataSet;
 
       // Apply sort settings
-      ClientDataSet1.IndexFieldNames := lastmonstersort;
-      ClientDataSet2.IndexFieldNames := lastobjsort;
+      ApplyMonsterSort(lastmonstersort);
+      ApplyObjectSort(lastobjsort);
 
       // Temporarily disable read-only fields for writing
       DBGrid1.Fields[0].ReadOnly := false;
