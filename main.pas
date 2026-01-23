@@ -2827,8 +2827,11 @@ begin
       ClientDataSet1.EnableControls;
       ClientDataSet2.EnableControls;
 
-      SetDBGridScrollPos(DBGrid1, ScrollPos1);
-      SetDBGridScrollPos(DBGrid2, ScrollPos2);
+      if GetForegroundWindow = form1.Handle then
+      begin
+        SetDBGridScrollPos(DBGrid1, ScrollPos1);
+        SetDBGridScrollPos(DBGrid2, ScrollPos2);
+      end;
 
       DBGrid1.Fields[0].ReadOnly := true;
       DBGrid2.Fields[0].ReadOnly := true;
@@ -4937,6 +4940,7 @@ begin
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+    DrawMap;
   end;
 end;
 
@@ -5111,6 +5115,7 @@ begin
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+    DrawMap;
   end;
 end;
 
