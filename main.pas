@@ -671,12 +671,13 @@ type
     procedure DBGrid2KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure DBGrid1KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure DBGrid2KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure DBGrid2MouseEnter(Sender: TObject);
     procedure DBGrid1MouseEnter(Sender: TObject);
+    procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure Image1Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -2910,7 +2911,6 @@ begin
       ClientDataSet1.EnableControls;
       ClientDataSet2.EnableControls;
 
-
       DBGrid1.Fields[0].ReadOnly := true;
       DBGrid2.Fields[0].ReadOnly := true;
       DBGrid1.Fields[1].ReadOnly := true;
@@ -4939,6 +4939,11 @@ begin
     ListBox1.Clear;
     ListBox2.Clear;
     Selected := -1;
+    if not indelete then
+    begin
+      DBGrid1.Options := DBGrid1.Options - [dgMultiSelect];
+      DBGrid2.Options := DBGrid2.Options - [dgMultiSelect];
+    end;
     if not ctrldw then
     begin
       mpx := 0;
@@ -5860,16 +5865,18 @@ procedure TForm1.Delete1Click(Sender: TObject);
 var
   Grid: TDBGrid;
   i: Integer;
-  bm: TBookmark;
+  bm, lastbm: TBookmark;
   Dataset: TClientDataSet;
 begin
   if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
   and not fmScriptTE.txtNotes.Focused then
   begin
-    if not (dgMultiSelect in DBGrid1.Options) and not (dgMultiSelect in DBGrid2.Options) then
+    indelete := true;
+    if not (dgMultiSelect in DBGrid1.Options) and not (dgMultiSelect in DBGrid2.Options)
+    or form13.Focused then
       Button3Click(nil)
     // Multi-delete
-    else if not form13.Focused then
+    else
     begin
       SetUndow;
       if pagecontrol1.ActivePage = tabsheet1 then
@@ -5893,14 +5900,24 @@ begin
             Dataset.GotoBookmark(bm);
 
           Selected := Dataset.FieldByName('#').AsInteger;
+          if not Dataset.Bof then
+          begin
+            Dataset.Prior;
+            lastbm := Dataset.GetBookmark;
+          end
+          else if not Dataset.Eof then
+          begin
+            Dataset.Next;
+            lastbm := Dataset.GetBookmark;
+          end;
 
           // Call single-row delete on selection
           Button3Click(DBGrid1);
         end;
       finally
-        if not Dataset.Eof then
+        if Assigned(lastbm) and Dataset.BookmarkValid(lastbm) then
         begin
-          Dataset.Next;
+          Dataset.GotoBookmark(lastbm);
           Selected := Dataset.FieldByName('#').AsInteger;
           Button2.Enabled := true;
           Button1.Enabled := true;
@@ -5921,6 +5938,7 @@ begin
         LoadFloorGrids;
       end;
     end;
+    indelete := false;
   end
   else if form4.edit1.Focused then
     form4.edit1.Clear
@@ -9581,6 +9599,12 @@ begin
   bywave1Click(nil);
 end;
 
+procedure TForm1.Image1Click(Sender: TObject);
+begin
+  DBGrid1.Options := DBGrid1.Options - [dgMultiSelect];
+  DBGrid2.Options := DBGrid2.Options - [dgMultiSelect];
+end;
+
 procedure TForm1.Image2Click(Sender: TObject);
 var
   x, d, pz, i, z, y, j, k, l, closest: integer;
@@ -9589,6 +9613,8 @@ var
 begin
   if showgrid and editgrid then
     form1.GroupBox1.SetFocus;
+  DBGrid1.Options := DBGrid1.Options - [dgMultiSelect];
+  DBGrid2.Options := DBGrid2.Options - [dgMultiSelect];
   if MoveSel > -1 then
   begin
     snapvalue := FSnapOptions.seSnapTolerance.Value;

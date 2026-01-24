@@ -259,6 +259,7 @@ object Form1: TForm1
       Align = alClient
       ExplicitWidth = 523
       Transparent = True
+      OnClick = Image1Click
     end
   end
   object Panel2: TPanel
