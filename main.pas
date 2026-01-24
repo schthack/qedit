@@ -2732,10 +2732,12 @@ begin
   Grid.Perform(WM_VSCROLL, MakeWParam(SB_THUMBPOSITION, Pos.Vert), 0);
 end;
 
-procedure ApplyMonsterSort(const s: string);
+procedure ApplyMonsterSort(const s: string; descending: Boolean);
 begin
   with Form1.ClientDataSet1 do
   begin
+    form1.DBGrid1.Options := form1.DBGrid1.Options - [dgMultiSelect];
+    form1.DBGrid2.Options := form1.DBGrid2.Options - [dgMultiSelect];
     // Clear current index
     IndexName := '';
     try
@@ -2745,23 +2747,22 @@ begin
     end;
 
     // Create new index with the current setting
-    if decmonstsort then
+    if descending then
       AddIndex('temp_idx', s, [ixDescending])
     else
       AddIndex('temp_idx', s, []);
-
-    // Toggle the setting
-    decmonstsort := not decmonstsort;
 
     // Apply the index
     IndexName := 'temp_idx';
   end;
 end;
 
-procedure ApplyObjectSort(const s: string);
+procedure ApplyObjectSort(const s: string; descending: Boolean);
 begin
   with Form1.ClientDataSet2 do
   begin
+    form1.DBGrid1.Options := form1.DBGrid1.Options - [dgMultiSelect];
+    form1.DBGrid2.Options := form1.DBGrid2.Options - [dgMultiSelect];
     // Clear current index
     IndexName := '';
     try
@@ -2771,13 +2772,10 @@ begin
     end;
 
     // Create new index with the current setting
-    if decobjsort then
+    if descending then
       AddIndex('temp_idx', s, [ixDescending])
     else
       AddIndex('temp_idx', s, []);
-
-    // Toggle the setting
-    decobjsort := not decobjsort;
 
     // Apply the index
     IndexName := 'temp_idx';
@@ -5704,7 +5702,20 @@ procedure TForm1.DBGrid1KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if (ssShift in Shift) or (ssCtrl in Shift) then
+  begin
     DBGrid1.Options := DBGrid1.Options + [dgMultiSelect];
+    with Form1.ClientDataSet1 do
+    begin
+      // Clear current index
+      try
+        IndexName := '';
+        DeleteIndex('temp_idx');
+        LoadFloorGrids;
+      except
+        // Index doesn't exist yet; ignore exception
+      end;
+    end;
+  end;
 end;
 
 procedure TForm1.DBGrid1KeyUp(Sender: TObject; var Key: Word;
@@ -5741,7 +5752,8 @@ end;
 procedure TForm1.DBGrid1TitleClick(Column: TColumn);
 begin
   lastmonstersort := Column.FieldName;
-  ApplyMonsterSort(lastmonstersort);
+  ApplyMonsterSort(lastmonstersort, decmonstsort);
+  decmonstsort := not decmonstsort;
   LoadFloorGrids;
 end;
 
@@ -5810,7 +5822,20 @@ procedure TForm1.DBGrid2KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if (ssShift in Shift) or (ssCtrl in Shift) then
+  begin
     DBGrid2.Options := DBGrid2.Options + [dgMultiSelect];
+    with Form1.ClientDataSet2 do
+    begin
+      // Clear current index
+      try
+        IndexName := '';
+        DeleteIndex('temp_idx');
+        LoadFloorGrids;
+      except
+        // Index doesn't exist yet; ignore exception
+      end;
+    end;
+  end;
 end;
 
 procedure TForm1.DBGrid2KeyUp(Sender: TObject; var Key: Word;
@@ -5847,7 +5872,8 @@ end;
 procedure TForm1.DBGrid2TitleClick(Column: TColumn);
 begin
   lastobjsort := Column.FieldName;
-  ApplyObjectSort(lastobjsort);
+  ApplyObjectSort(lastobjsort, decobjsort);
+  decobjsort := not decobjsort;
   LoadFloorGrids;
 end;
 
@@ -5876,7 +5902,7 @@ begin
     or form13.Focused then
       Button3Click(nil)
     // Multi-delete
-    else
+    else if showgrid then
     begin
       SetUndow;
       if pagecontrol1.ActivePage = tabsheet1 then
