@@ -316,7 +316,7 @@ object Form1: TForm1
     Caption = 'Delete'
     Enabled = False
     TabOrder = 6
-    OnClick = Button3Click
+    OnClick = Delete1Click
   end
   object Button4: TButton
     Left = 591

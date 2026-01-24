@@ -911,10 +911,9 @@ begin
       form1.PageControl1.ActivePage := form1.tabsheet1;
     if sType = 2 then
       form1.PageControl1.ActivePage := form1.tabsheet2;
-    form1.ClientDataSet1.Locate('#', form1.Listbox1.Itemindex, []);
-    form1.ClientDataSet2.Locate('#', form1.Listbox2.ItemIndex, []);
     gridtype := sType;
   end;
+  form1.LoadFloorGrids;
 end;
 
 Procedure HideGrids;
@@ -2787,7 +2786,6 @@ end;
 Procedure TForm1.LoadFloorGrids;
 var
   i: integer;
-  ScrollPos1, ScrollPos2: TGridScrollPos;
 begin
   if showgrid then
   begin
@@ -2803,10 +2801,6 @@ begin
       else if editgrid then
         DBGrid2.Options := DBGrid2.Options + [dgEditing];
 
-      // Save scroll positions
-      ScrollPos1 := GetDBGridScrollPos(DBGrid1);
-      ScrollPos2 := GetDBGridScrollPos(DBGrid2);
-
       // Disable controls for smoother updating
       ClientDataSet1.DisableControls;
       ClientDataSet2.DisableControls;
@@ -2814,10 +2808,6 @@ begin
       // Clear the data sets
       ClientDataSet1.EmptyDataSet;
       ClientDataSet2.EmptyDataSet;
-
-      // Apply sort settings
-      ApplyMonsterSort(lastmonstersort);
-      ApplyObjectSort(lastobjsort);
 
       // Temporarily disable read-only fields for writing
       DBGrid1.Fields[0].ReadOnly := false;
@@ -2912,15 +2902,14 @@ begin
         gridtype := -1;
       end;
 
+      // Restore columns
+      DBGrid1.SelectedIndex := grid1col;
+      DBGrid2.SelectedIndex := grid2col;
+
       // Done writing; cleanup and revert original settings
       ClientDataSet1.EnableControls;
       ClientDataSet2.EnableControls;
 
-      if GetForegroundWindow = form1.Handle then
-      begin
-        SetDBGridScrollPos(DBGrid1, ScrollPos1);
-        SetDBGridScrollPos(DBGrid2, ScrollPos2);
-      end;
 
       DBGrid1.Fields[0].ReadOnly := true;
       DBGrid2.Fields[0].ReadOnly := true;
@@ -5019,7 +5008,7 @@ end;
 procedure TForm1.ClientDataSet1AfterScroll(DataSet: TDataSet);
 begin
   if (not ClientDataSet1.isEmpty and (selected > -1) and monstgridfocused
-  and showgrid) or (DataSet = nil) then
+  and showgrid and not ClientDataSet1.ControlsDisabled) or (DataSet = nil) then
   begin
     sType := 1;
     gridtype := 1;
@@ -5029,8 +5018,7 @@ begin
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
-    if editgrid then
-      DBGrid1.SelectedIndex := grid1col;
+    DBGrid1.SelectedIndex := grid1col;
     DrawMap;
   end;
 end;
@@ -5196,7 +5184,7 @@ end;
 procedure TForm1.ClientDataSet2AfterScroll(DataSet: TDataSet);
 begin
   if (not ClientDataSet2.isEmpty and (selected > -1) and objgridfocused
-  and showgrid) or (DataSet = nil) then
+  and showgrid and not ClientDataSet2.ControlsDisabled) or (DataSet = nil) then
   begin
     sType := 2;
     gridtype := 2;
@@ -5206,8 +5194,7 @@ begin
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
-    if editgrid then
-      DBGrid2.SelectedIndex := grid2col;
+    DBGrid2.SelectedIndex := grid2col;
     DrawMap;
   end;
 end;
@@ -5496,11 +5483,6 @@ begin
     begin
       LoadFloorGrids;
       PageControl1.ActivePage := TabSheet1;
-      clientdataset1.DisableControls;
-      clientdataset1.Locate('#', selected, []);
-      clientdataset1.EnableControls;
-      if editgrid then
-        form1.GroupBox1.SetFocus;
     end;
     DBGrid1.Options := DBGrid1.Options + [dgIndicator];
     DBGrid2.Options := DBGrid2.Options - [dgIndicator];
@@ -5612,11 +5594,6 @@ begin
     begin
       LoadFloorGrids;
       PageControl1.ActivePage := TabSheet2;
-      clientdataset2.DisableControls;
-      clientdataset2.Locate('#', selected, []);
-      clientdataset2.EnableControls;
-      if editgrid then
-        form1.GroupBox1.SetFocus;
     end;
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];
     DBGrid2.Options := DBGrid2.Options + [dgIndicator];
@@ -5657,20 +5634,14 @@ begin
 end;
 
 procedure TForm1.DBGrid1CellClick(Column: TColumn);
-var
-  scrollpos: TGridScrollPos;
 begin
   if not ClientDataSet1.isEmpty then
   begin
     selected := strtoint(DBGrid1.DataSource.DataSet.FieldByName('#').AsString);
     listbox1.ItemIndex := selected;
-    scrollpos := GetDBGridScrollPos(DBGrid1);
     Listbox1click(DBGrid1);
     grid1col := Column.ID - 1;
-    if editgrid then
-      DBGrid1.SelectedIndex := Column.ID - 1
-    else
-      form1.SetDBGridScrollPos(DBGrid1, scrollpos);
+    DBGrid1.SelectedIndex := Column.ID - 1;
     DBGrid1.Invalidate;
   end;
 end;
@@ -5722,8 +5693,6 @@ end;
 procedure TForm1.DBGrid1Exit(Sender: TObject);
 begin
   monstgridfocused := false;
-  DBGrid1.Options := DBGrid1.Options - [dgMultiSelect];
-  DBGrid2.Options := DBGrid2.Options - [dgMultiSelect];
 end;
 
 procedure TForm1.DBGrid1KeyDown(Sender: TObject; var Key: Word;
@@ -5767,24 +5736,19 @@ end;
 procedure TForm1.DBGrid1TitleClick(Column: TColumn);
 begin
   lastmonstersort := Column.FieldName;
+  ApplyMonsterSort(lastmonstersort);
   LoadFloorGrids;
 end;
 
 procedure TForm1.DBGrid2CellClick(Column: TColumn);
-var
-  scrollpos: TGridScrollPos;
 begin
   if not ClientDataSet2.isEmpty then
   begin
     selected := strtoint(DBGrid2.DataSource.DataSet.FieldByName('#').AsString);
     listbox2.ItemIndex := selected;
-    scrollpos := GetDBGridScrollPos(DBGrid2);
     Listbox2click(DBGrid2);
     grid2col := Column.ID - 1;
-    if editgrid then
-      DBGrid2.SelectedIndex := Column.ID - 1
-    else
-      SetDBGridScrollPos(DBGrid2, scrollpos);
+    DBGrid2.SelectedIndex := Column.ID - 1;
     DBGrid2.Invalidate;
   end;
 end;
@@ -5835,8 +5799,6 @@ end;
 procedure TForm1.DBGrid2Exit(Sender: TObject);
 begin
   objgridfocused := false;
-  DBGrid1.Options := DBGrid1.Options - [dgMultiSelect];
-  DBGrid2.Options := DBGrid2.Options - [dgMultiSelect];
 end;
 
 procedure TForm1.DBGrid2KeyDown(Sender: TObject; var Key: Word;
@@ -5880,6 +5842,7 @@ end;
 procedure TForm1.DBGrid2TitleClick(Column: TColumn);
 begin
   lastobjsort := Column.FieldName;
+  ApplyObjectSort(lastobjsort);
   LoadFloorGrids;
 end;
 
@@ -5905,8 +5868,10 @@ begin
   begin
     if not (dgMultiSelect in DBGrid1.Options) and not (dgMultiSelect in DBGrid2.Options) then
       Button3Click(nil)
-    else
+    // Multi-delete
+    else if not form13.Focused then
     begin
+      SetUndow;
       if pagecontrol1.ActivePage = tabsheet1 then
       begin
         Grid := DBGrid1;
@@ -5923,18 +5888,37 @@ begin
         for i := Grid.SelectedRows.Count - 1 downto 0 do
         begin
           bm := Grid.SelectedRows[i];
-          Dataset.GotoBookmark(bm);
+
+          if Assigned(bm) and Dataset.BookmarkValid(bm) then
+            Dataset.GotoBookmark(bm);
 
           Selected := Dataset.FieldByName('#').AsInteger;
 
           // Call single-row delete on selection
-          Button3Click(nil);
+          Button3Click(DBGrid1);
         end;
       finally
+        if not Dataset.Eof then
+        begin
+          Dataset.Next;
+          Selected := Dataset.FieldByName('#').AsInteger;
+          Button2.Enabled := true;
+          Button1.Enabled := true;
+          Button3.Enabled := true;
+          smEdit.Enabled := true;
+          smDelete.Enabled := true;
+          smMove.Enabled := true;
+          transform1.Enabled := true;
+          if sType = 1 then
+            listbox1.ItemIndex := selected;
+          if sType = 2 then
+            listbox2.ItemIndex := selected;
+        end;
         Grid.SelectedRows.Clear;
         Grid.Options := Grid.Options - [dgMultiSelect];
         Grid.Options := Grid.Options - [dgMultiSelect];
         Dataset.EnableControls;
+        LoadFloorGrids;
       end;
     end;
   end
@@ -9098,7 +9082,7 @@ var
 begin
   if Selected > -1 then
   begin
-    if showgrid then
+    if showgrid and (sender <> DBGrid1) then
     begin
       ClientDataSet1.DisableControls;
       ClientDataSet2.DisableControls;
@@ -9124,7 +9108,8 @@ begin
     isedited := true;
     HideIndicator();
     MoveSel := -1;
-    SetUndow;
+    if sender <> DBGrid1 then
+      SetUndow;
     if stype = 1 then
     begin // monstre
       // if have3d then Mymonst[selected].Free;
@@ -9196,7 +9181,7 @@ begin
       end;
     end;
 
-    if showgrid then
+    if showgrid and (sender <> DBGrid1) then
     begin
       if sType = 1 then
       begin
@@ -9602,6 +9587,8 @@ var
   lastwarpx, lastwarpz, lastposx, lastposz: single;
   px, py, px2, py2, di, pz2, diff, diffmin: double;
 begin
+  if showgrid and editgrid then
+    form1.GroupBox1.SetFocus;
   if MoveSel > -1 then
   begin
     snapvalue := FSnapOptions.seSnapTolerance.Value;
