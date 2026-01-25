@@ -5864,9 +5864,10 @@ end;
 procedure TForm1.Delete1Click(Sender: TObject);
 var
   Grid: TDBGrid;
-  i: Integer;
-  bm, lastbm: TBookmark;
+  i, j, temp: Integer;
+  bm: TBookmark;
   Dataset: TClientDataSet;
+  deletionidx: array of Integer;
 begin
   if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
   and not fmScriptTE.txtNotes.Focused then
@@ -5876,7 +5877,7 @@ begin
     or form13.Focused then
       Button3Click(nil)
     // Multi-delete
-    else
+    else if showgrid then
     begin
       SetUndow;
       if pagecontrol1.ActivePage = tabsheet1 then
@@ -5891,51 +5892,78 @@ begin
       end;
       Dataset.DisableControls;
       try
+        SetLength(deletionidx, Grid.SelectedRows.Count);
         // Delete from bottom to top
         for i := Grid.SelectedRows.Count - 1 downto 0 do
         begin
           bm := Grid.SelectedRows[i];
 
           if Assigned(bm) and Dataset.BookmarkValid(bm) then
+          begin
             Dataset.GotoBookmark(bm);
+            deletionidx[i] := Dataset.FieldByName('#').AsInteger;
+          end;
+        end;
+        // Sort descending; delete from bottom to top
+        for i := 0 to High(deletionidx) - 1 do
+          for j := i + 1 to High(deletionidx) do
+            if deletionidx[i] < deletionidx[j] then
+            begin
+              temp := deletionidx[i];
+              deletionidx[i] := deletionidx[j];
+              deletionidx[j] := temp;
+            end;
 
-          Selected := Dataset.FieldByName('#').AsInteger;
-          if not Dataset.Bof then
+          // Call single-delete on each item
+          for i := 0 to High(deletionidx) do
           begin
-            Dataset.Prior;
-            lastbm := Dataset.GetBookmark;
-          end
-          else if not Dataset.Eof then
-          begin
-            Dataset.Next;
-            lastbm := Dataset.GetBookmark;
+            Selected := deletionidx[i];
+            Button3Click(DBGrid1);
           end;
 
-          // Call single-row delete on selection
-          Button3Click(DBGrid1);
-        end;
-      finally
-        if Assigned(lastbm) and Dataset.BookmarkValid(lastbm) then
-        begin
-          Dataset.GotoBookmark(lastbm);
-          Selected := Dataset.FieldByName('#').AsInteger;
-          Button2.Enabled := true;
-          Button1.Enabled := true;
-          Button3.Enabled := true;
-          smEdit.Enabled := true;
-          smDelete.Enabled := true;
-          smMove.Enabled := true;
-          transform1.Enabled := true;
+          // Select the next available
           if sType = 1 then
-            listbox1.ItemIndex := selected;
+          begin
+            if Floor[sfloor].MonsterCount > 0 then
+            begin
+              Selected := Min(Selected, Floor[sfloor].MonsterCount - 1);
+              listbox1.ItemIndex := Selected;
+              Button2.Enabled := true;
+              Button1.Enabled := true;
+              Button3.Enabled := true;
+              smEdit.Enabled := true;
+              smDelete.Enabled := true;
+              smMove.Enabled := true;
+              transform1.Enabled := true;
+            end
+            else
+              Selected := -1;
+          end;
+
           if sType = 2 then
-            listbox2.ItemIndex := selected;
-        end;
-        Grid.SelectedRows.Clear;
-        Grid.Options := Grid.Options - [dgMultiSelect];
-        Grid.Options := Grid.Options - [dgMultiSelect];
-        Dataset.EnableControls;
-        LoadFloorGrids;
+          begin
+            if Floor[sfloor].ObjCount > 0 then
+            begin
+              Selected := Min(Selected, Floor[sfloor].ObjCount - 1);
+              listbox2.ItemIndex := Selected;
+              Button2.Enabled := true;
+              Button1.Enabled := true;
+              Button3.Enabled := true;
+              smEdit.Enabled := true;
+              smDelete.Enabled := true;
+              smMove.Enabled := true;
+              transform1.Enabled := true;
+            end
+            else
+              Selected := -1;
+          end;
+
+          finally
+          Grid.SelectedRows.Clear;
+          Grid.Options := Grid.Options - [dgMultiSelect];
+          Grid.Options := Grid.Options - [dgMultiSelect];
+          Dataset.EnableControls;
+          LoadFloorGrids;
       end;
     end;
     indelete := false;
@@ -9104,23 +9132,12 @@ begin
     begin
       ClientDataSet1.DisableControls;
       ClientDataSet2.DisableControls;
-      if sType = 1 then
-      begin
-       if not ClientDataSet1.Eof then
-          ClientDataSet1.Next;
-        next := strtointdef(DBGrid1.DataSource.DataSet.FieldByName('#').AsString, -1);
-      end;
-      if sType = 2 then
-      begin
-        if not ClientDataSet2.Eof then
-          ClientDataSet2.Next;
-          next := strtointdef(DBGrid2.DataSource.DataSet.FieldByName('#').AsString, -1);
-      end;
 
-      if next > Selected then
-        Dec(next);
-      if next < 0 then
-        next := 0;
+      // Save the current row positions
+      if sType = 1 then
+        next := ClientDataSet1.RecNo
+      else
+        next := ClientDataSet2.RecNo;
     end;
     s := Selected;
     isedited := true;
@@ -9204,6 +9221,9 @@ begin
       if sType = 1 then
       begin
         gridtype := 1;
+        // Refresh floor data
+        LoadFloorGrids;
+
         if Floor[sfloor].MonsterCount = 0 then
         begin
           Selected := -1;
@@ -9216,13 +9236,23 @@ begin
           transform1.Enabled := false;
         end
         else
-          Selected := next;
+        begin
+          // Return to the last row
+          if next > ClientDataSet1.RecordCount then
+            ClientDataSet1.Last
+          else
+            ClientDataSet1.RecNo := next;
+          Selected := ClientDataSet1.FieldByName('#').AsInteger;
+        end;
         form1.Listbox1.ItemIndex := selected;
-        LoadFloorGrids;
       end;
+
       if sType = 2 then
       begin
         gridtype := 2;
+        // Refresh floor data
+        LoadFloorGrids;
+
         if Floor[sfloor].ObjCount = 0 then
         begin
           Selected := -1;
@@ -9235,10 +9265,17 @@ begin
           transform1.Enabled := false;
         end
         else
-          Selected := next;
+        begin
+          // Return to the last row
+          if next > ClientDataSet2.RecordCount then
+            ClientDataSet2.Last
+          else
+            ClientDataSet2.RecNo := next;
+          Selected := ClientDataSet2.FieldByName('#').AsInteger;
+        end;
         form1.Listbox2.ItemIndex := selected;
-        LoadFloorGrids;
       end;
+
       Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
       ClientDataSet1.EnableControls;
       ClientDataSet2.EnableControls;
