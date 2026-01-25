@@ -60,7 +60,7 @@ object Form31: TForm31
   object cbShow: TComboBox
     Left = 17
     Top = 448
-    Width = 128
+    Width = 121
     Height = 22
     Style = csOwnerDrawFixed
     Anchors = [akLeft, akBottom]

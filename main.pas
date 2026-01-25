@@ -5650,7 +5650,7 @@ begin
     listbox1.ItemIndex := selected;
     Listbox1click(DBGrid1);
     grid1col := Column.ID - 1;
-    DBGrid1.SelectedIndex := Column.ID - 1;
+    DBGrid1.SelectedIndex := grid1col;
     DBGrid1.Invalidate;
   end;
 end;
@@ -5764,7 +5764,7 @@ begin
     listbox2.ItemIndex := selected;
     Listbox2click(DBGrid2);
     grid2col := Column.ID - 1;
-    DBGrid2.SelectedIndex := Column.ID - 1;
+    DBGrid2.SelectedIndex := grid2col;
     DBGrid2.Invalidate;
   end;
 end;
