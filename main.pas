@@ -5653,8 +5653,11 @@ end;
 
 procedure TForm1.DBGrid1DblClick(Sender: TObject);
 begin
-  if (selected > -1) and not ClientDataSet1.IsEmpty and not editgrid then
-    Listbox1DblClick(nil);
+  if (selected > -1) and not ClientDataSet1.IsEmpty then
+  begin
+    if not editgrid or ((grid1col = 0) or (grid1col = 1)) then
+      Listbox1DblClick(nil);
+  end;
 end;
 
 procedure TForm1.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -5760,8 +5763,11 @@ end;
 
 procedure TForm1.DBGrid2DblClick(Sender: TObject);
 begin
-  if (selected > -1) and not ClientDataSet2.IsEmpty and not editgrid then
-    Listbox1DblClick(nil);
+  if (selected > -1) and not ClientDataSet2.IsEmpty then
+  begin
+    if not editgrid or ((grid2col = 0) or (grid2col = 1)) then
+      Listbox1DblClick(nil);
+  end;
 end;
 
 procedure TForm1.DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
