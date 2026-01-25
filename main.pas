@@ -416,9 +416,6 @@ type
     ClientDataSet2PosX: TSingleField;
     ClientDataSet2PosY: TSingleField;
     ClientDataSet2PosZ: TSingleField;
-    ClientDataSet2RotX: TSingleField;
-    ClientDataSet2RotY: TSingleField;
-    ClientDataSet2RotZ: TSingleField;
     ClientDataSet1Param1: TIntegerField;
     ClientDataSet2Param4: TIntegerField;
     ClientDataSet2Param5: TIntegerField;
@@ -443,6 +440,9 @@ type
     Switchtab1: TMenuItem;
     Edit2: TMenuItem;
     Selection1: TMenuItem;
+    ClientDataSet2RotX: TIntegerField;
+    ClientDataSet2RotY: TIntegerField;
+    ClientDataSet2RotZ: TIntegerField;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);

@@ -724,13 +724,13 @@ begin
 
     // Pos X/Y/Z
     move(room.data[offset + 0], flt, 4);
-    StringGrid3.Cells[1,entryIdx] := FloatToStrF(flt, ffGeneral, 6, 2);
+    StringGrid3.Cells[1,entryIdx] := FloatToStrF(flt, ffFixed, 10, 4);
 
     move(room.data[offset + 4], flt, 4);
-    StringGrid3.Cells[2,entryIdx] := FloatToStrF(flt, ffGeneral, 6, 2);
+    StringGrid3.Cells[2,entryIdx] := FloatToStrF(flt, ffFixed, 10, 4);
 
     move(room.data[offset + 8], flt, 4);
-    StringGrid3.Cells[3,entryIdx] := FloatToStrF(flt, ffGeneral, 6, 2);
+    StringGrid3.Cells[3,entryIdx] := FloatToStrF(flt, ffFixed, 10, 4);
 
     // Rot X/Y/Z
     move(room.data[offset + 12], tempInt, 4);

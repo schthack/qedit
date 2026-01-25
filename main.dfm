@@ -2094,16 +2094,19 @@ object Form1: TForm1
       Alignment = taLeftJustify
       FieldName = 'Pos X'
       OnSetText = ClientDataSet1PositionXSetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet1PositionY: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Y'
       OnSetText = ClientDataSet1PositionYSetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet1PositionZ: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Z'
       OnSetText = ClientDataSet1PositionZSetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet1RotationY: TIntegerField
       Alignment = taLeftJustify
@@ -2120,26 +2123,31 @@ object Form1: TForm1
       Alignment = taLeftJustify
       FieldName = 'Param 2'
       OnSetText = ClientDataSet1Param2SetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet1Param3: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 3'
       OnSetText = ClientDataSet1Param3SetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet1Param4: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 4'
       OnSetText = ClientDataSet1Param4SetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet1Param5: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 5'
       OnSetText = ClientDataSet1Param5SetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet1Param6: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 6'
       OnSetText = ClientDataSet1Param6SetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet1Param7: TIntegerField
       Alignment = taLeftJustify
@@ -2184,30 +2192,33 @@ object Form1: TForm1
       Alignment = taLeftJustify
       FieldName = 'Pos X'
       OnSetText = ClientDataSet2PosXSetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet2PosY: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Y'
       OnSetText = ClientDataSet2PosYSetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet2PosZ: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Z'
       OnSetText = ClientDataSet2PosZSetText
+      DisplayFormat = '0.0000'
     end
-    object ClientDataSet2RotX: TSingleField
+    object ClientDataSet2RotX: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'Rot X'
       OnGetText = ClientDataSet2RotXGetText
       OnSetText = ClientDataSet2RotXSetText
     end
-    object ClientDataSet2RotY: TSingleField
+    object ClientDataSet2RotY: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'Rot Y'
       OnGetText = ClientDataSet2RotYGetText
       OnSetText = ClientDataSet2RotYSetText
     end
-    object ClientDataSet2RotZ: TSingleField
+    object ClientDataSet2RotZ: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'Rot Z'
       OnGetText = ClientDataSet2RotZGetText
@@ -2217,16 +2228,19 @@ object Form1: TForm1
       Alignment = taLeftJustify
       FieldName = 'Param 1'
       OnSetText = ClientDataSet2Param1SetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet2Param2: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 2'
       OnSetText = ClientDataSet2Param2SetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet2Param3: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 3'
       OnSetText = ClientDataSet2Param3SetText
+      DisplayFormat = '0.0000'
     end
     object ClientDataSet2Param4: TIntegerField
       Alignment = taLeftJustify
