@@ -10,6 +10,7 @@ object Form13: TForm13
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  OnActivate = FormActivate
   OnClose = FormClose
   OnHide = FormHide
   OnKeyDown = FormKeyDown

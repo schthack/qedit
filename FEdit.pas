@@ -354,11 +354,14 @@ begin
 
     end;
     Form1.DrawMap;
-    scrollpos1 := form1.GetDBGridScrollPos(form1.DBGrid1);
-    scrollpos2 := form1.GetDBGridScrollPos(form1.DBGrid2);
-    Form1.LoadFloorGrids;
-    form1.SetDBGridScrollPos(form1.DBGrid1, scrollpos1);
-    form1.SetDBGridScrollPos(form1.DBGrid2, scrollpos2);
+    if showgrid then
+    begin
+      scrollpos1 := form1.GetDBGridScrollPos(form1.DBGrid1);
+      scrollpos2 := form1.GetDBGridScrollPos(form1.DBGrid2);
+      Form1.LoadFloorGrids;
+      form1.SetDBGridScrollPos(form1.DBGrid1, scrollpos1);
+      form1.SetDBGridScrollPos(form1.DBGrid2, scrollpos2);
+    end;
     close;
 end;
 

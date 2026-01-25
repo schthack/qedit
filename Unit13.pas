@@ -24,6 +24,7 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -1101,6 +1102,12 @@ begin
   finally
     Reg.Free;
   end;
+end;
+
+procedure TForm13.FormActivate(Sender: TObject);
+begin
+  form1.DBGrid1.Options := form1.DBGrid1.Options - [dgMultiSelect];
+  form1.DBGrid2.Options := form1.DBGrid2.Options - [dgMultiSelect];
 end;
 
 procedure TForm13.FormClose(Sender: TObject; var Action: TCloseAction);
