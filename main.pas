@@ -963,6 +963,8 @@ begin
     Selection1.Checked := false;
     Celledit1.Checked := true;
     Edit2.Checked := true;
+    DBGrid1.SelectedIndex := grid1col;
+    DBGrid2.SelectedIndex := grid2col;
   end;
 end;
 
@@ -3372,6 +3374,7 @@ begin
   finally
     Reg.Free;
   end;
+  LoadFloorGrids;
 end;
 
 procedure TForm1.Russian1Click(Sender: TObject);
@@ -13208,6 +13211,7 @@ begin
   finally
     Reg.Free;
   end;
+  LoadFloorGrids;
 end;
 
 procedure TForm1.CheckBox1Click(Sender: TObject);
