@@ -963,6 +963,10 @@ begin
     Selection1.Checked := false;
     Celledit1.Checked := true;
     Edit2.Checked := true;
+    if grid1col < 2 then
+      grid1col := 2;
+    if grid2col < 2 then
+      grid2col := 2;
     DBGrid1.SelectedIndex := grid1col;
     DBGrid2.SelectedIndex := grid2col;
   end;
@@ -12005,8 +12009,8 @@ procedure TForm1.Lists1Click(Sender: TObject);
 var
   Reg: TRegistry;
 begin
-  HideGrids;
   showgrid := false;
+  HideGrids;
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;
@@ -13320,8 +13324,8 @@ procedure TForm1.Grids1Click(Sender: TObject);
 var
   Reg: TRegistry;
 begin
-  ShowGrids;
   showgrid := true;
+  ShowGrids;
   Reg := TRegistry.Create;
   try
     Reg.RootKey := HKEY_CURRENT_USER;
