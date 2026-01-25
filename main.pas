@@ -3374,7 +3374,6 @@ begin
   finally
     Reg.Free;
   end;
-  LoadFloorGrids;
 end;
 
 procedure TForm1.Russian1Click(Sender: TObject);
@@ -5652,8 +5651,13 @@ begin
 end;
 
 procedure TForm1.DBGrid1DblClick(Sender: TObject);
+var
+  Pt: TPoint;
+  intitle: Boolean;
 begin
-  if (selected > -1) and not ClientDataSet1.IsEmpty then
+  Pt := DBGrid1.ScreenToClient(Mouse.CursorPos);
+  intitle := DBGrid1.MouseCoord(Pt.X, Pt.Y).Y = 0;
+  if (selected > -1) and not ClientDataSet1.IsEmpty and not intitle then
   begin
     if not editgrid or ((grid1col = 0) or (grid1col = 1)) then
       Listbox1DblClick(nil);
@@ -5745,7 +5749,6 @@ procedure TForm1.DBGrid1TitleClick(Column: TColumn);
 begin
   lastmonstersort := Column.FieldName;
   ApplyMonsterSort(lastmonstersort);
-  LoadFloorGrids;
 end;
 
 procedure TForm1.DBGrid2CellClick(Column: TColumn);
@@ -5762,8 +5765,13 @@ begin
 end;
 
 procedure TForm1.DBGrid2DblClick(Sender: TObject);
+var
+  Pt: TPoint;
+  intitle: Boolean;
 begin
-  if (selected > -1) and not ClientDataSet2.IsEmpty then
+  Pt := DBGrid2.ScreenToClient(Mouse.CursorPos);
+  intitle := DBGrid2.MouseCoord(Pt.X, Pt.Y).Y = 0;
+  if (selected > -1) and not ClientDataSet2.IsEmpty and not intitle then
   begin
     if not editgrid or ((grid2col = 0) or (grid2col = 1)) then
       Listbox1DblClick(nil);
@@ -5854,7 +5862,6 @@ procedure TForm1.DBGrid2TitleClick(Column: TColumn);
 begin
   lastobjsort := Column.FieldName;
   ApplyObjectSort(lastobjsort);
-  LoadFloorGrids;
 end;
 
 procedure TForm1.Default1Click(Sender: TObject);
@@ -13203,7 +13210,6 @@ begin
   finally
     Reg.Free;
   end;
-  LoadFloorGrids;
 end;
 
 procedure TForm1.CheckBox1Click(Sender: TObject);
@@ -13325,7 +13331,6 @@ begin
   finally
     Reg.Free;
   end;
-  LoadFloorGrids;
 end;
 
 procedure TForm1.Exporttextfortranslation1Click(Sender: TObject);
