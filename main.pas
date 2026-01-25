@@ -903,7 +903,6 @@ begin
   form1.PageControl1.Visible := true;
   form1.Lists1.Checked := false;
   form1.Grids1.Checked := true;
-  form1.Switchgridtab1.Visible := true;
   form1.Switchgridtab1.Enabled := true;
   form1.Gridmode1.Visible := true;
   if selected > -1 then
@@ -927,7 +926,6 @@ begin
   form1.PageControl1.Visible := false;
   form1.Lists1.Checked := true;
   form1.Grids1.Checked := false;
-  form1.Switchgridtab1.Visible := false;
   form1.Switchgridtab1.Enabled := false;
   form1.Gridmode1.Visible := false;
   form1.DBGrid1.Options := form1.DBGrid1.Options - [dgMultiSelect];

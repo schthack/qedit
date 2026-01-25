@@ -2123,31 +2123,31 @@ object Form1: TForm1
       Alignment = taLeftJustify
       FieldName = 'Param 2'
       OnSetText = ClientDataSet1Param2SetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet1Param3: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 3'
       OnSetText = ClientDataSet1Param3SetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet1Param4: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 4'
       OnSetText = ClientDataSet1Param4SetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet1Param5: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 5'
       OnSetText = ClientDataSet1Param5SetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet1Param6: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 6'
       OnSetText = ClientDataSet1Param6SetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet1Param7: TIntegerField
       Alignment = taLeftJustify
@@ -2228,19 +2228,19 @@ object Form1: TForm1
       Alignment = taLeftJustify
       FieldName = 'Param 1'
       OnSetText = ClientDataSet2Param1SetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet2Param2: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 2'
       OnSetText = ClientDataSet2Param2SetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet2Param3: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Param 3'
       OnSetText = ClientDataSet2Param3SetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet2Param4: TIntegerField
       Alignment = taLeftJustify
