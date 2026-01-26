@@ -2,6 +2,7 @@ program Qedit;
 
 uses
   Forms,
+  MidasLib,
   SysUtils,
   windows,
   Registry,
