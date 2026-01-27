@@ -3004,7 +3004,7 @@ end;
 
 procedure TForm1.LookAt1Click(Sender: TObject);
 begin
-  if (GetForegroundWindow = form1.Handle) and (selected > -1) then
+  if (Screen.ActiveForm = form1) and (selected > -1) then
   begin
     placelookat := true;
     lblStatus.Caption := GetLanguageString(528);
@@ -5838,7 +5838,7 @@ end;
 
 procedure TForm1.DBGrid1MouseEnter(Sender: TObject);
 begin
-   if (GetForegroundWindow = form1.Handle) and editgrid then
+   if (Screen.ActiveForm = form1) and editgrid then
     DBGrid1.SetFocus;
 end;
 
@@ -5951,7 +5951,7 @@ end;
 
 procedure TForm1.DBGrid2MouseEnter(Sender: TObject);
 begin
-  if (GetForegroundWindow = form1.Handle) and editgrid then
+  if (Screen.ActiveForm = form1) and editgrid then
     DBGrid2.SetFocus;
 end;
 
@@ -13738,7 +13738,7 @@ end;
 
 procedure TForm1.Switchgridtab1Click(Sender: TObject);
 begin
-  if (GetForegroundWindow = form1.Handle) and showgrid then
+  if (Screen.ActiveForm = form1) and showgrid then
   begin
     if pagecontrol1.ActivePage = tabsheet1 then pagecontrol1.ActivePage := tabsheet2
     else pagecontrol1.ActivePage := tabsheet1;
@@ -13747,7 +13747,7 @@ end;
 
 procedure TForm1.SwitchScriptEditor1Click(Sender: TObject);
 begin
-  if (GetForegroundWindow = form1.Handle) or form13.Focused then
+  if (Screen.ActiveForm = form1) or form13.Focused then
     form1.MirrorXposition1Click(nil)
   else
   begin
