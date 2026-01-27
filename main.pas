@@ -7089,14 +7089,15 @@ begin
         begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
-            LookAt2D(px, py)
-          else
-            LookAt2D(mpcx, mpcy);
-          exit;
+          begin
+            LookAt2D(px, py);
+            exit;
+          end;
         end;
 
         if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
-          (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
+          (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom))
+          and not placelookat then
           begin
             l := ListBox1.ItemIndex;
             ListBox1.ItemIndex := z;
@@ -7156,14 +7157,15 @@ begin
         begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
-            LookAt2D(px, py)
-          else
-            LookAt2D(mpcx, mpcy);
-          exit;
+          begin
+            LookAt2D(px, py);
+            exit;
+          end;
         end;
 
         if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
-          (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
+        (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom))
+        and not placelookat then
         begin
             l := ListBox2.ItemIndex;
             ListBox2.ItemIndex := z;
@@ -7197,6 +7199,8 @@ begin
             end;
         end;
       end;
+      if placelookat then
+        LookAt2D(mpcx, mpcy);
   end;
 
   ctrldw := false;
@@ -10239,15 +10243,15 @@ begin
         begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
-            LookAt2D(px, py)
-          else
-            LookAt2D(mpcx, mpcy);
-          exit;
+          begin
+            LookAt2D(px, py);
+            exit;
+          end;
         end;
 
         if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom))
-          and not smDrag.Checked then
+          and not smDrag.Checked and not placelookat then
         begin
           l := ListBox1.ItemIndex;
           ListBox1.ItemIndex := x;
@@ -10295,15 +10299,15 @@ begin
         begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
-            LookAt2D(px, py)
-          else
-            LookAt2D(mpcx, mpcy);
-          exit;
+          begin
+            LookAt2D(px, py);
+            exit;
+          end;
         end;
 
         if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom))
-          and not smDrag.Checked then
+          and not smDrag.Checked and not placelookat then
         begin
           l := ListBox2.ItemIndex;
           ListBox2.ItemIndex := x;
@@ -10323,6 +10327,11 @@ begin
           else
             Form1.ListBox2Click(Form1);
         end;
+      end;
+      if placelookat then
+      begin
+        LookAt2D(mpcx, mpcy);
+        exit;
       end;
       if not smDrag.Checked then
         lastimgclick := gettickcount();
