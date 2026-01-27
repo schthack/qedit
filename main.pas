@@ -898,10 +898,10 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
 
 {$R *.dfm}
 
-Procedure LookAt2D(targetX: integer; targetY: integer);
+Procedure LookAt2D(targetX: double; targetY: double);
 var
-  px, py, px2, py2, rad: double;
-  diffx, diffy, angle, mapsection, mouseAngle: integer;
+  px, py, px2, py2, rad, diffX, diffY: double;
+  angle, mapsection, mouseAngle: integer;
 begin
     if sType = 1 then
     begin
@@ -936,8 +936,8 @@ begin
       py := py + mmy + MidP[mapsection].y + px2;
     end;
 
-    diffX := targetX - round(px);
-    diffY := targetY - round(py);
+    diffX := targetX - px;
+    diffY := targetY - py;
     rad := ArcTan2(diffY, diffX);
 
     mouseAngle := Round(rad * 10430.37835);
@@ -7089,7 +7089,7 @@ begin
         begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
-            LookAt2D(round(px), round(py))
+            LookAt2D(px, py)
           else
             LookAt2D(mpcx, mpcy);
           exit;
@@ -7156,7 +7156,7 @@ begin
         begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
-            LookAt2D(round(px), round(py))
+            LookAt2D(px, py)
           else
             LookAt2D(mpcx, mpcy);
           exit;
@@ -10239,7 +10239,7 @@ begin
         begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
-            LookAt2D(round(px), round(py))
+            LookAt2D(px, py)
           else
             LookAt2D(mpcx, mpcy);
           exit;
@@ -10295,7 +10295,7 @@ begin
         begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
-            LookAt2D(round(px), round(py))
+            LookAt2D(px, py)
           else
             LookAt2D(mpcx, mpcy);
           exit;
