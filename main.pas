@@ -443,6 +443,9 @@ type
     ClientDataSet2RotX: TIntegerField;
     ClientDataSet2RotY: TIntegerField;
     ClientDataSet2RotZ: TIntegerField;
+    N18: TMenuItem;
+    LookAt1: TMenuItem;
+    LookAt2: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -678,6 +681,8 @@ type
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Image1Click(Sender: TObject);
+    procedure LookAt1Click(Sender: TObject);
+    procedure LookAt2Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -794,7 +799,6 @@ var
   testflag: integer;
   mmy: integer = 116;
   mmx: integer = 197;
-  imgclickstart: dword = 0;
   lastimgclick: dword = 0;
   lastloadformat: integer = 3;
   lsatsaveformat: integer = 4;
@@ -846,6 +850,7 @@ var
   inundo: Boolean = false;
   indelete: Boolean = false;
   placerandom: Boolean = false;
+  placelookat: Boolean = false;
   placerotation: integer = 0;
   darkmode: Boolean = false;
   previewstate: integer = 0;
@@ -892,6 +897,79 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   FAddRoom;
 
 {$R *.dfm}
+
+Procedure LookAt2D(targetX: integer; targetY: integer);
+var
+  px, py, px2, py2, rad: double;
+  diffx, diffy, angle, mapsection, mouseAngle: integer;
+begin
+    if sType = 1 then
+    begin
+      mapsection := Floor[sfloor].Monster[selected].map_section;
+      if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+        MidP[0].y := 0;
+      px2 := Floor[sfloor].Monster[selected].Pos_X / Zoom;
+      py2 := Floor[sfloor].Monster[selected].Pos_Y / Zoom;
+      px := cos(-rev[mapsection] / 10430.37835) * px2 -
+        sin(-rev[mapsection] / 10430.37835) * py2;
+      py := sin(-rev[mapsection] / 10430.37835) * px2 +
+        cos(-rev[mapsection] / 10430.37835) * py2;
+      px2 := mpx / Zoom;
+      px := px + mmx + MidP[mapsection].x + px2;
+      px2 := mpy / Zoom;
+      py := py + mmy + MidP[mapsection].y + px2;
+    end;
+    if sType = 2 then
+    begin
+      mapsection := Floor[sfloor].Obj[selected].map_section;
+      if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+        MidP[0].y := 0;
+      px2 := Floor[sfloor].Obj[selected].Pos_X / Zoom;
+      py2 := Floor[sfloor].Obj[selected].Pos_Y / Zoom;
+      px := cos(-rev[mapsection] / 10430.37835) * px2 -
+        sin(-rev[mapsection] / 10430.37835) * py2;
+      py := sin(-rev[mapsection] / 10430.37835) * px2 +
+        cos(-rev[mapsection] / 10430.37835) * py2;
+      px2 := mpx / Zoom;
+      px := px + mmx + MidP[mapsection].x + px2;
+      px2 := mpy / Zoom;
+      py := py + mmy + MidP[mapsection].y + px2;
+    end;
+
+    diffX := targetX - round(px);
+    diffY := targetY - round(py);
+    rad := ArcTan2(diffY, diffX);
+
+    mouseAngle := Round(rad * 10430.37835);
+    mouseAngle := mouseAngle - 16384;
+
+    angle := -mouseAngle - rev[mapSection];
+
+    angle := angle mod 65536;
+    if angle < 0 then
+      angle := angle + 65536;
+
+    if sType = 1 then
+    begin
+      Floor[sfloor].Monster[selected].Direction := angle;
+      if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2)
+    end
+    else if sType = 2 then
+    begin
+      Floor[sfloor].Obj[selected].unknow6 := angle;
+      if have3d then
+      begin
+         myobj[selected].Free;
+         Generateobj(Floor[sfloor].obj[selected],selected);
+      end;
+    end;
+
+    placelookat := false;
+    HideIndicator;
+    form1.DrawMap;
+    form1.LoadFloorGrids;
+end;
 
 Procedure ShowGrids;
 begin
@@ -1204,6 +1282,7 @@ begin
   form1.Gridmode2.Caption := GetLanguageString(524);
   form1.Selection1.Caption := GetLanguageString(525);
   form1.Edit2.Caption := GetLanguageString(526);
+  form1.LookAt1.Caption := GetLanguageString(527);
   form21.Button1.Caption := GetLanguageString(116);
   form21.Button2.Caption := GetLanguageString(117);
   form21.Button3.Caption := GetLanguageString(118);
@@ -2923,6 +3002,25 @@ begin
   end;
 end;
 
+procedure TForm1.LookAt1Click(Sender: TObject);
+begin
+  if (GetForegroundWindow = form1.Handle) and (selected > -1) then
+  begin
+    placelookat := true;
+    lblStatus.Caption := GetLanguageString(528);
+    if not Form1.smDisableIndicator.Checked then
+      lblStatus.Show;
+    lblModifiers.Hide;
+    MoveType := 0;
+    MoveSel := -1;
+  end;
+end;
+
+procedure TForm1.LookAt2Click(Sender: TObject);
+begin
+  LookAt1Click(nil);
+end;
+
 Procedure TForm1.DrawMap;
 Var
   px, py, px2, py2, px3, py3: double;
@@ -3076,7 +3174,9 @@ begin
           if Assigned(bm) and not bm.Empty then
             BBRelBmp.Canvas.StretchDraw(maprect, bm);
         end;
-        if darkmode and not ((sType = 1) and (selected = x)) then
+        if darkmode and not ((sType = 1) and (selected = x))
+        or (darkmode and ((sType = 1) and (selected = x)) and showbmp.Checked)
+        then
           BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         BBRelBmp.Canvas.Pen.Width := outlinewidth;
         rt := -(rev[Floor[sfloor].Monster[x].map_section] + Floor[sfloor].Monster[x].Direction);
@@ -3256,7 +3356,9 @@ begin
           end;
         end;
         // rotation
-        if darkmode and not ((sType = 2) and (selected = x)) then
+        if darkmode and not ((sType = 2) and (selected = x))
+        or (darkmode and ((sType = 2) and (selected = x)) and showbmp.Checked)
+        then
           BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         BBRelBmp.Canvas.Pen.Width := outlinewidth;
         rt := -(rev[Floor[sfloor].Obj[x].map_section] + Floor[sfloor].Obj[x].unknow6);
@@ -4250,7 +4352,7 @@ begin
   if not Form1.smDisableIndicator.Checked then
   begin
     Form1.lblStatus.Visible := true;
-    if not placerandom then
+    if not placerandom and not placelookat then
     begin
       Form1.lblModifiers.Visible := true;
       Form1.lblStatus.Caption := GetLanguageString(425);
@@ -4266,6 +4368,7 @@ begin
     Form1.lblModifiers.Visible := false;
   end;
   placerandom := false;
+  placelookat := false;
 end;
 
 procedure AdjustDistanceX(target: integer);
@@ -5735,7 +5838,7 @@ end;
 
 procedure TForm1.DBGrid1MouseEnter(Sender: TObject);
 begin
-   if editgrid then
+   if (GetForegroundWindow = form1.Handle) and editgrid then
     DBGrid1.SetFocus;
 end;
 
@@ -5848,7 +5951,7 @@ end;
 
 procedure TForm1.DBGrid2MouseEnter(Sender: TObject);
 begin
-  if editgrid then
+  if (GetForegroundWindow = form1.Handle) and editgrid then
     DBGrid2.SetFocus;
 end;
 
@@ -6560,6 +6663,7 @@ begin
 
     SetObjectDefaults();
     placerandom := false;
+    placelookat := false;
     ShowIndicator();
     MoveSel := Floor[sfloor].ObjCount - 1;
     MoveType := 2;
@@ -6602,6 +6706,7 @@ begin
 
     SetMonsterDefaults();
     placerandom := false;
+    placelookat := false;
     ShowIndicator();
     MoveSel := Floor[sfloor].MonsterCount - 1;
     MoveType := 1;
@@ -6958,7 +7063,6 @@ begin
   // Start of mouse drag
   if (Button = mbleft) and (smDrag.checked) then
   begin
-    imgclickstart := gettickcount();
     // Drag monsters
     for z := 0 to Floor[sfloor].MonsterCount - 1 do
       if (Floor[sfloor].Monster[z].Unknow5 = showwave) or (showwave = -1) then
@@ -6980,6 +7084,16 @@ begin
         px2 := mpy;
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Monster[z].map_section].y + px2;
+
+        if placelookat then
+        begin
+          if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
+          (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
+            LookAt2D(round(px), round(py))
+          else
+            LookAt2D(mpcx, mpcy);
+          exit;
+        end;
 
         if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
@@ -7012,7 +7126,6 @@ begin
             if not inedit then
             begin
               lastimgclick := gettickcount();
-              imgclickstart := gettickcount();
               mdrag := 1;
             end;
           end;
@@ -7038,6 +7151,16 @@ begin
         px2 := mpy;
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Obj[z].map_section].y + px2;
+
+        if placelookat then
+        begin
+          if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
+          (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
+            LookAt2D(round(px), round(py))
+          else
+            LookAt2D(mpcx, mpcy);
+          exit;
+        end;
 
         if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
@@ -7070,7 +7193,6 @@ begin
             if not inedit then
             begin
               lastimgclick := gettickcount();
-              imgclickstart := gettickcount();
               mdrag := 1;
             end;
         end;
@@ -9373,6 +9495,7 @@ begin
 
     SetObjectDefaults();
     placerandom := false;
+    placelookat := false;
     ShowIndicator();
     MoveSel := Floor[sfloor].ObjCount - 1;
     MoveType := 2;
@@ -9464,6 +9587,7 @@ begin
 
     SetMonsterDefaults();
     placerandom := false;
+    placelookat := false;
     ShowIndicator();
     MoveSel := Floor[sfloor].MonsterCount - 1;
     MoveType := 1;
@@ -10111,6 +10235,16 @@ begin
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Monster[x].map_section].y + px2;
 
+        if placelookat then
+        begin
+          if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
+          (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
+            LookAt2D(round(px), round(py))
+          else
+            LookAt2D(mpcx, mpcy);
+          exit;
+        end;
+
         if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom))
           and not smDrag.Checked then
@@ -10156,6 +10290,16 @@ begin
         px2 := mpy;
         px2 := px2 / Zoom;
         py := py + mmy + MidP[Floor[sfloor].Obj[x].map_section].y + px2;
+
+        if placelookat then
+        begin
+          if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
+          (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
+            LookAt2D(round(px), round(py))
+          else
+            LookAt2D(mpcx, mpcy);
+          exit;
+        end;
 
         if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom))
@@ -13190,6 +13334,7 @@ begin
     MoveSel := -1;
     HideIndicator();
     placerandom := false;
+    placelookat := false;
     if previewstate > 0 then
     begin
       ResetPreviewState;

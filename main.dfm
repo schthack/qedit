@@ -878,6 +878,11 @@ object Form1: TForm1
         ShortCut = 32858
         OnClick = MirrorZposition2Click
       end
+      object LookAt2: TMenuItem
+        Caption = 'Look At'
+        ShortCut = 32833
+        OnClick = LookAt2Click
+      end
     end
   end
   object OpenDialog1: TOpenDialog
@@ -1909,6 +1914,14 @@ object Form1: TForm1
         Caption = 'Mirror Z position'
         ShortCut = 32858
         OnClick = MirrorZposition1Click
+      end
+      object N18: TMenuItem
+        Caption = '-'
+      end
+      object LookAt1: TMenuItem
+        Caption = 'Look at selection'
+        ShortCut = 32833
+        OnClick = LookAt1Click
       end
     end
     object smMove: TMenuItem

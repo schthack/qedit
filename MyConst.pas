@@ -3,7 +3,7 @@ unit MyConst;
 interface
 
   Const
-    EnglishUIText: array[0..525] of string = (
+    EnglishUIText: array[0..527] of string = (
     'File',                                                                     // 1
     'Properties',                                                               // 2
     'Script',                                                                   // 3
@@ -529,7 +529,9 @@ interface
     'Switch tab',                                                               // 523
     'Grid mode',                                                                // 524
     'Selection',                                                                // 525
-    'Edit'                                                                      // 526
+    'Edit',                                                                     // 526
+    'Look at target or area',                                                   // 527
+    '[Click a target or area - Esc: cancel]'                                    // 528
   );
 
 Const FloorFog: array[0..46] of byte = (
