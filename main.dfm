@@ -2086,7 +2086,9 @@ object Form1: TForm1
       FieldName = '#'
     end
     object ClientDataSet1Name: TStringField
+      DisplayWidth = 20
       FieldName = 'Name'
+      Size = 255
     end
     object ClientDataSet1Skin: TWordField
       Alignment = taLeftJustify
@@ -2184,7 +2186,9 @@ object Form1: TForm1
       FieldName = '#'
     end
     object ClientDataSet2Name: TStringField
+      DisplayWidth = 20
       FieldName = 'Name'
+      Size = 255
     end
     object ClientDataSet2Skin: TWordField
       Alignment = taLeftJustify

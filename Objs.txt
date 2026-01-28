@@ -6255,3 +6255,24 @@ Action	0
 unknow	0
 Unknow	0
 Unknow	0
+
+	[QEdit] 2D Snap Object
+Skin	10000
+Unknow	0
+Unknow	0
+ID	0
+Map Section	0
+Unknow	0
+Pos X	0
+Pos Z	0
+Pos Y	0
+Unknow	0
+Rotation	0
+Unknow	0
+Active Range	1
+Unknow	0
+Unknow	0
+Action	5
+unknow	0
+Unknow	30
+Unknow	0

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  ImgList, Dialogs, Math, Menus, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
+  ImgList, Dialogs, Math, Menus, StdCtrls, ExtCtrls, CheckLst, ComCtrls, System.Types,
   ShellApi, D3DEngin, registry, Spin, System.ImageList, System.Generics.Collections,
   System.Actions, System.IOUtils, Vcl.ActnList, Vcl.Themes, Vcl.Styles, Data.DB,
   Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.DBCtrls;
@@ -55,6 +55,13 @@ const
   quest_sufix: array [0 .. 4] of ansistring = ('_j', '_e', '_g', '_f', '_s');
 
 type
+  TPolygonVertices = array of TPointF;
+
+  TPolygonEdge = record
+    X1, Y1, X2, Y2: double;
+  end;
+  TPolygonEdges = array of TPolygonEdge;
+
   TPlayer = Record
     RecKeyPos, KeyPos: integer;
     Key: array [0 .. 2, 0 .. $500] of dword;
@@ -897,6 +904,272 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
   FAddRoom;
 
 {$R *.dfm}
+
+function SectionToMouseX(idx: integer; etype: integer): double;
+var
+  px, py, px2, py2: double;
+begin
+  if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+  begin
+    MidP[0].y := 0;
+  end;
+  if etype = 1 then
+  begin
+    px2 := Floor[sfloor].Monster[idx].Pos_X / Zoom;
+    py2 := Floor[sfloor].Monster[idx].Pos_Y / Zoom;
+    px := cos(-rev[Floor[sfloor].Monster[idx].map_section] / 10430.37835) * px2 -
+      sin(-rev[Floor[sfloor].Monster[idx].map_section] / 10430.37835) * py2;
+    py := sin(-rev[Floor[sfloor].Monster[idx].map_section] / 10430.37835) * px2 +
+      cos(-rev[Floor[sfloor].Monster[idx].map_section] / 10430.37835) * py2;
+
+    px2 := mpx;
+    px2 := px2 / Zoom;
+    px := px + mmx + MidP[Floor[sfloor].Monster[idx].map_section].x + px2;
+    px2 := mpy;
+    px2 := px2 / Zoom;
+    py := py + mmy + MidP[Floor[sfloor].Monster[idx].map_section].y + px2;
+  end;
+  if etype = 2 then
+  begin
+    px2 := Floor[sfloor].Obj[idx].Pos_X / Zoom;
+    py2 := Floor[sfloor].Obj[idx].Pos_Y / Zoom;
+    px := cos(-rev[Floor[sfloor].Obj[idx].map_section] / 10430.37835) * px2 -
+      sin(-rev[Floor[sfloor].Obj[idx].map_section] / 10430.37835) * py2;
+    py := sin(-rev[Floor[sfloor].Obj[idx].map_section] / 10430.37835) * px2 +
+      cos(-rev[Floor[sfloor].Obj[idx].map_section] / 10430.37835) * py2;
+
+    px2 := mpx;
+    px2 := px2 / Zoom;
+    px := px + mmx + MidP[Floor[sfloor].Obj[idx].map_section].x + px2;
+    px2 := mpy;
+    px2 := px2 / Zoom;
+    py := py + mmy + MidP[Floor[sfloor].Obj[idx].map_section].y + px2;
+  end;
+  result := px;
+end;
+
+function SectionToMouseY(idx: integer; etype: integer): double;
+var
+  px, py, px2, py2: double;
+begin
+  if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+  begin
+    MidP[0].y := 0;
+  end;
+  if etype = 1 then
+  begin
+    px2 := Floor[sfloor].Monster[idx].Pos_X / Zoom;
+    py2 := Floor[sfloor].Monster[idx].Pos_Y / Zoom;
+    px := cos(-rev[Floor[sfloor].Monster[idx].map_section] / 10430.37835) * px2 -
+      sin(-rev[Floor[sfloor].Monster[idx].map_section] / 10430.37835) * py2;
+    py := sin(-rev[Floor[sfloor].Monster[idx].map_section] / 10430.37835) * px2 +
+      cos(-rev[Floor[sfloor].Monster[idx].map_section] / 10430.37835) * py2;
+
+    px2 := mpx;
+    px2 := px2 / Zoom;
+    px := px + mmx + MidP[Floor[sfloor].Monster[idx].map_section].x + px2;
+    px2 := mpy;
+    px2 := px2 / Zoom;
+    py := py + mmy + MidP[Floor[sfloor].Monster[idx].map_section].y + px2;
+  end;
+  if etype = 2 then
+  begin
+    px2 := Floor[sfloor].Obj[idx].Pos_X / Zoom;
+    py2 := Floor[sfloor].Obj[idx].Pos_Y / Zoom;
+    px := cos(-rev[Floor[sfloor].Obj[idx].map_section] / 10430.37835) * px2 -
+      sin(-rev[Floor[sfloor].Obj[idx].map_section] / 10430.37835) * py2;
+    py := sin(-rev[Floor[sfloor].Obj[idx].map_section] / 10430.37835) * px2 +
+      cos(-rev[Floor[sfloor].Obj[idx].map_section] / 10430.37835) * py2;
+
+    px2 := mpx;
+    px2 := px2 / Zoom;
+    px := px + mmx + MidP[Floor[sfloor].Obj[idx].map_section].x + px2;
+    px2 := mpy;
+    px2 := px2 / Zoom;
+    py := py + mmy + MidP[Floor[sfloor].Obj[idx].map_section].y + px2;
+  end;
+  result := py;
+end;
+
+function GeneratePolygonVertices(rotation: integer; scale: double; sides: integer): TPolygonVertices;
+var
+  i: integer;
+  angle, angleStep: double;
+begin
+  SetLength(Result, sides);
+
+  // Angle between each vertex
+  angleStep := (2 * Pi) / sides;
+
+  for i := 0 to sides - 1 do
+  begin
+    // Calculate angle for this vertex, adjusted by rotation
+    angle := (i * angleStep) + ((rotation) / 10430.37835);
+
+    // Calculate vertex position
+    // Starting at top (negative Y) by default
+    Result[i].X := sin(angle) * scale * 20;
+    Result[i].Y := -cos(angle) * scale * 20;  // Negative because screen Y is inverted
+  end;
+end;
+
+procedure DrawPolygon(Canvas: TCanvas; obj: TObj; centerX: double; centerY: double);
+var
+  vertices: TPolygonVertices;
+  screenPoints: array of TPoint;
+  i: integer;
+  OldPenColor: TColor;
+  OldPenWidth: integer;
+  OldBrushStyle: TBrushStyle;
+begin
+  // Save the original canvas state
+  OldPenColor := Canvas.Pen.Color;
+  OldPenWidth := Canvas.Pen.Width;
+  OldBrushStyle := Canvas.Brush.Style;
+
+  // Generate polygon in local space (relative to object center)
+  vertices := GeneratePolygonVertices(
+    obj.unknow6, // Rotation value
+    obj.unknow8, // Scale/radius
+    obj.obj_id   // Number of sides
+  );
+
+  SetLength(screenPoints, Length(vertices) + 1);
+
+  // Transform each vertex to screen space
+  for i := 0 to High(vertices) do
+  begin
+    screenPoints[i].X := Round(centerX + (vertices[i].X / Zoom));
+    screenPoints[i].Y := Round(centerY + (vertices[i].Y / Zoom));
+  end;
+
+  // Close the shape
+  screenPoints[High(screenPoints)] := screenPoints[0];
+
+  // Draw the polygon
+  Canvas.Pen.Color := clPurple;
+  Canvas.Pen.Width := 2;
+  Canvas.Brush.Style := bsClear;
+  Canvas.Polyline(screenPoints);
+
+  // Restore the canvas
+  Canvas.Pen.Color := OldPenColor;
+  Canvas.Pen.Width := OldPenWidth;
+  Canvas.Brush.Style := OldBrushStyle;
+end;
+
+function GetPolygonEdgesWorldSpace(obj: TObj; applyMapRotation: boolean): TPolygonEdges;
+var
+  vertices: TPolygonVertices;
+  i: integer;
+  worldX, worldY, px, py: double;
+begin
+  vertices := GeneratePolygonVertices(
+    obj.unknow6,
+    obj.unknow8,
+    obj.obj_id
+  );
+
+  SetLength(Result, Length(vertices));
+
+  for i := 0 to High(vertices) do
+  begin
+    if applyMapRotation then
+    begin
+      // Transform vertex by map section rotation
+      px := vertices[i].X;
+      py := vertices[i].Y;
+      worldX := cos(-rev[obj.map_section] / 10430.37835) * px -
+                sin(-rev[obj.map_section] / 10430.37835) * py;
+      worldY := sin(-rev[obj.map_section] / 10430.37835) * px +
+                cos(-rev[obj.map_section] / 10430.37835) * py;
+
+      // Add object's world position
+      Result[i].X1 := worldX + obj.Pos_X;
+      Result[i].Y1 := worldY + obj.Pos_Y;
+
+      // Next vertex
+      px := vertices[(i + 1) mod Length(vertices)].X;
+      py := vertices[(i + 1) mod Length(vertices)].Y;
+      worldX := cos(-rev[obj.map_section] / 10430.37835) * px -
+                sin(-rev[obj.map_section] / 10430.37835) * py;
+      worldY := sin(-rev[obj.map_section] / 10430.37835) * px +
+                cos(-rev[obj.map_section] / 10430.37835) * py;
+
+      Result[i].X2 := worldX + obj.Pos_X;
+      Result[i].Y2 := worldY + obj.Pos_Y;
+    end
+    else
+    begin
+      // No rotation
+      Result[i].X1 := vertices[i].X + obj.Pos_X;
+      Result[i].Y1 := vertices[i].Y + obj.Pos_Y;
+      Result[i].X2 := vertices[(i + 1) mod Length(vertices)].X + obj.Pos_X;
+      Result[i].Y2 := vertices[(i + 1) mod Length(vertices)].Y + obj.Pos_Y;
+    end;
+  end;
+end;
+
+function TrySnapToPolygon(var targetX, targetY: double; polyObj: TObj;
+                          snapThreshold: double; targetMapSection: integer): boolean;
+var
+  edges: TPolygonEdges;
+  i: integer;
+  minDist, dist, t, dx, dy: double;
+  closestEdgeIdx: integer;
+  snapX, snapY: double;
+  debugMsg: string;
+begin
+  Result := False;
+
+  // Only snap if in the same map section
+  if polyObj.map_section <> targetMapSection then
+    Exit;
+
+  edges := GetPolygonEdgesWorldSpace(polyObj, true);
+  minDist := Double.MaxValue;
+  closestEdgeIdx := -1;
+
+  // Find closest edge
+  for i := 0 to High(edges) do
+  begin
+    dx := edges[i].X2 - edges[i].X1;
+    dy := edges[i].Y2 - edges[i].Y1;
+
+    if (dx = 0) and (dy = 0) then
+      Continue;
+
+    t := ((targetX - edges[i].X1) * dx + (targetY - edges[i].Y1) * dy) / (dx * dx + dy * dy);
+
+    if t < 0 then t := 0
+    else if t > 1 then t := 1;
+
+    snapX := edges[i].X1 + t * dx;
+    snapY := edges[i].Y1 + t * dy;
+
+    dist := sqrt(sqr(targetX - snapX) + sqr(targetY - snapY));
+
+    if dist < minDist then
+    begin
+      minDist := dist;
+      closestEdgeIdx := i;
+    end;
+  end;
+
+  // If within snap threshold, apply the snap
+  if (closestEdgeIdx >= 0) and (minDist <= snapThreshold) then
+  begin
+    dx := edges[closestEdgeIdx].X2 - edges[closestEdgeIdx].X1;
+    dy := edges[closestEdgeIdx].Y2 - edges[closestEdgeIdx].Y1;
+    t := ((targetX - edges[closestEdgeIdx].X1) * dx + (targetY - edges[closestEdgeIdx].Y1) * dy) / (dx * dx + dy * dy);
+    t := Max(0, Min(1, t));
+
+    targetX := edges[closestEdgeIdx].X1 + t * dx;
+    targetY := edges[closestEdgeIdx].Y1 + t * dy;
+
+    Result := True;
+  end;
+end;
 
 Procedure LookAt2D(targetX: double; targetY: double);
 var
@@ -3360,24 +3633,29 @@ begin
         or (darkmode and ((sType = 2) and (selected = x)) and showbmp.Checked)
         then
           BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
-        BBRelBmp.Canvas.Pen.Width := outlinewidth;
-        rt := -(rev[Floor[sfloor].Obj[x].map_section] + Floor[sfloor].Obj[x].unknow6);
-        px2 := -(8 / Zoom);
-        py2 := -(8 / Zoom);
-        px3 := cos(rt / 10430.37835) * px2 - sin(rt / 10430.37835) * py2;
-        py3 := sin(rt / 10430.37835) * px2 + cos(rt / 10430.37835) * py2;
-        tpt[0] := point(round(px) + round(px3), round(py) + round(py3));
-        px2 := 0;
-        py2 := 8 / Zoom;
-        px3 := cos(rt / 10430.37835) * px2 - sin(rt / 10430.37835) * py2;
-        py3 := sin(rt / 10430.37835) * px2 + cos(rt / 10430.37835) * py2;
-        tpt[1] := point(round(px) + round(px3), round(py) + round(py3));
-        px2 := (8 / Zoom);
-        py2 := -(8 / Zoom);
-        px3 := cos(rt / 10430.37835) * px2 - sin(rt / 10430.37835) * py2;
-        py3 := sin(rt / 10430.37835) * px2 + cos(rt / 10430.37835) * py2;
-        tpt[2] := point(round(px) + round(px3), round(py) + round(py3));
-        BBRelBmp.Canvas.Polyline(tpt);
+        if Floor[sfloor].Obj[x].Skin = 10000 then
+          DrawPolygon(BBRelBmp.Canvas, Floor[sFloor].Obj[x], px, py)
+        else
+        begin
+          BBRelBmp.Canvas.Pen.Width := outlinewidth;
+          rt := -(rev[Floor[sfloor].Obj[x].map_section] + Floor[sfloor].Obj[x].unknow6);
+          px2 := -(8 / Zoom);
+          py2 := -(8 / Zoom);
+          px3 := cos(rt / 10430.37835) * px2 - sin(rt / 10430.37835) * py2;
+          py3 := sin(rt / 10430.37835) * px2 + cos(rt / 10430.37835) * py2;
+          tpt[0] := point(round(px) + round(px3), round(py) + round(py3));
+          px2 := 0;
+          py2 := 8 / Zoom;
+          px3 := cos(rt / 10430.37835) * px2 - sin(rt / 10430.37835) * py2;
+          py3 := sin(rt / 10430.37835) * px2 + cos(rt / 10430.37835) * py2;
+          tpt[1] := point(round(px) + round(px3), round(py) + round(py3));
+          px2 := (8 / Zoom);
+          py2 := -(8 / Zoom);
+          px3 := cos(rt / 10430.37835) * px2 - sin(rt / 10430.37835) * py2;
+          py3 := sin(rt / 10430.37835) * px2 + cos(rt / 10430.37835) * py2;
+          tpt[2] := point(round(px) + round(px3), round(py) + round(py3));
+          BBRelBmp.Canvas.Polyline(tpt);
+        end;
         BBRelBmp.Canvas.Pen.Color := clBlack;
         BBRelBmp.Canvas.Pen.Width := 1;
         // dsfsdf
@@ -9455,7 +9733,8 @@ begin
   form10.ComboBox1.Clear;
   for x := 0 to preseti - 1 do
     for y := 0 to FloorObjID[Floor[sfloor].floorid].count[FFilter] - 1 do
-      if FloorObjID[Floor[sfloor].floorid].ids[FFilter, y] = ObjTemplate[x].data.Skin then
+      if (FloorObjID[Floor[sfloor].floorid].ids[FFilter, y] = ObjTemplate[x].data.Skin)
+      or (ObjTemplate[x].data.Skin = 10000) then
       begin
         form10.ComboBox1.Items.Add(ObjTemplate[x].name);
         break;
@@ -9792,7 +10071,7 @@ procedure TForm1.Image2Click(Sender: TObject);
 var
   x, d, pz, i, z, y, j, k, l, closest: integer;
   lastwarpx, lastwarpz, lastposx, lastposz: single;
-  px, py, px2, py2, di, pz2, diff, diffmin: double;
+  px, py, px2, py2, px3, py3, di, pz2, diff, diffmin: double;
 begin
   if showgrid and editgrid then
     form1.GroupBox1.SetFocus;
@@ -10001,6 +10280,30 @@ begin
           AdjustDistanceX(closest);
       end;
 
+      // Check for snap objects
+      for j := 0 to Floor[sfloor].ObjCount - 1 do
+      begin
+        // Check if this object is a snap polygon
+        if (Floor[sfloor].Obj[j].Skin = 10000) and (j <> MoveSel) then
+        begin
+          px3 := px;
+          py3 := py;
+          if TrySnapToPolygon(
+            px3,
+            py3,
+            Floor[sfloor].Obj[j],
+            Floor[sFloor].Obj[j].unknow13,
+            Floor[sfloor].Monster[MoveSel].map_section
+          ) then
+          begin
+            Floor[sfloor].Monster[MoveSel].Pos_X := px3;
+            Floor[sfloor].Monster[MoveSel].Pos_Y := py3;
+            if Floor[sFloor].Obj[j].Action = 1 then
+              LookAt2D(SectionToMouseX(j,2), SectionToMouseY(j,2));
+          end;
+        end;
+      end;
+
       // Placement modifiers - overwrite values if keys are pressed
       if (Selected > -1) and (fdown) then // F key
       begin
@@ -10139,6 +10442,30 @@ begin
         end;
         if closest > -1 then
           AdjustDistanceX(closest);
+      end;
+
+      // Check for any snap objects
+      for j := 0 to Floor[sfloor].ObjCount - 1 do
+      begin
+        // Check if this object is a snap polygon
+        if (Floor[sfloor].Obj[j].Skin = 10000) and (j <> MoveSel) then
+        begin
+          px3 := px;
+          py3 := py;
+          if TrySnapToPolygon(
+            px3,
+            py3,
+            Floor[sfloor].Obj[j],
+            Floor[sFloor].Obj[j].unknow13,
+            Floor[sfloor].Obj[MoveSel].map_section
+          ) then
+          begin
+            Floor[sfloor].Obj[MoveSel].Pos_X := px3;
+            Floor[sfloor].Obj[MoveSel].Pos_Y := py3;
+            if Floor[sFloor].Obj[j].Action = 1 then
+              LookAt2D(SectionToMouseX(j,2), SectionToMouseY(j,2));
+          end;
+        end;
       end;
 
       // Placement modifiers - overwrite values if keys are pressed
