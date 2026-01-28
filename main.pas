@@ -10305,7 +10305,7 @@ begin
               LookAt2D(SectionToMouseX(j,2), SectionToMouseY(j,2));
 
             // Save the default parent ID and offsets
-            Floor[sfloor].Monster[MoveSel].unknow4 := 10001;
+            Floor[sfloor].Monster[MoveSel].unknow4 := Floor[sfloor].Obj[j].id;
             objsnapX :=  word(SmallInt(round(Floor[sfloor].Monster[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X)));
             objsnapY :=  word(SmallInt(round(Floor[sfloor].Monster[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y)));
             Floor[sfloor].Monster[MoveSel].Unknow1 := objsnapX;
@@ -10314,7 +10314,7 @@ begin
           end;
         end;
       end;
-      if not objsnap and (Floor[sfloor].Monster[MoveSel].unknow4 = 10001) then
+      if not objsnap and (Floor[sfloor].Monster[MoveSel].unknow4 = Floor[sfloor].Obj[j].id) then
         Floor[sfloor].Monster[MoveSel].unknow4 := 0;
 
       // Placement modifiers - overwrite values if keys are pressed
@@ -10480,7 +10480,7 @@ begin
               LookAt2D(SectionToMouseX(j,2), SectionToMouseY(j,2));
 
             // Save the default parent ID and offsets
-            Floor[sfloor].Obj[MoveSel].id := 10001;
+            Floor[sfloor].Obj[MoveSel].id := Floor[sfloor].Obj[j].id;
             objsnapX :=  word(SmallInt(round(Floor[sfloor].Obj[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X)));
             objsnapY :=  word(SmallInt(round(Floor[sfloor].Obj[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y)));
             Floor[sfloor].Obj[MoveSel].Unknow1 := objsnapX;
@@ -10489,7 +10489,7 @@ begin
           end;
         end;
       end;
-      if not objsnap and (Floor[sfloor].Obj[MoveSel].unknow4 = 10001) then
+      if not objsnap and (Floor[sfloor].Obj[MoveSel].unknow4 = Floor[sfloor].Obj[j].id) then
         Floor[sfloor].Obj[MoveSel].unknow4 := 0;
 
       // Placement modifiers - overwrite values if keys are pressed

@@ -6256,7 +6256,7 @@ unknow	0
 Unknow	0
 Unknow	0
 
-	[QEdit] 2D Snap Object
+	[QEdit] 2D Snap Polygon
 Skin	10000
 Unknow	0
 Unknow	0
