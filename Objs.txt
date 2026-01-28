@@ -6260,7 +6260,7 @@ Unknow	0
 Skin	10000
 Unknow	0
 Unknow	0
-ID	0
+ID	10001
 Map Section	0
 Unknow	0
 Pos X	0

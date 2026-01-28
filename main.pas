@@ -1004,7 +1004,7 @@ begin
   for i := 0 to sides - 1 do
   begin
     // Calculate angle for this vertex, adjusted by rotation
-    angle := (i * angleStep) + ((rotation) / 10430.37835);
+    angle := (i * angleStep) + ((rotation + 32768) / 10430.37835);
 
     // Calculate vertex position
     // Starting at top (negative Y) by default
@@ -10072,6 +10072,8 @@ var
   x, d, pz, i, z, y, j, k, l, closest: integer;
   lastwarpx, lastwarpz, lastposx, lastposz: single;
   px, py, px2, py2, px3, py3, di, pz2, diff, diffmin: double;
+  objsnap: Boolean;
+  objsnapX, objsnapY: word;
 begin
   if showgrid and editgrid then
     form1.GroupBox1.SetFocus;
@@ -10281,6 +10283,7 @@ begin
       end;
 
       // Check for snap objects
+      objsnap := false;
       for j := 0 to Floor[sfloor].ObjCount - 1 do
       begin
         // Check if this object is a snap polygon
@@ -10300,9 +10303,19 @@ begin
             Floor[sfloor].Monster[MoveSel].Pos_Y := py3;
             if Floor[sFloor].Obj[j].Action = 1 then
               LookAt2D(SectionToMouseX(j,2), SectionToMouseY(j,2));
+
+            // Save the default parent ID and offsets
+            Floor[sfloor].Monster[MoveSel].unknow4 := 10001;
+            objsnapX :=  word(SmallInt(round(Floor[sfloor].Monster[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X)));
+            objsnapY :=  word(SmallInt(round(Floor[sfloor].Monster[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y)));
+            Floor[sfloor].Monster[MoveSel].Unknow1 := objsnapX;
+            Floor[sfloor].Monster[MoveSel].Unknow2 := objsnapY + (Floor[sfloor].Monster[MoveSel].Unknow2 and $ffff0000);
+            objsnap := true;
           end;
         end;
       end;
+      if not objsnap and (Floor[sfloor].Monster[MoveSel].unknow4 = 10001) then
+        Floor[sfloor].Monster[MoveSel].unknow4 := 0;
 
       // Placement modifiers - overwrite values if keys are pressed
       if (Selected > -1) and (fdown) then // F key
@@ -10445,6 +10458,7 @@ begin
       end;
 
       // Check for any snap objects
+      objsnap := false;
       for j := 0 to Floor[sfloor].ObjCount - 1 do
       begin
         // Check if this object is a snap polygon
@@ -10464,9 +10478,19 @@ begin
             Floor[sfloor].Obj[MoveSel].Pos_Y := py3;
             if Floor[sFloor].Obj[j].Action = 1 then
               LookAt2D(SectionToMouseX(j,2), SectionToMouseY(j,2));
+
+            // Save the default parent ID and offsets
+            Floor[sfloor].Obj[MoveSel].id := 10001;
+            objsnapX :=  word(SmallInt(round(Floor[sfloor].Obj[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X)));
+            objsnapY :=  word(SmallInt(round(Floor[sfloor].Obj[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y)));
+            Floor[sfloor].Obj[MoveSel].Unknow1 := objsnapX;
+            Floor[sfloor].Obj[MoveSel].Unknow2 := objsnapY + (Floor[sfloor].Obj[MoveSel].Unknow2 and $ffff0000);
+            objsnap := true;
           end;
         end;
       end;
+      if not objsnap and (Floor[sfloor].Obj[MoveSel].unknow4 = 10001) then
+        Floor[sfloor].Obj[MoveSel].unknow4 := 0;
 
       // Placement modifiers - overwrite values if keys are pressed
       if (Selected > -1) and (fdown) then // F key
@@ -10501,6 +10525,37 @@ begin
 
         Floor[sfloor].Obj[MoveSel].unknow8 := lastwarpx - warpx;
         Floor[sfloor].Obj[MoveSel].unknow10 := lastwarpz - warpz;
+      end;
+
+      // Check for snap polygon movement
+      for i := 0 to Floor[sfloor].ObjCount - 1 do
+      begin
+        if (Floor[sfloor].Obj[MoveSel].Skin = 10000) then
+        begin
+          for j := 0 to Floor[sfloor].MonsterCount - 1 do
+          begin
+            if Floor[sfloor].Monster[j].unknow4 = Floor[sfloor].Obj[MoveSel].id then
+            begin
+              Floor[sfloor].Monster[j].map_section := Floor[sfloor].Obj[MoveSel].map_section;
+              // Restore offsets
+              Floor[sfloor].Monster[j].Pos_X := Floor[sfloor].Obj[MoveSel].Pos_X + SmallInt(Floor[sfloor].Monster[j].Unknow1);
+              Floor[sfloor].Monster[j].Pos_Y := Floor[sfloor].Obj[MoveSel].Pos_Y + SmallInt(Floor[sfloor].Monster[j].unknow2 and $ffff);
+              if not altdw or firstdrop then Floor[sfloor].Monster[j].Pos_Z := pz2;
+            end;
+          end;
+          for j := 0 to Floor[sfloor].ObjCount - 1 do
+          begin
+            if Floor[sfloor].Obj[j].id = Floor[sfloor].Obj[MoveSel].id then
+            begin
+              Floor[sfloor].Obj[j].map_section := Floor[sfloor].Obj[MoveSel].map_section;
+              // Restore offsets
+              Floor[sfloor].Obj[j].Pos_X := Floor[sfloor].Obj[MoveSel].Pos_X + SmallInt(Floor[sfloor].Obj[j].Unknow1);
+              Floor[sfloor].Obj[j].Pos_Y := Floor[sfloor].Obj[MoveSel].Pos_Y + SmallInt(Floor[sfloor].Obj[j].unknow2 and $ffff);
+              if not altdw or firstdrop then Floor[sfloor].Obj[j].Pos_Z := pz2;
+            end;
+          end;
+          break;
+        end;
       end;
 
       if have3d then
