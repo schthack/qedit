@@ -1029,6 +1029,9 @@ begin
       // Update Y position
       if polygon.unknow13 = 1 then
         Floor[sfloor].Monster[i].Pos_Z := polygon.Pos_Z;
+
+      if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[i],i,2);
     end;
   end;
 
@@ -1058,6 +1061,12 @@ begin
       // Update Y position
       if polygon.unknow13 = 1 then
         Floor[sfloor].Obj[i].Pos_Z := polygon.Pos_Z;
+
+      if have3d then
+      begin
+         myobj[i].Free;
+         Generateobj(Floor[sfloor].obj[i],i);
+      end;
     end;
   end;
 end;
