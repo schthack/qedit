@@ -352,6 +352,8 @@ begin
          end;
          form1.ListBox2.Items.Strings[selected]:='#'+inttostr(selected)+' - '+GetObjName(Floor[sfloor].Obj[selected].skin);
 
+         if Floor[sFloor].Obj[selected].Skin = 10000 then
+          form1.UpdateSnapPolygonChildren(Floor[sfloor].Obj[selected]);
     end;
     Form1.DrawMap;
     if showgrid then

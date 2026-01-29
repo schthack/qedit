@@ -283,7 +283,7 @@ object Form1: TForm1
       OnMouseMove = Image2MouseMove
       OnMouseUp = Image2MouseUp
       OnPaint = Image2Paint
-      ExplicitTop = 3
+      ExplicitLeft = 2
     end
   end
   object Button1: TButton

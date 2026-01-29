@@ -458,6 +458,7 @@ type
     procedure CheckListBox1Click(Sender: TObject);
     procedure DrawMap;
     procedure LoadFloorGrids;
+    procedure UpdateSnapPolygonChildren(polygon: TObj);
     function GetDBGridScrollPos(Grid: TDBGrid): TGridScrollPos;
     procedure SetDBGridScrollPos(Grid: TDBGrid; const Pos: TGridScrollPos);
     procedure Button6Click(Sender: TObject);
@@ -991,6 +992,76 @@ begin
   result := py;
 end;
 
+procedure TForm1.UpdateSnapPolygonChildren(polygon: TObj);
+var
+  i: integer;
+  localOffsetX, localOffsetY: double;
+  parentScale, parentRot: double;
+  scaledOffsetX, scaledOffsetY: double;
+  worldOffsetX, worldOffsetY: double;
+begin
+  parentScale := polygon.unknow8 * 20.0;
+  parentRot := polygon.unknow6 / 10430.37835;
+
+  // Update all monsters that are children
+  for i := 0 to Floor[sfloor].MonsterCount - 1 do
+  begin
+    if Floor[sfloor].Monster[i].unknow4 = polygon.id then
+    begin
+      Floor[sfloor].Monster[i].map_section := polygon.map_section;
+
+      // Get stored local offset percentages
+      localOffsetX := SmallInt(Floor[sfloor].Monster[i].Unknow1) / 100.0;
+      localOffsetY := SmallInt(Floor[sfloor].Monster[i].unknow2 and $ffff) / 100.0;
+
+      // Scale by current parent scale
+      scaledOffsetX := localOffsetX * parentScale;
+      scaledOffsetY := localOffsetY * parentScale;
+
+      // Rotate by current parent rotation
+      worldOffsetX := cos(parentRot) * scaledOffsetX - sin(parentRot) * scaledOffsetY;
+      worldOffsetY := sin(parentRot) * scaledOffsetX + cos(parentRot) * scaledOffsetY;
+
+      // Apply to child position
+      Floor[sfloor].Monster[i].Pos_X := polygon.Pos_X + worldOffsetX;
+      Floor[sfloor].Monster[i].Pos_Y := polygon.Pos_Y + worldOffsetY;
+
+      // Update Y position
+      if polygon.unknow13 = 1 then
+        Floor[sfloor].Monster[i].Pos_Z := polygon.Pos_Z;
+    end;
+  end;
+
+  // Update all objects that are children
+  for i := 0 to Floor[sfloor].ObjCount - 1 do
+  begin
+    if Floor[sfloor].Obj[i].id = polygon.id then
+    begin
+      Floor[sfloor].Obj[i].map_section := polygon.map_section;
+
+      // Get stored local offset percentages
+      localOffsetX := SmallInt(Floor[sfloor].Obj[i].Unknow1) / 100.0;
+      localOffsetY := SmallInt(Floor[sfloor].Obj[i].unknow2 and $ffff) / 100.0;
+
+      // Scale by current parent scale
+      scaledOffsetX := localOffsetX * parentScale;
+      scaledOffsetY := localOffsetY * parentScale;
+
+      // Rotate by current parent rotation
+      worldOffsetX := cos(parentRot) * scaledOffsetX - sin(parentRot) * scaledOffsetY;
+      worldOffsetY := sin(parentRot) * scaledOffsetX + cos(parentRot) * scaledOffsetY;
+
+      // Apply to child position
+      Floor[sfloor].Obj[i].Pos_X := polygon.Pos_X + worldOffsetX;
+      Floor[sfloor].Obj[i].Pos_Y := polygon.Pos_Y + worldOffsetY;
+
+      // Update Y position
+      if polygon.unknow13 = 1 then
+        Floor[sfloor].Obj[i].Pos_Z := polygon.Pos_Z;
+    end;
+  end;
+end;
+
 function GeneratePolygonVertices(rotation: integer; scale: double; sides: integer): TPolygonVertices;
 var
   i: integer;
@@ -1004,7 +1075,7 @@ begin
   for i := 0 to sides - 1 do
   begin
     // Calculate angle for this vertex, adjusted by rotation
-    angle := (i * angleStep) + ((rotation + 32768) / 10430.37835);
+    angle := (i * angleStep) + ((rotation) / 10430.37835);
 
     // Calculate vertex position
     // Starting at top (negative Y) by default
@@ -1126,7 +1197,7 @@ begin
   if polyObj.map_section <> targetMapSection then
     Exit;
 
-  edges := GetPolygonEdgesWorldSpace(polyObj, true);
+  edges := GetPolygonEdgesWorldSpace(polyObj, false);
   minDist := Double.MaxValue;
   closestEdgeIdx := -1;
 
@@ -5909,6 +5980,8 @@ begin
     sms := Floor[sfloor].Obj[Selected].map_section;
     stype := 2;
     gridtype := 2;
+    if Floor[sFloor].Obj[selected].Skin = 10000 then
+      UpdateSnapPolygonChildren(Floor[sfloor].Obj[selected]);
     DrawMap;
     SetImage1Colors;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
@@ -9601,6 +9674,17 @@ begin
       end;
       dec(Floor[sfloor].ObjCount);
       // form1.listbox2.Items.Delete(selected);
+
+      // Clear parent IDs
+      if Floor[sFloor].Obj[selected].Skin = 10000 then
+      begin
+        for x := 0 to Floor[sfloor].MonsterCount - 1 do
+          if Floor[sFloor].Monster[x].unknow4 = Floor[sFloor].Obj[selected].id then
+            Floor[sFloor].Monster[x].unknow4 := 0;
+        for x := 0 to Floor[sfloor].ObjCount - 1 do
+          if Floor[sFloor].Obj[x].id = Floor[sFloor].Obj[selected].id then
+            Floor[sFloor].Obj[x].id := 0;
+      end;
     end;
     ctrldw := true;
     //
@@ -10069,9 +10153,12 @@ end;
 
 procedure TForm1.Image2Click(Sender: TObject);
 var
-  x, d, pz, i, z, y, j, k, l, closest: integer;
+  x, d, pz, i, z, y, j, k, l, closest, polyidx: integer;
   lastwarpx, lastwarpz, lastposx, lastposz: single;
   px, py, px2, py2, px3, py3, di, pz2, diff, diffmin: double;
+  worldOffsetX, worldOffsetY: double;
+  localOffsetX, localOffsetY: double;
+  parentRot, parentScale: double;
   objsnap: Boolean;
   objsnapX, objsnapY: word;
 begin
@@ -10284,6 +10371,7 @@ begin
 
       // Check for snap objects
       objsnap := false;
+      polyidx := -1;
       for j := 0 to Floor[sfloor].ObjCount - 1 do
       begin
         // Check if this object is a snap polygon
@@ -10291,30 +10379,52 @@ begin
         begin
           px3 := px;
           py3 := py;
+          polyidx := j;
           if TrySnapToPolygon(
             px3,
             py3,
             Floor[sfloor].Obj[j],
-            Floor[sFloor].Obj[j].unknow13,
+            Floor[sFloor].Obj[j].unknow9,
             Floor[sfloor].Monster[MoveSel].map_section
           ) then
           begin
             Floor[sfloor].Monster[MoveSel].Pos_X := px3;
             Floor[sfloor].Monster[MoveSel].Pos_Y := py3;
+            // Update Y position
+            if Floor[sFloor].Obj[j].unknow13 = 1 then
+              Floor[sfloor].Monster[MoveSel].Pos_Z := Floor[sFloor].Obj[j].Pos_Z;
             if Floor[sFloor].Obj[j].Action = 1 then
               LookAt2D(SectionToMouseX(j,2), SectionToMouseY(j,2));
 
-            // Save the default parent ID and offsets
+            // Save the parent ID
             Floor[sfloor].Monster[MoveSel].unknow4 := Floor[sfloor].Obj[j].id;
-            objsnapX :=  word(SmallInt(round(Floor[sfloor].Monster[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X)));
-            objsnapY :=  word(SmallInt(round(Floor[sfloor].Monster[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y)));
-            Floor[sfloor].Monster[MoveSel].Unknow1 := objsnapX;
-            Floor[sfloor].Monster[MoveSel].Unknow2 := objsnapY + (Floor[sfloor].Monster[MoveSel].Unknow2 and $ffff0000);
+
+            // Calculate offset in world space
+            worldOffsetX := Floor[sfloor].Monster[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X;
+            worldOffsetY := Floor[sfloor].Monster[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y;
+
+            // Transform to parent's local space (inverse rotation)
+            parentRot := -Floor[sfloor].Obj[j].unknow6 / 10430.37835;
+            localOffsetX := cos(parentRot) * worldOffsetX - sin(parentRot) * worldOffsetY;
+            localOffsetY := sin(parentRot) * worldOffsetX + cos(parentRot) * worldOffsetY;
+
+            // Normalize by parent scale
+            parentScale := Floor[sfloor].Obj[j].unknow8 * 20.0;
+            if parentScale <> 0 then
+            begin
+              localOffsetX := localOffsetX / parentScale;
+              localOffsetY := localOffsetY / parentScale;
+            end;
+
+            // Store as normalized offsets (multiply by 100 to preserve precision)
+            Floor[sfloor].Monster[MoveSel].Unknow1 := word(SmallInt(round(localOffsetX * 100)));
+            Floor[sfloor].Monster[MoveSel].Unknow2 := word(SmallInt(round(localOffsetY * 100))) +
+                                                       (Floor[sfloor].Monster[MoveSel].Unknow2 and $ffff0000);
             objsnap := true;
           end;
         end;
       end;
-      if not objsnap and (Floor[sfloor].Monster[MoveSel].unknow4 = Floor[sfloor].Obj[j].id) then
+      if (polyidx <> -1) and not objsnap and (Floor[sfloor].Monster[MoveSel].unknow4 = Floor[sfloor].Obj[polyidx].id) then
         Floor[sfloor].Monster[MoveSel].unknow4 := 0;
 
       // Placement modifiers - overwrite values if keys are pressed
@@ -10459,6 +10569,7 @@ begin
 
       // Check for any snap objects
       objsnap := false;
+      polyidx := -1;
       for j := 0 to Floor[sfloor].ObjCount - 1 do
       begin
         // Check if this object is a snap polygon
@@ -10470,26 +10581,47 @@ begin
             px3,
             py3,
             Floor[sfloor].Obj[j],
-            Floor[sFloor].Obj[j].unknow13,
+            Floor[sFloor].Obj[j].unknow9,
             Floor[sfloor].Obj[MoveSel].map_section
           ) then
           begin
             Floor[sfloor].Obj[MoveSel].Pos_X := px3;
             Floor[sfloor].Obj[MoveSel].Pos_Y := py3;
+            // Update Y position
+            if Floor[sFloor].Obj[j].unknow13 = 1 then
+              Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sFloor].Obj[j].Pos_Z;
             if Floor[sFloor].Obj[j].Action = 1 then
               LookAt2D(SectionToMouseX(j,2), SectionToMouseY(j,2));
 
-            // Save the default parent ID and offsets
+            // Save the parent ID
             Floor[sfloor].Obj[MoveSel].id := Floor[sfloor].Obj[j].id;
-            objsnapX :=  word(SmallInt(round(Floor[sfloor].Obj[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X)));
-            objsnapY :=  word(SmallInt(round(Floor[sfloor].Obj[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y)));
-            Floor[sfloor].Obj[MoveSel].Unknow1 := objsnapX;
-            Floor[sfloor].Obj[MoveSel].Unknow2 := objsnapY + (Floor[sfloor].Obj[MoveSel].Unknow2 and $ffff0000);
+
+            // Calculate offset in world space
+            worldOffsetX := Floor[sfloor].Obj[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X;
+            worldOffsetY := Floor[sfloor].Obj[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y;
+
+            // Transform to parent's local space (inverse rotation)
+            parentRot := -Floor[sfloor].Obj[j].unknow6 / 10430.37835;
+            localOffsetX := cos(parentRot) * worldOffsetX - sin(parentRot) * worldOffsetY;
+            localOffsetY := sin(parentRot) * worldOffsetX + cos(parentRot) * worldOffsetY;
+
+            // Normalize by parent scale
+            parentScale := Floor[sfloor].Obj[j].unknow8 * 20.0;
+            if parentScale <> 0 then
+            begin
+              localOffsetX := localOffsetX / parentScale;
+              localOffsetY := localOffsetY / parentScale;
+            end;
+
+            // Store as normalized offsets (multiply by 100 to preserve precision)
+            Floor[sfloor].Obj[MoveSel].Unknow1 := word(SmallInt(round(localOffsetX * 100)));
+            Floor[sfloor].Obj[MoveSel].Unknow2 := word(SmallInt(round(localOffsetY * 100))) +
+                                                   (Floor[sfloor].Obj[MoveSel].Unknow2 and $ffff0000);
             objsnap := true;
           end;
         end;
       end;
-      if not objsnap and (Floor[sfloor].Obj[MoveSel].unknow4 = Floor[sfloor].Obj[j].id) then
+      if (polyidx <> -1) and not objsnap and (Floor[sfloor].Obj[MoveSel].unknow4 = Floor[sfloor].Obj[polyidx].id) then
         Floor[sfloor].Obj[MoveSel].unknow4 := 0;
 
       // Placement modifiers - overwrite values if keys are pressed
@@ -10525,37 +10657,6 @@ begin
 
         Floor[sfloor].Obj[MoveSel].unknow8 := lastwarpx - warpx;
         Floor[sfloor].Obj[MoveSel].unknow10 := lastwarpz - warpz;
-      end;
-
-      // Check for snap polygon movement
-      for i := 0 to Floor[sfloor].ObjCount - 1 do
-      begin
-        if (Floor[sfloor].Obj[MoveSel].Skin = 10000) then
-        begin
-          for j := 0 to Floor[sfloor].MonsterCount - 1 do
-          begin
-            if Floor[sfloor].Monster[j].unknow4 = Floor[sfloor].Obj[MoveSel].id then
-            begin
-              Floor[sfloor].Monster[j].map_section := Floor[sfloor].Obj[MoveSel].map_section;
-              // Restore offsets
-              Floor[sfloor].Monster[j].Pos_X := Floor[sfloor].Obj[MoveSel].Pos_X + SmallInt(Floor[sfloor].Monster[j].Unknow1);
-              Floor[sfloor].Monster[j].Pos_Y := Floor[sfloor].Obj[MoveSel].Pos_Y + SmallInt(Floor[sfloor].Monster[j].unknow2 and $ffff);
-              if not altdw or firstdrop then Floor[sfloor].Monster[j].Pos_Z := pz2;
-            end;
-          end;
-          for j := 0 to Floor[sfloor].ObjCount - 1 do
-          begin
-            if Floor[sfloor].Obj[j].id = Floor[sfloor].Obj[MoveSel].id then
-            begin
-              Floor[sfloor].Obj[j].map_section := Floor[sfloor].Obj[MoveSel].map_section;
-              // Restore offsets
-              Floor[sfloor].Obj[j].Pos_X := Floor[sfloor].Obj[MoveSel].Pos_X + SmallInt(Floor[sfloor].Obj[j].Unknow1);
-              Floor[sfloor].Obj[j].Pos_Y := Floor[sfloor].Obj[MoveSel].Pos_Y + SmallInt(Floor[sfloor].Obj[j].unknow2 and $ffff);
-              if not altdw or firstdrop then Floor[sfloor].Obj[j].Pos_Z := pz2;
-            end;
-          end;
-          break;
-        end;
       end;
 
       if have3d then

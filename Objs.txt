@@ -6270,9 +6270,9 @@ Unknow	0
 Rotation	0
 Unknow	0
 Active Range	1
-Unknow	0
+Unknow	30
 Unknow	0
 Action	5
 unknow	0
-Unknow	30
+Unknow	0
 Unknow	0
