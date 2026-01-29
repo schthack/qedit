@@ -992,6 +992,79 @@ begin
   result := py;
 end;
 
+Procedure LookAt2D(idx: integer; eType: integer; targetX: double; targetY: double);
+var
+  px, py, px2, py2, rad, diffX, diffY: double;
+  angle, mapsection, mouseAngle: integer;
+begin
+    if eType = 1 then
+    begin
+      mapsection := Floor[sfloor].Monster[idx].map_section;
+      if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+        MidP[0].y := 0;
+      px2 := Floor[sfloor].Monster[idx].Pos_X / Zoom;
+      py2 := Floor[sfloor].Monster[idx].Pos_Y / Zoom;
+      px := cos(-rev[mapsection] / 10430.37835) * px2 -
+        sin(-rev[mapsection] / 10430.37835) * py2;
+      py := sin(-rev[mapsection] / 10430.37835) * px2 +
+        cos(-rev[mapsection] / 10430.37835) * py2;
+      px2 := mpx / Zoom;
+      px := px + mmx + MidP[mapsection].x + px2;
+      px2 := mpy / Zoom;
+      py := py + mmy + MidP[mapsection].y + px2;
+    end;
+    if eType = 2 then
+    begin
+      mapsection := Floor[sfloor].Obj[idx].map_section;
+      if extractfilename(mapfilenam) = 'map_boss03c.rel' then
+        MidP[0].y := 0;
+      px2 := Floor[sfloor].Obj[idx].Pos_X / Zoom;
+      py2 := Floor[sfloor].Obj[idx].Pos_Y / Zoom;
+      px := cos(-rev[mapsection] / 10430.37835) * px2 -
+        sin(-rev[mapsection] / 10430.37835) * py2;
+      py := sin(-rev[mapsection] / 10430.37835) * px2 +
+        cos(-rev[mapsection] / 10430.37835) * py2;
+      px2 := mpx / Zoom;
+      px := px + mmx + MidP[mapsection].x + px2;
+      px2 := mpy / Zoom;
+      py := py + mmy + MidP[mapsection].y + px2;
+    end;
+
+    diffX := targetX - px;
+    diffY := targetY - py;
+    rad := ArcTan2(diffY, diffX);
+
+    mouseAngle := Round(rad * 10430.37835);
+    mouseAngle := mouseAngle - 16384;
+
+    angle := -mouseAngle - rev[mapSection];
+
+    angle := angle mod 65536;
+    if angle < 0 then
+      angle := angle + 65536;
+
+    if eType = 1 then
+    begin
+      Floor[sfloor].Monster[idx].Direction := angle;
+      if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[idx],idx,2)
+    end
+    else if eType = 2 then
+    begin
+      Floor[sfloor].Obj[idx].unknow6 := angle;
+      if have3d then
+      begin
+         myobj[idx].Free;
+         Generateobj(Floor[sfloor].obj[idx],idx);
+      end;
+    end;
+
+    placelookat := false;
+    HideIndicator;
+    form1.DrawMap;
+    form1.LoadFloorGrids;
+end;
+
 procedure TForm1.UpdateSnapPolygonChildren(polygon: TObj);
 var
   i: integer;
@@ -1001,7 +1074,7 @@ var
   worldOffsetX, worldOffsetY: double;
 begin
   parentScale := polygon.unknow8 * 20.0;
-  parentRot := polygon.unknow6 / 10430.37835;
+  parentRot := -polygon.unknow6 / 10430.37835;
 
   // Update all monsters that are children
   for i := 0 to Floor[sfloor].MonsterCount - 1 do
@@ -1025,6 +1098,10 @@ begin
       // Apply to child position
       Floor[sfloor].Monster[i].Pos_X := polygon.Pos_X + worldOffsetX;
       Floor[sfloor].Monster[i].Pos_Y := polygon.Pos_Y + worldOffsetY;
+
+      // Update orientation
+      if polygon.Action = 1 then
+        LookAt2D(i, 1, SectionToMouseX(selected, 2), SectionToMouseY(selected, 2));
 
       // Update Y position
       if polygon.unknow13 = 1 then
@@ -1057,6 +1134,10 @@ begin
       // Apply to child position
       Floor[sfloor].Obj[i].Pos_X := polygon.Pos_X + worldOffsetX;
       Floor[sfloor].Obj[i].Pos_Y := polygon.Pos_Y + worldOffsetY;
+
+      // Update orientation
+      if polygon.Action = 1 then
+        LookAt2D(i, 2, SectionToMouseX(selected, 2), SectionToMouseY(selected, 2));
 
       // Update Y position
       if polygon.unknow13 = 1 then
@@ -1109,7 +1190,7 @@ begin
 
   // Generate polygon in local space (relative to object center)
   vertices := GeneratePolygonVertices(
-    obj.unknow6, // Rotation value
+    obj.unknow6 - rev[obj.map_section], // Rotation value
     obj.unknow8, // Scale/radius
     obj.obj_id   // Number of sides
   );
@@ -1145,7 +1226,7 @@ var
   worldX, worldY, px, py: double;
 begin
   vertices := GeneratePolygonVertices(
-    obj.unknow6,
+    obj.unknow6 - rev[obj.map_section],
     obj.unknow8,
     obj.obj_id
   );
@@ -1198,7 +1279,6 @@ var
   minDist, dist, t, dx, dy: double;
   closestEdgeIdx: integer;
   snapX, snapY: double;
-  debugMsg: string;
 begin
   Result := False;
 
@@ -1206,7 +1286,7 @@ begin
   if polyObj.map_section <> targetMapSection then
     Exit;
 
-  edges := GetPolygonEdgesWorldSpace(polyObj, false);
+  edges := GetPolygonEdgesWorldSpace(polyObj, true);
   minDist := Double.MaxValue;
   closestEdgeIdx := -1;
 
@@ -1249,79 +1329,6 @@ begin
 
     Result := True;
   end;
-end;
-
-Procedure LookAt2D(targetX: double; targetY: double);
-var
-  px, py, px2, py2, rad, diffX, diffY: double;
-  angle, mapsection, mouseAngle: integer;
-begin
-    if sType = 1 then
-    begin
-      mapsection := Floor[sfloor].Monster[selected].map_section;
-      if extractfilename(mapfilenam) = 'map_boss03c.rel' then
-        MidP[0].y := 0;
-      px2 := Floor[sfloor].Monster[selected].Pos_X / Zoom;
-      py2 := Floor[sfloor].Monster[selected].Pos_Y / Zoom;
-      px := cos(-rev[mapsection] / 10430.37835) * px2 -
-        sin(-rev[mapsection] / 10430.37835) * py2;
-      py := sin(-rev[mapsection] / 10430.37835) * px2 +
-        cos(-rev[mapsection] / 10430.37835) * py2;
-      px2 := mpx / Zoom;
-      px := px + mmx + MidP[mapsection].x + px2;
-      px2 := mpy / Zoom;
-      py := py + mmy + MidP[mapsection].y + px2;
-    end;
-    if sType = 2 then
-    begin
-      mapsection := Floor[sfloor].Obj[selected].map_section;
-      if extractfilename(mapfilenam) = 'map_boss03c.rel' then
-        MidP[0].y := 0;
-      px2 := Floor[sfloor].Obj[selected].Pos_X / Zoom;
-      py2 := Floor[sfloor].Obj[selected].Pos_Y / Zoom;
-      px := cos(-rev[mapsection] / 10430.37835) * px2 -
-        sin(-rev[mapsection] / 10430.37835) * py2;
-      py := sin(-rev[mapsection] / 10430.37835) * px2 +
-        cos(-rev[mapsection] / 10430.37835) * py2;
-      px2 := mpx / Zoom;
-      px := px + mmx + MidP[mapsection].x + px2;
-      px2 := mpy / Zoom;
-      py := py + mmy + MidP[mapsection].y + px2;
-    end;
-
-    diffX := targetX - px;
-    diffY := targetY - py;
-    rad := ArcTan2(diffY, diffX);
-
-    mouseAngle := Round(rad * 10430.37835);
-    mouseAngle := mouseAngle - 16384;
-
-    angle := -mouseAngle - rev[mapSection];
-
-    angle := angle mod 65536;
-    if angle < 0 then
-      angle := angle + 65536;
-
-    if sType = 1 then
-    begin
-      Floor[sfloor].Monster[selected].Direction := angle;
-      if have3d then
-        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2)
-    end
-    else if sType = 2 then
-    begin
-      Floor[sfloor].Obj[selected].unknow6 := angle;
-      if have3d then
-      begin
-         myobj[selected].Free;
-         Generateobj(Floor[sfloor].obj[selected],selected);
-      end;
-    end;
-
-    placelookat := false;
-    HideIndicator;
-    form1.DrawMap;
-    form1.LoadFloorGrids;
 end;
 
 Procedure ShowGrids;
@@ -7468,7 +7475,7 @@ begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
           begin
-            LookAt2D(px, py);
+            LookAt2D(selected, sType, px, py);
             exit;
           end;
         end;
@@ -7536,7 +7543,7 @@ begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
           begin
-            LookAt2D(px, py);
+            LookAt2D(selected, sType, px, py);
             exit;
           end;
         end;
@@ -7578,7 +7585,7 @@ begin
         end;
       end;
       if placelookat then
-        LookAt2D(mpcx, mpcy);
+        LookAt2D(selected, sType, mpcx, mpcy);
   end;
 
   ctrldw := false;
@@ -10421,7 +10428,7 @@ begin
             if Floor[sFloor].Obj[j].unknow13 = 1 then
               Floor[sfloor].Monster[MoveSel].Pos_Z := Floor[sFloor].Obj[j].Pos_Z;
             if Floor[sFloor].Obj[j].Action = 1 then
-              LookAt2D(SectionToMouseX(j,2), SectionToMouseY(j,2));
+              LookAt2D(selected, sType, SectionToMouseX(j,2), SectionToMouseY(j,2));
 
             // Save the parent ID
             Floor[sfloor].Monster[MoveSel].unknow4 := Floor[sfloor].Obj[j].id;
@@ -10430,8 +10437,8 @@ begin
             worldOffsetX := Floor[sfloor].Monster[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X;
             worldOffsetY := Floor[sfloor].Monster[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y;
 
-            // Transform to parent's local space (inverse rotation)
-            parentRot := -Floor[sfloor].Obj[j].unknow6 / 10430.37835;
+            // Transform to parent's local space
+            parentRot := Floor[sfloor].Obj[j].unknow6 / 10430.37835;
             localOffsetX := cos(parentRot) * worldOffsetX - sin(parentRot) * worldOffsetY;
             localOffsetY := sin(parentRot) * worldOffsetX + cos(parentRot) * worldOffsetY;
 
@@ -10619,7 +10626,7 @@ begin
             if Floor[sFloor].Obj[j].unknow13 = 1 then
               Floor[sfloor].Obj[MoveSel].Pos_Z := Floor[sFloor].Obj[j].Pos_Z;
             if Floor[sFloor].Obj[j].Action = 1 then
-              LookAt2D(SectionToMouseX(j,2), SectionToMouseY(j,2));
+              LookAt2D(selected, sType, SectionToMouseX(j,2), SectionToMouseY(j,2));
 
             // Save the parent ID
             Floor[sfloor].Obj[MoveSel].id := Floor[sfloor].Obj[j].id;
@@ -10628,8 +10635,8 @@ begin
             worldOffsetX := Floor[sfloor].Obj[MoveSel].Pos_X - Floor[sfloor].Obj[j].Pos_X;
             worldOffsetY := Floor[sfloor].Obj[MoveSel].Pos_Y - Floor[sfloor].Obj[j].Pos_Y;
 
-            // Transform to parent's local space (inverse rotation)
-            parentRot := -Floor[sfloor].Obj[j].unknow6 / 10430.37835;
+            // Transform to parent's local space
+            parentRot := Floor[sfloor].Obj[j].unknow6 / 10430.37835;
             localOffsetX := cos(parentRot) * worldOffsetX - sin(parentRot) * worldOffsetY;
             localOffsetY := sin(parentRot) * worldOffsetX + cos(parentRot) * worldOffsetY;
 
@@ -10755,7 +10762,7 @@ begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
           begin
-            LookAt2D(px, py);
+            LookAt2D(selected, sType, px, py);
             exit;
           end;
         end;
@@ -10811,7 +10818,7 @@ begin
           if (mpcx >= round(px) - round(6 / Zoom)) and (mpcx <= round(px) + round(6 / Zoom)) and
           (mpcy >= round(py) - round(6 / Zoom)) and (mpcy <= round(py) + round(6 / Zoom)) then
           begin
-            LookAt2D(px, py);
+            LookAt2D(selected, sType, px, py);
             exit;
           end;
         end;
@@ -10841,7 +10848,7 @@ begin
       end;
       if placelookat then
       begin
-        LookAt2D(mpcx, mpcy);
+        LookAt2D(selected, sType, mpcx, mpcy);
         exit;
       end;
       if not smDrag.Checked then
