@@ -9689,6 +9689,17 @@ begin
 
     if stype = 2 then
     begin // object
+      // Clear parent IDs
+      if Floor[sFloor].Obj[selected].Skin = 10000 then
+      begin
+        for x := 0 to Floor[sfloor].MonsterCount - 1 do
+          if Floor[sFloor].Monster[x].unknow4 = Floor[sFloor].Obj[selected].id then
+            Floor[sFloor].Monster[x].unknow4 := 0;
+        for x := 0 to Floor[sfloor].ObjCount - 1 do
+          if Floor[sFloor].Obj[x].id = Floor[sFloor].Obj[selected].id then
+            Floor[sFloor].Obj[x].id := 0;
+      end;
+
       for x := Selected to Floor[sfloor].ObjCount - 2 do
       begin
         p1 := @Floor[sfloor].Obj[x];
@@ -9701,17 +9712,6 @@ begin
       end;
       dec(Floor[sfloor].ObjCount);
       // form1.listbox2.Items.Delete(selected);
-
-      // Clear parent IDs
-      if Floor[sFloor].Obj[selected].Skin = 10000 then
-      begin
-        for x := 0 to Floor[sfloor].MonsterCount - 1 do
-          if Floor[sFloor].Monster[x].unknow4 = Floor[sFloor].Obj[selected].id then
-            Floor[sFloor].Monster[x].unknow4 := 0;
-        for x := 0 to Floor[sfloor].ObjCount - 1 do
-          if Floor[sFloor].Obj[x].id = Floor[sFloor].Obj[selected].id then
-            Floor[sFloor].Obj[x].id := 0;
-      end;
     end;
     ctrldw := true;
     //
