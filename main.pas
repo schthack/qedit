@@ -10604,6 +10604,7 @@ begin
         begin
           px3 := px;
           py3 := py;
+          polyidx := j;
           if TrySnapToPolygon(
             px3,
             py3,
@@ -10648,8 +10649,8 @@ begin
           end;
         end;
       end;
-      if (polyidx <> -1) and (polyidx <> MoveSel) and not objsnap and (Floor[sfloor].Obj[MoveSel].unknow4 = Floor[sfloor].Obj[polyidx].id)
-      then Floor[sfloor].Obj[MoveSel].unknow4 := 0;
+      if (polyidx <> -1) and (polyidx <> MoveSel) and not objsnap and (Floor[sfloor].Obj[MoveSel].id = Floor[sfloor].Obj[polyidx].id)
+      then Floor[sfloor].Obj[MoveSel].id := 0;
 
       // Placement modifiers - overwrite values if keys are pressed
       if (Selected > -1) and (fdown) then // F key
