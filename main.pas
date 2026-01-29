@@ -1001,7 +1001,7 @@ var
   worldOffsetX, worldOffsetY: double;
 begin
   parentScale := polygon.unknow8 * 20.0;
-  parentRot := -polygon.unknow6 / 10430.37835;
+  parentRot := polygon.unknow6 / 10430.37835;
 
   // Update all monsters that are children
   for i := 0 to Floor[sfloor].MonsterCount - 1 do
