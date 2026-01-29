@@ -1035,7 +1035,7 @@ begin
   // Update all objects that are children
   for i := 0 to Floor[sfloor].ObjCount - 1 do
   begin
-    if Floor[sfloor].Obj[i].id = polygon.id then
+    if (Floor[sfloor].Obj[i].id = polygon.id) and (i <> selected) then
     begin
       Floor[sfloor].Obj[i].map_section := polygon.map_section;
 
@@ -4667,8 +4667,9 @@ end;
 
 procedure SetObjectDefaults();
 var
-  section: integer;
+  section, i, j: integer;
   pz2: double;
+  found: Boolean;
 begin
   // Set default object position based on user's setting
   if form13.focused then
@@ -4687,6 +4688,23 @@ begin
     Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_X := FPlacementOptions.nbDefaultX.Value;
     Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Y := FPlacementOptions.nbDefaultZ.Value;
     Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Z := FPlacementOptions.nbDefaultY.Value;
+  end;
+
+  // Find the next unused entity ID after 10000 if a snap object
+  if Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Skin = 10000 then
+  begin
+    for i := 10001 to 65535 do
+    begin
+      found := false;
+      for j := 0 to Floor[sFloor].MonsterCount - 1 do
+        if Floor[sFloor].Monster[j].unknow4 = i then
+          found := true;
+      for j := 0 to Floor[sFloor].ObjCount - 1 do
+        if Floor[sFloor].Obj[j].id = i then
+          found := true;
+      if not found then break;
+    end;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].id := i;
   end;
 end;
 
@@ -10375,7 +10393,7 @@ begin
       for j := 0 to Floor[sfloor].ObjCount - 1 do
       begin
         // Check if this object is a snap polygon
-        if (Floor[sfloor].Obj[j].Skin = 10000) and (j <> MoveSel) then
+        if Floor[sfloor].Obj[j].Skin = 10000 then
         begin
           px3 := px;
           py3 := py;
@@ -10621,8 +10639,8 @@ begin
           end;
         end;
       end;
-      if (polyidx <> -1) and not objsnap and (Floor[sfloor].Obj[MoveSel].unknow4 = Floor[sfloor].Obj[polyidx].id) then
-        Floor[sfloor].Obj[MoveSel].unknow4 := 0;
+      if (polyidx <> -1) and (polyidx <> MoveSel) and not objsnap and (Floor[sfloor].Obj[MoveSel].unknow4 = Floor[sfloor].Obj[polyidx].id)
+      then Floor[sfloor].Obj[MoveSel].unknow4 := 0;
 
       // Placement modifiers - overwrite values if keys are pressed
       if (Selected > -1) and (fdown) then // F key
