@@ -5523,7 +5523,6 @@ procedure TForm1.ClientDataSet1ChildCountSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].unknow2 := strtoint(Text) * $10000;
     Listbox1Click(nil);
   end;
@@ -5534,7 +5533,6 @@ procedure TForm1.ClientDataSet1Param1SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow8 := strtoint(Text);
     Listbox1Click(nil);
   end;
@@ -5545,7 +5543,6 @@ procedure TForm1.ClientDataSet1Param2SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Movement_data := strtofloat(Text);
     Listbox1Click(nil);
   end;
@@ -5556,7 +5553,6 @@ procedure TForm1.ClientDataSet1Param3SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow10 := strtofloat(Text);
     Listbox1Click(nil);
   end;
@@ -5567,7 +5563,6 @@ procedure TForm1.ClientDataSet1Param4SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow11 := strtofloat(Text);
     Listbox1Click(nil);
   end;
@@ -5578,7 +5573,6 @@ procedure TForm1.ClientDataSet1Param5SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Char_id := strtofloat(Text);
     Listbox1Click(nil);
   end;
@@ -5589,7 +5583,6 @@ procedure TForm1.ClientDataSet1Param6SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Action := strtofloat(Text);
     Listbox1Click(nil);
   end;
@@ -5600,7 +5593,6 @@ procedure TForm1.ClientDataSet1Param7SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Movement_flag := strtoint(Text);
     Listbox1Click(nil);
   end;
@@ -5611,7 +5603,6 @@ procedure TForm1.ClientDataSet1PositionXSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Pos_X := strtofloat(Text);
     Listbox1Click(nil);
   end;
@@ -5622,7 +5613,6 @@ procedure TForm1.ClientDataSet1PositionYSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Pos_Z := strtofloat(Text);
     Listbox1Click(nil);
   end;
@@ -5633,7 +5623,6 @@ procedure TForm1.ClientDataSet1PositionZSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Pos_Y := strtofloat(Text);
     Listbox1Click(nil);
   end;
@@ -5654,7 +5643,6 @@ procedure TForm1.ClientDataSet1RotationYSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Direction := strtoint(Text);
     Listbox1Click(nil);
   end;
@@ -5665,7 +5653,6 @@ procedure TForm1.ClientDataSet1SectionSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].map_section := strtoint(Text);
     Listbox1Click(nil);
   end;
@@ -5675,7 +5662,6 @@ procedure TForm1.ClientDataSet1SkinSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Skin := strtoint(Text);
     Listbox1Click(nil);
   end;
@@ -5685,7 +5671,6 @@ procedure TForm1.ClientDataSet1WaveSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow5 := strtoint(Text);
     Listbox1Click(nil);
   end;
@@ -5713,7 +5698,6 @@ procedure TForm1.ClientDataSet2GroupSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].grp := strtoint(Text);
     Listbox2Click(nil);
   end;
@@ -5724,7 +5708,6 @@ procedure TForm1.ClientDataSet2Param1SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].unknow8 := strtofloat(Text);
     Listbox2Click(nil);
   end;
@@ -5735,7 +5718,6 @@ procedure TForm1.ClientDataSet2Param2SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].unknow9 := strtofloat(Text);
     Listbox2Click(nil);
   end;
@@ -5746,7 +5728,6 @@ procedure TForm1.ClientDataSet2Param3SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow10 := strtofloat(Text);
     Listbox2Click(nil);
   end;
@@ -5757,7 +5738,6 @@ procedure TForm1.ClientDataSet2Param4SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].obj_id := strtoint(Text);
     Listbox2Click(nil);
   end;
@@ -5768,7 +5748,6 @@ procedure TForm1.ClientDataSet2Param5SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Action := strtoint(Text);
     Listbox2Click(nil);
   end;
@@ -5779,7 +5758,6 @@ procedure TForm1.ClientDataSet2Param6SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].unknow13 := strtoint(Text);
     Listbox2Click(nil);
   end;
@@ -5789,7 +5767,6 @@ procedure TForm1.ClientDataSet2PosXSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Pos_X := strtofloat(Text);
     Listbox2Click(nil);
   end;
@@ -5799,7 +5776,6 @@ procedure TForm1.ClientDataSet2PosYSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Pos_Z := strtofloat(Text);
     Listbox2Click(nil);
   end;
@@ -5809,7 +5785,6 @@ procedure TForm1.ClientDataSet2PosZSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Pos_Y := strtofloat(Text);
     Listbox2Click(nil);
   end;
@@ -5829,7 +5804,6 @@ procedure TForm1.ClientDataSet2RotXSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow5 := strtoint(Text);
     Listbox2Click(nil);
   end;
@@ -5849,7 +5823,6 @@ procedure TForm1.ClientDataSet2RotYSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow6 := strtoint(Text);
     Listbox2Click(nil);
   end;
@@ -5869,7 +5842,6 @@ procedure TForm1.ClientDataSet2RotZSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow7 := strtoint(Text);
     Listbox2Click(nil);
   end;
@@ -5880,7 +5852,6 @@ procedure TForm1.ClientDataSet2SectionSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].map_section := strtoint(Text);
     Listbox2Click(nil);
   end;
@@ -5890,7 +5861,6 @@ procedure TForm1.ClientDataSet2SkinSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
-    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Skin := strtoint(Text);
     Listbox2Click(nil);
   end;
