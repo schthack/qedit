@@ -2109,19 +2109,19 @@ object Form1: TForm1
       Alignment = taLeftJustify
       FieldName = 'Pos X'
       OnSetText = ClientDataSet1PositionXSetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet1PositionY: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Y'
       OnSetText = ClientDataSet1PositionYSetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet1PositionZ: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Z'
       OnSetText = ClientDataSet1PositionZSetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet1RotationY: TIntegerField
       Alignment = taLeftJustify
@@ -2209,19 +2209,19 @@ object Form1: TForm1
       Alignment = taLeftJustify
       FieldName = 'Pos X'
       OnSetText = ClientDataSet2PosXSetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet2PosY: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Y'
       OnSetText = ClientDataSet2PosYSetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet2PosZ: TSingleField
       Alignment = taLeftJustify
       FieldName = 'Pos Z'
       OnSetText = ClientDataSet2PosZSetText
-      DisplayFormat = '0.0000'
+      DisplayFormat = '0.####'
     end
     object ClientDataSet2RotX: TIntegerField
       Alignment = taLeftJustify
