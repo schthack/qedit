@@ -997,6 +997,12 @@ var
   px, py, px2, py2, rad, diffX, diffY: double;
   angle, mapsection, mouseAngle: integer;
 begin
+    if placelookat then
+    begin
+      form1.SetUndow;
+      isedited := true;
+    end;
+
     if eType = 1 then
     begin
       mapsection := Floor[sfloor].Monster[idx].map_section;
@@ -1059,9 +1065,12 @@ begin
       end;
     end;
 
-    placelookat := false;
-    HideIndicator;
-    form1.DrawMap;
+    if placelookat then
+    begin
+      placelookat := false;
+      HideIndicator;
+      form1.DrawMap;
+    end;
     form1.LoadFloorGrids;
 end;
 
@@ -5424,8 +5433,11 @@ begin
       else previewpaused := true;
     end;
     HideIndicator();
-    Copylastmonster1.Enabled := false;
-    Copylastitem1.Enabled := false;
+    if not indelete and not inundo then
+    begin
+      Copylastmonster1.Enabled := false;
+      Copylastitem1.Enabled := false;
+    end;
     ListBox1.Clear;
     ListBox2.Clear;
     Selected := -1;
@@ -5523,7 +5535,11 @@ procedure TForm1.ClientDataSet1ChildCountSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].unknow2 := strtoint(Text) * $10000;
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5533,7 +5549,11 @@ procedure TForm1.ClientDataSet1Param1SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow8 := strtoint(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5543,7 +5563,11 @@ procedure TForm1.ClientDataSet1Param2SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Movement_data := strtofloat(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5553,7 +5577,11 @@ procedure TForm1.ClientDataSet1Param3SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow10 := strtofloat(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5563,7 +5591,11 @@ procedure TForm1.ClientDataSet1Param4SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow11 := strtofloat(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5573,7 +5605,11 @@ procedure TForm1.ClientDataSet1Param5SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Char_id := strtofloat(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5583,7 +5619,11 @@ procedure TForm1.ClientDataSet1Param6SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Action := strtofloat(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5593,7 +5633,11 @@ procedure TForm1.ClientDataSet1Param7SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Movement_flag := strtoint(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5603,7 +5647,11 @@ procedure TForm1.ClientDataSet1PositionXSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Pos_X := strtofloat(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5613,7 +5661,11 @@ procedure TForm1.ClientDataSet1PositionYSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Pos_Z := strtofloat(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5623,7 +5675,11 @@ procedure TForm1.ClientDataSet1PositionZSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Pos_Y := strtofloat(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5643,7 +5699,11 @@ procedure TForm1.ClientDataSet1RotationYSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Direction := strtoint(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5653,7 +5713,11 @@ procedure TForm1.ClientDataSet1SectionSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].map_section := strtoint(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5662,7 +5726,11 @@ procedure TForm1.ClientDataSet1SkinSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Skin := strtoint(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5671,7 +5739,11 @@ procedure TForm1.ClientDataSet1WaveSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Monster[ClientDataSet1.FieldByName('#').AsInteger].Unknow5 := strtoint(Text);
+    if have3d then
+        GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
     Listbox1Click(nil);
   end;
 end;
@@ -5698,7 +5770,14 @@ procedure TForm1.ClientDataSet2GroupSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].grp := strtoint(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5708,7 +5787,14 @@ procedure TForm1.ClientDataSet2Param1SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].unknow8 := strtofloat(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5718,7 +5804,14 @@ procedure TForm1.ClientDataSet2Param2SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].unknow9 := strtofloat(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5728,7 +5821,14 @@ procedure TForm1.ClientDataSet2Param3SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow10 := strtofloat(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5738,7 +5838,14 @@ procedure TForm1.ClientDataSet2Param4SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].obj_id := strtoint(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5748,7 +5855,14 @@ procedure TForm1.ClientDataSet2Param5SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Action := strtoint(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5758,7 +5872,14 @@ procedure TForm1.ClientDataSet2Param6SetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].unknow13 := strtoint(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5767,7 +5888,14 @@ procedure TForm1.ClientDataSet2PosXSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Pos_X := strtofloat(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5776,7 +5904,14 @@ procedure TForm1.ClientDataSet2PosYSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Pos_Z := strtofloat(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5785,7 +5920,14 @@ procedure TForm1.ClientDataSet2PosZSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Pos_Y := strtofloat(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5804,7 +5946,14 @@ procedure TForm1.ClientDataSet2RotXSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow5 := strtoint(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5823,7 +5972,14 @@ procedure TForm1.ClientDataSet2RotYSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow6 := strtoint(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5842,7 +5998,14 @@ procedure TForm1.ClientDataSet2RotZSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Unknow7 := strtoint(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5852,7 +6015,14 @@ procedure TForm1.ClientDataSet2SectionSetText(Sender: TField;
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].map_section := strtoint(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -5861,7 +6031,14 @@ procedure TForm1.ClientDataSet2SkinSetText(Sender: TField; const Text: string);
 begin
   if not Sender.IsNull and (Text <> '') and editgrid and (selected > -1) then
   begin
+    isedited := true;
+    SetUndow;
     Floor[sFloor].Obj[ClientDataSet2.FieldByName('#').AsInteger].Skin := strtoint(Text);
+    if have3d then
+    begin
+       myobj[selected].Free;
+       Generateobj(Floor[sfloor].obj[selected],selected);
+    end;
     Listbox2Click(nil);
   end;
 end;
@@ -11198,8 +11375,9 @@ end;
 
 procedure TForm1.Button11Click(Sender: TObject);
 var
-  x: integer;
+  x, s: integer;
 begin
+  s := selected;
   if undocount = 0 then
     exit;
   dec(undocount);
@@ -11214,6 +11392,44 @@ begin
   inundo := true;
   Form1.CheckListBox1Click(Form1);
   inundo := false;
+  if s > -1 then
+  begin
+    if sType = 1 then
+    begin
+      if s < Form1.ListBox1.count then
+      begin
+        Selected := s;
+        gridtype := 1;
+        Form1.ListBox1.ItemIndex := s;
+        Button2.Enabled := true;
+        Button1.Enabled := true;
+        Button3.Enabled := true;
+        smEdit.Enabled := true;
+        smDelete.Enabled := true;
+        smMove.Enabled := true;
+        transform1.Enabled := true;
+      end;
+    end;
+    if sType = 2 then
+    begin
+      if s < Form1.ListBox2.count then
+      begin
+        Selected := s;
+        gridtype := 2;
+        Form1.ListBox2.ItemIndex := s;
+        Button2.Enabled := true;
+        Button1.Enabled := true;
+        Button3.Enabled := true;
+        smEdit.Enabled := true;
+        smDelete.Enabled := true;
+        smMove.Enabled := true;
+        transform1.Enabled := true;
+      end;
+    end;
+    LoadFloorGrids;
+    DrawMap;
+  end;
+
   ctrldw := false;
 end;
 
