@@ -459,6 +459,9 @@ type
     procedure DrawMap;
     procedure LoadFloorGrids;
     procedure UpdateSnapPolygonChildren(polygon: TObj);
+    function SectionToMouseX(idx: integer; etype: integer): double;
+    function SectionToMouseY(idx: integer; etype: integer): double;
+    procedure LookAt2D(idx: integer; eType: integer; targetX: double; targetY: double);
     function GetDBGridScrollPos(Grid: TDBGrid): TGridScrollPos;
     procedure SetDBGridScrollPos(Grid: TDBGrid; const Pos: TGridScrollPos);
     procedure Button6Click(Sender: TObject);
@@ -906,7 +909,7 @@ uses FTitle, FInfo, Unit1, FScrypt, TCom, FSetting, FEdit, Unit8, Unit9,
 
 {$R *.dfm}
 
-function SectionToMouseX(idx: integer; etype: integer): double;
+function TForm1.SectionToMouseX(idx: integer; etype: integer): double;
 var
   px, py, px2, py2: double;
 begin
@@ -949,7 +952,7 @@ begin
   result := px;
 end;
 
-function SectionToMouseY(idx: integer; etype: integer): double;
+function TForm1.SectionToMouseY(idx: integer; etype: integer): double;
 var
   px, py, px2, py2: double;
 begin
@@ -992,7 +995,7 @@ begin
   result := py;
 end;
 
-Procedure LookAt2D(idx: integer; eType: integer; targetX: double; targetY: double);
+Procedure TForm1.LookAt2D(idx: integer; eType: integer; targetX: double; targetY: double);
 var
   px, py, px2, py2, rad, diffX, diffY: double;
   angle, mapsection, mouseAngle: integer;
@@ -3373,7 +3376,7 @@ end;
 
 procedure TForm1.LookAt1Click(Sender: TObject);
 begin
-  if (Screen.ActiveForm = form1) and (selected > -1) then
+  if selected > -1 then
   begin
     placelookat := true;
     lblStatus.Caption := GetLanguageString(528);
@@ -6153,7 +6156,8 @@ begin
     end;
     if (sender <> DBGrid1) and showgrid then
     begin
-      LoadFloorGrids;
+      if not ClientDataSet1.ControlsDisabled then
+        LoadFloorGrids;
       PageControl1.ActivePage := TabSheet1;
     end;
     DBGrid1.Options := DBGrid1.Options + [dgIndicator];
@@ -6266,7 +6270,8 @@ begin
     end;
     if (sender <> DBGrid2) and showgrid then
     begin
-      LoadFloorGrids;
+      if not ClientDataSet2.ControlsDisabled then
+        LoadFloorGrids;
       PageControl1.ActivePage := TabSheet2;
     end;
     DBGrid1.Options := DBGrid1.Options - [dgIndicator];

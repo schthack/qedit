@@ -992,6 +992,11 @@ begin
                 and (rayOrigin.y >= mymonst[i].Positiony+mymonst[i].SizeDownY)
                 and (rayOrigin.y <= mymonst[i].Positiony+mymonst[i].SizeUpY)
                 and (rayOrigin.z >= mymonst[i].PositionZ+d2) and (rayOrigin.z<=mymonst[i].PositionZ+u2) then begin
+                    if placelookat then
+                    begin
+                      form1.LookAt2D(selected, sType, form1.SectionToMouseX(i,1), form1.SectionToMouseY(i,1));
+                      exit;
+                    end;
                     selected:=i;
                     if undocount > 0 then
                       form1.SetUndow;
@@ -1003,6 +1008,7 @@ begin
                     form1.ListBox1.ItemIndex:=i;
                     form1.DBGrid1.Options := form1.DBGrid1.Options - [dgIndicator];
                     form1.DBGrid2.Options := form1.DBGrid2.Options - [dgIndicator];
+                    form1.PageControl1.ActivePage := form1.TabSheet1;
                     form1.LoadFloorGrids;
                     form1.drawmap;
                     if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
@@ -1021,6 +1027,11 @@ begin
                 and (rayOrigin.y >= MyObj[i].Positiony+MyObj[i].SizeDownY)
                 and (rayOrigin.y <= MyObj[i].Positiony+MyObj[i].SizeUpY)
                 and (rayOrigin.z >= MyObj[i].PositionZ+MyObj[i].SizeDownZ) and (rayOrigin.z<=MyObj[i].PositionZ+MyObj[i].SizeUpZ) then begin
+                    if placelookat then
+                    begin
+                      form1.LookAt2D(selected, sType, form1.SectionToMouseX(i,2), form1.SectionToMouseY(i,2));
+                      exit;
+                    end;
                     selected:=i;
                     if undocount > 0 then
                       form1.SetUndow;
@@ -1032,6 +1043,7 @@ begin
                     form1.ListBox2.ItemIndex:=i;
                     form1.DBGrid1.Options := form1.DBGrid1.Options - [dgIndicator];
                     form1.DBGrid2.Options := form1.DBGrid2.Options - [dgIndicator];
+                    form1.PageControl1.ActivePage := form1.TabSheet2;
                     form1.LoadFloorGrids;
                     form1.drawmap;
                     if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
