@@ -55,6 +55,11 @@ const
   quest_sufix: array [0 .. 4] of ansistring = ('_j', '_e', '_g', '_f', '_s');
 
 type
+  TSnapPoint = record
+    X, Y: double;
+  end;
+  TSnapPoints = array of TSnapPoint;
+
   TPolygonVertices = array of TPointF;
 
   TPolygonEdge = record
@@ -1164,6 +1169,45 @@ begin
   end;
 end;
 
+function GetEdgeSnapPoints(edge: TPolygonEdge; snapMode: integer): TSnapPoints;
+var
+  i, numPoints: integer;
+  t: double;
+  dx, dy: double;
+begin
+  dx := edge.X2 - edge.X1;
+  dy := edge.Y2 - edge.Y1;
+
+  case snapMode of
+    -1: // Snap anywhere
+    begin
+      SetLength(Result, 0);
+    end;
+
+    0: // Snap only to corners
+    begin
+      SetLength(Result, 2);
+      Result[0].X := edge.X1;
+      Result[0].Y := edge.Y1;
+      Result[1].X := edge.X2;
+      Result[1].Y := edge.Y2;
+    end;
+
+    else // Snap to corners + n-points per edge
+    begin
+      numPoints := snapMode + 2;
+      SetLength(Result, numPoints);
+
+      for i := 0 to numPoints - 1 do
+      begin
+        t := i / (numPoints - 1);
+        Result[i].X := edge.X1 + t * dx;
+        Result[i].Y := edge.Y1 + t * dy;
+      end;
+    end;
+  end;
+end;
+
 function GeneratePolygonVertices(rotation: integer; scale: double; sides: integer): TPolygonVertices;
 var
   i: integer;
@@ -1283,14 +1327,57 @@ begin
   end;
 end;
 
+procedure DrawPolygonSnapPoints(Canvas: TCanvas; obj: TObj; centerX: double; centerY: double);
+var
+  edges: TPolygonEdges;
+  snapPoints: TSnapPoints;
+  i, j: integer;
+  screenX, screenY: integer;
+  snapMode: integer;
+  OldPenColor: TColor;
+begin
+  snapMode := obj.unknow14;
+
+  if snapMode = -1 then
+    Exit;
+
+  OldPenColor := Canvas.pen.Color;
+
+  edges := GetPolygonEdgesWorldSpace(obj, false);
+
+  Canvas.Pen.Color := clRed;
+
+  for i := 0 to High(edges) do
+  begin
+    snapPoints := GetEdgeSnapPoints(edges[i], snapMode);
+
+    for j := 0 to High(snapPoints) do
+    begin
+      // Transform to screen space
+      screenX := Round(centerX + ((snapPoints[j].X - obj.Pos_X) / Zoom));
+      screenY := Round(centerY + ((snapPoints[j].Y - obj.Pos_Y) / Zoom));
+
+      // Draw each point as a cross shape
+      Canvas.MoveTo(screenX - 3, screenY);
+      Canvas.LineTo(screenX + 4, screenY);
+      Canvas.MoveTo(screenX, screenY - 3);
+      Canvas.LineTo(screenX, screenY + 4);
+    end;
+  end;
+
+  Canvas.Pen.Color := OldPenColor;
+end;
+
 function TrySnapToPolygon(var targetX, targetY: double; polyObj: TObj;
                           snapThreshold: double; targetMapSection: integer): boolean;
 var
   edges: TPolygonEdges;
-  i: integer;
+  snapPoints: TSnapPoints;
+  i, j: integer;
   minDist, dist, t, dx, dy: double;
   closestEdgeIdx: integer;
   snapX, snapY: double;
+  snapMode: integer;
 begin
   Result := False;
 
@@ -1299,47 +1386,76 @@ begin
     Exit;
 
   edges := GetPolygonEdgesWorldSpace(polyObj, true);
+  snapMode := polyObj.unknow14;
   minDist := Double.MaxValue;
   closestEdgeIdx := -1;
 
-  // Find closest edge
-  for i := 0 to High(edges) do
+  // -1: Edge-only snapping
+  if snapMode = -1 then
   begin
-    dx := edges[i].X2 - edges[i].X1;
-    dy := edges[i].Y2 - edges[i].Y1;
-
-    if (dx = 0) and (dy = 0) then
-      Continue;
-
-    t := ((targetX - edges[i].X1) * dx + (targetY - edges[i].Y1) * dy) / (dx * dx + dy * dy);
-
-    if t < 0 then t := 0
-    else if t > 1 then t := 1;
-
-    snapX := edges[i].X1 + t * dx;
-    snapY := edges[i].Y1 + t * dy;
-
-    dist := sqrt(sqr(targetX - snapX) + sqr(targetY - snapY));
-
-    if dist < minDist then
+    for i := 0 to High(edges) do
     begin
-      minDist := dist;
-      closestEdgeIdx := i;
+      dx := edges[i].X2 - edges[i].X1;
+      dy := edges[i].Y2 - edges[i].Y1;
+
+      if (dx = 0) and (dy = 0) then
+        Continue;
+
+      t := ((targetX - edges[i].X1) * dx + (targetY - edges[i].Y1) * dy) / (dx * dx + dy * dy);
+
+      if t < 0 then t := 0
+      else if t > 1 then t := 1;
+
+      snapX := edges[i].X1 + t * dx;
+      snapY := edges[i].Y1 + t * dy;
+
+      dist := sqrt(sqr(targetX - snapX) + sqr(targetY - snapY));
+
+      if dist < minDist then
+      begin
+        minDist := dist;
+        closestEdgeIdx := i;
+      end;
     end;
-  end;
 
-  // If within snap threshold, apply the snap
-  if (closestEdgeIdx >= 0) and (minDist <= snapThreshold) then
+    if (closestEdgeIdx >= 0) and (minDist <= snapThreshold) then
+    begin
+      dx := edges[closestEdgeIdx].X2 - edges[closestEdgeIdx].X1;
+      dy := edges[closestEdgeIdx].Y2 - edges[closestEdgeIdx].Y1;
+      t := ((targetX - edges[closestEdgeIdx].X1) * dx + (targetY - edges[closestEdgeIdx].Y1) * dy) / (dx * dx + dy * dy);
+      t := Max(0, Min(1, t));
+
+      targetX := edges[closestEdgeIdx].X1 + t * dx;
+      targetY := edges[closestEdgeIdx].Y1 + t * dy;
+      Result := True;
+    end;
+  end
+  else
+  // 0 or positive: Snap to points
   begin
-    dx := edges[closestEdgeIdx].X2 - edges[closestEdgeIdx].X1;
-    dy := edges[closestEdgeIdx].Y2 - edges[closestEdgeIdx].Y1;
-    t := ((targetX - edges[closestEdgeIdx].X1) * dx + (targetY - edges[closestEdgeIdx].Y1) * dy) / (dx * dx + dy * dy);
-    t := Max(0, Min(1, t));
+    for i := 0 to High(edges) do
+    begin
+      snapPoints := GetEdgeSnapPoints(edges[i], snapMode);
 
-    targetX := edges[closestEdgeIdx].X1 + t * dx;
-    targetY := edges[closestEdgeIdx].Y1 + t * dy;
+      for j := 0 to High(snapPoints) do
+      begin
+        dist := sqrt(sqr(targetX - snapPoints[j].X) + sqr(targetY - snapPoints[j].Y));
 
-    Result := True;
+        if dist < minDist then
+        begin
+          minDist := dist;
+          snapX := snapPoints[j].X;
+          snapY := snapPoints[j].Y;
+        end;
+      end;
+    end;
+
+    if minDist <= snapThreshold then
+    begin
+      targetX := snapX;
+      targetY := snapY;
+      Result := True;
+    end;
   end;
 end;
 
@@ -2884,10 +3000,10 @@ begin
     second from bottom Unknown = Laser fence size
     0 = 2x4
     1 = 2x6
-    (17:47:45) leejohnlangan:    130 
-    131 
-    150 
-    151   
+    (17:47:45) leejohnlangan:    130
+    131
+    150
+    151
     (17:48:24) leejohnlangan: 130 / 150  share the same 2 models
     (17:48:40) leejohnlangan: 150 / 151 share the 2 models for squared fences
     (17:48:53) schthack2: ok
@@ -3733,7 +3849,10 @@ begin
         then
           BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         if Floor[sfloor].Obj[x].Skin = 10000 then
-          DrawPolygon(BBRelBmp.Canvas, Floor[sFloor].Obj[x], px, py)
+        begin
+          DrawPolygon(BBRelBmp.Canvas, Floor[sFloor].Obj[x], px, py);
+          DrawPolygonSnapPoints(BBRelBmp.Canvas, Floor[sFloor].Obj[x], px, py)
+        end
         else
         begin
           BBRelBmp.Canvas.Pen.Width := outlinewidth;
