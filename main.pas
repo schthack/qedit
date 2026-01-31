@@ -464,6 +464,8 @@ type
     procedure DrawMap;
     procedure LoadFloorGrids;
     procedure UpdateSnapPolygonChildren(polygon: TObj);
+    function TrySnapToPolygon(var targetX, targetY: double; polyObj: TObj;
+                          snapThreshold: double; targetMapSection: integer): boolean;
     function SectionToMouseX(idx: integer; etype: integer): double;
     function SectionToMouseY(idx: integer; etype: integer): double;
     procedure LookAt2D(idx: integer; eType: integer; targetX: double; targetY: double);
@@ -1089,6 +1091,7 @@ var
   parentScale, parentRot: double;
   scaledOffsetX, scaledOffsetY: double;
   worldOffsetX, worldOffsetY: double;
+  px, py: double;
 begin
   parentScale := polygon.unknow8 * 20.0;
   parentRot := -polygon.unknow6 / 10430.37835;
@@ -1115,6 +1118,21 @@ begin
       // Apply to child position
       Floor[sfloor].Monster[i].Pos_X := polygon.Pos_X + worldOffsetX;
       Floor[sfloor].Monster[i].Pos_Y := polygon.Pos_Y + worldOffsetY;
+
+      // Re-snap to the closest point
+      px := Floor[sfloor].Monster[i].Pos_X;
+      py := Floor[sfloor].Monster[i].Pos_Y;
+      if TrySnapToPolygon(
+        px,
+        py,
+        polygon,
+        Double.MaxValue,
+        Floor[sfloor].Monster[i].map_section
+      ) then
+      begin
+        Floor[sfloor].Monster[i].Pos_X := px;
+        Floor[sfloor].Monster[i].Pos_Y := py;
+      end;
 
       // Update orientation
       if polygon.Action = 1 then
@@ -1151,6 +1169,21 @@ begin
       // Apply to child position
       Floor[sfloor].Obj[i].Pos_X := polygon.Pos_X + worldOffsetX;
       Floor[sfloor].Obj[i].Pos_Y := polygon.Pos_Y + worldOffsetY;
+
+      // Re-snap to the closest point
+      px := Floor[sfloor].Obj[i].Pos_X;
+      py := Floor[sfloor].Obj[i].Pos_Y;
+      if TrySnapToPolygon(
+        px,
+        py,
+        polygon,
+        Double.MaxValue,
+        Floor[sfloor].Obj[i].map_section
+      ) then
+      begin
+        Floor[sfloor].Obj[i].Pos_X := px;
+        Floor[sfloor].Obj[i].Pos_Y := py;
+      end;
 
       // Update orientation
       if polygon.Action = 1 then
@@ -1341,7 +1374,7 @@ begin
   if snapMode = -1 then
     Exit;
 
-  OldPenColor := Canvas.pen.Color;
+  OldPenColor := Canvas.Pen.Color;
 
   edges := GetPolygonEdgesWorldSpace(obj, false);
 
@@ -1368,7 +1401,7 @@ begin
   Canvas.Pen.Color := OldPenColor;
 end;
 
-function TrySnapToPolygon(var targetX, targetY: double; polyObj: TObj;
+function TForm1.TrySnapToPolygon(var targetX, targetY: double; polyObj: TObj;
                           snapThreshold: double; targetMapSection: integer): boolean;
 var
   edges: TPolygonEdges;
