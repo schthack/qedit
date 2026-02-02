@@ -82,8 +82,7 @@ object Form22: TForm22
     Left = 70
     Top = 72
     Width = 145
-    Height = 22
-    Style = csOwnerDrawFixed
+    Height = 21
     Sorted = True
     TabOrder = 2
     OnChange = ComboBox3Change

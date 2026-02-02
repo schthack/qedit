@@ -37,8 +37,7 @@ object Form23: TForm23
     Left = 14
     Top = 14
     Width = 159
-    Height = 22
-    Style = csOwnerDrawFixed
+    Height = 21
     Sorted = True
     TabOrder = 0
     OnChange = ComboBox1Change

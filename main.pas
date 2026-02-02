@@ -3568,6 +3568,12 @@ begin
   if fileexists(mapfilenam) then
     DrawBBRELFile(mapfilenam);
 
+  if (selected > -1) and (sType = 2) and (mdown = 0) and (mdrag = 0) then
+  begin
+    if (Floor[sFloor].Obj[selected].Skin = 10000) then
+      UpdateSnapPolygonChildren(Floor[sFloor].Obj[selected]);
+  end;
+
   if Floor[sfloor].d04count > 0 then
     try
       move(Floor[sfloor].d04[4], x, 4); // data pos
@@ -3689,7 +3695,6 @@ begin
             end;
             hs.free;
           end;
-
           maprect := Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom));
           if Assigned(bm) and not bm.Empty then
@@ -3773,9 +3778,7 @@ begin
         end;
         if showbmp.Checked then
         begin
-          bm := TBitmap.Create;
           name := inttohex(Floor[sFloor].Obj[x].Skin,2) + '.bmp';
-
           if not BMPCache.TryGetValue('object_' + name, bm) then
           begin
             bm := TBitmap.Create;
@@ -3800,7 +3803,7 @@ begin
             end;
             hs.free;
           end;
-          if Assigned(bm) and (sType = 2) and (selected = x) and objloaded then
+          if Assigned(bm) and (sType = 2) and (selected = x) and objloaded and (mdrag = 0) and (mdown = 0) then
             objscreen.GetBitmap(bm);
           maprect := Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom));
@@ -6347,8 +6350,6 @@ begin
     sms := Floor[sfloor].Obj[Selected].map_section;
     stype := 2;
     gridtype := 2;
-    if Floor[sFloor].Obj[selected].Skin = 10000 then
-      UpdateSnapPolygonChildren(Floor[sfloor].Obj[selected]);
     DrawMap;
     SetImage1Colors;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);

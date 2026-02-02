@@ -44,7 +44,7 @@ var
   attacktables: TStringList;
 begin
   cbIndexType.Clear;
-  attacktables := GetAttackTables(ComboBox1.Text);
+  attacktables := GetAttackTables(ComboBox1.Items[ComboBox1.Items.IndexOf(ComboBox1.Text)]);
   cbIndexType.items.Add('Physical');
   cbIndexType.items.Add('Resist');
   if attacktables.Count > 0 then
@@ -83,54 +83,58 @@ procedure TForm23.Button1Click(Sender: TObject);
 var z, idx:integer;
 begin
     // Find specific attack index
-    idx := GetAttackIndex(combobox1.Text, cbIndexType.Text);
-    if idx <> -1 then
+    ComboBox1.Text := ComboBox1.Items[ComboBox1.Items.IndexOf(ComboBox1.Text)];
+    if ComboBox1.ItemIndex > -1 then
     begin
-      myresult:=idx;
+      idx := GetAttackIndex(combobox1.Text, cbIndexType.Text);
+      if idx <> -1 then
+      begin
+        myresult:=idx;
+        modalresult:=1;
+        exit;
+      end;
+
+      for z:=0 to 60 do begin
+          if (tag = 0) and (z <= 58)
+          and (Ep1Name[z] = combobox1.Text) then break;
+          if (tag = 1)
+          and (Ep2Name[z] = combobox1.Text) then break;
+          if (tag = 2) and (z <= 35)
+          and (Ep4Name[z] = combobox1.Text) then break;
+      end;
+
+      // Load index type based on selection
+      if cbIndexType.Text = 'Resist' then
+      begin
+        if tag = 0 then
+            myresult:=Ep1ResistID[z]
+        else if tag = 1 then myresult:=Ep2ResistID[z]
+        else myresult:=Ep4ResistID[z];
+      end
+      else if cbIndexType.Text = 'Attack' then
+      begin
+        if tag = 0 then
+            myresult:=Ep1AttackID[z]
+        else if tag = 1 then myresult:=Ep2AttackID[z]
+        else myresult:=Ep4AttackID[z];
+      end
+      else if cbIndexType.Text = 'Movement' then
+      begin
+        if tag = 0 then
+            myresult:=Ep1MovementID[z]
+        else if tag = 1 then myresult:=Ep2MovementID[z]
+        else myresult:=Ep4MovementID[z];
+      end
+      else
+      begin
+        if tag = 0 then
+            myresult:=Ep1PhysID[z]
+        else if tag = 1 then myresult:=Ep2PhysID[z]
+        else myresult:=Ep4PhysID[z];
+      end;
+
       modalresult:=1;
-      exit;
     end;
-
-    for z:=0 to 60 do begin
-        if (tag = 0) and (z <= 58)
-        and (Ep1Name[z] = combobox1.Text) then break;
-        if (tag = 1)
-        and (Ep2Name[z] = combobox1.Text) then break;
-        if (tag = 2) and (z <= 35)
-        and (Ep4Name[z] = combobox1.Text) then break;
-    end;
-
-    // Load index type based on selection
-    if cbIndexType.Text = 'Resist' then
-    begin
-      if tag = 0 then
-          myresult:=Ep1ResistID[z]
-      else if tag = 1 then myresult:=Ep2ResistID[z]
-      else myresult:=Ep4ResistID[z];
-    end
-    else if cbIndexType.Text = 'Attack' then
-    begin
-      if tag = 0 then
-          myresult:=Ep1AttackID[z]
-      else if tag = 1 then myresult:=Ep2AttackID[z]
-      else myresult:=Ep4AttackID[z];
-    end
-    else if cbIndexType.Text = 'Movement' then
-    begin
-      if tag = 0 then
-          myresult:=Ep1MovementID[z]
-      else if tag = 1 then myresult:=Ep2MovementID[z]
-      else myresult:=Ep4MovementID[z];
-    end
-    else
-    begin
-      if tag = 0 then
-          myresult:=Ep1PhysID[z]
-      else if tag = 1 then myresult:=Ep2PhysID[z]
-      else myresult:=Ep4PhysID[z];
-    end;
-
-    modalresult:=1;
 end;
 
 end.
