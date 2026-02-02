@@ -3778,6 +3778,7 @@ begin
         end;
         if showbmp.Checked then
         begin
+          bm := TBitmap.Create;
           name := inttohex(Floor[sFloor].Obj[x].Skin,2) + '.bmp';
           if not BMPCache.TryGetValue('object_' + name, bm) then
           begin
@@ -3803,12 +3804,14 @@ begin
             end;
             hs.free;
           end;
-          if Assigned(bm) and (sType = 2) and (selected = x) and objloaded and (mdrag = 0) and (mdown = 0) then
+          if Assigned(bm) and (sType = 2) and (selected = x) and objloaded then
             objscreen.GetBitmap(bm);
           maprect := Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom));
           if Assigned(bm) and not bm.Empty then
             BBRelBmp.Canvas.StretchDraw(maprect, bm);
+          if Assigned(bm) and (sType = 2) and (selected = x) and objloaded then
+            bm.free;
         end;
         if (stype = 2) and (Selected = x) then
         begin
