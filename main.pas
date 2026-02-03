@@ -5681,9 +5681,7 @@ begin
     selected := strtointdef(DBGrid1.DataSource.DataSet.FieldByName('#').AsString, -1);
     listbox1.ItemIndex := selected;
     listbox2.ItemIndex := -1;
-    Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
-    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
-    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+    listbox1click(DBGrid1);
     DBGrid1.SelectedIndex := grid1col;
     DrawMap;
   end;
@@ -5917,9 +5915,7 @@ begin
     selected := strtointdef(DBGrid2.DataSource.DataSet.FieldByName('#').AsString, -1);
     listbox2.ItemIndex := selected;
     listbox1.ItemIndex := -1;
-    Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
-    DBGrid1.Options := DBGrid1.Options - [dgIndicator];
-    DBGrid2.Options := DBGrid2.Options - [dgIndicator];
+    listbox2click(DBGrid2);
     DBGrid2.SelectedIndex := grid2col;
     DrawMap;
   end;
