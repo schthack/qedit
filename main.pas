@@ -891,6 +891,7 @@ var
   prevppx, prevppy, prevppz, prevvr, prevvz: single;
 
   BMPCache: TDictionary<string, TBitmap>;
+  selectionBMP: TBitmap;
   objloaded: Boolean = false;
   unusedlabel: Boolean = false;
 
@@ -3778,7 +3779,6 @@ begin
         end;
         if showbmp.Checked then
         begin
-          bm := TBitmap.Create;
           name := inttohex(Floor[sFloor].Obj[x].Skin,2) + '.bmp';
           if not BMPCache.TryGetValue('object_' + name, bm) then
           begin
@@ -3805,13 +3805,11 @@ begin
             hs.free;
           end;
           if Assigned(bm) and (sType = 2) and (selected = x) and objloaded then
-            objscreen.GetBitmap(bm);
+            bm := selectionBMP;
           maprect := Rect(round(px) - round(6 / Zoom), round(py) - round(6 / Zoom),
           round(px) + round(6 / Zoom), round(py) + round(6 / Zoom));
           if Assigned(bm) and not bm.Empty then
             BBRelBmp.Canvas.StretchDraw(maprect, bm);
-          if Assigned(bm) and (sType = 2) and (selected = x) and objloaded then
-            bm.free;
         end;
         if (stype = 2) and (Selected = x) then
         begin
@@ -6232,7 +6230,6 @@ end;
 
 procedure TForm1.ListBox1Click(Sender: TObject);
 var
-  bm: TBitmap;
   na: ansistring;
   hs: TMemoryStream;
   x: integer;
@@ -6258,7 +6255,6 @@ begin
     DrawMap;
     SetImage1Colors;
     Image1.Canvas.FillRect(Image1.Canvas.ClipRect);
-    bm := TBitmap.Create;
 
     { if (round(floor[sfloor].Monster[selected].Movement_flag) = 0)
       or (floor[sfloor].Monster[selected].Skin<$33) then begin
@@ -6275,15 +6271,15 @@ begin
     hs := TMemoryStream.Create;
     na := GenerateMonsterName(Floor[sfloor].Monster[Selected], Selected, -1) + '.bmp';
     if fileexists(path + 'img\' + na) then
-      bm.LoadFromFile(path + 'img\' + na)
+      selectionBMP.LoadFromFile(path + 'img\' + na)
     else if PikaGetFile(hs, na, path + 'images.ppk', 'Build By Schthack') = 0 then
-      bm.LoadFromStream(hs)
+      selectionBMP.LoadFromStream(hs)
     else if PikaGetFile(hs, 'unknow.bmp', path + 'images.ppk', 'Build By Schthack') = 0 then
-      bm.LoadFromStream(hs)
+      selectionBMP.LoadFromStream(hs)
     else if fileexists(path + 'img\unknow.bmp') then
-      bm.LoadFromFile(path + 'img\unknow.bmp');
+      selectionBMP.LoadFromFile(path + 'img\unknow.bmp');
     hs.Free;
-    Image1.Canvas.Draw(2, 2, bm);
+    Image1.Canvas.Draw(2, 2, selectionBMP);
     Image1.Canvas.TextOut(52, 4, 'Skin : ' + inttostr(Floor[sfloor].Monster[Selected].Skin));
     Image1.Canvas.TextOut(130, 4, 'Map Section : ' + inttostr(Floor[sfloor].Monster[Selected].map_section));
     Image1.Canvas.TextOut(250, 4, 'Wave #' + inttostr(round(Floor[sfloor].Monster[Selected].Unknow5)));
@@ -6302,7 +6298,6 @@ begin
     Image1.Canvas.TextOut(330, 22, 'Rotation : ' + inttostr((Floor[sfloor].Monster[Selected].Direction) and
       $FFFF div 182) + '°');
 
-    bm.Free;
     if have3d and form17.chkFollow.Checked then
     begin
       ppx := midpz[Floor[sfloor].Monster[selected].map_section].x;
@@ -6330,7 +6325,6 @@ end;
 
 procedure TForm1.ListBox2Click(Sender: TObject);
 var
-  bm: TBitmap;
   t: Single;
   hs: TMemoryStream;
 begin
@@ -6390,23 +6384,23 @@ begin
       objscreen.LookAt(0, t, -(t * 1.7), 0, t / 2, 0);
       objitm.SetRotation(15, 0, 0);
       objscreen.RenderSurface;
-      objscreen.GetBitmap(bm);
+      objscreen.GetBitmap(selectionBMP);
       objloaded := true;
     end
     else
     begin
-      bm := TBitmap.Create;
+      selectionBMP := TBitmap.Create;
       hs := TMemoryStream.Create;
       if fileexists(path + 'img\i' + inttohex(Floor[sfloor].Obj[Selected].Skin, 2) + '.bmp') then
-        bm.LoadFromFile(path + 'img\i' + inttohex(Floor[sfloor].Obj[Selected].Skin, 2) + '.bmp')
+        selectionBMP.LoadFromFile(path + 'img\i' + inttohex(Floor[sfloor].Obj[Selected].Skin, 2) + '.bmp')
       else if PikaGetFile(hs, 'unknow.bmp', path + 'images.ppk', 'Build By Schthack') = 0 then
-        bm.LoadFromStream(hs)
+        selectionBMP.LoadFromStream(hs)
       else
-        bm.LoadFromFile(path + 'img\unknow.bmp');
+        selectionBMP.LoadFromFile(path + 'img\unknow.bmp');
       hs.Free;
     end;
 
-    Image1.Canvas.StretchDraw(Rect(2, 2, 45, 45), bm);
+    Image1.Canvas.StretchDraw(Rect(2, 2, 45, 45), selectionBMP);
     Image1.Canvas.TextOut(52, 4, 'Skin : ' + inttostr(Floor[sfloor].Obj[Selected].Skin));
     Image1.Canvas.TextOut(150, 4, 'Map Section : ' + inttostr(Floor[sfloor].Obj[Selected].map_section));
     Image1.Canvas.TextOut(52, 22, 'Pos X : ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_X)));
@@ -6414,7 +6408,7 @@ begin
     Image1.Canvas.TextOut(260, 22, 'Pos Z : ' + inttostr(round(Floor[sfloor].Obj[Selected].Pos_Y)));
     Image1.Canvas.TextOut(260, 4, 'Direction : ' + inttostr((Floor[sfloor].Obj[Selected].unknow6 and $FFFF)
       div 182) + '°');
-    bm.Free;
+
     if have3d and form17.chkFollow.Checked then
     begin
       ppx := midpz[Floor[sfloor].Obj[selected].map_section].x;
@@ -8038,6 +8032,7 @@ var
 begin
   If tag = 0 then
   begin
+    selectionBMP := TBitmap.Create;
     SetImage1Colors;
     clientdataset1.CreateDataSet;
     clientdataset2.CreateDataSet;
@@ -11626,7 +11621,6 @@ procedure TForm1.showbmpClick(Sender: TObject);
 var
   x: integer;
   t: single;
-  bm: TBitmap;
   Reg: TRegistry;
 begin
   showbmp.Checked := not showbmp.Checked;
@@ -11688,8 +11682,8 @@ begin
           objscreen.LookAt(0, t, -(t * 1.7), 0, t / 2, 0);
           objitm.SetRotation(15, 0, 0);
           objscreen.RenderSurface;
-          objscreen.GetBitmap(bm);
-          bm.SaveToFile(path + 'img\i' + inttohex(ObjTemplate[x].data.Skin, 2) + '.bmp');
+          objscreen.GetBitmap(selectionBMP);
+          selectionBMP.SaveToFile(path + 'img\i' + inttohex(ObjTemplate[x].data.Skin, 2) + '.bmp');
         end
       end;
     end;

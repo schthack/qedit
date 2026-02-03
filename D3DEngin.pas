@@ -7449,9 +7449,9 @@ begin
     tmp.SetSize(buf.GetBufferSize);
     p:=buf.GetBufferPointer;
     move(pansichar(p)[0],pansichar(tmp.Memory)[0],tmp.Size);
-    bm:=tbitmap.Create;
     tmp.Position:=0;
     bm.LoadFromStream(tmp);
+    tmp.Free;
 end;
 
 
