@@ -13408,6 +13408,7 @@ begin
   FClosedSuccessfully := True;
   // Free the BMP cache
   ClearBMPCache;
+  selectionBMP.Free;
 end;
 
 Function LookForLabel2(s: ansistring): integer;
