@@ -7452,6 +7452,8 @@ begin
     tmp.Position:=0;
     bm.LoadFromStream(tmp);
     tmp.Free;
+    buf._Release;
+    psurface._Release;
 end;
 
 
