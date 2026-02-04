@@ -859,6 +859,11 @@ object Form1: TForm1
         ShortCut = 16473
         OnClick = Redo1Click
       end
+      object Redo2: TMenuItem
+        Caption = 'Redo 2'
+        ShortCut = 24666
+        OnClick = Redo2Click
+      end
       object Options1: TMenuItem
         Caption = 'Placement Options'
         ShortCut = 113

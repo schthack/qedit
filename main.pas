@@ -461,6 +461,7 @@ type
     btnRedo: TButton;
     smRedo: TMenuItem;
     Redo1: TMenuItem;
+    Redo2: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -707,6 +708,7 @@ type
     procedure btnRedoClick(Sender: TObject);
     procedure smRedoClick(Sender: TObject);
     procedure Redo1Click(Sender: TObject);
+    procedure Redo2Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -4008,6 +4010,14 @@ begin
 end;
 
 procedure TForm1.Redo1Click(Sender: TObject);
+begin
+  if not fmScriptTE.TextEdit.Focused then
+    btnRedoClick(nil)
+  else if fmScriptTE.TextEdit.Focused then
+    fmScriptTE.Redo1Click(nil);
+end;
+
+procedure TForm1.Redo2Click(Sender: TObject);
 begin
   if not fmScriptTE.TextEdit.Focused then
     btnRedoClick(nil)
