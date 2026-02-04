@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 195
   Top = 115
   Caption = 'Quest Editor v2.0c Public'
-  ClientHeight = 507
+  ClientHeight = 506
   ClientWidth = 723
   Color = clBtnFace
   Constraints.MinHeight = 540
@@ -28,7 +28,7 @@ object Form1: TForm1
   OnShow = FormShow
   DesignSize = (
     723
-    507)
+    506)
   TextHeight = 13
   object Label3: TLabel
     Left = 468
@@ -77,7 +77,7 @@ object Form1: TForm1
   end
   object lblStatus: TLabel
     Left = 308
-    Top = 490
+    Top = 489
     Width = 70
     Height = 13
     Anchors = [akBottom]
@@ -93,7 +93,7 @@ object Form1: TForm1
   end
   object lblModifiers: TLabel
     Left = 384
-    Top = 490
+    Top = 489
     Width = 48
     Height = 13
     Cursor = crHandPoint
@@ -113,7 +113,7 @@ object Form1: TForm1
   end
   object lblPreview: TLabel
     Left = 236
-    Top = 490
+    Top = 489
     Width = 302
     Height = 13
     Anchors = [akBottom]
@@ -127,10 +127,11 @@ object Form1: TForm1
     Left = 0
     Top = 0
     Width = 183
-    Height = 507
+    Height = 506
     Align = alLeft
     Caption = ' Map : '
     TabOrder = 0
+    ExplicitHeight = 507
     object Label1: TLabel
       Left = 10
       Top = 20
@@ -269,16 +270,17 @@ object Form1: TForm1
     Left = 190
     Top = 244
     Width = 397
-    Height = 241
+    Height = 240
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvLowered
     ParentBackground = False
     TabOrder = 12
+    ExplicitHeight = 241
     object Image2: TPaintBox
       Left = 1
       Top = 1
       Width = 395
-      Height = 239
+      Height = 238
       Align = alClient
       PopupMenu = PopupMenu1
       OnClick = Image2Click
@@ -385,15 +387,16 @@ object Form1: TForm1
     OnClick = CheckBox1Click
   end
   object Button11: TButton
-    Left = 593
+    Left = 591
     Top = 440
-    Width = 127
-    Height = 23
+    Width = 129
+    Height = 22
     Anchors = [akRight, akBottom]
     Caption = 'Undo'
     Enabled = False
     TabOrder = 9
     OnClick = Button11Click
+    ExplicitTop = 439
   end
   object ComboBox1: TComboBox
     Left = 591
@@ -495,15 +498,16 @@ object Form1: TForm1
     end
   end
   object btnRedo: TButton
-    Left = 593
+    Left = 591
     Top = 464
-    Width = 127
-    Height = 23
+    Width = 129
+    Height = 22
     Anchors = [akRight, akBottom]
     Caption = 'Redo'
     Enabled = False
     TabOrder = 10
     OnClick = btnRedoClick
+    ExplicitTop = 463
   end
   object MainMenu1: TMainMenu
     Images = ImageList1
