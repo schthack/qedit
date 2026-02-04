@@ -2378,7 +2378,7 @@ begin
     if form1.ComboBox1.Items[idx] = inttostr(prevsection) then break;
   form1.ComboBox1.ItemIndex := idx;
   form1.DrawMap;
-  if have3d then
+  if have3d and not inundo and not indelete then
   begin
     ppx := midpz[prevsection].x;
     ppy := Form1.YFromBBRELFile(MidP[prevsection].x * zoom, MidP[prevsection].y * zoom) + 15;
@@ -4011,7 +4011,8 @@ end;
 
 procedure TForm1.Redo1Click(Sender: TObject);
 begin
-  if not fmScriptTE.TextEdit.Focused then
+  if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
+  and not fmScriptTE.Edit2.Focused and not fmScriptTE.txtNotes.Focused then
     btnRedoClick(nil)
   else if fmScriptTE.TextEdit.Focused then
     fmScriptTE.Redo1Click(nil);
@@ -4019,7 +4020,8 @@ end;
 
 procedure TForm1.Redo2Click(Sender: TObject);
 begin
-  if not fmScriptTE.TextEdit.Focused then
+  if not form4.edit1.Focused and not fmScriptTE.TextEdit.Focused
+  and not fmScriptTE.Edit2.Focused and not fmScriptTE.txtNotes.Focused then
     btnRedoClick(nil)
   else if fmScriptTE.TextEdit.Focused then
     fmScriptTE.Redo1Click(nil);
@@ -5674,7 +5676,8 @@ begin
     else
       Button12.Enabled := true;
     DrawMap;
-    if form17.chkFollow.Checked and not inundo and not indelete then
+    if form17.chkFollow.Checked and not inundo and not indelete
+    and (previewstate = 0) then
     begin
       ppx := 0;
       ppy := YFromBBRELFile(0,0) + 15;
