@@ -135,6 +135,7 @@ type
     NotesBackground1: TMenuItem;
     NotesText1: TMenuItem;
     N6: TMenuItem;
+    Redo1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -209,6 +210,8 @@ type
     procedure NotesReset1Click(Sender: TObject);
     procedure txtNotesKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormActivate(Sender: TObject);
+    procedure Redo1Click(Sender: TObject);
+    procedure PopupMenu1Popup(Sender: TObject);
 
   private
     { Private declarations }
@@ -1335,6 +1338,31 @@ begin
   TextEdit.PasteFromClipboard;
 end;
 
+procedure TfmScriptTE.PopupMenu1Popup(Sender: TObject);
+begin
+   if TextEdit.SelectedText = '' then
+   begin
+    fmScriptTE.Cut1.Enabled := false;
+    fmScriptTE.Copy1.Enabled := false;
+    fmScriptTE.Delete1.Enabled := false;
+   end
+   else
+   begin
+    fmScriptTE.Cut1.Enabled := true;
+    fmScriptTE.Copy1.Enabled := true;
+    fmScriptTE.Delete1.Enabled := true;
+   end;
+   if TextEdit.CanUndo then
+    fmScriptTE.Undo1.Enabled := true
+   else fmScriptTE.Undo1.Enabled := false;
+  if TextEdit.CanRedo then
+    fmScriptTE.Redo1.Enabled := true
+  else fmScriptTE.Redo1.Enabled := false;
+  if TextEdit.CanPaste then
+    fmScriptTE.Paste1.Enabled := true
+  else fmScriptTE.Paste1.Enabled := false;
+end;
+
 procedure TfmScriptTE.Opcodes1Click(Sender: TObject);
 begin
   SetTextColor('TEOpcodeColor');
@@ -1343,6 +1371,13 @@ end;
 procedure TfmScriptTE.Opcodes2Click(Sender: TObject);
 begin
   ShellExecute(0, 'open', 'https://qedit.info/index.php?title=OPCodes', '', '', 0);
+end;
+
+procedure TfmScriptTE.Redo1Click(Sender: TObject);
+begin
+  TextEdit.DoRedo;
+  editline := -1;
+  linechanged := false;
 end;
 
 procedure TfmScriptTE.Registers1Click(Sender: TObject);

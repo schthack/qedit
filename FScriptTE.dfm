@@ -146,6 +146,7 @@ object fmScriptTE: TfmScriptTE
     end
   end
   object PopupMenu1: TPopupMenu
+    OnPopup = PopupMenu1Popup
     Left = 344
     Top = 232
     object Addeditdata1: TMenuItem
@@ -271,6 +272,11 @@ object fmScriptTE: TfmScriptTE
       Caption = 'Undo'
       ShortCut = 16474
       OnClick = Undo1Click
+    end
+    object Redo1: TMenuItem
+      Caption = 'Redo'
+      ShortCut = 16473
+      OnClick = Redo1Click
     end
     object N1: TMenuItem
       Caption = '-'

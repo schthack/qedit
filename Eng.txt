@@ -526,3 +526,4 @@ Selection
 Edit
 Look at target or area
 [Click a target or area - Esc: cancel]
+Redo

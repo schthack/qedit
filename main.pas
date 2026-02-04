@@ -458,6 +458,9 @@ type
     N18: TMenuItem;
     LookAt1: TMenuItem;
     LookAt2: TMenuItem;
+    btnRedo: TButton;
+    smRedo: TMenuItem;
+    Redo1: TMenuItem;
     procedure Quit1Click(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure CheckListBox1Click(Sender: TObject);
@@ -701,6 +704,9 @@ type
     procedure Image1Click(Sender: TObject);
     procedure LookAt1Click(Sender: TObject);
     procedure LookAt2Click(Sender: TObject);
+    procedure btnRedoClick(Sender: TObject);
+    procedure smRedoClick(Sender: TObject);
+    procedure Redo1Click(Sender: TObject);
 
   private
     FClosedSuccessfully: Boolean;
@@ -746,7 +752,9 @@ var
   Form1: TForm1;
   Floor: array [0 .. 40] of TFloor;
   FloorUn: array [0 .. 20, 0 .. 40] of TFloor;
+  FloorRedo: array [0 .. 20, 0 .. 40] of TFloor;
   undocount: integer = 0;
+  redocount: integer = 0;
   sfloor, Selected, stype: integer;
   Zoom: double;
   path: ansistring;
@@ -1805,6 +1813,8 @@ begin
   form1.Selection1.Caption := GetLanguageString(525);
   form1.Edit2.Caption := GetLanguageString(526);
   form1.LookAt1.Caption := GetLanguageString(527);
+  form1.btnRedo.Caption := GetLanguageString(529);
+  form1.smRedo.Caption := GetLanguageString(529);
   form21.Button1.Caption := GetLanguageString(116);
   form21.Button2.Caption := GetLanguageString(117);
   form21.Button3.Caption := GetLanguageString(118);
@@ -2208,6 +2218,7 @@ begin
   fmScriptTE.Paste1.Caption := GetLanguageString(161);
   fmScriptTE.Delete1.Caption := GetLanguageString(162);
   fmScriptTE.Undo1.Caption := GetLanguageString(45);
+  fmScriptTE.Redo1.Caption := GetLanguageString(529);
 
   fmReplace.Caption := GetLanguageString(420);
   fmReplace.Label1.Caption := GetLanguageString(421);
@@ -3996,6 +4007,14 @@ begin
   application.Terminate;
 end;
 
+procedure TForm1.Redo1Click(Sender: TObject);
+begin
+  if not fmScriptTE.TextEdit.Focused then
+    btnRedoClick(nil)
+  else if fmScriptTE.TextEdit.Focused then
+    fmScriptTE.Redo1Click(nil);
+end;
+
 procedure TForm1.Rowselection1Click(Sender: TObject);
 var
   Reg: TRegistry;
@@ -4179,9 +4198,12 @@ begin
     if previewstate > 0 then
       ResetPreviewState;
     undocount := 0;
+    redocount := 0;
     ClearShadow;
     Button11.Enabled := false;
     smUndo.Enabled := false;
+    btnRedo.Enabled := false;
+    smRedo.Enabled := false;
     AsmMode := 0;
     eb1 := 0;
     eb2 := 0;
@@ -11185,6 +11207,77 @@ begin
   end;
 end;
 
+procedure TForm1.btnRedoClick(Sender: TObject);
+var
+  x, s: integer;
+begin
+  s := selected;
+
+  if redocount = 0 then
+    exit;
+
+  isedited := true;
+
+  move(Floor[0], FloorUn[undocount], sizeof(TFloor) * 40);
+  inc(undocount);
+  dec(redocount);
+
+  if redocount = 0 then
+  begin
+    btnRedo.Enabled := false;
+    smRedo.Enabled := false;
+  end;
+
+  Button11.Enabled := true;
+  smUndo.Enabled := true;
+
+  move(FloorRedo[redocount], Floor[0], sizeof(TFloor) * 40);
+
+  ctrldw := true;
+  inundo := true;
+  Form1.CheckListBox1Click(Form1);
+  inundo := false;
+  if s > -1 then
+  begin
+    if sType = 1 then
+    begin
+      if s < Form1.ListBox1.count then
+      begin
+        Selected := s;
+        gridtype := 1;
+        Form1.ListBox1.ItemIndex := s;
+        Button2.Enabled := true;
+        Button1.Enabled := true;
+        Button3.Enabled := true;
+        smEdit.Enabled := true;
+        smDelete.Enabled := true;
+        smMove.Enabled := true;
+        transform1.Enabled := true;
+      end;
+    end;
+    if sType = 2 then
+    begin
+      if s < Form1.ListBox2.count then
+      begin
+        Selected := s;
+        gridtype := 2;
+        Form1.ListBox2.ItemIndex := s;
+        Button2.Enabled := true;
+        Button1.Enabled := true;
+        Button3.Enabled := true;
+        smEdit.Enabled := true;
+        smDelete.Enabled := true;
+        smMove.Enabled := true;
+        transform1.Enabled := true;
+      end;
+    end;
+    LoadFloorGrids;
+    DrawMap;
+  end;
+
+  ctrldw := false;
+end;
+
 procedure TForm1.Button10Click(Sender: TObject);
 var
   x, y, z, i, m, u, v, c: integer;
@@ -11314,8 +11407,11 @@ begin
   if previewstate > 0 then
     ResetPreviewState;
   undocount := 0;
+  redocount := 0;
   Button11.Enabled := false;
   smUndo.Enabled := false;
+  btnRedo.Enabled := false;
+  smRedo.Enabled := false;
   TrFnc.DeleteChildren;
   TrData.DeleteChildren;
   TrReg.DeleteChildren;
@@ -11388,8 +11484,11 @@ begin
   if previewstate > 0 then
     ResetPreviewState;
   undocount := 0;
+  redocount := 0;
   Button11.Enabled := false;
   smUndo.Enabled := false;
+  btnRedo.Enabled := false;
+  smRedo.Enabled := false;
   TrFnc.DeleteChildren;
   TrData.DeleteChildren;
   TrReg.DeleteChildren;
@@ -11463,8 +11562,11 @@ begin
   if previewstate > 0 then
     ResetPreviewState;
   undocount := 0;
+  redocount := 0;
   Button11.Enabled := false;
   smUndo.Enabled := false;
+  btnRedo.Enabled := false;
+  smRedo.Enabled := false;
   TrFnc.DeleteChildren;
   TrData.DeleteChildren;
   TrReg.DeleteChildren;
@@ -11532,12 +11634,16 @@ begin
   s := selected;
   if undocount = 0 then
     exit;
+  move(Floor[0], FloorRedo[redocount], sizeof(TFloor) * 40);
+  inc(redocount);
   dec(undocount);
   if undocount = 0 then
   begin
     Button11.Enabled := false;
     smUndo.Enabled := false;
   end;
+  btnRedo.Enabled := true;
+  smRedo.Enabled := true;
   isedited := true;
   move(FloorUn[undocount], Floor[0], sizeof(TFloor) * 40);
   ctrldw := true;
@@ -11590,6 +11696,10 @@ var
   x: integer;
   unchanged: Boolean;
 begin
+  redocount := 0;
+  btnRedo.Enabled := false;
+  smRedo.Enabled := false;
+
   unchanged := true;
   if undocount > 0 then
     unchanged := CompareMem(@Floor[0], @FloorUn[undocount], sizeof(TFloor) * 40);
@@ -12200,6 +12310,7 @@ var
 begin
   // MenueDrawItemX(form1.MainMenu1);
   have3d := false;
+  MoveSel := -1;
   s := dummy1 + dummy2 + dummy3 + dummy4 + dummy5 + dummy6 + dummy7 + dummy8;
 end;
 
@@ -12727,6 +12838,11 @@ end;
 procedure TForm1.smPlacementClick(Sender: TObject);
 begin
   FPlacementOptions.showmodal();
+end;
+
+procedure TForm1.smRedoClick(Sender: TObject);
+begin
+  btnRedoClick(nil);
 end;
 
 procedure TForm1.smDeleteClick(Sender: TObject);

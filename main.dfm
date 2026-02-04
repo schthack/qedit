@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 195
   Top = 115
   Caption = 'Quest Editor v2.0c Public'
-  ClientHeight = 481
+  ClientHeight = 507
   ClientWidth = 723
   Color = clBtnFace
   Constraints.MinHeight = 540
@@ -28,7 +28,7 @@ object Form1: TForm1
   OnShow = FormShow
   DesignSize = (
     723
-    481)
+    507)
   TextHeight = 13
   object Label3: TLabel
     Left = 468
@@ -77,7 +77,7 @@ object Form1: TForm1
   end
   object lblStatus: TLabel
     Left = 308
-    Top = 464
+    Top = 490
     Width = 70
     Height = 13
     Anchors = [akBottom]
@@ -89,10 +89,11 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     Visible = False
+    ExplicitTop = 464
   end
   object lblModifiers: TLabel
     Left = 384
-    Top = 464
+    Top = 490
     Width = 48
     Height = 13
     Cursor = crHandPoint
@@ -108,10 +109,11 @@ object Form1: TForm1
     ParentFont = False
     Visible = False
     OnClick = lblModifiersClick
+    ExplicitTop = 464
   end
   object lblPreview: TLabel
     Left = 236
-    Top = 464
+    Top = 490
     Width = 302
     Height = 13
     Anchors = [akBottom]
@@ -119,12 +121,13 @@ object Form1: TForm1
       #8592' Previous  |  '#8594' Next  |  Space: Pause/Play  |  Esc: Exit previe' +
       'w'
     Visible = False
+    ExplicitTop = 464
   end
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
     Width = 183
-    Height = 481
+    Height = 507
     Align = alLeft
     Caption = ' Map : '
     TabOrder = 0
@@ -250,7 +253,7 @@ object Form1: TForm1
     DoubleBuffered = True
     ParentBackground = False
     ParentDoubleBuffered = False
-    TabOrder = 10
+    TabOrder = 11
     object Image1: TImage
       Left = 1
       Top = 1
@@ -266,16 +269,16 @@ object Form1: TForm1
     Left = 190
     Top = 244
     Width = 397
-    Height = 215
+    Height = 241
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvLowered
     ParentBackground = False
-    TabOrder = 11
+    TabOrder = 12
     object Image2: TPaintBox
       Left = 1
       Top = 1
       Width = 395
-      Height = 213
+      Height = 239
       Align = alClient
       PopupMenu = PopupMenu1
       OnClick = Image2Click
@@ -284,6 +287,7 @@ object Form1: TForm1
       OnMouseUp = Image2MouseUp
       OnPaint = Image2Paint
       ExplicitLeft = 2
+      ExplicitHeight = 213
     end
   end
   object Button1: TButton
@@ -377,12 +381,12 @@ object Form1: TForm1
     Width = 129
     Height = 17
     Caption = 'Show room ID'
-    TabOrder = 12
+    TabOrder = 13
     OnClick = CheckBox1Click
   end
   object Button11: TButton
     Left = 593
-    Top = 436
+    Top = 440
     Width = 127
     Height = 23
     Anchors = [akRight, akBottom]
@@ -400,7 +404,7 @@ object Form1: TForm1
     Style = csOwnerDrawFixed
     Anchors = [akTop, akRight]
     ItemIndex = 0
-    TabOrder = 13
+    TabOrder = 14
     Text = 'Auto'
     OnChange = ComboBox1Change
     Items.Strings = (
@@ -415,7 +419,7 @@ object Form1: TForm1
     BevelOuter = bvNone
     ItemHeight = 13
     PopupMenu = popupMonsters
-    TabOrder = 14
+    TabOrder = 15
     OnClick = ListBox1Click
     OnDblClick = ListBox1DblClick
   end
@@ -425,7 +429,7 @@ object Form1: TForm1
     Width = 531
     Height = 160
     ActivePage = TabSheet1
-    TabOrder = 15
+    TabOrder = 16
     object TabSheet1: TTabSheet
       Caption = 'Monsters'
       object DBGrid1: TDBGrid
@@ -489,6 +493,17 @@ object Form1: TForm1
         OnTitleClick = DBGrid2TitleClick
       end
     end
+  end
+  object btnRedo: TButton
+    Left = 593
+    Top = 464
+    Width = 127
+    Height = 23
+    Anchors = [akRight, akBottom]
+    Caption = 'Redo'
+    Enabled = False
+    TabOrder = 10
+    OnClick = btnRedoClick
   end
   object MainMenu1: TMainMenu
     Images = ImageList1
@@ -838,6 +853,11 @@ object Form1: TForm1
         Caption = 'Undo'
         ShortCut = 16474
         OnClick = Undo1Click
+      end
+      object Redo1: TMenuItem
+        Caption = 'Redo'
+        ShortCut = 16473
+        OnClick = Redo1Click
       end
       object Options1: TMenuItem
         Caption = 'Placement Options'
@@ -1935,6 +1955,12 @@ object Form1: TForm1
       Enabled = False
       ShortCut = 16474
       OnClick = smUndoClick
+    end
+    object smRedo: TMenuItem
+      Caption = 'Redo'
+      Enabled = False
+      ShortCut = 16473
+      OnClick = smRedoClick
     end
     object N11: TMenuItem
       Caption = '-'
