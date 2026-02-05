@@ -3925,8 +3925,8 @@ begin
         end;
         // rotation
         if darkmode and not ((sType = 2) and (selected = x))
-        or (darkmode and ((sType = 2) and (selected = x)) and showbmp.Checked)
-        and (Floor[sfloor].Obj[x].Skin <> 11000)
+        or (darkmode and ((sType = 2) and (selected = x)) and showbmp.Checked
+        and (Floor[sfloor].Obj[x].Skin <> 11000))
         then
           BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         if Floor[sfloor].Obj[x].Skin = 10000 then
