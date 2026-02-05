@@ -3931,16 +3931,16 @@ begin
           BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         if Floor[sfloor].Obj[x].Skin = 10000 then
         begin
-          DrawPolygon(BBRelBmp.Canvas, Floor[sFloor].Obj[x], px, py);
-          DrawPolygonSnapPoints(BBRelBmp.Canvas, Floor[sFloor].Obj[x], px, py)
+          DrawPolygon(BBRelBmp.Canvas, Floor[sFloor].Obj[x], round(px), round(py));
+          DrawPolygonSnapPoints(BBRelBmp.Canvas, Floor[sFloor].Obj[x], round(px), round(py))
         end
         else if Floor[sfloor].Obj[x].Skin = 11000 then
         begin
           BBRelBmp.Canvas.Pen.Width := outlinewidth;
           if (sType = 2) and (selected = x) then
-            DrawStar(BBRelBmp.Canvas, px, py, 8 / Zoom, true)
+            DrawStar(BBRelBmp.Canvas, round(px), round(py), round(8 / Zoom) * 0.60, true)
           else
-            DrawStar(BBRelBmp.Canvas, px, py, 6 / Zoom, true)
+            DrawStar(BBRelBmp.Canvas, round(px), round(py), round(6 / Zoom) * 0.60, true)
         end
         else
         begin
