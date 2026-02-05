@@ -131,7 +131,6 @@ object Form1: TForm1
     Align = alLeft
     Caption = ' Map : '
     TabOrder = 0
-    ExplicitHeight = 507
     object Label1: TLabel
       Left = 10
       Top = 20
@@ -275,7 +274,6 @@ object Form1: TForm1
     BevelOuter = bvLowered
     ParentBackground = False
     TabOrder = 12
-    ExplicitHeight = 241
     object Image2: TPaintBox
       Left = 1
       Top = 1
@@ -396,7 +394,6 @@ object Form1: TForm1
     Enabled = False
     TabOrder = 9
     OnClick = Button11Click
-    ExplicitTop = 439
   end
   object ComboBox1: TComboBox
     Left = 591
@@ -507,7 +504,6 @@ object Form1: TForm1
     Enabled = False
     TabOrder = 10
     OnClick = btnRedoClick
-    ExplicitTop = 463
   end
   object MainMenu1: TMainMenu
     Images = ImageList1

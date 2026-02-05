@@ -1319,6 +1319,36 @@ begin
   Canvas.Brush.Style := OldBrushStyle;
 end;
 
+procedure DrawStar(Canvas: TCanvas; CenterX, CenterY: Double; OuterRadius: Double;
+                   Filled: Boolean = True);
+var
+  Points: array[0..9] of TPoint;
+  i: Integer;
+  angle: Double;
+  InnerRadius: Double;
+begin
+  InnerRadius := OuterRadius * 0.382;
+
+  // Generate 10 points (5 outer, 5 inner) for a 5-pointed star
+  for i := 0 to 9 do
+  begin
+    angle := (i * 36 - 90) * Pi / 180; // 36 degrees between points
+    if i mod 2 = 0 then
+      // Outer
+      Points[i] := Point(Round(CenterX + OuterRadius * Cos(angle)),
+                        Round(CenterY + OuterRadius * Sin(angle)))
+    else
+      // Inner
+      Points[i] := Point(Round(CenterX + InnerRadius * Cos(angle)),
+                        Round(CenterY + InnerRadius * Sin(angle)));
+  end;
+
+  if Filled then
+    Canvas.Polygon(Points)
+  else
+    Canvas.Polyline(Points);
+end;
+
 function GetPolygonEdgesWorldSpace(obj: TObj; applyMapRotation: boolean): TPolygonEdges;
 var
   vertices: TPolygonVertices;
@@ -3790,7 +3820,7 @@ begin
           else
             BBRelBmp.Canvas.Rectangle(Rect(round(px) - 3, round(py) - 3, round(px) + 3, round(py) + 3));
         end;
-        if showbmp.Checked then
+        if showbmp.Checked and (Floor[sfloor].Obj[x].Skin <> 11000) then
         begin
           name := inttohex(Floor[sFloor].Obj[x].Skin,2) + '.bmp';
           if not BMPCache.TryGetValue('object_' + name, bm) then
@@ -3896,12 +3926,21 @@ begin
         // rotation
         if darkmode and not ((sType = 2) and (selected = x))
         or (darkmode and ((sType = 2) and (selected = x)) and showbmp.Checked)
+        and (Floor[sfloor].Obj[x].Skin <> 11000)
         then
           BBRelBmp.Canvas.Pen.Color := RGB(200,200,200);
         if Floor[sfloor].Obj[x].Skin = 10000 then
         begin
           DrawPolygon(BBRelBmp.Canvas, Floor[sFloor].Obj[x], px, py);
           DrawPolygonSnapPoints(BBRelBmp.Canvas, Floor[sFloor].Obj[x], px, py)
+        end
+        else if Floor[sfloor].Obj[x].Skin = 11000 then
+        begin
+          BBRelBmp.Canvas.Pen.Width := outlinewidth;
+          if (sType = 2) and (selected = x) then
+            DrawStar(BBRelBmp.Canvas, px, py, 8 / Zoom, true)
+          else
+            DrawStar(BBRelBmp.Canvas, px, py, 6 / Zoom, true)
         end
         else
         begin
@@ -10216,7 +10255,7 @@ begin
   for x := 0 to preseti - 1 do
     for y := 0 to FloorObjID[Floor[sfloor].floorid].count[FFilter] - 1 do
       if (FloorObjID[Floor[sfloor].floorid].ids[FFilter, y] = ObjTemplate[x].data.Skin)
-      or (ObjTemplate[x].data.Skin = 10000) then
+      or (ObjTemplate[x].data.Skin = 10000) or (ObjTemplate[x].data.Skin = 11000) then
       begin
         form10.ComboBox1.Items.Add(ObjTemplate[x].name);
         break;
@@ -10648,7 +10687,8 @@ begin
 
       if Form1.ComboBox1.ItemIndex > 0 then
         d := strtoint(Form1.ComboBox1.Items.Strings[Form1.ComboBox1.ItemIndex]);
-
+      if (MoveType = 2) and (Floor[sfloor].Obj[MoveSel].Skin = 11000) then
+        d := 0;
     end;
 
     // section found save the data to the object/monster
