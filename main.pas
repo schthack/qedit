@@ -1419,7 +1419,7 @@ begin
 
   edges := GetPolygonEdgesWorldSpace(obj, false);
 
-  Canvas.Pen.Color := clRed;
+  Canvas.Pen.Color := clBlue;
 
   for i := 0 to High(edges) do
   begin
