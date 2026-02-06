@@ -13879,7 +13879,8 @@ begin
           for i := 0 to FloorObjID[Floor[x].floorid].count[ver] - 1 do
             if FloorObjID[Floor[x].floorid].ids[ver, i] = Floor[x].Obj[y].Skin then
               break;
-          if (i = FloorObjID[Floor[x].floorid].count[ver]) and (FloorObjID[Floor[x].floorid].count[ver] <> 0) then
+          if (i = FloorObjID[Floor[x].floorid].count[ver]) and (FloorObjID[Floor[x].floorid].count[ver] <> 0)
+          and (Floor[x].Obj[y].Skin <> 10000) and (Floor[x].Obj[y].Skin <> 11000) then
             warn.Add(GetLanguageString(103) + ' ' + inttostr(Floor[x].Obj[y].Skin) + GetLanguageString(102) +
               inttostr(y) + GetLanguageString(98) + ' ' + inttostr(x));
 
