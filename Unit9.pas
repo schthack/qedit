@@ -36,7 +36,11 @@ uses Unit1, main, PikaPackage;
 {$R *.dfm}
 
 procedure TForm9.Button1Click(Sender: TObject);
+var
+  idx: integer;
 begin
+    idx := form1.PartialSearch(ComboBox1.items, ComboBox1.Text);
+    ComboBox1.ItemIndex := idx;
     ComboBox1.Text := ComboBox1.Items[ComboBox1.Items.IndexOf(ComboBox1.Text)];
     if combobox1.ItemIndex > -1 then begin
         tag:=1;
@@ -48,9 +52,11 @@ procedure TForm9.ComboBox1Change(Sender: TObject);
 var
   hs:tmemorystream;
   s: string;
+  idx: integer;
 begin
     hs:=tmemorystream.Create;
-    s := ComboBox1.Items[ComboBox1.Items.IndexOf(ComboBox1.Text)];
+    idx := form1.PartialSearch(ComboBox1.items, ComboBox1.Text);
+    s := ComboBox1.Items[idx];
     if fileexists(path+'img\msel\'+ s+'.bmp') then
         image1.Picture.LoadFromFile(path+'img\msel\'+ s +'.bmp')
     else if PikaGetFile(hs,'msel\'+s+'.bmp',path+'images.ppk','Build By Schthack') = 0 then image1.Picture.Bitmap.LoadFromStream(hs)

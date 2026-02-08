@@ -38,8 +38,12 @@ uses D3DEngin, Unit1, main;
 {$R *.dfm}
 
 procedure TForm10.Button1Click(Sender: TObject);
-var f:single;
+var
+  f: single;
+  idx: integer;
 begin
+    idx := form1.PartialSearch(ComboBox1.items, ComboBox1.Text);
+    ComboBox1.ItemIndex := idx;
     ComboBox1.Text := ComboBox1.Items[ComboBox1.Items.IndexOf(ComboBox1.Text)];
     if ComboBox1.ItemIndex > -1 then begin
         if UnicodeStringGrid1.Visible then begin
@@ -71,11 +75,12 @@ begin
 end;
 
 procedure TForm10.ComboBox1Change(Sender: TObject);
-var x,y:integer;
+var x,y,idx:integer;
     t:single;
 begin
+    idx := form1.PartialSearch(ComboBox1.items, ComboBox1.Text);
     for x:=0 to preseti-1 do
-        if ObjTemplate[x].name = ComboBox1.Items[ComboBox1.Items.IndexOf(ComboBox1.Text)]
+        if lowercase(ObjTemplate[x].name) = lowercase(ComboBox1.Items[idx])
         then break;
     UnicodeStringGrid1.Visible:=false;
     UnicodeStringGrid2.Visible:=false;
@@ -87,7 +92,7 @@ begin
         if ScaleItm[y] = ObjTemplate[x].data.Skin then begin
             UnicodeStringGrid2.Visible:=true;
         end;
-    if (objscreen.Enable) and (ComboBox1.ItemIndex > -1) then begin
+    if objscreen.Enable then begin
     objitm.Free;
     objitm:=nil;
     objitm:=t3ditem.Create(objscreen);

@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   ImgList, Dialogs, Math, Menus, StdCtrls, ExtCtrls, CheckLst, ComCtrls, System.Types,
   ShellApi, D3DEngin, registry, Spin, System.ImageList, System.Generics.Collections,
-  System.Actions, System.IOUtils, Vcl.ActnList, Vcl.Themes, Vcl.Styles, Data.DB,
+  StrUtils, System.Actions, System.IOUtils, Vcl.ActnList, Vcl.Themes, Vcl.Styles, Data.DB,
   Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.DBCtrls;
 
 const
@@ -504,6 +504,7 @@ type
     procedure Episode41Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure SetUndow();
+    function PartialSearch(strings: TStrings; const substr: string): integer;
     procedure Button1Click(Sender: TObject);
     procedure ConvertBINDATtooffline1Click(Sender: TObject);
     procedure Fixbadidonitem1Click(Sender: TObject);
@@ -11768,6 +11769,23 @@ begin
     move(Floor[0], FloorUn[undocount], sizeof(TFloor) * 40);
     inc(undocount);
     // Form1.CheckListBox1Click(form1);
+  end;
+end;
+
+function TForm1.PartialSearch(strings: TStrings; const substr: string): integer;
+var
+  idx: integer;
+begin
+  // Default; not found
+  result := -1;
+  for idx := 0 to strings.Count - 1 do
+  begin
+    // Partial and case-insensitive search
+    if ContainsText(strings[idx], substr) then
+    begin
+      result := idx;
+      exit;
+    end;
   end;
 end;
 
