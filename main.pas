@@ -4824,7 +4824,7 @@ var
   x, y, i, id: integer;
   a, name: ansistring;
 begin
-  if selected <= -1 then exit;
+  if not ((selected > -1) and (sType = 1)) then exit;
 
   name := GenerateMonsterName(monst, selected, 0);
   id := monst.Skin;
