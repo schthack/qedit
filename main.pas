@@ -11797,14 +11797,9 @@ begin
   // Default; not found
   result := -1;
   for idx := 0 to strings.Count - 1 do
-  begin
     // Partial and case-insensitive search
     if ContainsText(strings[idx], substr) then
-    begin
       result := idx;
-      exit;
-    end;
-  end;
 end;
 
 procedure TForm1.Showbitmapoverlays1Click(Sender: TObject);
