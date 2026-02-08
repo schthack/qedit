@@ -729,7 +729,7 @@ Function CreateKey(val: dword; user: integer): Boolean;
 Function GetObjName(id: integer): ansistring;
 Function GetObjParam(id: integer): tstringlist;
 procedure MenueDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
-Function GetMonsterParam(id: integer): tstringlist;
+Function GetMonsterParam(monst: TMonster): tstringlist;
 Function GetMonsterName(id: integer): ansistring;
 procedure ClearShadow;
 Function GetLanguageString(id: integer): string;
@@ -4819,11 +4819,29 @@ begin
   end;
 end;
 
-Function GetMonsterParam(id: integer): tstringlist;
+Function GetMonsterParam(monst: TMonster): tstringlist;
 var
-  x, y, i: integer;
-  a: ansistring;
+  x, y, i, id: integer;
+  a, name: ansistring;
 begin
+  if selected <= -1 then exit;
+
+  name := GenerateMonsterName(monst, selected, 0);
+  id := monst.Skin;
+  if (monst.Skin = 65) and (pos('sand', lowercase(name)) > 0)
+  or (monst.Skin = 97) and (pos('del', lowercase(name)) > 0)
+  or (monst.Skin = 192) and (pos('gal', lowercase(name)) > 0)
+  or (monst.Skin = 224) and (pos('epsi', lowercase(name)) > 0)
+  then begin
+    id := -id;
+    a := inttostr(id) + #9;
+    for x := 0 to Monsterini.count - 1 do
+      if copy(Monsterini.Strings[x], 1, length(a)) = a then
+        break;
+    if x >= Monsterini.count then
+      id := -id;
+  end;
+
   result := tstringlist.Create;
   a := inttostr(id) + #9;
   for x := 0 to Monsterini.count - 1 do

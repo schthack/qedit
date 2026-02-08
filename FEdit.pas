@@ -174,7 +174,7 @@ begin
         StringGrid1.RowCount:=y;
         Form7.TrackBar1.Position:=-round(EMonsterData.Pos_z * 10);
         DrawRotation(-(EMonsterData.Direction+rev[EMonsterData.Map_Section]));
-        t:=GetMonsterParam(EMonsterData.Skin);   
+        t:=GetMonsterParam(EMonsterData);
         for x:=0 to t.Count-1 do begin
             if (t.Strings[x] <> '') and (t.Strings[x] <> '-') then begin
                 StringGrid1.RowCount:=y+1;
@@ -402,7 +402,7 @@ begin
     if stype = 1 then begin
         //
         y:=0;
-        t:=GetMonsterParam(EMonsterData.Skin);
+        t:=GetMonsterParam(EMonsterData);
         for x:=0 to t.Count-1 do begin
             if (t.Strings[x] <> '') and (t.Strings[x] <> '-') then begin
                 if x = 10 then begin
@@ -442,7 +442,7 @@ begin
     if stype = 1 then begin
         //
         y:=0;
-        t:=GetMonsterParam(EMonsterData.Skin);
+        t:=GetMonsterParam(EMonsterData);
         for x:=0 to t.Count-1 do begin
             if (t.Strings[x] <> '') and (t.Strings[x] <> '-') then begin
                 //StringGrid1.RowCount:=y+1;
@@ -668,7 +668,7 @@ begin
     if stype = 1 then begin
         EMonsterData.Direction:=(rt-rev[EMonsterData.Map_Section]) and $ffff;
         yy:=0;
-        t:=GetMonsterParam(EMonsterData.Skin);
+        t:=GetMonsterParam(EMonsterData);
         for xx:=0 to t.Count-1 do begin
             if (t.Strings[xx] <> '') and (t.Strings[xx] <> '-') then begin
                 if xx = 13 then Form7.StringGrid1.Cells[1,yy]:=inttostr(EMonsterData.Direction);
@@ -768,7 +768,7 @@ begin
     if stype = 1 then begin
         EMonsterData.Pos_z:=z;
         y:=0;
-        t:=GetMonsterParam(EMonsterData.Skin);
+        t:=GetMonsterParam(EMonsterData);
         for x:=0 to t.Count-1 do begin
             if (t.Strings[x] <> '') and (t.Strings[x] <> '-') then begin
                 if x = 10 then begin
