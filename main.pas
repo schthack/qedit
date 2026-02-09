@@ -4919,17 +4919,31 @@ end;
 procedure SetMonsterDefaults();
 var
   section: integer;
-  pz2: double;
+  px, py, px2, py2, pz2: double;
 begin
   // Set default monster position based on user's setting
   if form13.focused then
   begin
-    section := FindClosestSection();
-    pz2 := Form1.YFromBBRELFile(MidP[section].x * zoom, MidP[section].y * zoom);
-    pz2 := pz2 - miz[section] * zoom;
+    if Form1.ComboBox1.ItemIndex > 0 then
+      section := strtoint(Form1.ComboBox1.Items.Strings[Form1.ComboBox1.ItemIndex])
+    else
+      section := FindClosestSection();
+
+    pz2 := form1.YFromBBRELFile(ppx, -ppz);
+    pz2 := pz2 - miz[section];
+
+    px2 := (ppx / zoom) - MidP[section].x;
+    py2 := (-ppz / zoom) - MidP[section].y;
+
+    px := cos(rev[section] / 10430.37835) * px2 - sin(rev[section] / 10430.37835) * py2;
+    py := sin(rev[section] / 10430.37835) * px2 + cos(rev[section] / 10430.37835) * py2;
+
+    px := px * Zoom;
+    py := py * Zoom;
+
     Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].map_section := section;
-    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_X := 0;
-    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Y := 0;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_X := px;
+    Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Y := py;
     Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Z := pz2;
   end
   else
@@ -4944,18 +4958,34 @@ end;
 procedure SetObjectDefaults();
 var
   section, i, j: integer;
-  pz2: double;
+  px, py, px2, py2, pz2: double;
   found: Boolean;
 begin
   // Set default object position based on user's setting
   if form13.focused then
   begin
-    section := FindClosestSection();
-    pz2 := Form1.YFromBBRELFile(MidP[section].x * zoom, MidP[section].y * zoom);
-    pz2 := pz2 - miz[section] * zoom;
+    if Form1.ComboBox1.ItemIndex > 0 then
+      section := strtoint(Form1.ComboBox1.Items.Strings[Form1.ComboBox1.ItemIndex])
+    else section := FindClosestSection();
+
+    if Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Skin = 11000 then
+      section := 0;
+
+    pz2 := form1.YFromBBRELFile(ppx, -ppz);
+    pz2 := pz2 - miz[section];
+
+    px2 := (ppx / zoom) - MidP[section].x;
+    py2 := (-ppz / zoom) - MidP[section].y;
+
+    px := cos(rev[section] / 10430.37835) * px2 - sin(rev[section] / 10430.37835) * py2;
+    py := sin(rev[section] / 10430.37835) * px2 + cos(rev[section] / 10430.37835) * py2;
+
+    px := px * Zoom;
+    py := py * Zoom;
+
     Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].map_section := section;
-    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_X := 0;
-    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Y := 0;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_X := px;
+    Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Y := py;
     Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Z := pz2;
   end
   else
