@@ -1061,9 +1061,9 @@ begin
         if i < floor[sfloor].ObjCount then break;
         
     end;
-    if not (ssRight in Shift) and not inedit
-    and not (ssCtrl in Shift) and not (ssShift in Shift)
-    and not rtx and not rty and not rtz then
+    if not (ssRight in Shift) and not (ssCtrl in Shift) and not (ssShift in Shift)
+    and not rtx and not rty and not rtz
+    and not inedit then
       lastclick := gettickcount();
 end;
 
