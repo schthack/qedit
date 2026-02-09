@@ -854,6 +854,7 @@ var
   showbitmaps: Boolean = false;
   markerbrightness: integer = 0;
   outlinewidth: integer = 1;
+  countfilter: integer = 0;
   searchwholewords: Boolean = false;
   searchmatchcase: Boolean = false;
   searchengine: integer = 0;
@@ -8762,6 +8763,8 @@ begin
           markerbrightness := Reg.ReadInteger('MarkerBrightness');
         if Reg.ValueExists('OutlineWidth') then
           outlinewidth := Reg.ReadInteger('OutlineWidth');
+        if Reg.ValueExists('CountFilter') then
+          countfilter := Reg.ReadInteger('CountFilter');
         if Reg.ValueExists('SearchWholeWords') then
           searchwholewords := Reg.ReadBool('SearchWholeWords');
         if Reg.ValueExists('SearchMatchCase') then
@@ -9005,6 +9008,8 @@ begin
     form1.showbmp.Checked := showbitmaps;
     SetBrightness(markerbrightness);
     SetOutlineWidth(outlinewidth);
+
+    form31.cbShow.ItemIndex := countfilter;
 
     FSnapOptions.seDistanceLimit.Value := distancelimit;
     FPlacementOptions.nbOffsetX.Value := OffsetX;

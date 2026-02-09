@@ -3,8 +3,8 @@ unit FMonsDet;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+  Winapi.Windows, Winapi.Messages, Registry, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
 
 type
   TForm31 = class(TForm)
@@ -174,8 +174,21 @@ begin
 end;
 
 procedure TForm31.cbShowChange(Sender: TObject);
+var
+  Reg: TRegistry;
 begin
   LoadCounts;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+    begin
+      Reg.WriteInteger('CountFilter', cbShow.ItemIndex);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
 end;
 
 procedure TForm31.CopyClick(Sender: TObject);
