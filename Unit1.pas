@@ -2419,6 +2419,8 @@ begin
       Mymonst[x].SetCoordinate(px + midpz[floor[sfloor].Monster[x].map_section].x,
         m.Pos_z + miz[floor[sfloor].Monster[x].map_section] + MonsterPosZ[re],
         0 - py - midpz[floor[sfloor].Monster[x].map_section].y);
+      if re = 72 then
+        Mymonst[x].SetProportion(0.5, 0.5, 0.5);
       Mymonst[x].Visible := true;
       // Mymonst[x].SetRotation(((($8000-(m.Direction+rev[Floor[sfloor].Monster[x].map_section])) and $ffff) / 182.04444)
       if m.Skin = 223 then
