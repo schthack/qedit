@@ -1011,7 +1011,9 @@ begin
                     form1.PageControl1.ActivePage := form1.TabSheet1;
                     form1.LoadFloorGrids;
                     form1.drawmap;
-                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
+                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift)
+                    and not (ssCtrl in Shift) and not (ssShift in Shift)
+                    and not rtx and not rty and not rtz then
                     begin
                       form1.Button2Click(nil);
                       inedit := true;
@@ -1046,7 +1048,9 @@ begin
                     form1.PageControl1.ActivePage := form1.TabSheet2;
                     form1.LoadFloorGrids;
                     form1.drawmap;
-                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
+                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift)
+                    and not (ssCtrl in Shift) and not (ssShift in Shift)
+                    and not rtx and not rty and not rtz then
                     begin
                       form1.Button2Click(nil);
                       inedit := true;
@@ -1057,7 +1061,9 @@ begin
         if i < floor[sfloor].ObjCount then break;
         
     end;
-    if not (ssRight in Shift) and not inedit then
+    if not (ssRight in Shift) and not inedit
+    and not (ssCtrl in Shift) and not (ssShift in Shift)
+    and not rtx and not rty and not rtz then
       lastclick := gettickcount();
 end;
 
