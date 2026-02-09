@@ -4945,6 +4945,13 @@ begin
     Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_X := px;
     Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Y := py;
     Floor[sfloor].Monster[Floor[sfloor].MonsterCount - 1].Pos_Z := pz2;
+
+    selected := Floor[sfloor].MonsterCount - 1;
+    stype:=1;
+    form1.ListBox1.ItemIndex:=selected;
+    form1.DBGrid1.Options := form1.DBGrid1.Options - [dgIndicator];
+    form1.DBGrid2.Options := form1.DBGrid2.Options - [dgIndicator];
+    form1.PageControl1.ActivePage := form1.TabSheet1;
   end
   else
   begin
@@ -4987,6 +4994,13 @@ begin
     Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_X := px;
     Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Y := py;
     Floor[sfloor].Obj[Floor[sfloor].ObjCount - 1].Pos_Z := pz2;
+
+    selected := Floor[sfloor].ObjCount - 1;
+    stype:=2;
+    form1.ListBox2.ItemIndex:=selected;
+    form1.DBGrid1.Options := form1.DBGrid1.Options - [dgIndicator];
+    form1.DBGrid2.Options := form1.DBGrid2.Options - [dgIndicator];
+    form1.PageControl1.ActivePage := form1.TabSheet2;
   end
   else
   begin
