@@ -19,6 +19,7 @@ type
     procedure CopyClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure cbShowChange(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -182,6 +183,12 @@ begin
   memo1.SelStart:=0;
   memo1.SelLength:=length(memo1.Text);
   memo1.CopyToClipboard;
+end;
+
+procedure TForm31.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
 end;
 
 procedure TForm31.FormShow(Sender: TObject);

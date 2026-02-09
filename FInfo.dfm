@@ -11,7 +11,9 @@ object Form3: TForm3
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   Position = poMainFormCenter
+  OnKeyDown = FormKeyDown
   TextHeight = 13
   object Label1: TLabel
     Left = 10

@@ -30,6 +30,7 @@ type
     procedure btnResetClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   private
     { Private declarations }
@@ -85,6 +86,12 @@ begin
   nbDefaultY.MaxValue := single.MaxValue;
   nbDefaultZ.MinValue := single.MinValue;
   nbDefaultZ.MaxValue := single.MaxValue;
+end;
+
+procedure TFPlacementOptions.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
 end;
 
 procedure TFPlacementOptions.FormKeyUp(Sender: TObject; var Key: Word;

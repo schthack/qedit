@@ -13,6 +13,7 @@ type
     Label1: TLabel;
     Label2: TLabel;
     procedure Button1Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -29,6 +30,12 @@ implementation
 procedure TForm16.Button1Click(Sender: TObject);
 begin
 close;
+end;
+
+procedure TForm16.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
 end;
 
 end.

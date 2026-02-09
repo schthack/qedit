@@ -11,8 +11,10 @@ object Form8: TForm8
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   Position = poMainFormCenter
   OnClose = FormClose
+  OnKeyDown = FormKeyDown
   TextHeight = 13
   object Panel1: TPanel
     Left = 0

@@ -10,6 +10,8 @@ object Form31: TForm31
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
+  OnKeyDown = FormKeyDown
   OnShow = FormShow
   DesignSize = (
     516

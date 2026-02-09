@@ -12,6 +12,7 @@ type
     UnicodeMemo1: TMemo;
     Label1: TLabel;
     procedure Button1Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -31,6 +32,12 @@ procedure TForm11.Button1Click(Sender: TObject);
 begin
     desc:=UnicodeMemo1.text;
     close;
+end;
+
+procedure TForm11.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
 end;
 
 end.

@@ -24,6 +24,7 @@ type
     procedure chkDistancelimitClick(Sender: TObject);
     procedure chkSnapClick(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   private
     { Private declarations }
@@ -111,6 +112,12 @@ begin
   seSnapTolerance.MaxValue := High(integer);
   seDistanceLimit.MinValue := 0;
   seDistanceLimit.MaxValue := High (integer);
+end;
+
+procedure TFSnapOptions.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
 end;
 
 procedure TFSnapOptions.FormKeyUp(Sender: TObject; var Key: Word;

@@ -15,6 +15,7 @@ object FSnapOptions: TFSnapOptions
   KeyPreview = True
   Position = poOwnerFormCenter
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   TextHeight = 13
   object Label8: TLabel

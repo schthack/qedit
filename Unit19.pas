@@ -15,6 +15,7 @@ type
       const Value: String);
     procedure StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -41,6 +42,12 @@ begin
     if StringGrid1.EditorMode then exit;
     bbdata[((ARow-1)*14)+ACol+36]:=hextoint(value);
     isedited:=true;
+end;
+
+procedure TForm19.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
 end;
 
 procedure TForm19.StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;

@@ -14493,6 +14493,10 @@ begin
   end
   else if fmScriptTE.txtNotes.Focused then
     fmScriptTE.Notes1Click(nil)
+  else if Screen.ActiveForm = form12 then
+    form12.Close
+  else if Screen.ActiveForm = form17 then
+    form17.Close
   else
   begin
     MoveSel := -1;

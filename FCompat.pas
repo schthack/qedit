@@ -23,6 +23,7 @@ type
     procedure ListBox1MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Clearunusedlabels1Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -99,6 +100,12 @@ begin
       unusedlabel := false;
       Listbox1.Invalidate;
     end;
+end;
+
+procedure TForm27.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
 end;
 
 procedure TForm27.ListBox1Click(Sender: TObject);

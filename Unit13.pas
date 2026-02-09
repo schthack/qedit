@@ -677,7 +677,7 @@ begin
             if autoadjustY then
             begin
               pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
-              pz2 := pz2 - miz[d] * zoom;
+              pz2 := pz2 - miz[d];
               floor[sfloor].Obj[selected].Pos_Z := pz2;
             end;
             if autoadjustsect or autoadjustY then

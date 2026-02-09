@@ -23,6 +23,7 @@ type
     procedure Memo2KeyPress(Sender: TObject; var Key: Char);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -326,6 +327,12 @@ end;
 procedure TForm8.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     //action:=caNone;
+end;
+
+procedure TForm8.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
 end;
 
 procedure TForm8.Memo2KeyPress(Sender: TObject; var Key: Char);

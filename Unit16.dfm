@@ -2,7 +2,7 @@ object Form16: TForm16
   Left = 192
   Top = 114
   Caption = 'About'
-  ClientHeight = 304
+  ClientHeight = 309
   ClientWidth = 332
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -10,7 +10,9 @@ object Form16: TForm16
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   Position = poMainFormCenter
+  OnKeyDown = FormKeyDown
   TextHeight = 13
   object Label1: TLabel
     Left = 20
