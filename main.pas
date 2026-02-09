@@ -6,8 +6,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   ImgList, Dialogs, Math, Menus, StdCtrls, ExtCtrls, CheckLst, ComCtrls, System.Types,
   ShellApi, D3DEngin, registry, Spin, System.ImageList, System.Generics.Collections,
-  StrUtils, System.Actions, System.IOUtils, Vcl.ActnList, Vcl.Themes, Vcl.Styles, Data.DB,
-  Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.DBCtrls;
+  System.Generics.Defaults, StrUtils, System.Actions, System.IOUtils, Vcl.ActnList, Vcl.Themes,
+  Vcl.Styles, Data.DB, Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.DBCtrls;
 
 const
   gcstring = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!"/$%?&*()_+-=#qazwsxedcrfvtgbyhnujmik,ol.p;^`<>';
@@ -11793,13 +11793,37 @@ end;
 function TForm1.PartialSearch(strings: TStrings; const substr: string): integer;
 var
   idx: integer;
+  sortedIndices: TList<integer>;
 begin
   // Default; not found
   result := -1;
-  for idx := 0 to strings.Count - 1 do
-    // Partial and case-insensitive search
-    if ContainsText(strings[idx], substr) then
-      result := idx;
+
+  // Create a list of indices
+  sortedIndices := TList<integer>.Create;
+  try
+    for idx := 0 to strings.Count - 1 do
+      sortedIndices.Add(idx);
+
+    // Sort indices by string length
+    sortedIndices.Sort(TComparer<integer>.Construct(
+      function(const Left, Right: integer): integer
+      begin
+        result := strings[Left].Length - strings[Right].Length;
+      end
+    ));
+
+    // Search in order of length
+    for idx in sortedIndices do
+    begin
+      if ContainsText(strings[idx], substr) then
+      begin
+        result := idx;
+        exit;
+      end;
+    end;
+  finally
+    sortedIndices.Free;
+  end;
 end;
 
 procedure TForm1.Showbitmapoverlays1Click(Sender: TObject);
