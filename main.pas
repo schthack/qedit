@@ -3259,8 +3259,16 @@ begin
     // myscreen.SetAdvancedFog(0,20,$40404040,'obj\fog.bmp');
     myscreen.SetFog(fogCol, fogstart, fogend);
 
+    // Apply the current visibility settings
+    form1.Itemsgroupe1.Tag := showgrp;
+    form1.Itemsgroupe1Click(form1.Itemsgroupe1);
     if previewstate > 0 then
-      DrawPreviewState(previewstate);
+      DrawPreviewState(previewstate)
+    else
+    begin
+      form1.EnemyWave1.Tag := showwave;
+      form1.EnemyWave1Click(form1.EnemyWave1);
+    end;
   end;
   form14.hide;
 end;

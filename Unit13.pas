@@ -358,6 +358,7 @@ begin
 
         if ini > 0 then begin
             dec(ini);
+            myscreen.TextOut(GetLanguageString(530),rect(0,form13.Height-95,form13.Width,form13.Height-79),$FFFFFFFF,1);
             myscreen.TextOut(GetLanguageString(490),rect(0,form13.Height-80,form13.Width,form13.Height-64),$FFFFFFFF,1);
             myscreen.TextOut(GetLanguageString(491),rect(0,form13.Height-65,form13.Width,form13.Height-49),$FFFFFFFF,1);
             myscreen.TextOut(GetLanguageString(492),rect(0,form13.Height-50,form13.Width,form13.Height-34),$FFFFFFFF,1);
@@ -1340,8 +1341,19 @@ begin
       AutoRotate(rtinc);
     end;
 
-    if key = 'w' then popupWave.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
-    if key = 'g' then popupGroup.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
+    if key = 'w' then
+    begin
+      // Cancel movement before opening the menu
+      Keys[Ord('Q')] := false;
+      Keys[Ord('A')] := false;
+      popupWave.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
+    end;
+    if key = 'g' then
+    begin
+      Keys[Ord('Q')] := false;
+      Keys[Ord('A')] := false;
+      popupGroup.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
+    end;
 end;
 
 procedure TForm13.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
