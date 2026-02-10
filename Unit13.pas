@@ -4,11 +4,13 @@ interface
 
 uses
   Windows, Registry, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, D3Dx9, StdCtrls, Vcl.DBGrids;
+  Dialogs, ExtCtrls, D3Dx9, StdCtrls, Vcl.DBGrids, Vcl.Menus;
 
 type
   TForm13 = class(TForm)
     Timer1: TTimer;
+    popupWave: TPopupMenu;
+    popupGroup: TPopupMenu;
     procedure Timer1Timer(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormHide(Sender: TObject);
@@ -25,6 +27,8 @@ type
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure FormActivate(Sender: TObject);
+    procedure popupWavePopup(Sender: TObject);
+    procedure popupGroupPopup(Sender: TObject);
   private
     { Private declarations }
   public
@@ -424,6 +428,83 @@ begin
         myscreen.SetView(ppx, ppy, ppz, vr, vz);
       end;
     end;
+end;
+
+procedure TForm13.popupWavePopup(Sender: TObject);
+var
+  tm: TMenuItem;
+  x, y: integer;
+begin
+  popupWave.Items.Clear;
+  if previewstate = 0 then
+  begin
+    tm := TMenuItem.Create(form1.EnemyWave1);
+    tm.Caption := GetLanguageString(83);
+    tm.RadioItem := true;
+    if showwave = -1 then tm.Checked := true;
+    tm.tag := -1;
+    tm.OnClick := form1.EnemyWave1Click;
+    popupWave.Items.Add(tm);
+    y := CountNumberOfWave;
+    for x := 0 to y do
+    begin
+      tm := TMenuItem.Create(form1.EnemyWave1);
+      tm.Caption := GetLanguageString(84) + inttostr(x);
+      tm.RadioItem := true;
+      if x = showwave then tm.Checked := true;
+      tm.tag := x;
+      tm.OnClick := form1.EnemyWave1Click;
+      if (x > 0) and (x mod 20 = 19) then
+        tm.Break := mbBarBreak;
+      popupWave.Items.Add(tm);
+    end;
+    tm := TMenuItem.Create(form1.EnemyWave1);
+    tm.Caption := GetLanguageString(514);
+    tm.RadioItem := true;
+    if showwave = 65536 then tm.Checked := true;
+    tm.tag := 65536;
+    tm.OnClick := form1.EnemyWave1Click;
+    if (x > 0) and (x mod 20 = 19) then
+        tm.Break := mbBarBreak;
+    popupWave.Items.Add(tm);
+  end;
+end;
+
+procedure TForm13.popupGroupPopup(Sender: TObject);
+var
+  tm: TMenuItem;
+  x, y: integer;
+begin
+  popupGroup.Items.Clear;
+  tm := TMenuItem.Create(form1.Itemsgroupe1);
+  tm.Caption := GetLanguageString(83);
+  tm.RadioItem := true;
+  if showgrp = -1 then tm.Checked := true;
+  tm.tag := -1;
+  tm.OnClick := form1.Itemsgroupe1Click;
+  popupGroup.Items.Add(tm);
+  y := CountNumberOfGrp;
+  for x := 0 to y do
+  begin
+    tm := TMenuItem.Create(form1.EnemyWave1);
+    tm.Caption := GetLanguageString(85) + inttostr(x);
+    tm.RadioItem := true;
+    if x = showgrp then tm.Checked := true;
+    tm.tag := x;
+    tm.OnClick := form1.Itemsgroupe1Click;
+    if (x > 0) and (x mod 20 = 19) then
+      tm.Break := mbBarBreak;
+    popupGroup.Items.Add(tm);
+  end;
+  tm := TMenuItem.Create(form1.Itemsgroupe1);
+  tm.Caption := GetLanguageString(514);
+  tm.RadioItem := true;
+  if showgrp = 65536 then tm.Checked := true;
+  tm.tag := 65536;
+  tm.OnClick := form1.Itemsgroupe1Click;
+  if (x > 0) and (x mod 20 = 19) then
+        tm.Break := mbBarBreak;
+  popupGroup.Items.Add(tm);
 end;
 
 procedure TForm13.FormHide(Sender: TObject);
@@ -1258,6 +1339,9 @@ begin
       else rtinc := 0;
       AutoRotate(rtinc);
     end;
+
+    if key = 'w' then popupWave.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
+    if key = 'g' then popupGroup.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
 end;
 
 procedure TForm13.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);

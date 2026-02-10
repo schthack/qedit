@@ -750,6 +750,8 @@ procedure AddRoomEntry(section: integer; x: double; y: double; z: double);
 procedure SetImage1Colors;
 procedure DrawPreviewState(AState: Integer);
 Function LookForLabel2(s: ansistring): integer;
+Function CountNumberOfWave: integer;
+Function CountNumberOfGrp: integer;
 
 var
   Form1: TForm1;
@@ -1733,7 +1735,12 @@ begin
   form1.PopupMenu2.AutoHotkeys := maAutomatic;
   form1.PopupMenu3.AutoHotkeys := maAutomatic;
   form1.PopupMenu4.AutoHotkeys := maAutomatic;
+  form1.popupMonsters.AutoHotkeys := maAutomatic;
+  form1.popupObjects.AutoHotkeys := maAutomatic;
+  form1.popupGrid.AutoHotkeys := maAutomatic;
   form4.PopupMenu1.AutoHotkeys := maAutomatic;
+  form13.popupWave.AutoHotkeys := maAutomatic;
+  form13.popupGroup.AutoHotkeys := maAutomatic;
   form15.PopupMenu1.AutoHotKeys := maAutomatic;
   form15.PopupMenu2.AutoHotKeys := maAutomatic;
   form15.PopupMenu3.AutoHotKeys := maAutomatic;
@@ -1750,7 +1757,12 @@ begin
   form1.PopupMenu2.AutoHotkeys := maManual;
   form1.PopupMenu3.AutoHotkeys := maManual;
   form1.PopupMenu4.AutoHotkeys := maManual;
+  form1.popupMonsters.AutoHotkeys := maManual;
+  form1.popupObjects.AutoHotkeys := maManual;
+  form1.popupGrid.AutoHotkeys := maManual;
   form4.PopupMenu1.AutoHotkeys := maManual;
+  form13.popupWave.AutoHotkeys := maManual;
+  form13.popupGroup.AutoHotkeys := maManual;
   form15.PopupMenu1.AutoHotKeys := maManual;
   form15.PopupMenu2.AutoHotKeys := maManual;
   form15.PopupMenu3.AutoHotKeys := maManual;
