@@ -439,7 +439,7 @@ begin
   popupWave.Items.Clear;
   if previewstate = 0 then
   begin
-    tm := TMenuItem.Create(form1.EnemyWave1);
+    tm := TMenuItem.Create(popupWave.Items);
     tm.Caption := GetLanguageString(83);
     tm.RadioItem := true;
     if showwave = -1 then tm.Checked := true;
@@ -449,7 +449,7 @@ begin
     y := CountNumberOfWave;
     for x := 0 to y do
     begin
-      tm := TMenuItem.Create(form1.EnemyWave1);
+      tm := TMenuItem.Create(popupWave.Items);
       tm.Caption := GetLanguageString(84) + inttostr(x);
       tm.RadioItem := true;
       if x = showwave then tm.Checked := true;
@@ -459,7 +459,7 @@ begin
         tm.Break := mbBarBreak;
       popupWave.Items.Add(tm);
     end;
-    tm := TMenuItem.Create(form1.EnemyWave1);
+    tm := TMenuItem.Create(popupWave.Items);
     tm.Caption := GetLanguageString(514);
     tm.RadioItem := true;
     if showwave = 65536 then tm.Checked := true;
@@ -477,7 +477,7 @@ var
   x, y: integer;
 begin
   popupGroup.Items.Clear;
-  tm := TMenuItem.Create(form1.Itemsgroupe1);
+  tm := TMenuItem.Create(popupGroup.Items);
   tm.Caption := GetLanguageString(83);
   tm.RadioItem := true;
   if showgrp = -1 then tm.Checked := true;
@@ -487,7 +487,7 @@ begin
   y := CountNumberOfGrp;
   for x := 0 to y do
   begin
-    tm := TMenuItem.Create(form1.Itemsgroupe1);
+    tm := TMenuItem.Create(popupGroup.Items);
     tm.Caption := GetLanguageString(85) + inttostr(x);
     tm.RadioItem := true;
     if x = showgrp then tm.Checked := true;
@@ -497,7 +497,7 @@ begin
       tm.Break := mbBarBreak;
     popupGroup.Items.Add(tm);
   end;
-  tm := TMenuItem.Create(form1.Itemsgroupe1);
+  tm := TMenuItem.Create(popupGroup.Items);
   tm.Caption := GetLanguageString(514);
   tm.RadioItem := true;
   if showgrp = 65536 then tm.Checked := true;
