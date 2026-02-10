@@ -487,7 +487,7 @@ begin
   y := CountNumberOfGrp;
   for x := 0 to y do
   begin
-    tm := TMenuItem.Create(form1.EnemyWave1);
+    tm := TMenuItem.Create(form1.Itemsgroupe1);
     tm.Caption := GetLanguageString(85) + inttostr(x);
     tm.RadioItem := true;
     if x = showgrp then tm.Checked := true;
