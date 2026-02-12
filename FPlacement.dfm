@@ -14,7 +14,6 @@ object FPlacementOptions: TFPlacementOptions
   KeyPreview = True
   Position = poOwnerFormCenter
   OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   TextHeight = 13
   object Label1: TLabel
@@ -155,5 +154,16 @@ object FPlacementOptions: TFPlacementOptions
     Caption = 'Defaults'
     TabOrder = 8
     OnClick = btnResetClick
+  end
+  object btnClose: TButton
+    Left = 1000
+    Top = 1000
+    Width = 75
+    Height = 25
+    Cancel = True
+    Caption = 'Close'
+    TabOrder = 9
+    TabStop = False
+    OnClick = btnCloseClick
   end
 end

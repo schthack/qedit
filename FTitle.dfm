@@ -11,9 +11,7 @@ object Form2: TForm2
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  KeyPreview = True
   Position = poMainFormCenter
-  OnKeyDown = FormKeyDown
   TextHeight = 13
   object Label1: TLabel
     Left = 12
@@ -40,5 +38,16 @@ object Form2: TForm2
     AutoSize = False
     MaxLength = 32
     TabOrder = 0
+  end
+  object btnClose: TButton
+    Left = 1000
+    Top = 1000
+    Width = 75
+    Height = 25
+    Cancel = True
+    Caption = 'Close'
+    TabOrder = 2
+    TabStop = False
+    OnClick = btnCloseClick
   end
 end

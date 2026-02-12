@@ -11,8 +11,9 @@ type
     Label1: TLabel;
     Button1: TButton;
     Edit1: TEdit;
+    btnClose: TButton;
     procedure Button1Click(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnCloseClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -28,18 +29,17 @@ uses main;
 
 {$R *.dfm}
 
+procedure TForm2.btnCloseClick(Sender: TObject);
+begin
+  Close;
+end;
+
 procedure TForm2.Button1Click(Sender: TObject);
 begin
     Title:=Edit1.Text;
     UpdateWindowTitle;
     isedited:=true;
     close;
-end;
-
-procedure TForm2.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then Close;
 end;
 
 end.

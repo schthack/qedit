@@ -26,11 +26,12 @@ type
     nbDefaultX: TNumberBox;
     btnReset: TButton;
     Bevel1: TBevel;
+    btnClose: TButton;
     procedure btnSaveClick(Sender: TObject);
     procedure btnResetClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnCloseClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -88,17 +89,16 @@ begin
   nbDefaultZ.MaxValue := single.MaxValue;
 end;
 
-procedure TFPlacementOptions.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then Close;
-end;
-
 procedure TFPlacementOptions.FormKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_F1 then
     shellexecute(0,'open',pchar('http://qedit.info/index.php?title=Placement_Options'),'','',0);
+end;
+
+procedure TFPlacementOptions.btnCloseClick(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TFPlacementOptions.btnResetClick(Sender: TObject);
