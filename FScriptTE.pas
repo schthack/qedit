@@ -2256,9 +2256,11 @@ end;
 procedure TfmScriptTE.TextEditPaint(const ASender: TObject;
   const ACanvas: TCanvas);
 var
-  i, j, k, opcodepos, stringpos: Integer;
+  i, j, k, g, d, x, lab, opcodepos, RegNum, foundpos, stringpos: Integer;
+  RegMatches: TList<Integer>;
+  RegPositions: TList<Integer>;
   zoom: Double;
-  LineText, Annotation, LabelStr, temp, opcodestr, fullargs, s: string;
+  LineText, Annotation, LabelStr, temp, opcodestr, fullargs, SearchStr, s, o: string;
   YPos, XPos: Integer;
   FirstVisibleLine, LastVisibleLine: Integer;
   argarray: TArray <String>;
@@ -2282,11 +2284,15 @@ begin
 
     // Draw annotations for each visible line
     argstrings := TStringList.Create;
+    RegMatches := TList<Integer>.Create;
+    RegPositions := TList<Integer>.Create;
     try
     for i := FirstVisibleLine to LastVisibleLine do
     begin
       // Clear/initialize values
       argstrings.Clear;
+      RegMatches.Clear;
+      RegPositions.Clear;
       Annotation := '';
       labelstr := '';
       temp := '';
@@ -2346,25 +2352,84 @@ begin
         temp := '';
         if (argstrings.Strings[k] <> '') and (opcodestr <> '')
         and (opcodestr <> 'Unknow_Opcode') and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
-        and ((opcodelist[j].arg[k] = T_REG)
-        or (opcodelist[j].arg[k] = T_BREG)
-        or (opcodelist[j].arg[k] = T_DREG)
-        or (opcodelist[j].arg[k] = T_RREG)
-        or (opcodelist[j].arg[k] = T_FUNC)
-        or (opcodelist[j].arg[k] = T_DATA)
-        or (opcodelist[j].arg[k] = T_STRDATA)
-        or (opcodelist[j].arg[k] = T_FUNC2)
-        or ((opcodelist[j].arg[k] = T_DWORD)
-        and (opcodelist[j].order = T_ARGS)))
         then
         begin
           s := argstrings.Strings[k];
-          if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(UpperCase(s), temp);
-          if (temp <> '') and not Annotation.Contains('(' + UpperCase(s) + ' = ' + temp + ')') then
+          if ((opcodelist[j].arg[k] = T_REG)
+          or (opcodelist[j].arg[k] = T_BREG)
+          or (opcodelist[j].arg[k] = T_DREG)
+          or (opcodelist[j].arg[k] = T_RREG)
+          or (opcodelist[j].arg[k] = T_FUNC)
+          or (opcodelist[j].arg[k] = T_DATA)
+          or (opcodelist[j].arg[k] = T_STRDATA)
+          or (opcodelist[j].arg[k] = T_FUNC2)
+          or ((opcodelist[j].arg[k] = T_DWORD)
+          and (opcodelist[j].order = T_ARGS)))
+          then
           begin
-            if Annotation <> '' then
-              Annotation := Annotation + ' ';
-            Annotation := Annotation + '(' + UpperCase(s) + ' = ' + temp + ')';
+            if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(UpperCase(s), temp);
+            if (temp <> '') and not Annotation.Contains('(' + UpperCase(s) + ' = ' + temp + ')') then
+            begin
+              if Annotation <> '' then
+                Annotation := Annotation + ' ';
+              Annotation := Annotation + '(' + UpperCase(s) + ' = ' + temp + ')';
+            end;
+          end
+          else if ((opcodelist[j].arg[k] = T_SWITCH) or (opcodelist[j].arg[k] = T_SWITCH2B)) then
+          begin
+           g := 0;
+           d := 0;
+           lab := 0;
+           trystrtoint(copy(s,1,pos(':',s)-1),g);
+           o:=copy(s,pos(':',s)+1,length(s)-pos(':',s));
+           s:=inttostr(g);
+           while g > 0 do begin
+                d:=pos(':',o);
+                if d = 0 then begin
+                    if g = 1 then d:=length(o)+1;
+                end;
+                trystrtoint(copy(o,1,d-1),lab);
+                o:=copy(o,d+1,length(o)-d);
+                dec(g);
+                temp := '';
+                if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(inttostr(lab), temp);
+                if (temp <> '') and not Annotation.Contains('(' + inttostr(lab) + ' = ' + temp + ')') then
+                begin
+                  if Annotation <> '' then
+                    Annotation := Annotation + ' ';
+                  Annotation := Annotation + '(' + inttostr(lab) + ' = ' + temp + ')';
+                end;
+             end;
+          end
+          else if (opcodelist[j].arg[k] = T_STR) then
+          begin
+            // Look for registers
+            for x := 0 to 255 do
+            begin
+              SearchStr := 'r' + IntToStr(x);
+              FoundPos := Pos(SearchStr, LineText);
+              if (FoundPos > 0) and IsWordInString(PChar(LineText), SearchStr, [soDown, soWholeWord, soMatchCase]) then
+              begin
+                // Insert in sorted order by position
+                g := 0;
+                while (g < RegPositions.Count) and (RegPositions[g] < FoundPos) do
+                  Inc(g);
+                RegPositions.Insert(g, FoundPos);
+                RegMatches.Insert(g, x);
+              end;
+            end;
+            for RegNum in RegMatches do
+            begin
+              temp := '';
+              if Assigned(FNoteLookup) then
+                FNoteLookUp.TryGetValue('R' + IntToStr(RegNum), temp);
+              if (temp <> '') and not Annotation.Contains('(R' + IntToStr(RegNum) + '=' + temp + ')') then
+              begin
+                if Annotation <> '' then
+                  Annotation := Annotation + ' ';
+                Annotation := Annotation + '(R' + IntToStr(RegNum) + ' = ' + temp + ')';
+              end;
+            end;
           end;
         end;
       end;
@@ -2390,6 +2455,8 @@ begin
     end;
     finally
       argstrings.Free;
+      RegMatches.Free;
+      RegPositions.Free;
     end;
   end;
 end;
