@@ -2327,198 +2327,199 @@ var
   argarray: TArray <String>;
   argstrings: TStringList;
 begin
-  if not hideanno then
+  // Calculate zoom
+  zoom := TextEdit.ZoomPercentage / 100;
+
+  // Get the range of visible lines
+  FirstVisibleLine := TextEdit.TopLine;
+  LastVisibleLine := FirstVisibleLine + TextEdit.VisibleLineCount;
+
+  // Prepare canvas for annotation text
+  TextEdit.Canvas.Font.Name := TextEdit.Fonts.Text.Name;
+  TextEdit.Canvas.Font.Size := round(TextEdit.Fonts.Text.Size * zoom);
+  TextEdit.Canvas.Font.Style := [fsItalic];
+  TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorCommentForeground;
+  TextEdit.Canvas.Brush.Style := bsClear;
+
+  // Draw annotations for each visible line
+  argstrings := TStringList.Create;
+  RegMatches := TList<Integer>.Create;
+  RegPositions := TList<Integer>.Create;
+  try
+  for i := FirstVisibleLine to LastVisibleLine do
   begin
-    // Calculate zoom
-    zoom := TextEdit.ZoomPercentage / 100;
+    // Clear/initialize values
+    argstrings.Clear;
+    RegMatches.Clear;
+    RegPositions.Clear;
+    Annotation := '';
+    labelstr := '';
+    temp := '';
+    LineText := TextEdit.Lines[i-1];
 
-    // Get the range of visible lines
-    FirstVisibleLine := TextEdit.TopLine;
-    LastVisibleLine := FirstVisibleLine + TextEdit.VisibleLineCount;
+    // Look for a label
+    j := pos(':',LineText);
+      if (j <= 6) and (j <> 0) then
+        LabelStr := copy(LineText, 1, j-1);
+    if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(Labelstr, temp);
+    if temp <> '' then
+    Annotation :=  '[@' + temp + ']';
 
-    // Prepare canvas for annotation text
-    TextEdit.Canvas.Font.Name := TextEdit.Fonts.Text.Name;
-    TextEdit.Canvas.Font.Size := round(TextEdit.Fonts.Text.Size * zoom);
-    TextEdit.Canvas.Font.Style := [fsItalic];
-    TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorCommentForeground;
-    TextEdit.Canvas.Brush.Style := bsClear;
-
-    // Draw annotations for each visible line
-    argstrings := TStringList.Create;
-    RegMatches := TList<Integer>.Create;
-    RegPositions := TList<Integer>.Create;
-    try
-    for i := FirstVisibleLine to LastVisibleLine do
+    // Get opcode if it exists
+    opcodestr := '';
+    temp := '';
+    for j := 0 to Length(opcodelist) - 1 do
     begin
-      // Clear/initialize values
-      argstrings.Clear;
-      RegMatches.Clear;
-      RegPositions.Clear;
-      Annotation := '';
-      labelstr := '';
-      temp := '';
-      LineText := TextEdit.Lines[i-1];
-
-      // Look for a label
-      j := pos(':',LineText);
-        if (j <= 6) and (j <> 0) then
-          LabelStr := copy(LineText, 1, j-1);
-      if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(Labelstr, temp);
-      if temp <> '' then
-      Annotation :=  '[@' + temp + ']';
-
-      // Get opcode if it exists
-      opcodestr := '';
-      temp := '';
-      for j := 0 to Length(opcodelist) - 1 do
+      if (opcodelist[j].name <> '') and (LineText.Contains(opcodelist[j].name)) then
       begin
-        if (opcodelist[j].name <> '') and (LineText.Contains(opcodelist[j].name)) then
-        begin
-          opcodestr := opcodelist[j].name;
-          opcodepos := pos(opcodelist[j].name, LineText);
-          break;
-        end
-        else if LineText.Contains('Unknow_Opcode') then
-        begin
-          opcodestr := 'Unknow_Opcode';
-          opcodepos := pos('Unknow_Opcode', LineText);
-          break;
-        end;
+        opcodestr := opcodelist[j].name;
+        opcodepos := pos(opcodelist[j].name, LineText);
+        break;
+      end
+      else if LineText.Contains('Unknow_Opcode') then
+      begin
+        opcodestr := 'Unknow_Opcode';
+        opcodepos := pos('Unknow_Opcode', LineText);
+        break;
       end;
+    end;
 
-      // Check arguments
-      if opcodestr <> '' then
+    // Check arguments
+    if opcodestr <> '' then
+    begin
+      fullargs := copy(LineText, opcodepos +
+      length(opcodestr),length(LineText));
+
+      stringpos := pos('''', fullargs);
+      if (stringpos > 0) and (opcodestr <> 'STR:') then
+        delete(fullargs, stringpos, length(fullargs) - stringpos);
+      if (opcodestr <> 'STR:') and (opcodestr <> 'HEX:') and (opcodestr <> 'Unknow_Opcode') then
       begin
-        fullargs := copy(LineText, opcodepos +
-        length(opcodestr),length(LineText));
-
-        stringpos := pos('''', fullargs);
-        if (stringpos > 0) and (opcodestr <> 'STR:') then
-          delete(fullargs, stringpos, length(fullargs) - stringpos);
-        if (opcodestr <> 'STR:') and (opcodestr <> 'HEX:') and (opcodestr <> 'Unknow_Opcode') then
-        begin
-              argarray := SplitString(fullargs, ',');
-              for var arg in argarray do
-                argstrings.add(trim(arg));
-        end;
-        if argstrings.Count = 0 then
-        begin
-          if opcodestr = 'STR:' then
-            argstrings.add(fullargs)
-          else argstrings.add(Trim(fullargs));
-        end;
+            argarray := SplitString(fullargs, ',');
+            for var arg in argarray do
+              argstrings.add(trim(arg));
       end;
-      for k := 0 to argstrings.count - 1 do
+      if argstrings.Count = 0 then
       begin
-        temp := '';
-        if (argstrings.Strings[k] <> '') and (opcodestr <> '')
-        and (opcodestr <> 'Unknow_Opcode') and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
+        if opcodestr = 'STR:' then
+          argstrings.add(fullargs)
+        else argstrings.add(Trim(fullargs));
+      end;
+    end;
+    for k := 0 to argstrings.count - 1 do
+    begin
+      temp := '';
+      if (argstrings.Strings[k] <> '') and (opcodestr <> '')
+      and (opcodestr <> 'Unknow_Opcode') and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
+      then
+      begin
+        s := argstrings.Strings[k];
+        if ((opcodelist[j].arg[k] = T_REG)
+        or (opcodelist[j].arg[k] = T_BREG)
+        or (opcodelist[j].arg[k] = T_DREG)
+        or (opcodelist[j].arg[k] = T_RREG)
+        or (opcodelist[j].arg[k] = T_FUNC)
+        or (opcodelist[j].arg[k] = T_DATA)
+        or (opcodelist[j].arg[k] = T_STRDATA)
+        or (opcodelist[j].arg[k] = T_FUNC2)
+        or ((opcodelist[j].arg[k] = T_DWORD)
+        and (opcodelist[j].order = T_ARGS)))
         then
         begin
-          s := argstrings.Strings[k];
-          if ((opcodelist[j].arg[k] = T_REG)
-          or (opcodelist[j].arg[k] = T_BREG)
-          or (opcodelist[j].arg[k] = T_DREG)
-          or (opcodelist[j].arg[k] = T_RREG)
-          or (opcodelist[j].arg[k] = T_FUNC)
-          or (opcodelist[j].arg[k] = T_DATA)
-          or (opcodelist[j].arg[k] = T_STRDATA)
-          or (opcodelist[j].arg[k] = T_FUNC2)
-          or ((opcodelist[j].arg[k] = T_DWORD)
-          and (opcodelist[j].order = T_ARGS)))
-          then
+          if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(UpperCase(s), temp);
+          if (temp <> '') and not Annotation.Contains('(' + UpperCase(s) + ' = ' + temp + ')') then
           begin
-            if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(UpperCase(s), temp);
-            if (temp <> '') and not Annotation.Contains('(' + UpperCase(s) + ' = ' + temp + ')') then
-            begin
-              if Annotation <> '' then
-                Annotation := Annotation + ' ';
-              Annotation := Annotation + '(' + UpperCase(s) + ' = ' + temp + ')';
-            end;
-          end
-          else if ((opcodelist[j].arg[k] = T_SWITCH) or (opcodelist[j].arg[k] = T_SWITCH2B)) then
-          begin
-           g := 0;
-           d := 0;
-           lab := 0;
-           trystrtoint(copy(s,1,pos(':',s)-1),g);
-           o:=copy(s,pos(':',s)+1,length(s)-pos(':',s));
-           s:=inttostr(g);
-           while g > 0 do begin
-                d:=pos(':',o);
-                if d = 0 then begin
-                    if g = 1 then d:=length(o)+1;
-                end;
-                trystrtoint(copy(o,1,d-1),lab);
-                o:=copy(o,d+1,length(o)-d);
-                dec(g);
-                temp := '';
-                if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(inttostr(lab), temp);
-                if (temp <> '') and not Annotation.Contains('(' + inttostr(lab) + ' = ' + temp + ')') then
-                begin
-                  if Annotation <> '' then
-                    Annotation := Annotation + ' ';
-                  Annotation := Annotation + '(' + inttostr(lab) + ' = ' + temp + ')';
-                end;
-             end;
-          end
-          else if (opcodelist[j].arg[k] = T_STR) then
-          begin
-            // Look for registers
-            for x := 0 to 255 do
-            begin
-              SearchStr := 'r' + IntToStr(x);
-              FoundPos := Pos(SearchStr, LineText);
-              if (FoundPos > 0) and IsWordInString(PChar(LineText), SearchStr, [soDown, soWholeWord, soMatchCase]) then
-              begin
-                // Insert in sorted order by position
-                g := 0;
-                while (g < RegPositions.Count) and (RegPositions[g] < FoundPos) do
-                  Inc(g);
-                RegPositions.Insert(g, FoundPos);
-                RegMatches.Insert(g, x);
+            if Annotation <> '' then
+              Annotation := Annotation + ' ';
+            Annotation := Annotation + '(' + UpperCase(s) + ' = ' + temp + ')';
+          end;
+        end
+        else if ((opcodelist[j].arg[k] = T_SWITCH) or (opcodelist[j].arg[k] = T_SWITCH2B)) then
+        begin
+         g := 0;
+         d := 0;
+         lab := 0;
+         trystrtoint(copy(s,1,pos(':',s)-1),g);
+         o:=copy(s,pos(':',s)+1,length(s)-pos(':',s));
+         s:=inttostr(g);
+         while g > 0 do begin
+              d:=pos(':',o);
+              if d = 0 then begin
+                  if g = 1 then d:=length(o)+1;
               end;
-            end;
-            for RegNum in RegMatches do
-            begin
+              trystrtoint(copy(o,1,d-1),lab);
+              o:=copy(o,d+1,length(o)-d);
+              dec(g);
               temp := '';
-              if Assigned(FNoteLookup) then
-                FNoteLookUp.TryGetValue('R' + IntToStr(RegNum), temp);
-              if (temp <> '') and not Annotation.Contains('(R' + IntToStr(RegNum) + '=' + temp + ')') then
+              if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(inttostr(lab), temp);
+              if (temp <> '') and not Annotation.Contains('(' + inttostr(lab) + ' = ' + temp + ')') then
               begin
                 if Annotation <> '' then
                   Annotation := Annotation + ' ';
-                Annotation := Annotation + '(R' + IntToStr(RegNum) + ' = ' + temp + ')';
+                Annotation := Annotation + '(' + inttostr(lab) + ' = ' + temp + ')';
               end;
+           end;
+        end
+        else if (opcodelist[j].arg[k] = T_STR) then
+        begin
+          // Look for registers
+          for x := 0 to 255 do
+          begin
+            SearchStr := 'r' + IntToStr(x);
+            FoundPos := Pos(SearchStr, LineText);
+            if (FoundPos > 0) and IsWordInString(PChar(LineText), SearchStr, [soDown, soWholeWord, soMatchCase]) then
+            begin
+              // Insert in sorted order by position
+              g := 0;
+              while (g < RegPositions.Count) and (RegPositions[g] < FoundPos) do
+                Inc(g);
+              RegPositions.Insert(g, FoundPos);
+              RegMatches.Insert(g, x);
+            end;
+          end;
+          for RegNum in RegMatches do
+          begin
+            temp := '';
+            if Assigned(FNoteLookup) then
+              FNoteLookUp.TryGetValue('R' + IntToStr(RegNum), temp);
+            if (temp <> '') and not Annotation.Contains('(R' + IntToStr(RegNum) + '=' + temp + ')') then
+            begin
+              if Annotation <> '' then
+                Annotation := Annotation + ' ';
+              Annotation := Annotation + '(R' + IntToStr(RegNum) + ' = ' + temp + ')';
             end;
           end;
         end;
       end;
-
-      // Overwrite with custom annotation if found
-      temp := '';
-      if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue('L'+inttostr(i-1), temp);
-      if temp <> '' then Annotation := '// ' + temp;
-
-      if Annotation <> '' then
-      begin
-        // Calculate vertical position
-        YPos := (i - FirstVisibleLine) * TextEdit.LineHeight;
-
-        // Calculate horizontal position
-        if (Length(LineText) > 0) and (LineText[Length(LineText)] <> ' ') then
-          Annotation := ' ' + Annotation;
-        XPos := TextEdit.Canvas.TextWidth(LineText) - TextEdit.HorizontalScrollPosition;
-
-        // Draw the annotation
-        TextEdit.Canvas.TextOut(XPos, YPos, Annotation);
-      end;
     end;
-    finally
-      argstrings.Free;
-      RegMatches.Free;
-      RegPositions.Free;
+
+    // Hide auto-annotations if enabled
+    if hideanno then
+      Annotation := '';
+
+    // Overwrite with custom annotation if found
+    temp := '';
+    if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue('L'+inttostr(i-1), temp);
+    if temp <> '' then Annotation := '// ' + temp;
+
+    if Annotation <> '' then
+    begin
+      // Calculate vertical position
+      YPos := (i - FirstVisibleLine) * TextEdit.LineHeight;
+
+      // Calculate horizontal position
+      if (Length(LineText) > 0) and (LineText[Length(LineText)] <> ' ') then
+        Annotation := ' ' + Annotation;
+      XPos := TextEdit.Canvas.TextWidth(LineText) - TextEdit.HorizontalScrollPosition;
+
+      // Draw the annotation
+      TextEdit.Canvas.TextOut(XPos, YPos, Annotation);
     end;
+  end;
+  finally
+    argstrings.Free;
+    RegMatches.Free;
+    RegPositions.Free;
   end;
 end;
 
