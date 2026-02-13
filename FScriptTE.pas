@@ -279,7 +279,6 @@ begin
     if sep > 0 then
     begin
       left  := Trim(Copy(s, 1, sep - 1));
-      if (Length(left) > 0) and (UpperCase(left[1]) = 'F') then delete(left,1,1);
       right := Trim(Copy(s, sep + 2, MaxInt));
 
       // Make lookup case-insensitive
@@ -777,14 +776,19 @@ end;
 procedure TfmScriptTE.Defineterm1Click(Sender: TObject);
 var
   temp: string;
+  NewLineIndex: Integer;
 begin
-  if Assigned(FNoteLookup) and FNoteLookup.TryGetValue(UpperCase(lastmouseword), temp) then
+  if Assigned(FNoteLookup) and FNoteLookup.TryGetValue(lastmouseword, temp) then
     exit;
+
   if not NotesPanel.Visible then
-    NotesPanel.Show;
-  txtNotes.Lines.Add(lastmouseword + ' := ');
+    Notes1Click(nil);
+
+  NewLineIndex := txtNotes.Lines.Add(lastmouseword + ' := ');
   txtNotes.SetFocus;
-  txtNotes.SelStart := Length(txtNotes.Text)-1;
+
+  // Position cursor at end of the newly added line
+  txtNotes.CaretPos := Point(Length(txtNotes.Lines[NewLineIndex]), NewLineIndex);
 end;
 
 procedure TfmScriptTE.Delete1Click(Sender: TObject);
@@ -1594,14 +1598,19 @@ end;
 procedure TfmScriptTE.Addannotation1Click(Sender: TObject);
 var
   temp: string;
+  NewLineIndex: Integer;
 begin
   if Assigned(FNoteLookup) and FNoteLookup.TryGetValue('L' + inttostr(TextEdit.TextPosition.Line), temp) then
     exit;
+
   if not NotesPanel.Visible then
-    NotesPanel.Show;
-  txtNotes.Lines.Add('L' + inttostr(TextEdit.TextPosition.Line) + ' := ');
+    Notes1Click(nil);
+
+  NewLineIndex := txtNotes.Lines.Add('L' + inttostr(TextEdit.TextPosition.Line) + ' := ');
   txtNotes.SetFocus;
-  txtNotes.SelStart := Length(txtNotes.Text)-1;
+
+  // Position cursor at end of the newly added line
+  txtNotes.CaretPos := Point(Length(txtNotes.Lines[NewLineIndex]), NewLineIndex);
 end;
 
 procedure TfmScriptTE.AddArgs1Click(Sender: TObject);
