@@ -2358,12 +2358,12 @@ begin
         then
         begin
           s := argstrings.Strings[k];
-          if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(s, temp);
-          if (temp <> '') and not Annotation.Contains('(' + s + ' = ' + temp + ')') then
+          if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(UpperCase(s), temp);
+          if (temp <> '') and not Annotation.Contains('(' + UpperCase(s) + ' = ' + temp + ')') then
           begin
             if Annotation <> '' then
               Annotation := Annotation + ' ';
-            Annotation := Annotation + '(' + s + ' = ' + temp + ')';
+            Annotation := Annotation + '(' + UpperCase(s) + ' = ' + temp + ')';
           end;
         end;
       end;
