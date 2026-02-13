@@ -246,10 +246,22 @@ object fmScriptTE: TfmScriptTE
       Caption = 'Hide NOPs'
       OnClick = HideNOPs1Click
     end
+    object N12: TMenuItem
+      Caption = '-'
+    end
+    object Addannotation1: TMenuItem
+      Caption = 'Add annotation'
+      ShortCut = 32833
+      OnClick = Addannotation1Click
+    end
     object Annotations1: TMenuItem
       Caption = 'Hide annotations'
-      ShortCut = 32833
+      ShortCut = 41025
       OnClick = Annotations1Click
+    end
+    object Defineterm1: TMenuItem
+      Caption = 'Define <term>'
+      OnClick = Defineterm1Click
     end
     object N2: TMenuItem
       Caption = '-'
@@ -654,6 +666,11 @@ object fmScriptTE: TfmScriptTE
         Caption = 'Add register'
         ShortCut = 16466
         OnClick = Addregister1Click
+      end
+      object Hideannotations1: TMenuItem
+        Caption = 'Hide annotations'
+        ShortCut = 41025
+        OnClick = Hideannotations1Click
       end
     end
   end

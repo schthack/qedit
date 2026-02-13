@@ -3,7 +3,7 @@ unit MyConst;
 interface
 
   Const
-    EnglishUIText: array[0..530] of string = (
+    EnglishUIText: array[0..532] of string = (
     'File',                                                                     // 1
     'Properties',                                                               // 2
     'Script',                                                                   // 3
@@ -534,7 +534,9 @@ interface
     '[Click a target or area - Esc: cancel]',                                   // 528
     'Redo',                                                                     // 529
     'W = Change wave, G = Change group, Left-click + X = Rotate object X, + Z = Rotate object Z', // 530
-    'Hide annotations'                                                          // 531
+    'Add line annotation',                                                      // 531
+    'Hide annotations',                                                         // 532
+    'Define'                                                                    // 533
   );
 
 Const FloorFog: array[0..46] of byte = (

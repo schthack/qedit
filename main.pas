@@ -853,7 +853,7 @@ var
   editgrid: Boolean = false;
   addargs: Boolean = false;
   hidenops: Boolean = true;
-  hideanno: Boolean = true;
+  hideanno: Boolean = false;
   showbitmaps: Boolean = false;
   markerbrightness: integer = 0;
   outlinewidth: integer = 1;
@@ -2266,7 +2266,8 @@ begin
   fmScriptTE.Delete1.Caption := GetLanguageString(162);
   fmScriptTE.Undo1.Caption := GetLanguageString(45);
   fmScriptTE.Redo1.Caption := GetLanguageString(529);
-  fmScriptTE.Annotations1.Caption := GetLanguageString(531);
+  fmScriptTE.Addannotation1.Caption := GetLanguageString(531);
+  fmScriptTE.Annotations1.Caption := GetLanguageString(532);
 
   fmReplace.Caption := GetLanguageString(420);
   fmReplace.Label1.Caption := GetLanguageString(421);
@@ -3608,7 +3609,7 @@ end;
 procedure TForm1.LookAt2Click(Sender: TObject);
 begin
   if Screen.ActiveForm = fmScriptTE then
-    fmScriptTE.Annotations1Click(nil)
+    fmScriptTE.AddAnnotation1Click(nil)
   else
     LookAt1Click(nil);
 end;

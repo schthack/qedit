@@ -137,6 +137,10 @@ type
     N6: TMenuItem;
     Redo1: TMenuItem;
     Annotations1: TMenuItem;
+    Addannotation1: TMenuItem;
+    N12: TMenuItem;
+    Hideannotations1: TMenuItem;
+    Defineterm1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -215,6 +219,9 @@ type
     procedure PopupMenu1Popup(Sender: TObject);
     procedure TextEditPaint(const ASender: TObject; const ACanvas: TCanvas);
     procedure Annotations1Click(Sender: TObject);
+    procedure Addannotation1Click(Sender: TObject);
+    procedure Hideannotations1Click(Sender: TObject);
+    procedure Defineterm1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -246,6 +253,7 @@ var
   nextline: integer = 0;
   nextlabel: integer = 0;
   opcodelist: array [0 .. 1000] of TAsmFnc;
+  lastmouseword: string;
 
 implementation
 
@@ -271,7 +279,7 @@ begin
     if sep > 0 then
     begin
       left  := Trim(Copy(s, 1, sep - 1));
-      if UpperCase(left[1]) = 'F' then delete(left,1,1);
+      if (Length(left) > 0) and (UpperCase(left[1]) = 'F') then delete(left,1,1);
       right := Trim(Copy(s, sep + 2, MaxInt));
 
       // Make lookup case-insensitive
@@ -766,6 +774,19 @@ begin
   form4.Decimal1Click(nil);
 end;
 
+procedure TfmScriptTE.Defineterm1Click(Sender: TObject);
+var
+  temp: string;
+begin
+  if Assigned(FNoteLookup) and FNoteLookup.TryGetValue(UpperCase(lastmouseword), temp) then
+    exit;
+  if not NotesPanel.Visible then
+    NotesPanel.Show;
+  txtNotes.Lines.Add(lastmouseword + ' := ');
+  txtNotes.SetFocus;
+  txtNotes.SelStart := Length(txtNotes.Text)-1;
+end;
+
 procedure TfmScriptTE.Delete1Click(Sender: TObject);
 begin
   TextEdit.DeleteSelection;
@@ -1111,6 +1132,11 @@ begin
   TextEdit.Invalidate;
 end;
 
+procedure TfmScriptTE.Hideannotations1Click(Sender: TObject);
+begin
+  Annotations1Click(nil);
+end;
+
 procedure TfmScriptTE.HideNOPs1Click(Sender: TObject);
 begin
   form4.HideNOPs1Click(nil);
@@ -1365,6 +1391,8 @@ begin
 end;
 
 procedure TfmScriptTE.PopupMenu1Popup(Sender: TObject);
+var
+  temp: string;
 begin
    if TextEdit.SelectedText = '' then
    begin
@@ -1387,6 +1415,17 @@ begin
   if TextEdit.CanPaste then
     fmScriptTE.Paste1.Enabled := true
   else fmScriptTE.Paste1.Enabled := false;
+  if Assigned(FNoteLookup) and FNoteLookup.TryGetValue('L' + inttostr(TextEdit.TextPosition.Line), temp) then
+    fmScriptTE.AddAnnotation1.Enabled := false
+  else fmScriptTE.AddAnnotation1.Enabled := true;
+  if TextEdit.WordAtMouse(false) <> '' then
+  begin
+    lastmouseword := TextEdit.WordAtMouse(false);
+    fmScriptTE.Defineterm1.Visible := true;
+    fmScriptTE.Defineterm1.Caption := GetLanguageString(533) + ' '''
+    + lastmouseword + '''';
+  end
+  else fmScriptTE.Defineterm1.Visible := false;
 end;
 
 procedure TfmScriptTE.Opcodes1Click(Sender: TObject);
@@ -1550,6 +1589,19 @@ end;
 procedure TfmScriptTE.Switcheditor1Click(Sender: TObject);
 begin
   form1.SwitchScriptEditor1Click(nil);
+end;
+
+procedure TfmScriptTE.Addannotation1Click(Sender: TObject);
+var
+  temp: string;
+begin
+  if Assigned(FNoteLookup) and FNoteLookup.TryGetValue('L' + inttostr(TextEdit.TextPosition.Line), temp) then
+    exit;
+  if not NotesPanel.Visible then
+    NotesPanel.Show;
+  txtNotes.Lines.Add('L' + inttostr(TextEdit.TextPosition.Line) + ' := ');
+  txtNotes.SetFocus;
+  txtNotes.SelStart := Length(txtNotes.Text)-1;
 end;
 
 procedure TfmScriptTE.AddArgs1Click(Sender: TObject);

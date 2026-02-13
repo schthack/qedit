@@ -528,4 +528,6 @@ Look at target or area
 [Click a target or area - Esc: cancel]
 Redo
 W = Change wave, G = Change group, Left-click + X = Rotate object X, + Z = Rotate object Z
+Add line annotation
 Hide annotations
+Define
