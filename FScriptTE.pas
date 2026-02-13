@@ -2283,9 +2283,8 @@ begin
     try
     for i := FirstVisibleLine to LastVisibleLine do
     begin
-      // Clear lists for this line
+      // Clear/initialize values
       argstrings.Clear;
-
       Annotation := '';
       labelstr := '';
       temp := '';
@@ -2343,8 +2342,8 @@ begin
       for k := 0 to argstrings.count - 1 do
       begin
         temp := '';
-        if (argstrings.Strings[k] <> '') and (opcodestr <> 'Unknow_Opcode')
-        and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
+        if (argstrings.Strings[k] <> '') and (opcodestr <> '')
+        and (opcodestr <> 'Unknow_Opcode') and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
         and ((opcodelist[j].arg[k] = T_REG)
         or (opcodelist[j].arg[k] = T_BREG)
         or (opcodelist[j].arg[k] = T_DREG)
