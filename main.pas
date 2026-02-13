@@ -853,7 +853,7 @@ var
   editgrid: Boolean = false;
   addargs: Boolean = false;
   hidenops: Boolean = true;
-  hideanno: Boolean = false;
+  hideanno: Boolean = true;
   showbitmaps: Boolean = false;
   markerbrightness: integer = 0;
   outlinewidth: integer = 1;

@@ -271,6 +271,7 @@ begin
     if sep > 0 then
     begin
       left  := Trim(Copy(s, 1, sep - 1));
+      if UpperCase(left[1]) = 'F' then delete(left,1,1);
       right := Trim(Copy(s, sep + 2, MaxInt));
 
       // Make lookup case-insensitive
@@ -1101,7 +1102,7 @@ begin
     Reg.RootKey := HKEY_CURRENT_USER;
   if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
   begin
-    Reg.WriteBool('HideNOPs', Annotations1.Checked);
+    Reg.WriteBool('HideAnnotations', Annotations1.Checked);
     Reg.CloseKey;
   end;
   finally
