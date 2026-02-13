@@ -285,8 +285,7 @@ begin
       FNoteLookup.AddOrSetValue(UpperCase(left), right);
     end;
   end;
-  if not hideanno then
-    TextEdit.Invalidate;
+  TextEdit.Invalidate;
 end;
 
 procedure UncheckThemes;
