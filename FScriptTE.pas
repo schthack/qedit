@@ -1108,6 +1108,7 @@ begin
   finally
     Reg.Free;
   end;
+  TextEdit.Invalidate;
 end;
 
 procedure TfmScriptTE.HideNOPs1Click(Sender: TObject);
@@ -2350,7 +2351,7 @@ begin
         begin
           s := argstrings.Strings[k];
           if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(s, temp);
-          if temp <> '' then
+          if (temp <> '') and not Annotation.Contains('(' + s + ' = ' + temp + ')') then
           begin
             if Annotation <> '' then
               Annotation := Annotation + ' ';
@@ -2370,7 +2371,7 @@ begin
         YPos := (i - FirstVisibleLine) * TextEdit.LineHeight;
 
         // Calculate horizontal position
-        if (Length(LineText) > 0) and (LineText[Length(linetext)] <> ' ') then
+        if (Length(LineText) > 0) and (LineText[Length(LineText)] <> ' ') then
           Annotation := ' ' + Annotation;
         XPos := TextEdit.Canvas.TextWidth(LineText) - TextEdit.HorizontalScrollPosition;
 

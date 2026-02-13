@@ -3607,7 +3607,10 @@ end;
 
 procedure TForm1.LookAt2Click(Sender: TObject);
 begin
-  LookAt1Click(nil);
+  if Screen.ActiveForm = fmScriptTE then
+    fmScriptTE.Annotations1Click(nil)
+  else
+    LookAt1Click(nil);
 end;
 
 Procedure TForm1.DrawMap;

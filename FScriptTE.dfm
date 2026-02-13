@@ -248,6 +248,7 @@ object fmScriptTE: TfmScriptTE
     end
     object Annotations1: TMenuItem
       Caption = 'Hide annotations'
+      ShortCut = 32833
       OnClick = Annotations1Click
     end
     object N2: TMenuItem
