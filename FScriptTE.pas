@@ -2345,14 +2345,7 @@ begin
         temp := '';
         if (argstrings.Strings[k] <> '') and (opcodestr <> '')
         and (opcodestr <> 'Unknow_Opcode') and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
-        and ((opcodelist[j].arg[k] = T_REG)
-        or (opcodelist[j].arg[k] = T_BREG)
-        or (opcodelist[j].arg[k] = T_DREG)
-        or (opcodelist[j].arg[k] = T_RREG)
-        or (opcodelist[j].arg[k] = T_FUNC)
-        or (opcodelist[j].arg[k] = T_DATA)
-        or (opcodelist[j].arg[k] = T_STRDATA)
-        or (opcodelist[j].arg[k] = T_FUNC2))
+        and (opcodelist[j].arg[k] <> T_STR)
         then
         begin
           s := argstrings.Strings[k];
