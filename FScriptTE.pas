@@ -136,6 +136,7 @@ type
     NotesText1: TMenuItem;
     N6: TMenuItem;
     Redo1: TMenuItem;
+    Annotations1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -212,6 +213,8 @@ type
     procedure FormActivate(Sender: TObject);
     procedure Redo1Click(Sender: TObject);
     procedure PopupMenu1Popup(Sender: TObject);
+    procedure TextEditPaint(const ASender: TObject; const ACanvas: TCanvas);
+    procedure Annotations1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -274,6 +277,8 @@ begin
       FNoteLookup.AddOrSetValue(UpperCase(left), right);
     end;
   end;
+  if not hideanno then
+    TextEdit.Invalidate;
 end;
 
 procedure UncheckThemes;
@@ -1083,6 +1088,25 @@ end;
 procedure TfmScriptTE.Hex1Click(Sender: TObject);
 begin
   form4.Hex1Click(nil);
+end;
+
+procedure TfmScriptTE.Annotations1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  Annotations1.Checked := not Annotations1.Checked;
+  hideanno := not hideanno;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+  begin
+    Reg.WriteBool('HideNOPs', Annotations1.Checked);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
 end;
 
 procedure TfmScriptTE.HideNOPs1Click(Sender: TObject);
@@ -2225,6 +2249,137 @@ begin
   // Only refresh hint if changed
   if TextEdit.Hint <> oldHint then
     Application.ActivateHint(TextEdit.ClientToScreen(Point(X, Y)));
+end;
+
+procedure TfmScriptTE.TextEditPaint(const ASender: TObject;
+  const ACanvas: TCanvas);
+var
+  i, j, k, opcodepos, stringpos: Integer;
+  zoom: Double;
+  LineText, Annotation, LabelStr, temp, opcodestr, fullargs, s: string;
+  YPos, XPos: Integer;
+  FirstVisibleLine, LastVisibleLine: Integer;
+  argarray: TArray <String>;
+  argstrings: TStringList;
+begin
+  if not hideanno then
+  begin
+    // Calculate zoom
+    zoom := TextEdit.ZoomPercentage / 100;
+
+    // Get the range of visible lines
+    FirstVisibleLine := TextEdit.TopLine;
+    LastVisibleLine := FirstVisibleLine + TextEdit.VisibleLineCount;
+
+    // Prepare canvas for annotation text
+    TextEdit.Canvas.Font.Name := TextEdit.Fonts.Text.Name;
+    TextEdit.Canvas.Font.Size := round(TextEdit.Fonts.Text.Size * zoom);
+    TextEdit.Canvas.Font.Style := [fsItalic];
+    TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorCommentForeground;
+    TextEdit.Canvas.Brush.Style := bsClear;
+
+    // Draw annotations for each visible line
+    argstrings := TStringList.Create;
+    try
+    for i := FirstVisibleLine to LastVisibleLine do
+    begin
+      // Clear lists for this line
+      argstrings.Clear;
+
+      Annotation := '';
+      labelstr := '';
+      temp := '';
+      LineText := TextEdit.Lines[i-1];
+
+      // Look for a label
+      j := pos(':',LineText);
+        if (j <= 6) and (j <> 0) then
+          LabelStr := copy(LineText, 1, j-1);
+      if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(Labelstr, temp);
+      if temp <> '' then
+      Annotation :=  '[@' + temp + ']';
+
+      // Get opcode if it exists
+      opcodestr := '';
+      temp := '';
+      for j := 0 to Length(opcodelist) - 1 do
+      begin
+        if (opcodelist[j].name <> '') and (LineText.Contains(opcodelist[j].name)) then
+        begin
+          opcodestr := opcodelist[j].name;
+          opcodepos := pos(opcodelist[j].name, LineText);
+          break;
+        end
+        else if LineText.Contains('Unknow_Opcode') then
+        begin
+          opcodestr := 'Unknow_Opcode';
+          opcodepos := pos('Unknow_Opcode', LineText);
+          break;
+        end;
+      end;
+
+      // Check arguments
+      if opcodestr <> '' then
+      begin
+        fullargs := copy(LineText, opcodepos +
+        length(opcodestr),length(LineText));
+
+        stringpos := pos('''', fullargs);
+        if (stringpos > 0) and (opcodestr <> 'STR:') then
+          delete(fullargs, stringpos, length(fullargs) - stringpos);
+        if (opcodestr <> 'STR:') and (opcodestr <> 'HEX:') and (opcodestr <> 'Unknow_Opcode') then
+        begin
+              argarray := SplitString(fullargs, ',');
+              for var arg in argarray do
+                argstrings.add(trim(arg));
+        end;
+        if argstrings.Count = 0 then
+        begin
+          if opcodestr = 'STR:' then
+            argstrings.add(fullargs)
+          else argstrings.add(Trim(fullargs));
+        end;
+      end;
+      for k := 0 to argstrings.count - 1 do
+      begin
+        temp := '';
+        if (argstrings.Strings[k] <> '') and (opcodestr <> 'Unknow_Opcode')
+        and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:') then
+        begin
+          s := argstrings.Strings[k];
+          if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(s, temp);
+          if temp <> '' then
+          begin
+            if Annotation <> '' then
+              Annotation := Annotation + ' ';
+            Annotation := Annotation + '(' + s + ' = ' + temp + ')';
+          end;
+        end;
+      end;
+
+      // Overwrite with custom annotation if found
+      temp := '';
+      if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue('L'+inttostr(i-1), temp);
+      if temp <> '' then Annotation := '// ' + temp;
+
+      if Annotation <> '' then
+      begin
+        // Calculate vertical position
+        YPos := (i - FirstVisibleLine) * TextEdit.LineHeight;
+
+        // Calculate horizontal position
+        if (Length(LineText) > 0) and (LineText[Length(linetext)] <> ' ') then
+          Annotation := ' ' + Annotation;
+        XPos := TextEdit.Canvas.TextWidth(LineText) - TextEdit.HorizontalScrollPosition;
+
+        // Draw the annotation
+        TextEdit.Canvas.TextOut(XPos, YPos, Annotation);
+      end;
+    end;
+    finally
+      argstrings.Free;
+    end;
+  end;
 end;
 
 procedure TfmScriptTE.txtNotesChange(Sender: TObject);

@@ -527,4 +527,5 @@ Edit
 Look at target or area
 [Click a target or area - Esc: cancel]
 Redo
-W = Change visible wave, G = Change visible group, Left-click + X = Rotate X, + Z = Rotate Z
+W = Change wave, G = Change group, Left-click + X = Rotate object X, + Z = Rotate object Z
+Hide annotations

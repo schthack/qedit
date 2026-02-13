@@ -853,6 +853,7 @@ var
   editgrid: Boolean = false;
   addargs: Boolean = false;
   hidenops: Boolean = true;
+  hideanno: Boolean = false;
   showbitmaps: Boolean = false;
   markerbrightness: integer = 0;
   outlinewidth: integer = 1;
@@ -2265,6 +2266,7 @@ begin
   fmScriptTE.Delete1.Caption := GetLanguageString(162);
   fmScriptTE.Undo1.Caption := GetLanguageString(45);
   fmScriptTE.Redo1.Caption := GetLanguageString(529);
+  fmScriptTE.Annotations1.Caption := GetLanguageString(531);
 
   fmReplace.Caption := GetLanguageString(420);
   fmReplace.Label1.Caption := GetLanguageString(421);
@@ -8777,6 +8779,8 @@ begin
           addargs := Reg.ReadBool('AddArgs');
         if Reg.ValueExists('HideNOPs') then
           hidenops := Reg.ReadBool('HideNOPs');
+        if Reg.ValueExists('HideAnnotations') then
+          hideanno := Reg.ReadBool('HideAnnotations');
         if Reg.ValueExists('ShowBMP') then
           showbitmaps := Reg.ReadBool('ShowBMP');
         if Reg.ValueExists('MarkerBrightness') then
@@ -9024,6 +9028,7 @@ begin
     fmScriptTE.AddArgs1.Checked := addargs;
     form4.HideNOPs1.Checked := hidenops;
     fmScriptTE.HideNOPs1.Checked := hidenops;
+    fmScriptTE.Annotations1.Checked := hideanno;
 
     form1.showbmp.Checked := showbitmaps;
     SetBrightness(markerbrightness);

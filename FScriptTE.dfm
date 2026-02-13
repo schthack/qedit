@@ -52,6 +52,7 @@ object fmScriptTE: TfmScriptTE
     OnKeyUp = TextEditKeyUp
     OnMouseDown = TextEditMouseDown
     OnMouseMove = TextEditMouseMove
+    OnPaint = TextEditPaint
     ParentShowHint = False
     RightMargin.Visible = False
     Scroll.Options = [soShowVerticalScrollHint, soWheelClickMove]
@@ -244,6 +245,10 @@ object fmScriptTE: TfmScriptTE
     object HideNOPs1: TMenuItem
       Caption = 'Hide NOPs'
       OnClick = HideNOPs1Click
+    end
+    object Annotations1: TMenuItem
+      Caption = 'Hide annotations'
+      OnClick = Annotations1Click
     end
     object N2: TMenuItem
       Caption = '-'
