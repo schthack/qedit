@@ -2354,7 +2354,8 @@ begin
         or (opcodelist[j].arg[k] = T_DATA)
         or (opcodelist[j].arg[k] = T_STRDATA)
         or (opcodelist[j].arg[k] = T_FUNC2)
-        or ((opcodelist[j].arg[k] = T_DWORD) and (opcodelist[j].order = T_ARGS)))
+        or ((opcodelist[j].arg[k] = T_DWORD)
+        and (opcodelist[j].order = T_ARGS)))
         then
         begin
           s := argstrings.Strings[k];
