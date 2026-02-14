@@ -780,20 +780,31 @@ end;
 
 procedure TfmScriptTE.Defineterm1Click(Sender: TObject);
 var
-  temp: string;
-  NewLineIndex: Integer;
+  NewLineIndex, idx: Integer;
 begin
-  if Assigned(FNoteLookup) and FNoteLookup.TryGetValue(lastmouseword, temp) then
-    exit;
-
   if not NotesPanel.Visible then
     Notes1Click(nil);
 
-  NewLineIndex := txtNotes.Lines.Add(lastmouseword + ' := ');
+  for idx := 0 to txtNotes.Lines.Count - 1 do
+  begin
+    if TrimLeft(UpperCase(txtNotes.Lines[idx])).StartsWith(UpperCase(lastmouseword))
+    and (pos(':=', txtNotes.Lines[idx]) > 0) then
+    begin
+      NewLineIndex := idx;
+      break;
+    end;
+  end;
+
+  if idx >= txtNotes.Lines.Count then
+    NewLineIndex := txtNotes.Lines.Add(lastmouseword + ' := ');
+
   txtNotes.SetFocus;
 
   // Position cursor at end of the newly added line
   txtNotes.CaretPos := Point(Length(txtNotes.Lines[NewLineIndex]), NewLineIndex);
+
+  // Scroll to the caret position
+  txtNotes.Perform(EM_SCROLLCARET, 0, 0);
 end;
 
 procedure TfmScriptTE.Delete1Click(Sender: TObject);
@@ -1424,9 +1435,9 @@ begin
   if TextEdit.CanPaste then
     fmScriptTE.Paste1.Enabled := true
   else fmScriptTE.Paste1.Enabled := false;
-  if Assigned(FNoteLookup) and FNoteLookup.TryGetValue('L' + inttostr(TextEdit.TextPosition.Line), temp) then
-    fmScriptTE.AddAnnotation1.Enabled := false
-  else fmScriptTE.AddAnnotation1.Enabled := true;
+  if Assigned(FNoteLookup) and FNoteLookUp.TryGetValue('L'+inttostr(TextEdit.TextPosition.Line), temp) then
+    fmScriptTE.Addannotation1.Caption := GetLanguageString(150) + GetLanguageString(531)
+  else fmScriptTE.Addannotation1.Caption := GetLanguageString(151) + GetLanguageString(531);
   temp := '';
   if TextEdit.WordAtMouse(false) <> '' then
   begin
@@ -1434,9 +1445,6 @@ begin
     fmScriptTE.Defineterm1.Visible := true;
     fmScriptTE.Defineterm1.Caption := GetLanguageString(533) + ' '''
     + lastmouseword + '''...';
-    if Assigned(FNoteLookup) and FNoteLookup.TryGetValue(UpperCase(lastmouseword), temp) then
-      fmScriptTE.Defineterm1.Enabled := false
-    else fmScriptTE.Defineterm1.Enabled := true;
   end
   else fmScriptTE.Defineterm1.Visible := false;
 end;
@@ -1607,20 +1615,31 @@ end;
 
 procedure TfmScriptTE.Addannotation1Click(Sender: TObject);
 var
-  temp: string;
-  NewLineIndex: Integer;
+  NewLineIndex, idx: Integer;
 begin
-  if Assigned(FNoteLookup) and FNoteLookup.TryGetValue('L' + inttostr(TextEdit.TextPosition.Line), temp) then
-    exit;
-
   if not NotesPanel.Visible then
     Notes1Click(nil);
 
-  NewLineIndex := txtNotes.Lines.Add('L' + inttostr(TextEdit.TextPosition.Line) + ' := ');
+  for idx := 0 to txtNotes.Lines.Count - 1 do
+  begin
+    if TrimLeft(UpperCase(txtNotes.Lines[idx])).StartsWith('L'+inttostr(TextEdit.TextPosition.Line))
+    and (pos(':=', txtNotes.Lines[idx]) > 0) then
+    begin
+      NewLineIndex := idx;
+      break;
+    end;
+  end;
+
+  if idx >= txtNotes.Lines.Count then
+    NewLineIndex := txtNotes.Lines.Add('L'+inttostr(TextEdit.TextPosition.Line) + ' := ');
+
   txtNotes.SetFocus;
 
   // Position cursor at end of the newly added line
   txtNotes.CaretPos := Point(Length(txtNotes.Lines[NewLineIndex]), NewLineIndex);
+
+  // Scroll to the caret position
+  txtNotes.Perform(EM_SCROLLCARET, 0, 0);
 end;
 
 procedure TfmScriptTE.AddArgs1Click(Sender: TObject);

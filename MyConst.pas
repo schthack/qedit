@@ -534,7 +534,7 @@ interface
     '[Click a target or area - Esc: cancel]',                                   // 528
     'Redo',                                                                     // 529
     'W = Change wave, G = Change group, Left-click + X = Rotate object X, + Z = Rotate object Z', // 530
-    'Add line comment...',                                                      // 531
+    ' line comment...',                                                         // 531
     'Hide annotations',                                                         // 532
     'Define',                                                                   // 533
     'Annotation...'                                                             // 534
