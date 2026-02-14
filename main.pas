@@ -2720,6 +2720,7 @@ begin
   cleantitle := SanitizeFileName(title);
   if (cleantitle <> '') and FileExists(path + 'notes\' + cleantitle + ' notes'+ '.txt') then
     fmScriptTE.txtNotes.Lines.LoadFromFile(path + 'notes\' + cleantitle + ' notes'+ '.txt');
+  fmScriptTE.BuildNoteLookup;
   isedited := false;
  if previewstate > 0 then
   ResetPreviewState;
@@ -4615,6 +4616,7 @@ begin
       cleantitle := SanitizeFileName(title);
       if (cleantitle <> '') and FileExists(path + 'notes\' + cleantitle + ' notes'+ '.txt') then
         fmScriptTE.txtNotes.Lines.LoadFromFile(path + 'notes\' + cleantitle + ' notes'+ '.txt');
+      fmScriptTE.BuildNoteLookup;
       isedited := false;
       if previewstate > 0 then
         ResetPreviewState;
@@ -11579,6 +11581,7 @@ begin
   TsReg.Clear;
   Tsopc.Clear;
   fmScriptTE.txtNotes.Clear;
+  fmScriptTE.BuildNoteLookup;
   for x := 0 to 30 do
   begin
     Floor[x].MonsterCount := 0;
@@ -11656,6 +11659,7 @@ begin
   TsReg.Clear;
   Tsopc.Clear;
   fmScriptTE.txtNotes.Clear;
+  fmScriptTE.BuildNoteLookup;
   for x := 0 to 30 do
   begin
     Floor[x].MonsterCount := 0;
@@ -11734,6 +11738,7 @@ begin
   TsReg.Clear;
   Tsopc.Clear;
   fmScriptTE.txtNotes.Clear;
+  fmScriptTE.BuildNoteLookup;
   for x := 0 to 30 do
   begin
     Floor[x].MonsterCount := 0;

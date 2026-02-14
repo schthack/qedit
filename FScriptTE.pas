@@ -222,11 +222,11 @@ type
     procedure Addannotation1Click(Sender: TObject);
     procedure Defineterm1Click(Sender: TObject);
     procedure Annotation1Click(Sender: TObject);
+    procedure BuildNoteLookup;
 
   private
     { Private declarations }
     FNoteLookup: TDictionary<string, string>;
-    procedure BuildNoteLookup;
   public
     { Public declarations }
   end;
