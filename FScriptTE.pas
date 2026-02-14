@@ -1433,7 +1433,7 @@ begin
     lastmouseword := TextEdit.WordAtMouse(false);
     fmScriptTE.Defineterm1.Visible := true;
     fmScriptTE.Defineterm1.Caption := GetLanguageString(533) + ' '''
-    + lastmouseword + '''';
+    + lastmouseword + '''...';
     if Assigned(FNoteLookup) and FNoteLookup.TryGetValue(UpperCase(lastmouseword), temp) then
       fmScriptTE.Defineterm1.Enabled := false
     else fmScriptTE.Defineterm1.Enabled := true;

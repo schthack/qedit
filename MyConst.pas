@@ -370,7 +370,7 @@ interface
     'Open from file...',                                                        // 364
     'Save to file...',                                                          // 365
     'Exit',                                                                     // 366
-    'Add STR comment',                                                          // 367
+    'Add STR comment...',                                                       // 367
     'Replace...',                                                               // 368
     'Search and replace settings',                                              // 369
     'Find whole words and registers only',                                      // 370
@@ -534,7 +534,7 @@ interface
     '[Click a target or area - Esc: cancel]',                                   // 528
     'Redo',                                                                     // 529
     'W = Change wave, G = Change group, Left-click + X = Rotate object X, + Z = Rotate object Z', // 530
-    'Add line comment',                                                         // 531
+    'Add line comment...',                                                      // 531
     'Hide annotations',                                                         // 532
     'Define',                                                                   // 533
     'Annotation...'                                                             // 534
