@@ -2225,6 +2225,7 @@ begin
   fmScriptTE.Values1.Caption := GetLanguageString(389);
   fmScriptTE.StringSTR1.Caption := GetLanguageString(390);
   fmScriptTE.StringArgument1.Caption := GetLanguageString(391);
+  fmScriptTE.Annotations1.Caption := GetLanguageString(533);
   fmScriptTE.Changetheme1.Caption := GetLanguageString(392);
   fmScriptTE.Setformattingdefaults1.Caption := GetLanguageString(393);
   fmScriptTE.View1.Caption := GetLanguageString(363);
@@ -3609,7 +3610,7 @@ end;
 procedure TForm1.LookAt2Click(Sender: TObject);
 begin
   if Screen.ActiveForm = fmScriptTE then
-    fmScriptTE.AddAnnotation1Click(nil)
+    fmScriptTE.Annotations1Click(nil)
   else
     LookAt1Click(nil);
 end;
@@ -7513,8 +7514,13 @@ end;
 
 procedure TForm1.Copyitem1Click(Sender: TObject);
 begin
-  if Copylastitem1.Enabled then
-    Copylastitem1Click(nil);
+  if Screen.ActiveForm = fmScriptTE then
+    fmScriptTE.Addannotation1Click(nil)
+  else
+  begin
+    if Copylastitem1.Enabled then
+      Copylastitem1Click(nil);
+  end;
 end;
 
 procedure TForm1.Copylastitem1Click(Sender: TObject);
@@ -8714,6 +8720,8 @@ begin
             fmScriptTE.TextEdit.Colors.EditorCommentForeground := Reg.ReadInteger('TESTRColor');
           if Reg.ValueExists('TEStringColor') then
             fmScriptTE.TextEdit.Colors.EditorStringForeground := Reg.ReadInteger('TEStringColor');
+          if Reg.ValueExists('TEAnnoColor') then
+            fmScriptTE.TextEdit.Colors.EditorDirectiveForeground := Reg.ReadInteger('TEAnnoColor');
         end;
         if Reg.ValueExists('Lang') then
           mylang := Reg.ReadInteger('Lang');

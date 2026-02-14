@@ -139,8 +139,8 @@ type
     Annotations1: TMenuItem;
     Addannotation1: TMenuItem;
     N12: TMenuItem;
-    Hideannotations1: TMenuItem;
     Defineterm1: TMenuItem;
+    Annotation1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -220,8 +220,8 @@ type
     procedure TextEditPaint(const ASender: TObject; const ACanvas: TCanvas);
     procedure Annotations1Click(Sender: TObject);
     procedure Addannotation1Click(Sender: TObject);
-    procedure Hideannotations1Click(Sender: TObject);
     procedure Defineterm1Click(Sender: TObject);
+    procedure Annotation1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -571,7 +571,9 @@ begin
       else if colortype = 'TESTRColor' then
         colordialog1.Color := TextEdit.Colors.EditorCommentForeground
       else if colortype = 'TEStringColor' then
-        colordialog1.Color := TextEdit.Colors.EditorStringForeground;
+        colordialog1.Color := TextEdit.Colors.EditorStringForeground
+      else if colortype = 'TEAnnoColor' then
+        colordialog1.Color := TextEdit.Colors.EditorDirectiveForeground;
 
       if colordialog1.Execute then begin
           UncheckThemes;
@@ -589,7 +591,9 @@ begin
           else if colortype = 'TESTRColor' then
             TextEdit.Colors.EditorCommentForeground:=colordialog1.Color
           else if colortype = 'TEStringColor' then
-            TextEdit.Colors.EditorStringForeground:=colordialog1.Color;
+            TextEdit.Colors.EditorStringForeground:=colordialog1.Color
+          else if colortype = 'TEAnnoColor' then
+            TextEdit.Colors.EditorDirectiveForeground:=colordialog1.Color;
 
           Reg := TRegistry.Create;
           try
@@ -605,6 +609,7 @@ begin
               Reg.WriteInteger('TEValueColor',TextEdit.Colors.EditorNumberForeground);
               Reg.WriteInteger('TESTRColor',TextEdit.Colors.EditorCommentForeground);
               Reg.WriteInteger('TEStringColor',TextEdit.Colors.EditorStringForeground);
+              Reg.WriteInteger('TEAnnoColor',TextEdit.Colors.EditorDirectiveForeground);
               Reg.WriteBool('ThemeModified',true);
               Reg.CloseKey;
           end;
@@ -739,6 +744,7 @@ begin
             Reg.WriteInteger('TEValueColor',TextEdit.Colors.EditorNumberForeground);
             Reg.WriteInteger('TESTRColor',TextEdit.Colors.EditorCommentForeground);
             Reg.WriteInteger('TEStringColor',TextEdit.Colors.EditorStringForeground);
+            Reg.WriteInteger('TEAnnoColor',TextEdit.Colors.EditorDirectiveForeground);
             Reg.WriteBool('ThemeModified',true);
             Reg.CloseKey;
             end;
@@ -1115,6 +1121,11 @@ begin
   form4.Hex1Click(nil);
 end;
 
+procedure TfmScriptTE.Annotation1Click(Sender: TObject);
+begin
+  SetTextColor('TEAnnoColor');
+end;
+
 procedure TfmScriptTE.Annotations1Click(Sender: TObject);
 var
   Reg: TRegistry;
@@ -1133,11 +1144,6 @@ begin
     Reg.Free;
   end;
   TextEdit.Invalidate;
-end;
-
-procedure TfmScriptTE.Hideannotations1Click(Sender: TObject);
-begin
-  Annotations1Click(nil);
 end;
 
 procedure TfmScriptTE.HideNOPs1Click(Sender: TObject);
@@ -1421,12 +1427,16 @@ begin
   if Assigned(FNoteLookup) and FNoteLookup.TryGetValue('L' + inttostr(TextEdit.TextPosition.Line), temp) then
     fmScriptTE.AddAnnotation1.Enabled := false
   else fmScriptTE.AddAnnotation1.Enabled := true;
+  temp := '';
   if TextEdit.WordAtMouse(false) <> '' then
   begin
     lastmouseword := TextEdit.WordAtMouse(false);
     fmScriptTE.Defineterm1.Visible := true;
     fmScriptTE.Defineterm1.Caption := GetLanguageString(533) + ' '''
     + lastmouseword + '''';
+    if Assigned(FNoteLookup) and FNoteLookup.TryGetValue(UpperCase(lastmouseword), temp) then
+      fmScriptTE.Defineterm1.Enabled := false
+    else fmScriptTE.Defineterm1.Enabled := true;
   end
   else fmScriptTE.Defineterm1.Visible := false;
 end;
@@ -1563,6 +1573,7 @@ begin
           Reg.WriteInteger('TEValueColor',clBlue);
           Reg.WriteInteger('TESTRColor',clGreen);
           Reg.WriteInteger('TEStringColor',clBlue);
+          Reg.WriteInteger('TEAnnoColor',clTeal);
           Reg.WriteBool('ThemeModified',false);
           Reg.CloseKey;
       end;
@@ -2337,7 +2348,6 @@ begin
   TextEdit.Canvas.Font.Name := TextEdit.Fonts.Text.Name;
   TextEdit.Canvas.Font.Size := round(TextEdit.Fonts.Text.Size * zoom);
   TextEdit.Canvas.Font.Style := [fsItalic];
-  TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorCommentForeground;
   TextEdit.Canvas.Brush.Style := bsClear;
 
   // Draw annotations for each visible line
@@ -2512,6 +2522,10 @@ begin
       XPos := TextEdit.Canvas.TextWidth(LineText) - TextEdit.HorizontalScrollPosition;
 
       // Draw the annotation
+      if Annotation.StartsWith(' //') then
+          TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorCommentForeground
+      else
+        TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorDirectiveForeground;
       TextEdit.Canvas.TextOut(XPos, YPos, Annotation);
     end;
   end;

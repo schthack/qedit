@@ -251,12 +251,12 @@ object fmScriptTE: TfmScriptTE
     end
     object Addannotation1: TMenuItem
       Caption = 'Add annotation'
-      ShortCut = 32833
+      ShortCut = 32835
       OnClick = Addannotation1Click
     end
     object Annotations1: TMenuItem
       Caption = 'Hide annotations'
-      ShortCut = 41025
+      ShortCut = 32833
       OnClick = Annotations1Click
     end
     object Defineterm1: TMenuItem
@@ -425,6 +425,10 @@ object fmScriptTE: TfmScriptTE
       object Changetextcolor1: TMenuItem
         Caption = 'Change text color'
         ImageIndex = 23
+        object Annotation1: TMenuItem
+          Caption = 'Annotation...'
+          OnClick = Annotation1Click
+        end
         object Label1: TMenuItem
           Caption = 'Label...'
           OnClick = Label1Click
@@ -437,17 +441,17 @@ object fmScriptTE: TfmScriptTE
           Caption = 'Register...'
           OnClick = Registers1Click
         end
-        object Values1: TMenuItem
-          Caption = 'Value...'
-          OnClick = Values1Click
+        object StringArgument1: TMenuItem
+          Caption = 'String (Argument)...'
+          OnClick = StringArgument1Click
         end
         object StringSTR1: TMenuItem
           Caption = 'String (STR)...'
           OnClick = StringSTR1Click
         end
-        object StringArgument1: TMenuItem
-          Caption = 'String (Argument)...'
-          OnClick = StringArgument1Click
+        object Values1: TMenuItem
+          Caption = 'Value...'
+          OnClick = Values1Click
         end
       end
       object Changetheme1: TMenuItem
@@ -666,11 +670,6 @@ object fmScriptTE: TfmScriptTE
         Caption = 'Add register'
         ShortCut = 16466
         OnClick = Addregister1Click
-      end
-      object Hideannotations1: TMenuItem
-        Caption = 'Hide annotations'
-        ShortCut = 41025
-        OnClick = Hideannotations1Click
       end
     end
   end
