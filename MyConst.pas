@@ -393,7 +393,7 @@ interface
     'Opcode...',                                                                // 387
     'Register...',                                                              // 388
     'Value...',                                                                 // 389
-    'String (STR)...',                                                          // 390
+    'String (STR)/comment...',                                                  // 390
     'String (Argument)...',                                                     // 391
     'Change theme',                                                             // 392
     'Reset formatting...',                                                      // 393
@@ -534,8 +534,8 @@ interface
     '[Click a target or area - Esc: cancel]',                                   // 528
     'Redo',                                                                     // 529
     'W = Change wave, G = Change group, Left-click + X = Rotate object X, + Z = Rotate object Z', // 530
-    ' line annotation...',                                                      // 531
-    'Hide auto annotations',                                                    // 532
+    ' syntax comment...',                                                       // 531
+    'Hide annotations',                                                         // 532
     'Define',                                                                   // 533
     'Annotation...'                                                             // 534
   );

@@ -251,17 +251,17 @@ object fmScriptTE: TfmScriptTE
     end
     object Addannotation1: TMenuItem
       Caption = 'Add annotation'
-      ShortCut = 32833
+      ShortCut = 32835
       OnClick = Addannotation1Click
-    end
-    object Annotations1: TMenuItem
-      Caption = 'Hide annotations'
-      ShortCut = 41025
-      OnClick = Annotations1Click
     end
     object Defineterm1: TMenuItem
       Caption = 'Define <term>'
       OnClick = Defineterm1Click
+    end
+    object Annotations1: TMenuItem
+      Caption = 'Hide annotations'
+      ShortCut = 32833
+      OnClick = Annotations1Click
     end
     object N2: TMenuItem
       Caption = '-'
@@ -611,9 +611,12 @@ object fmScriptTE: TfmScriptTE
       end
       object Minimap1: TMenuItem
         Caption = 'Toggle minimap'
-        ImageIndex = 19
+        ImageIndex = 4
         ShortCut = 16461
         OnClick = Minimap1Click
+      end
+      object N13: TMenuItem
+        Caption = '-'
       end
       object Zoom1: TMenuItem
         Caption = 'Zoom'
@@ -676,11 +679,6 @@ object fmScriptTE: TfmScriptTE
         Caption = 'Add register'
         ShortCut = 16466
         OnClick = Addregister1Click
-      end
-      object Hideannotations1: TMenuItem
-        Caption = 'Hide annotations'
-        ShortCut = 41025
-        OnClick = Hideannotations1Click
       end
     end
   end

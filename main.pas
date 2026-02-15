@@ -3613,7 +3613,7 @@ end;
 procedure TForm1.LookAt2Click(Sender: TObject);
 begin
   if Screen.ActiveForm = fmScriptTE then
-    fmScriptTE.AddAnnotation1Click(nil)
+    fmScriptTE.Annotations1Click(nil)
   else
     LookAt1Click(nil);
 end;
@@ -7518,8 +7518,13 @@ end;
 
 procedure TForm1.Copyitem1Click(Sender: TObject);
 begin
-  if Copylastitem1.Enabled then
-    Copylastitem1Click(nil);
+  if Screen.ActiveForm = fmScriptTE then
+    fmScriptTE.AddAnnotation1Click(nil)
+  else
+  begin
+    if Copylastitem1.Enabled then
+      Copylastitem1Click(nil);
+  end;
 end;
 
 procedure TForm1.Copylastitem1Click(Sender: TObject);

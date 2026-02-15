@@ -141,8 +141,8 @@ type
     N12: TMenuItem;
     Defineterm1: TMenuItem;
     Annotation1: TMenuItem;
-    Hideannotations1: TMenuItem;
     Minimap1: TMenuItem;
+    N13: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -225,7 +225,6 @@ type
     procedure Defineterm1Click(Sender: TObject);
     procedure Annotation1Click(Sender: TObject);
     procedure BuildNoteLookup;
-    procedure Hideannotations1Click(Sender: TObject);
     procedure TextEditAfterLinePaint(const ASender: TObject;
       const ACanvas: TCanvas; const ARect: TRect; const ALineNumber: Integer;
       const AIsMinimapLine: Boolean);
@@ -960,6 +959,10 @@ var
   JSONOpcodeList, JSONRegisterList: String;
   JSONStrings: TStringList;
 begin
+    if hideanno then
+      TextEdit.Scroll.SetOption(TTextEditorScrollOption.soPastEndOfLine,false)
+    else
+      TextEdit.Scroll.SetOption(TTextEditorScrollOption.soPastEndOfLine,true);
     if not AddArgs1.Enabled then
       AddArgs1.Checked := false;
     textEdited := false;
@@ -1168,12 +1171,11 @@ begin
   finally
     Reg.Free;
   end;
+  if hideanno then
+    TextEdit.Scroll.SetOption(TTextEditorScrollOption.soPastEndOfLine,false)
+  else
+    TextEdit.Scroll.SetOption(TTextEditorScrollOption.soPastEndOfLine,true);
   TextEdit.Invalidate;
-end;
-
-procedure TfmScriptTE.Hideannotations1Click(Sender: TObject);
-begin
-  Annotations1Click(nil);
 end;
 
 procedure TfmScriptTE.HideNOPs1Click(Sender: TObject);
