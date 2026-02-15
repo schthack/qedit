@@ -943,8 +943,6 @@ begin
         Reg.WriteInteger('TEState', Ord(wsNormal));
         Reg.WriteInteger('TEHeight', Height);
         Reg.WriteInteger('TEWidth', Width);
-        Reg.WriteInteger('TETop', Top);
-        Reg.WriteInteger('TELeft', Left);
       end;
       Reg.WriteInteger('NotesWidth', NotesPanel.Width);
       Reg.WriteBool('NotesVisible', Notes1.Checked);
@@ -2567,10 +2565,15 @@ begin
     if hideanno then
       Annotation := '';
 
-    // Overwrite with custom annotation if found
+    // Overwrite with syntax annotation if found
     temp := '';
     s := UpperCase(Trim(copy(TextEdit.Lines[i-1], 9, TextEdit.Lines[i-1].Length)));
     if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(s, temp);
+    if temp <> '' then Annotation := '// ' + temp;
+
+    // Overwrite with line annotation if found
+    temp := '';
+    if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue('L'+inttostr(i-1), temp);
     if temp <> '' then Annotation := '// ' + temp;
 
     if Annotation <> '' then
