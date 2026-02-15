@@ -55,7 +55,7 @@ object fmScriptTE: TfmScriptTE
     OnPaint = TextEditPaint
     ParentShowHint = False
     RightMargin.Visible = False
-    Scroll.Options = [soPastEndOfLine, soShowVerticalScrollHint, soWheelClickMove]
+    Scroll.Options = [soShowVerticalScrollHint, soWheelClickMove]
     Search.Options = [soBeepIfStringNotFound, soHighlightResults, soSearchOnTyping, soShowSearchMatchNotFound, soWrapAround]
     Selection.Options = [soTermsCaseSensitive]
     ShowHint = True
