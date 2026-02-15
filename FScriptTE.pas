@@ -936,8 +936,16 @@ begin
     Reg.RootKey := HKEY_CURRENT_USER;
     if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
     begin
-      Reg.WriteInteger('TEHeight', Height);
-      Reg.WriteInteger('TEWidth', Width);
+      if WindowState = wsMaximized then
+        Reg.WriteInteger('TEState', Ord(wsMaximized))
+      else if WindowState = wsNormal then
+      begin
+        Reg.WriteInteger('TEState', Ord(wsNormal));
+        Reg.WriteInteger('TEHeight', Height);
+        Reg.WriteInteger('TEWidth', Width);
+        Reg.WriteInteger('TETop', Top);
+        Reg.WriteInteger('TELeft', Left);
+      end;
       Reg.WriteInteger('NotesWidth', NotesPanel.Width);
       Reg.WriteBool('NotesVisible', Notes1.Checked);
       Reg.WriteBool('MinimapVisible', Minimap1.Checked);

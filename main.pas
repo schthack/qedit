@@ -872,6 +872,9 @@ var
   warpx, warpz: single;
   TEHeight: integer = 673;
   TEWidth: integer = 810;
+  TETop: integer = 0;
+  TELeft: integer = 0;
+  TEState: integer = Ord(wsNormal);
   NotesWidth: integer = 183;
   NotesVisible: Boolean = false;
   MinimapVisible: Boolean = false;
@@ -8819,6 +8822,12 @@ begin
           TEHeight := Reg.ReadInteger('TEHeight');
         if Reg.ValueExists('TEWidth') then
           TEWidth := Reg.ReadInteger('TEWidth');
+        if Reg.ValueExists('TETop') then
+          TETop := Reg.ReadInteger('TETop');
+        if Reg.ValueExists('TELeft') then
+          TELeft := Reg.ReadInteger('TELeft');
+        if Reg.ValueExists('TEState') then
+          TEState := Reg.ReadInteger('TEState');
         if Reg.ValueExists('NotesWidth') then
           NotesWidth := Reg.ReadInteger('NotesWidth');
         if Reg.ValueExists('NotesVisible') then
@@ -9062,8 +9071,16 @@ begin
     fmScriptTE.Matchcase1.Checked := searchmatchcase;
     SetSearchEngine(searchengine);
     fmReplace.Selectiononly1.Checked := replaceselectiononly;
-    fmScriptTE.Height := TEHeight;
-    fmScriptTE.Width := TEWidth;
+
+    if TEState = Ord(wsMaximized) then
+      fmScriptTE.WindowState := wsMaximized
+    else
+    begin
+      fmScriptTE.Height := TEHeight;
+      fmScriptTE.Width := TEWidth;
+      fmScriptTE.Top := TETop;
+      fmScriptTE.Left := TELeft;
+    end;
 
     // Work around to avoid misalignment of search bar after resizing text editor
     fmScriptTE.Edit2.Show;
