@@ -1431,7 +1431,8 @@ end;
 
 procedure TfmScriptTE.PopupMenu1Popup(Sender: TObject);
 var
-  temp: string;
+  temp, s: string;
+  idx: integer;
 begin
    if TextEdit.SelectedText = '' then
    begin
@@ -1454,7 +1455,9 @@ begin
   if TextEdit.CanPaste then
     fmScriptTE.Paste1.Enabled := true
   else fmScriptTE.Paste1.Enabled := false;
-  if Assigned(FNoteLookup) and FNoteLookUp.TryGetValue('L'+inttostr(TextEdit.TextPosition.Line), temp) then
+  idx := fmScriptTE.TextEdit.TextPosition.Line;
+  s := UpperCase(Trim(copy(fmScriptTE.TextEdit.Lines[idx], 9, fmScriptTE.TextEdit.Lines[idx].Length)));
+  if Assigned(FNoteLookup) and FNoteLookUp.TryGetValue(s, temp) then
     fmScriptTE.Addannotation1.Caption := GetLanguageString(150) + GetLanguageString(531)
   else fmScriptTE.Addannotation1.Caption := GetLanguageString(151) + GetLanguageString(531);
   temp := '';
@@ -1635,13 +1638,16 @@ end;
 procedure TfmScriptTE.Addannotation1Click(Sender: TObject);
 var
   NewLineIndex, idx: Integer;
+  s: string;
 begin
   if not NotesPanel.Visible then
     Notes1Click(nil);
 
+  idx := TextEdit.TextPosition.Line;
+  s := Trim(copy(TextEdit.Lines[idx], 9, TextEdit.Lines[idx].Length));
   for idx := 0 to txtNotes.Lines.Count - 1 do
   begin
-    if TrimLeft(UpperCase(txtNotes.Lines[idx])).StartsWith('L'+inttostr(TextEdit.TextPosition.Line))
+    if TrimLeft(UpperCase(txtNotes.Lines[idx])).StartsWith(UpperCase(s))
     and (pos(':=', txtNotes.Lines[idx]) > 0) then
     begin
       NewLineIndex := idx;
@@ -1650,7 +1656,7 @@ begin
   end;
 
   if idx >= txtNotes.Lines.Count then
-    NewLineIndex := txtNotes.Lines.Add('L'+inttostr(TextEdit.TextPosition.Line) + ' := ');
+    NewLineIndex := txtNotes.Lines.Add(s + ' := ');
 
   txtNotes.SetFocus;
 
@@ -2555,7 +2561,8 @@ begin
 
     // Overwrite with custom annotation if found
     temp := '';
-    if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue('L'+inttostr(i-1), temp);
+    s := UpperCase(Trim(copy(TextEdit.Lines[i-1], 9, TextEdit.Lines[i-1].Length)));
+    if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(s, temp);
     if temp <> '' then Annotation := '// ' + temp;
 
     if Annotation <> '' then
