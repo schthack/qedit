@@ -2388,7 +2388,7 @@ end;
 procedure TfmScriptTE.TextEditPaint(const ASender: TObject;
   const ACanvas: TCanvas);
 var
-  i, j, k, g, d, x, lab, opcodepos, RegNum, foundpos, stringpos: Integer;
+  i, j, k, g, d, x, lab, opcodepos, RegNum, foundpos, stringpos, areawidth: Integer;
   RegMatches: TList<Integer>;
   RegPositions: TList<Integer>;
   zoom: Double;
@@ -2593,6 +2593,19 @@ begin
       if (Length(LineText) > 0) and (LineText[Length(LineText)] <> ' ') then
         Annotation := ' ' + Annotation;
       XPos := TextEdit.Canvas.TextWidth(LineText) - TextEdit.HorizontalScrollPosition;
+
+      if Minimap1.Checked then
+      begin
+        areawidth := TextEdit.ClientWidth - TextEdit.Minimap.GetWidth - XPos;
+
+        if TextEdit.Canvas.TextWidth(Annotation) > areawidth then
+        begin
+          // Truncate annotation to fit
+          while (Length(Annotation) > 1) and (TextEdit.Canvas.TextWidth(Annotation + '...') > areawidth) do
+            Delete(Annotation, Length(Annotation), 1);
+          Annotation := Annotation + '...';
+        end;
+      end;
 
       // Draw the annotation
       TextEdit.Canvas.TextOut(XPos, YPos, Annotation);
