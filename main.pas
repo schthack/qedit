@@ -874,6 +874,7 @@ var
   TEWidth: integer = 810;
   NotesWidth: integer = 183;
   NotesVisible: Boolean = false;
+  MinimapVisible: Boolean = false;
   scriptline: integer = 0;
   scriptindex: integer = 0;
   importscan: Boolean = false;
@@ -3611,7 +3612,7 @@ end;
 procedure TForm1.LookAt2Click(Sender: TObject);
 begin
   if Screen.ActiveForm = fmScriptTE then
-    fmScriptTE.Annotations1Click(nil)
+    fmScriptTE.AddAnnotation1Click(nil)
   else
     LookAt1Click(nil);
 end;
@@ -7516,13 +7517,8 @@ end;
 
 procedure TForm1.Copyitem1Click(Sender: TObject);
 begin
-  if Screen.ActiveForm = fmScriptTE then
-    fmScriptTE.Addannotation1Click(nil)
-  else
-  begin
-    if Copylastitem1.Enabled then
-      Copylastitem1Click(nil);
-  end;
+  if Copylastitem1.Enabled then
+    Copylastitem1Click(nil);
 end;
 
 procedure TForm1.Copylastitem1Click(Sender: TObject);
@@ -8827,6 +8823,8 @@ begin
           NotesWidth := Reg.ReadInteger('NotesWidth');
         if Reg.ValueExists('NotesVisible') then
           NotesVisible := Reg.ReadBool('NotesVisible');
+        if Reg.ValueExists('MinimapVisible') then
+          MinimapVisible := Reg.ReadBool('MinimapVisible');
         if Reg.ValueExists('CoordSize') then
           coordsize := Reg.ReadInteger('CoordSize');
         Reg.CloseKey;
@@ -9075,6 +9073,9 @@ begin
     fmScriptTE.Splitter1.Left := fmScriptTE.NotesPanel.Left;
     if NotesVisible then
       fmScriptTE.Notes1Click(nil);
+
+    if MinimapVisible then
+      fmScriptTE.Minimap1Click(nil);
 
     SetCoordSize(coordsize);
 
@@ -12676,7 +12677,8 @@ end;
 
 procedure TForm1.Move1Click(Sender: TObject);
 begin
-  Button1Click(nil);
+  if not (Screen.ActiveForm = fmScriptTE) then
+    Button1Click(nil);
 end;
 
 procedure MenueDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);

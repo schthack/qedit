@@ -141,6 +141,8 @@ type
     N12: TMenuItem;
     Defineterm1: TMenuItem;
     Annotation1: TMenuItem;
+    Hideannotations1: TMenuItem;
+    Minimap1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -223,6 +225,11 @@ type
     procedure Defineterm1Click(Sender: TObject);
     procedure Annotation1Click(Sender: TObject);
     procedure BuildNoteLookup;
+    procedure Hideannotations1Click(Sender: TObject);
+    procedure TextEditAfterLinePaint(const ASender: TObject;
+      const ACanvas: TCanvas; const ARect: TRect; const ALineNumber: Integer;
+      const AIsMinimapLine: Boolean);
+    procedure Minimap1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -933,6 +940,7 @@ begin
       Reg.WriteInteger('TEWidth', Width);
       Reg.WriteInteger('NotesWidth', NotesPanel.Width);
       Reg.WriteBool('NotesVisible', Notes1.Checked);
+      Reg.WriteBool('MinimapVisible', Minimap1.Checked);
       Reg.CloseKey;
     end;
   finally
@@ -1157,6 +1165,11 @@ begin
   TextEdit.Invalidate;
 end;
 
+procedure TfmScriptTE.Hideannotations1Click(Sender: TObject);
+begin
+  Annotations1Click(nil);
+end;
+
 procedure TfmScriptTE.HideNOPs1Click(Sender: TObject);
 begin
   form4.HideNOPs1Click(nil);
@@ -1183,6 +1196,12 @@ begin
   finally
     Reg.Free;
   end;
+end;
+
+procedure TfmScriptTE.Minimap1Click(Sender: TObject);
+begin
+  Minimap1.Checked := not Minimap1.Checked;
+  TextEdit.Minimap.Visible := not TextEdit.Minimap.Visible;
 end;
 
 procedure TfmScriptTE.Newlabel1Click(Sender: TObject);
@@ -1742,6 +1761,15 @@ begin
 
   // Re-add references
   move(temp[0], datablock[0], sizeof(datablock));
+end;
+
+procedure TfmScriptTE.TextEditAfterLinePaint(const ASender: TObject;
+  const ACanvas: TCanvas; const ARect: TRect; const ALineNumber: Integer;
+  const AIsMinimapLine: Boolean);
+begin
+  // Set the bookmark icon position directly after the label number
+  TextEdit.LeftMargin.Bookmarks.LeftMargin := (TextEdit.CharWidth * 6)
+    + TextEdit.Margins.Left;
 end;
 
 procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
@@ -2535,16 +2563,18 @@ begin
       // Calculate vertical position
       YPos := (i - FirstVisibleLine) * TextEdit.LineHeight;
 
+      // Set the color
+      if Annotation.StartsWith('//') then
+          TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorCommentForeground
+      else
+        TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorDirectiveForeground;
+
       // Calculate horizontal position
       if (Length(LineText) > 0) and (LineText[Length(LineText)] <> ' ') then
         Annotation := ' ' + Annotation;
       XPos := TextEdit.Canvas.TextWidth(LineText) - TextEdit.HorizontalScrollPosition;
 
       // Draw the annotation
-      if Annotation.StartsWith(' //') then
-          TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorCommentForeground
-      else
-        TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorDirectiveForeground;
       TextEdit.Canvas.TextOut(XPos, YPos, Annotation);
     end;
   end;

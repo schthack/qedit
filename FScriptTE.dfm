@@ -39,12 +39,12 @@ object fmScriptTE: TfmScriptTE
     HighlightLine.Items = <
       item
       end>
-    LeftMargin.Bookmarks.Visible = False
     LeftMargin.LineNumbers.Visible = False
     LeftMargin.LineState.Visible = False
     LeftMargin.Marks.Visible = False
     LeftMargin.MarksPanel.Visible = False
     LeftMargin.Width = 3
+    OnAfterLinePaint = TextEditAfterLinePaint
     OnCaretChanged = TextEditCaretChanged
     OnChange = TextEditChange
     OnClick = TextEditClick
@@ -251,12 +251,12 @@ object fmScriptTE: TfmScriptTE
     end
     object Addannotation1: TMenuItem
       Caption = 'Add annotation'
-      ShortCut = 32835
+      ShortCut = 32833
       OnClick = Addannotation1Click
     end
     object Annotations1: TMenuItem
       Caption = 'Hide annotations'
-      ShortCut = 32833
+      ShortCut = 41025
       OnClick = Annotations1Click
     end
     object Defineterm1: TMenuItem
@@ -609,6 +609,12 @@ object fmScriptTE: TfmScriptTE
         ShortCut = 16462
         OnClick = Notes1Click
       end
+      object Minimap1: TMenuItem
+        Caption = 'Toggle minimap'
+        ImageIndex = 19
+        ShortCut = 16461
+        OnClick = Minimap1Click
+      end
       object Zoom1: TMenuItem
         Caption = 'Zoom'
         ImageIndex = 21
@@ -670,6 +676,11 @@ object fmScriptTE: TfmScriptTE
         Caption = 'Add register'
         ShortCut = 16466
         OnClick = Addregister1Click
+      end
+      object Hideannotations1: TMenuItem
+        Caption = 'Hide annotations'
+        ShortCut = 41025
+        OnClick = Hideannotations1Click
       end
     end
   end
