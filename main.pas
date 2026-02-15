@@ -2227,7 +2227,6 @@ begin
   fmScriptTE.Values1.Caption := GetLanguageString(389);
   fmScriptTE.StringSTR1.Caption := GetLanguageString(390);
   fmScriptTE.StringArgument1.Caption := GetLanguageString(391);
-  fmScriptTE.Annotations1.Caption := GetLanguageString(533);
   fmScriptTE.Changetheme1.Caption := GetLanguageString(392);
   fmScriptTE.Setformattingdefaults1.Caption := GetLanguageString(393);
   fmScriptTE.View1.Caption := GetLanguageString(363);
