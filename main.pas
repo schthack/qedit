@@ -2271,6 +2271,7 @@ begin
   fmScriptTE.Redo1.Caption := GetLanguageString(529);
   fmScriptTE.Addannotation1.Caption := GetLanguageString(531);
   fmScriptTE.Annotations1.Caption := GetLanguageString(532);
+  fmScriptTE.Annotation1.Caption := GetLanguageString(534);
 
   fmReplace.Caption := GetLanguageString(420);
   fmReplace.Label1.Caption := GetLanguageString(421);
