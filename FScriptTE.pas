@@ -2536,7 +2536,7 @@ begin
           for x := 0 to 255 do
           begin
             SearchStr := 'r' + IntToStr(x);
-            FoundPos := Pos(SearchStr, LineText);
+            FoundPos := Pos('<' + SearchStr + '>', LineText);
             if (FoundPos > 0) and IsWordInString(PChar(LineText), SearchStr, [soDown, soWholeWord, soMatchCase]) then
             begin
               // Insert in sorted order by position
