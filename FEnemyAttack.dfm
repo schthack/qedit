@@ -75,7 +75,7 @@ object Form25: TForm25
     Top = 94
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     TabOrder = 4
     OnClick = Button3Click
   end

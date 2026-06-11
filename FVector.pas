@@ -56,8 +56,8 @@ begin
     form32.StringGrid1.Cells[0,0] := 'X';
     form32.StringGrid1.Cells[1,0] := 'Y';
     form32.StringGrid1.Cells[2,0] := 'Z';
-    form32.StringGrid1.Cells[3,0] := 'Duration';
-    form32.StringGrid1.Cells[4,0] := 'Distance';
+    form32.StringGrid1.Cells[3,0] := GetLanguageString(449);
+    form32.StringGrid1.Cells[4,0] := GetLanguageString(450);
     for x:=1 to form32.vectorCount-1 do begin
       // calculate distance
       rx := abs(form32.vectors[x-1].x - form32.vectors[x].x);
@@ -130,7 +130,7 @@ end;
 procedure TForm32.Button3Click(Sender: TObject);
 var i:integer;
 begin
-    if stringgrid1.Selection.Top > -1 then begin
+    if (stringgrid1.Selection.Top > -1) and (stringgrid1.RowCount > 1) then begin
         for i:=stringgrid1.Selection.Top-1 to vectorCount-1 do begin
          vectors[i] := vectors[i+1];
         end;

@@ -23,6 +23,7 @@ type
     procedure Memo2KeyPress(Sender: TObject; var Key: Char);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -145,7 +146,7 @@ begin
     b:='';
     evtv:=20;
     for x:=0 to form8.Memo2.Lines.Count-1 do
-        if GetWord(form8.Memo2.Lines.Strings[x]) = 'wave_choice:' then evtv:=24;
+        if GetWord(form8.Memo2.Lines.Strings[x]) = 'random_waves:' then evtv:=24;
     //if floor[form1.checklistbox1.ItemIndex].Unknow[15] = $32 then evtv:=24;
     y:=0;
     try
@@ -183,19 +184,30 @@ begin
                 move(i,a[13],4);
             end;
 
-            if r = 'wavesetting:' then begin
+            if evtv = 24 then
+            begin
+              if r = 'mindelay:' then begin
                 i:=strtoint(GetWord(s));
-                s:=GetAfterWord(s);
-                move(i,a[17],1);
-                i:=strtoint(GetWord(s));
-                s:=GetAfterWord(s);
-                move(i,a[18],1);
-                i:=strtoint(GetWord(s));
-                s:=GetAfterWord(s);
-                move(i,a[19],1);
-                i:=strtoint(GetWord(s));
-                s:=GetAfterWord(s);
-                move(i,a[20],1);
+                move(i,a[13],2);
+              end;
+              if r = 'maxdelay:' then begin
+                  i:=strtoint(GetWord(s));
+                  move(i,a[15],2);
+              end;
+              if r = 'wavesetting:' then begin
+                  i:=strtoint(GetWord(s));
+                  s:=GetAfterWord(s);
+                  move(i,a[17],1);
+                  i:=strtoint(GetWord(s));
+                  s:=GetAfterWord(s);
+                  move(i,a[18],1);
+                  i:=strtoint(GetWord(s));
+                  s:=GetAfterWord(s);
+                  move(i,a[19],1);
+                  i:=strtoint(GetWord(s));
+                  s:=GetAfterWord(s);
+                  move(i,a[20],1);
+              end;
             end;
 
             //command
@@ -317,6 +329,12 @@ begin
     //action:=caNone;
 end;
 
+procedure TForm8.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
+end;
+
 procedure TForm8.Memo2KeyPress(Sender: TObject; var Key: Char);
 var x,y,i:integer;
     s:string;
@@ -325,7 +343,10 @@ begin
         wordlist:=tstringlist.Create;
         wordlist.Add('section:');
         wordlist.Add('wave:');
+        wordlist.Add('random_waves:');
         wordlist.Add('delay:');
+        wordlist.Add('mindelay:');
+        wordlist.Add('maxdelay:');
         wordlist.Add('wavesetting:');
         wordlist.Add('call');
         wordlist.Add('lock');

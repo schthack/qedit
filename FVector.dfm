@@ -81,7 +81,7 @@ object Form32: TForm32
     Top = 368
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     TabOrder = 5
     OnClick = Button5Click
   end

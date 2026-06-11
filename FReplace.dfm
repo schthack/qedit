@@ -40,7 +40,7 @@ object fmReplace: TfmReplace
     Top = 137
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     Default = True
     TabOrder = 3
     OnClick = btnOKClick
@@ -65,7 +65,7 @@ object fmReplace: TfmReplace
   object Selectiononly1: TCheckBox
     Left = 16
     Top = 110
-    Width = 153
+    Width = 195
     Height = 17
     Caption = 'Selection only'
     TabOrder = 2

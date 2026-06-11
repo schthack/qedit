@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, registry;
+  Dialogs, StdCtrls, registry, ShellAPI;
 
 type
   TForm17 = class(TForm)
@@ -80,8 +80,17 @@ begin
   close;
   if (myscreen <> nil) and screenchanged then
   begin
-    MessageDlg('Settings saved. Screen size and window settings will take effect the next time QEdit is launched.',
-     mtInformation, [mbOk], 0);
+     if MessageDlg(GetLanguageString(444),
+                  mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      begin
+        form1.Close;
+        if form1.ClosedSuccessfully then
+        begin
+          ShellExecute(0, 'open', PChar(ParamStr(0)), nil,
+          PChar(ExtractFilePath(ParamStr(0))),
+          SW_SHOWNORMAL);
+        end;
+      end;
   end;
 end;
 

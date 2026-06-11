@@ -10,6 +10,7 @@ object Form13: TForm13
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  OnActivate = FormActivate
   OnClose = FormClose
   OnHide = FormHide
   OnKeyDown = FormKeyDown
@@ -26,5 +27,15 @@ object Form13: TForm13
     OnTimer = Timer1Timer
     Left = 58
     Top = 8
+  end
+  object popupWave: TPopupMenu
+    OnPopup = popupWavePopup
+    Left = 56
+    Top = 64
+  end
+  object popupGroup: TPopupMenu
+    OnPopup = popupGroupPopup
+    Left = 55
+    Top = 118
   end
 end

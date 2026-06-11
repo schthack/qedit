@@ -12,6 +12,7 @@ object fmScriptTE: TfmScriptTE
   Font.Style = []
   Menu = MainMenu1
   Position = poMainFormCenter
+  OnActivate = FormActivate
   OnClose = FormClose
   OnDestroy = FormDestroy
   OnDeactivate = FormDeactivate
@@ -38,12 +39,12 @@ object fmScriptTE: TfmScriptTE
     HighlightLine.Items = <
       item
       end>
-    LeftMargin.Bookmarks.Visible = False
     LeftMargin.LineNumbers.Visible = False
     LeftMargin.LineState.Visible = False
     LeftMargin.Marks.Visible = False
     LeftMargin.MarksPanel.Visible = False
     LeftMargin.Width = 3
+    OnAfterLinePaint = TextEditAfterLinePaint
     OnCaretChanged = TextEditCaretChanged
     OnChange = TextEditChange
     OnClick = TextEditClick
@@ -51,8 +52,10 @@ object fmScriptTE: TfmScriptTE
     OnKeyUp = TextEditKeyUp
     OnMouseDown = TextEditMouseDown
     OnMouseMove = TextEditMouseMove
+    OnPaint = TextEditPaint
     ParentShowHint = False
     RightMargin.Visible = False
+    Scroll.Options = [soShowVerticalScrollHint, soWheelClickMove]
     Search.Options = [soBeepIfStringNotFound, soHighlightResults, soSearchOnTyping, soShowSearchMatchNotFound, soWrapAround]
     Selection.Options = [soTermsCaseSensitive]
     ShowHint = True
@@ -138,10 +141,13 @@ object fmScriptTE: TfmScriptTE
       ParentFont = False
       ScrollBars = ssBoth
       TabOrder = 1
+      StyleElements = [seBorder]
       OnChange = txtNotesChange
+      OnKeyUp = txtNotesKeyUp
     end
   end
   object PopupMenu1: TPopupMenu
+    OnPopup = PopupMenu1Popup
     Left = 344
     Top = 232
     object Addeditdata1: TMenuItem
@@ -152,14 +158,14 @@ object fmScriptTE: TfmScriptTE
       end
       object Image1: TMenuItem
         Caption = 'Image'
-        object SaveImage1: TMenuItem
-          Tag = 1
-          Caption = 'Save'
-          OnClick = AddEditData
-        end
         object Changeimage1: TMenuItem
           Tag = 2
           Caption = 'Change'
+          OnClick = AddEditData
+        end
+        object SaveImage1: TMenuItem
+          Tag = 1
+          Caption = 'Save'
           OnClick = AddEditData
         end
       end
@@ -227,16 +233,35 @@ object fmScriptTE: TfmScriptTE
       Caption = 'Set argument format'
       object Hex1: TMenuItem
         Caption = 'Hex'
+        RadioItem = True
         OnClick = Hex1Click
       end
       object Decimal1: TMenuItem
         Caption = 'Decimal'
+        RadioItem = True
         OnClick = Decimal1Click
       end
     end
     object HideNOPs1: TMenuItem
       Caption = 'Hide NOPs'
       OnClick = HideNOPs1Click
+    end
+    object N12: TMenuItem
+      Caption = '-'
+    end
+    object Addannotation1: TMenuItem
+      Caption = 'Add annotation'
+      ShortCut = 32835
+      OnClick = Addannotation1Click
+    end
+    object Defineterm1: TMenuItem
+      Caption = 'Define <term>'
+      OnClick = Defineterm1Click
+    end
+    object Annotations1: TMenuItem
+      Caption = 'Hide annotations'
+      ShortCut = 32833
+      OnClick = Annotations1Click
     end
     object N2: TMenuItem
       Caption = '-'
@@ -266,6 +291,11 @@ object fmScriptTE: TfmScriptTE
       ShortCut = 16474
       OnClick = Undo1Click
     end
+    object Redo1: TMenuItem
+      Caption = 'Redo'
+      ShortCut = 16473
+      OnClick = Redo1Click
+    end
     object N1: TMenuItem
       Caption = '-'
     end
@@ -282,13 +312,13 @@ object fmScriptTE: TfmScriptTE
     object File1: TMenuItem
       Caption = 'File'
       object Openfromfile1: TMenuItem
-        Caption = 'Open from file'
+        Caption = 'Open from file...'
         ImageIndex = 2
         ShortCut = 16463
         OnClick = Openfromfile1Click
       end
       object Savetofile1: TMenuItem
-        Caption = 'Save to file'
+        Caption = 'Save to file...'
         ImageIndex = 3
         ShortCut = 16467
         OnClick = Savetofile1Click
@@ -318,7 +348,7 @@ object fmScriptTE: TfmScriptTE
         OnClick = Find1Click
       end
       object Replace1: TMenuItem
-        Caption = 'Replace'
+        Caption = 'Replace...'
         ShortCut = 16456
         OnClick = Replace1Click
       end
@@ -336,18 +366,22 @@ object fmScriptTE: TfmScriptTE
           Caption = 'Engine'
           object Normal1: TMenuItem
             Caption = 'Normal'
+            RadioItem = True
             OnClick = Normal1Click
           end
           object Extended1: TMenuItem
             Caption = 'Extended'
+            RadioItem = True
             OnClick = Extended1Click
           end
           object RegularExpression1: TMenuItem
             Caption = 'Regular Expression'
+            RadioItem = True
             OnClick = RegularExpression1Click
           end
           object Wildcard1: TMenuItem
             Caption = 'Wildcard'
+            RadioItem = True
             OnClick = Wildcard1Click
           end
         end
@@ -355,7 +389,7 @@ object fmScriptTE: TfmScriptTE
           Caption = '-'
         end
         object Resetsettings1: TMenuItem
-          Caption = 'Reset'
+          Caption = 'Reset...'
           OnClick = Resetsettings1Click
         end
       end
@@ -363,13 +397,13 @@ object fmScriptTE: TfmScriptTE
         Caption = '-'
       end
       object GoToLabel1: TMenuItem
-        Caption = 'Go to label'
+        Caption = 'Go to label...'
         ImageIndex = 13
         ShortCut = 16455
         OnClick = GoToLabel1Click
       end
       object GotoLine1: TMenuItem
-        Caption = 'Go to line'
+        Caption = 'Go to line...'
         ImageIndex = 13
         ShortCut = 32839
         OnClick = GotoLine1Click
@@ -384,36 +418,40 @@ object fmScriptTE: TfmScriptTE
     object Format1: TMenuItem
       Caption = 'Format'
       object Changefont1: TMenuItem
-        Caption = 'Change font'
+        Caption = 'Change font...'
         ImageIndex = 22
         OnClick = Changefont1Click
       end
       object Changetextcolor1: TMenuItem
         Caption = 'Change text color'
         ImageIndex = 23
+        object Annotation1: TMenuItem
+          Caption = 'Annotation...'
+          OnClick = Annotation1Click
+        end
         object Label1: TMenuItem
-          Caption = 'Label'
+          Caption = 'Label...'
           OnClick = Label1Click
         end
         object Opcodes1: TMenuItem
-          Caption = 'Opcode'
+          Caption = 'Opcode...'
           OnClick = Opcodes1Click
         end
         object Registers1: TMenuItem
-          Caption = 'Register'
+          Caption = 'Register...'
           OnClick = Registers1Click
         end
-        object Values1: TMenuItem
-          Caption = 'Value'
-          OnClick = Values1Click
+        object StringArgument1: TMenuItem
+          Caption = 'String (Argument)...'
+          OnClick = StringArgument1Click
         end
         object StringSTR1: TMenuItem
-          Caption = 'String (STR)'
+          Caption = 'String (STR)...'
           OnClick = StringSTR1Click
         end
-        object StringArgument1: TMenuItem
-          Caption = 'String (Argument)'
-          OnClick = StringArgument1Click
+        object Values1: TMenuItem
+          Caption = 'Value...'
+          OnClick = Values1Click
         end
       end
       object Changetheme1: TMenuItem
@@ -423,6 +461,7 @@ object fmScriptTE: TfmScriptTE
         object Default1: TMenuItem
           Tag = -1
           Caption = 'Default'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object N4: TMenuItem
@@ -430,106 +469,127 @@ object fmScriptTE: TfmScriptTE
         end
         object Blue1: TMenuItem
           Caption = 'Blue'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Classic1: TMenuItem
           Tag = 1
           Caption = 'Classic'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Darcula1: TMenuItem
           Tag = 2
           Caption = 'Darcula'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object DarkIcon1: TMenuItem
           Tag = 3
           Caption = 'Dark Icon'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Dark1: TMenuItem
           Tag = 4
           Caption = 'Dark'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Darker1: TMenuItem
           Tag = 5
           Caption = 'Darker'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Dracula1: TMenuItem
           Tag = 6
           Caption = 'Dracula'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object FluentNight1: TMenuItem
           Tag = 7
           Caption = 'Fluent Night'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object GitHubDark1: TMenuItem
           Tag = 8
           Caption = 'GitHub Dark'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object MonokaiDistilled1: TMenuItem
           Tag = 9
           Caption = 'Monokai Distilled'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Monokai1: TMenuItem
           Tag = 10
           Caption = 'Monokai'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Oblivion1: TMenuItem
           Tag = 11
           Caption = 'Oblivion'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Obsid1: TMenuItem
           Tag = 12
           Caption = 'Obsidian'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Ocean1: TMenuItem
           Tag = 13
           Caption = 'Ocean'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Oceanic1: TMenuItem
           Tag = 14
           Caption = 'Oceanic'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Okaidia1: TMenuItem
           Tag = 15
           Caption = 'Okaidia'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Purple1: TMenuItem
           Tag = 16
           Caption = 'Purple'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Twilight1: TMenuItem
           Tag = 17
           Caption = 'Twilight'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object VisualStudioDark1: TMenuItem
           Tag = 18
           Caption = 'Visual Studio Dark'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object VisualStudio1: TMenuItem
           Tag = 19
           Caption = 'Visual Studio'
+          RadioItem = True
           OnClick = ChangeTheme
         end
         object Windows11Dark1: TMenuItem
           Tag = 20
           Caption = 'Windows 11 Dark'
+          RadioItem = True
           OnClick = ChangeTheme
         end
       end
@@ -537,7 +597,7 @@ object fmScriptTE: TfmScriptTE
         Caption = '-'
       end
       object Setformattingdefaults1: TMenuItem
-        Caption = 'Reset formatting'
+        Caption = 'Reset formatting...'
         OnClick = Setformattingdefaults1Click
       end
     end
@@ -549,28 +609,42 @@ object fmScriptTE: TfmScriptTE
         ShortCut = 16462
         OnClick = Notes1Click
       end
+      object Minimap1: TMenuItem
+        Caption = 'Toggle minimap'
+        ImageIndex = 4
+        ShortCut = 16461
+        OnClick = Minimap1Click
+      end
+      object N13: TMenuItem
+        Caption = '-'
+      end
       object Zoom1: TMenuItem
         Caption = 'Zoom'
         ImageIndex = 21
         object Z100: TMenuItem
           Caption = '100 %'
+          RadioItem = True
           OnClick = Z100Click
         end
         object Z125: TMenuItem
           Caption = '125 %'
           Checked = True
+          RadioItem = True
           OnClick = Z125Click
         end
         object Z150: TMenuItem
           Caption = '150 %'
+          RadioItem = True
           OnClick = Z150Click
         end
         object Z200: TMenuItem
           Caption = '200 %'
+          RadioItem = True
           OnClick = Z200Click
         end
         object Z300: TMenuItem
           Caption = '300 %'
+          RadioItem = True
           OnClick = Z300Click
         end
       end
@@ -637,17 +711,17 @@ object fmScriptTE: TfmScriptTE
     Left = 344
     Top = 288
     object NotesFont1: TMenuItem
-      Caption = 'Change font'
+      Caption = 'Change font...'
       ImageIndex = 22
       OnClick = NotesFont1Click
     end
     object NotesText1: TMenuItem
-      Caption = 'Change text color'
+      Caption = 'Change text color...'
       ImageIndex = 23
       OnClick = NotesText1Click
     end
     object NotesBackground1: TMenuItem
-      Caption = 'Change background color'
+      Caption = 'Change background color...'
       ImageIndex = 24
       OnClick = NotesBackground1Click
     end
@@ -655,7 +729,7 @@ object fmScriptTE: TfmScriptTE
       Caption = '-'
     end
     object NotesReset1: TMenuItem
-      Caption = 'Reset formatting'
+      Caption = 'Reset notes formatting...'
       OnClick = NotesReset1Click
     end
   end

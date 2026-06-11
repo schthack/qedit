@@ -11,7 +11,9 @@ object Form27: TForm27
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   Position = poMainFormCenter
+  OnKeyDown = FormKeyDown
   TextHeight = 13
   object Label1: TLabel
     Left = 10
@@ -43,6 +45,7 @@ object Form27: TForm27
     TabOrder = 0
     OnClick = ListBox1Click
     OnDrawItem = ListBox1DrawItem
+    OnMouseUp = ListBox1MouseUp
   end
   object Memo1: TMemo
     Left = 8
@@ -55,8 +58,8 @@ object Form27: TForm27
     WordWrap = False
   end
   object Button1: TButton
-    Left = 126
-    Top = 336
+    Left = 134
+    Top = 335
     Width = 75
     Height = 25
     Caption = 'Close'
@@ -326,5 +329,13 @@ object Form27: TForm27
       0FFFFFFC00000000C03C03FE1FFFFFFF00000000E07E07FE1FFFFFFFC0000000
       F0FF0FFFFFFFFFFFC0000000FFFFFFFFFFFFFFFFC00000000000000000000000
       0000000000000000000000000000}
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 248
+    Top = 328
+    object Clearunusedlabels1: TMenuItem
+      Caption = 'Clear unused NPC functions'
+      OnClick = Clearunusedlabels1Click
+    end
   end
 end

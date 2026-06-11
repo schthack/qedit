@@ -346,7 +346,7 @@ object Form20: TForm20
     Top = 286
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     TabOrder = 17
     OnClick = Button15Click
   end

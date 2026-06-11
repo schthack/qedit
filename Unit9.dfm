@@ -37,11 +37,11 @@ object Form9: TForm9
     Left = 168
     Top = 24
     Width = 165
-    Height = 22
-    Style = csOwnerDrawFixed
+    Height = 21
     Sorted = True
     TabOrder = 0
     OnChange = ComboBox1Change
+    OnKeyUp = ComboBox1KeyUp
   end
   object Button1: TButton
     Left = 256

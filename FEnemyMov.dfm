@@ -64,7 +64,7 @@ object Form26: TForm26
     Top = 130
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     TabOrder = 2
     OnClick = Button1Click
   end

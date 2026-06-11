@@ -55,7 +55,7 @@ object Form7: TForm7
     Top = 412
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     TabOrder = 0
     OnClick = Button1Click
   end
@@ -102,7 +102,7 @@ object Form7: TForm7
   object chkAutoAxis: TCheckBox
     Left = 371
     Top = 329
-    Width = 75
+    Width = 83
     Height = 17
     Caption = 'Auto-axis'
     TabOrder = 3

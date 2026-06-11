@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Registry, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Samples.Spin;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Samples.Spin, ShellApi;
 
 type
   TFSnapOptions = class(TForm)
@@ -23,6 +23,8 @@ type
     procedure btnResetClick(Sender: TObject);
     procedure chkDistancelimitClick(Sender: TObject);
     procedure chkSnapClick(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   private
     { Private declarations }
@@ -110,6 +112,19 @@ begin
   seSnapTolerance.MaxValue := High(integer);
   seDistanceLimit.MinValue := 0;
   seDistanceLimit.MaxValue := High (integer);
+end;
+
+procedure TFSnapOptions.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
+end;
+
+procedure TFSnapOptions.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_F1 then
+    shellexecute(0,'open',pchar('http://qedit.info/index.php?title=Snap_Options'),'','',0);
 end;
 
 end.

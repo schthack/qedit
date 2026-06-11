@@ -4,11 +4,13 @@ interface
 
 uses
   Windows, Registry, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, D3Dx9, StdCtrls;
+  Dialogs, ExtCtrls, D3Dx9, StdCtrls, Vcl.DBGrids, Vcl.Menus;
 
 type
   TForm13 = class(TForm)
     Timer1: TTimer;
+    popupWave: TPopupMenu;
+    popupGroup: TPopupMenu;
     procedure Timer1Timer(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormHide(Sender: TObject);
@@ -24,6 +26,9 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure FormActivate(Sender: TObject);
+    procedure popupWavePopup(Sender: TObject);
+    procedure popupGroupPopup(Sender: TObject);
   private
     { Private declarations }
   public
@@ -39,7 +44,6 @@ var
   ini:integer=1024;
   dta:integer=0;
   fog:integer=1;
-  rtinc:integer=0;
   rtx,rty,rtz:boolean;
   
   fogCol:dword;
@@ -88,8 +92,36 @@ begin
     myscreen.SetView(ppx,ppy,ppz,vr,vz);
 end;
 
-procedure AutoRotate;
+function ClosestRot(rt: dword): integer;
+var
+  rtvalues: array of integer;
+  closest,diff,diffmin,i: integer;
 begin
+  // Static rotation values
+  rtvalues := [0, 4096, 8192, 12288, 16384, 20480, 24576, 28672,
+              32768, 36864, 40960, 45056, 49152, 53248, 57344, 61440, 65536,
+              -4096, -8192, -12288, -16384, -20480, -24576, -28672, -32768,
+              -36864, -40960, -45056, -49152, -53248, -57344, -61440, -65536];
+
+    // Find the closest rotation value to the user's selection
+    closest := rtvalues[0];
+    diffmin := abs(rtvalues[0] - rt);
+    for i := 0 to High(rtvalues) do
+    begin
+      diff := abs(rt - rtvalues[i]);
+      if diff < diffmin then
+      begin
+        diffmin := diff;
+        closest := i;
+      end;
+    end;
+    // Return the new value
+    result := rtvalues[closest];
+end;
+
+procedure AutoRotate(rtinc: integer);
+begin
+  form1.SetUndow;
   if sType = 1 then
   begin
     floor[sfloor].Monster[selected].Direction := rtinc;
@@ -101,6 +133,7 @@ begin
     myobj[selected].Free;
     Generateobj(floor[sfloor].obj[selected],selected);
   end;
+  form1.DrawMap;
 end;
 
 procedure TForm13.Timer1Timer(Sender: TObject);
@@ -287,24 +320,50 @@ begin
             myscreen.TextOut('Map section: - Wave: - X: - Y: - Z: - Rotation: - ',rect(0,0,640,30),$FFFFFFFF,1);
         end;
 
-        s := 'Movement speed: ' + inttostr(round(movespeed / 3)) + '00%, ';
+        s := GetLanguageString(484) + inttostr(round(movespeed / 3)) + '00%, ';
         if autoadjustsect then
-          s := s + 'Auto-section: On, '
+          s := s + GetLanguageString(485)
         else
-          s := s + 'Auto-section: Off, ';
+          s := s + GetLanguageString(486);
         if autoadjustY then
-          s := s + 'Auto-Y: On'
+          s := s + GetLanguageString(487)
         else
-          s := s + 'Auto-Y: Off';
-        myscreen.TextOut(s,rect(0,15,640,45),$FFFFFFFF,1);
+          s := s + GetLanguageString(488);
+        myscreen.TextOut(s,rect(0,15,form13.Width,45),$FFFFFFFF,1);
+
+        if previewstate > 0 then
+        begin
+          MyScreen.TextOut(previewstring +
+          ' (' + inttostr(previewstate) + '/' +
+          inttostr(Floor[form1.CheckListBox1.ItemIndex].Unknow[8]) + ')',
+          rect(0,45,640,75),$FFFFFFFF,1);
+          MyScreen.TextOut('Section: ' + inttostr(prevsection),rect(0,60,640,90),$FFFFFFFF,1);
+          MyScreen.TextOut('Wave: ' + inttostr(mapwave),rect(0,75,640,105),$FFFFFFFF,1);
+          MyScreen.TextOut((delaystring),rect(0,90,640,120),$FFFFFFFF,1);
+          if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then
+          begin
+            MyScreen.TextOut((settingstring),rect(0,105,640,135),$FFFFFFFF,1);
+            MyScreen.TextOut((actionstring),rect(0,120,form13.Width,150),$FFFFFFFF,1)
+          end
+          else MyScreen.TextOut((actionstring),rect(0,105,form13.Width,135),$FFFFFFFF,1);
+          if previewpaused then
+          begin
+            if Floor[form1.CheckListBox1.ItemIndex].Unknow[15] = $32 then
+              MyScreen.TextOut(GetLanguageString(482),rect(0,150,form13.Width,180),$FFFFFFFF,1)
+            else
+              MyScreen.TextOut(GetLanguageString(482),rect(0,135,form13.Width,165),$FFFFFFFF,1);
+          end;
+          myscreen.TextOut(GetLanguageString(489),rect(0,form13.Height-35,form13.Width,form13.Height-19),$FFFFFFFF,1);
+        end;
 
         if ini > 0 then begin
             dec(ini);
-            myscreen.TextOut('Q = Forward, A = Backward, D = Toggle data format, F = Toggle fog effect, L/R = Auto-rotate',rect(0,form13.Height-80,640,form13.Height-64),$FFFFFFFF,1);
-            myscreen.TextOut('Scroll = Change movement speed, E = Toggle auto-section adjust, C = Toggle auto-Y adjust',rect(0,form13.Height-65,640,form13.Height-49),$FFFFFFFF,1);
-            myscreen.TextOut('Edit: Hold click + CTRL = Move, + SHIFT = Up/down, + right-click = Rotate, CTRL + S = Snap',rect(0,form13.Height-50,640,form13.Height-34),$FFFFFFFF,1);
-            if borderStyle = bsNone then
-              myscreen.TextOut('ESC = Exit, CTRL + X = Show/hide the main window (Click outside of window to return to 3D)',rect(0,form13.Height-35,640,form13.Height-19),$FFFFFFFF,1);
+            myscreen.TextOut(GetLanguageString(530),rect(0,form13.Height-95,form13.Width,form13.Height-79),$FFFFFFFF,1);
+            myscreen.TextOut(GetLanguageString(490),rect(0,form13.Height-80,form13.Width,form13.Height-64),$FFFFFFFF,1);
+            myscreen.TextOut(GetLanguageString(491),rect(0,form13.Height-65,form13.Width,form13.Height-49),$FFFFFFFF,1);
+            myscreen.TextOut(GetLanguageString(492),rect(0,form13.Height-50,form13.Width,form13.Height-34),$FFFFFFFF,1);
+            if (borderStyle = bsNone) and (previewstate = 0) then
+              myscreen.TextOut(GetLanguageString(493),rect(0,form13.Height-35,form13.Width,form13.Height-19),$FFFFFFFF,1);
         end;
         myscreen.RenderSurface;
         if Keys[Ord('Q')] then GoForward;
@@ -372,6 +431,83 @@ begin
     end;
 end;
 
+procedure TForm13.popupWavePopup(Sender: TObject);
+var
+  tm: TMenuItem;
+  x, y: integer;
+begin
+  popupWave.Items.Clear;
+  if previewstate = 0 then
+  begin
+    tm := TMenuItem.Create(popupWave.Items);
+    tm.Caption := GetLanguageString(83);
+    tm.RadioItem := true;
+    if showwave = -1 then tm.Checked := true;
+    tm.tag := -1;
+    tm.OnClick := form1.EnemyWave1Click;
+    popupWave.Items.Add(tm);
+    y := CountNumberOfWave;
+    for x := 0 to y do
+    begin
+      tm := TMenuItem.Create(popupWave.Items);
+      tm.Caption := GetLanguageString(84) + inttostr(x);
+      tm.RadioItem := true;
+      if x = showwave then tm.Checked := true;
+      tm.tag := x;
+      tm.OnClick := form1.EnemyWave1Click;
+      if (x > 0) and (x mod 20 = 19) then
+        tm.Break := mbBarBreak;
+      popupWave.Items.Add(tm);
+    end;
+    tm := TMenuItem.Create(popupWave.Items);
+    tm.Caption := GetLanguageString(514);
+    tm.RadioItem := true;
+    if showwave = 65536 then tm.Checked := true;
+    tm.tag := 65536;
+    tm.OnClick := form1.EnemyWave1Click;
+    if (x > 0) and (x mod 20 = 19) then
+        tm.Break := mbBarBreak;
+    popupWave.Items.Add(tm);
+  end;
+end;
+
+procedure TForm13.popupGroupPopup(Sender: TObject);
+var
+  tm: TMenuItem;
+  x, y: integer;
+begin
+  popupGroup.Items.Clear;
+  tm := TMenuItem.Create(popupGroup.Items);
+  tm.Caption := GetLanguageString(83);
+  tm.RadioItem := true;
+  if showgrp = -1 then tm.Checked := true;
+  tm.tag := -1;
+  tm.OnClick := form1.Itemsgroupe1Click;
+  popupGroup.Items.Add(tm);
+  y := CountNumberOfGrp;
+  for x := 0 to y do
+  begin
+    tm := TMenuItem.Create(popupGroup.Items);
+    tm.Caption := GetLanguageString(85) + inttostr(x);
+    tm.RadioItem := true;
+    if x = showgrp then tm.Checked := true;
+    tm.tag := x;
+    tm.OnClick := form1.Itemsgroupe1Click;
+    if (x > 0) and (x mod 20 = 19) then
+      tm.Break := mbBarBreak;
+    popupGroup.Items.Add(tm);
+  end;
+  tm := TMenuItem.Create(popupGroup.Items);
+  tm.Caption := GetLanguageString(514);
+  tm.RadioItem := true;
+  if showgrp = 65536 then tm.Checked := true;
+  tm.tag := 65536;
+  tm.OnClick := form1.Itemsgroupe1Click;
+  if (x > 0) and (x mod 20 = 19) then
+        tm.Break := mbBarBreak;
+  popupGroup.Items.Add(tm);
+end;
+
 procedure TForm13.FormHide(Sender: TObject);
 begin
    timer1.Enabled:=false;
@@ -404,6 +540,7 @@ begin
     if inclick then
     if  shift = [ssCtrl,ssleft] then begin
         isedited:=true;
+        if undocount = 0 then form1.SetUndow;
         v.x :=  ( ( ( 2.0 * X ) / Width ) - 1 ) / (2);
         v.y := -( ( ( 2.0 * Y ) / Height ) - 1) / (2);
         v.z :=  1.0;
@@ -453,7 +590,7 @@ begin
         diffmin := Double.MaxValue;
         closest := -1;
 
-        if stype = 1 then begin
+        if (stype = 1) and (selected > -1) then begin
             mymonst[selected].PositionX:=rayOrigin.x;
             mymonst[selected].PositionZ:=rayOrigin.z;
 
@@ -470,7 +607,7 @@ begin
             if autoadjustY then
             begin
               pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
-              pz2 := pz2 - miz[d] * zoom;
+              pz2 := pz2 - miz[d];
               floor[sfloor].Monster[selected].Pos_Z := pz2;
             end;
             if autoadjustsect or autoadjustY then
@@ -605,7 +742,7 @@ begin
                 floor[sfloor].Monster[selected].Pos_z+miz[Floor[sfloor].Monster[selected].map_section]+0.5,
                 mymonst[selected].Positionz );
         end;
-        if stype = 2 then begin
+        if (stype = 2) and (selected > -1) then begin
             MyObj[selected].PositionX:=rayOrigin.x;
             MyObj[selected].PositionZ:=rayOrigin.z;
             
@@ -622,7 +759,7 @@ begin
             if autoadjustY then
             begin
               pz2 := form1.YFromBBRELFile(rayOrigin.x, -rayOrigin.z);
-              pz2 := pz2 - miz[d] * zoom;
+              pz2 := pz2 - miz[d];
               floor[sfloor].Obj[selected].Pos_Z := pz2;
             end;
             if autoadjustsect or autoadjustY then
@@ -804,6 +941,7 @@ begin
     if inclick then
     if  shift = [ssShift,ssleft] then begin
     isedited:=true;
+    if undocount = 0 then form1.SetUndow;
         v.x :=  ( ( ( 2.0 * X ) / Width ) - 1 ) / (2);
         v.y := -( ( ( 2.0 * Y ) / Height ) - 1) / (2);
         v.z :=  1.0;
@@ -851,6 +989,7 @@ begin
     if inclick then
     if  (shift = [ssright,ssleft]) or ((shift = [ssleft]) and rty) then begin
     isedited:=true;
+    if undocount = 0 then form1.SetUndow;
          i:=(lmx-x)*200;
          if stype = 1 then begin
          dec(floor[sfloor].Monster[selected].Direction , i);
@@ -866,6 +1005,7 @@ begin
     if inclick then
     if ((shift = [ssleft]) and rtx) then begin
     isedited:=true;
+    if undocount = 0 then form1.SetUndow;
          i:=(lmx-x)*200;
          if stype = 2 then begin
              dec(floor[sfloor].obj[selected].unknow5 , i);
@@ -877,6 +1017,7 @@ begin
     if inclick then
     if ((shift = [ssleft]) and rtz) then begin
     isedited:=true;
+    if undocount = 0 then form1.SetUndow;
          i:=(lmx-x)*200;
          if stype = 2 then begin
              dec(floor[sfloor].obj[selected].unknow7 , i);
@@ -933,15 +1074,28 @@ begin
                 and (rayOrigin.y >= mymonst[i].Positiony+mymonst[i].SizeDownY)
                 and (rayOrigin.y <= mymonst[i].Positiony+mymonst[i].SizeUpY)
                 and (rayOrigin.z >= mymonst[i].PositionZ+d2) and (rayOrigin.z<=mymonst[i].PositionZ+u2) then begin
+                    if placelookat then
+                    begin
+                      form1.LookAt2D(selected, sType, form1.SectionToMouseX(i,1), form1.SectionToMouseY(i,1));
+                      exit;
+                    end;
                     selected:=i;
+                    if undocount > 0 then
+                      form1.SetUndow;
                     inclickz:=rayOrigin.y;
                     inclickx:=rayOrigin.x;
                     inclicky:=rayOrigin.z;
                     inclick:=true;
                     stype:=1;
                     form1.ListBox1.ItemIndex:=i;
+                    form1.DBGrid1.Options := form1.DBGrid1.Options - [dgIndicator];
+                    form1.DBGrid2.Options := form1.DBGrid2.Options - [dgIndicator];
+                    form1.PageControl1.ActivePage := form1.TabSheet1;
+                    form1.LoadFloorGrids;
                     form1.drawmap;
-                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
+                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift)
+                    and not (ssCtrl in Shift) and not (ssShift in Shift)
+                    and not rtx and not rty and not rtz then
                     begin
                       form1.Button2Click(nil);
                       inedit := true;
@@ -957,15 +1111,28 @@ begin
                 and (rayOrigin.y >= MyObj[i].Positiony+MyObj[i].SizeDownY)
                 and (rayOrigin.y <= MyObj[i].Positiony+MyObj[i].SizeUpY)
                 and (rayOrigin.z >= MyObj[i].PositionZ+MyObj[i].SizeDownZ) and (rayOrigin.z<=MyObj[i].PositionZ+MyObj[i].SizeUpZ) then begin
+                    if placelookat then
+                    begin
+                      form1.LookAt2D(selected, sType, form1.SectionToMouseX(i,2), form1.SectionToMouseY(i,2));
+                      exit;
+                    end;
                     selected:=i;
+                    if undocount > 0 then
+                      form1.SetUndow;
                     inclickz:=rayOrigin.y;
                     inclickx:=rayOrigin.x;
                     inclicky:=rayOrigin.z;
                     inclick:=true;
                     stype:=2;
                     form1.ListBox2.ItemIndex:=i;
+                    form1.DBGrid1.Options := form1.DBGrid1.Options - [dgIndicator];
+                    form1.DBGrid2.Options := form1.DBGrid2.Options - [dgIndicator];
+                    form1.PageControl1.ActivePage := form1.TabSheet2;
+                    form1.LoadFloorGrids;
                     form1.drawmap;
-                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift) then
+                    if (gettickcount() - lastclick <= 300) and not (ssRight in Shift)
+                    and not (ssCtrl in Shift) and not (ssShift in Shift)
+                    and not rtx and not rty and not rtz then
                     begin
                       form1.Button2Click(nil);
                       inedit := true;
@@ -976,7 +1143,9 @@ begin
         if i < floor[sfloor].ObjCount then break;
         
     end;
-    if not (ssRight in Shift) and not inedit then
+    if not (ssRight in Shift) and not (ssCtrl in Shift) and not (ssShift in Shift)
+    and not rtx and not rty and not rtz
+    and not inedit then
       lastclick := gettickcount();
 end;
 
@@ -1035,6 +1204,12 @@ begin
   end;
 end;
 
+procedure TForm13.FormActivate(Sender: TObject);
+begin
+  form1.DBGrid1.Options := form1.DBGrid1.Options - [dgMultiSelect];
+  form1.DBGrid2.Options := form1.DBGrid2.Options - [dgMultiSelect];
+end;
+
 procedure TForm13.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     timer1.Enabled:=false;
@@ -1051,14 +1226,41 @@ procedure TForm13.FormKeyDown(Sender: TObject; var Key: Word;
 begin
   if key < 256 then
     Keys[key]:=true;
+  if (key = 37) and (previewstate > 0) then
+  begin
+    key := 0;
+    previewpaused := true;
+    if previewstate > 1 then
+    begin
+      Dec(previewstate);
+      DrawPreviewState(previewstate);
+    end;
+  end;
+  if (key = 39) and (previewstate > 0) then
+  begin
+    key := 0;
+    previewpaused := true;
+    if previewstate < Floor[form1.CheckListBox1.ItemIndex].Unknow[8] then
+    begin
+      Inc(previewstate);
+      DrawPreviewState(previewstate);
+    end;
+  end;
+  if (key = 32) and (previewstate > 0) then
+  begin
+    key := 0;
+    previewpaused := not previewpaused;
+    form1.DrawMap;
+  end;
 end;
 
 procedure TForm13.FormKeyPress(Sender: TObject; var Key: Char);
 var
   Reg: TRegistry;
+  rtinc: integer;
 begin
     // Change and save auto-adjust settings to the registry
-    if key = 'e' then
+    if key = 's' then
     begin
         autoadjustsect := not autoadjustsect;
         Reg := TRegistry.Create;
@@ -1073,7 +1275,7 @@ begin
           Reg.Free;
         end;
     end;
-    if key = 'c' then
+    if key = 'y' then
     begin
         autoadjustY := not autoadjustY;
         Reg := TRegistry.Create;
@@ -1112,21 +1314,45 @@ begin
     // Auto-rotate monster/object clockwise 22.5 degrees
     if (key = 'l') and (selected > -1) then
     begin
+      if sType = 1 then
+        rtinc := ClosestRot(Floor[sFloor].Monster[selected].Direction);
+      if sType = 2 then
+        rtinc := ClosestRot(Floor[sFloor].Obj[selected].unknow6);
+
       // Decrement for next rotation
       if rtinc > 0 then
         rtinc := rtinc - 4096
       else rtinc := 61440;
-      AutoRotate;
+      AutoRotate(rtinc);
     end;
 
     // Auto-rotate monster/object counter-clockwise 22.5 degrees
     if (key = 'r') and (selected > -1) then
     begin
+      if sType = 1 then
+        rtinc := ClosestRot(Floor[sFloor].Monster[selected].Direction);
+      if sType = 2 then
+        rtinc := ClosestRot(Floor[sFloor].Obj[selected].unknow6);
+
       // Increment for next rotation
-      if rtinc < 61440 then
+      if (rtinc >= -65536) and (rtinc <= 61440) then
         rtinc := rtinc + 4096
       else rtinc := 0;
-      AutoRotate;
+      AutoRotate(rtinc);
+    end;
+
+    if key = 'w' then
+    begin
+      // Cancel movement before opening the menu
+      Keys[Ord('Q')] := false;
+      Keys[Ord('A')] := false;
+      popupWave.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
+    end;
+    if key = 'g' then
+    begin
+      Keys[Ord('Q')] := false;
+      Keys[Ord('A')] := false;
+      popupGroup.Popup(mouse.CursorPos.x, mouse.CursorPos.y);
     end;
 end;
 

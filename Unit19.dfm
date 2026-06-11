@@ -11,9 +11,9 @@ object Form19: TForm19
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
+  KeyPreview = True
   Position = poOwnerFormCenter
-  PixelsPerInch = 96
+  OnKeyDown = FormKeyDown
   TextHeight = 13
   object StringGrid1: TStringGrid
     Left = 6

@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Samples.Spin, registry,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Samples.Spin, registry, ShellApi,
   Vcl.NumberBox, Math, Vcl.ExtCtrls;
 
 type
@@ -26,9 +26,12 @@ type
     nbDefaultX: TNumberBox;
     btnReset: TButton;
     Bevel1: TBevel;
+    btnClose: TButton;
     procedure btnSaveClick(Sender: TObject);
     procedure btnResetClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnCloseClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -84,6 +87,18 @@ begin
   nbDefaultY.MaxValue := single.MaxValue;
   nbDefaultZ.MinValue := single.MinValue;
   nbDefaultZ.MaxValue := single.MaxValue;
+end;
+
+procedure TFPlacementOptions.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_F1 then
+    shellexecute(0,'open',pchar('http://qedit.info/index.php?title=Placement_Options'),'','',0);
+end;
+
+procedure TFPlacementOptions.btnCloseClick(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TFPlacementOptions.btnResetClick(Sender: TObject);

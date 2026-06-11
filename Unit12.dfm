@@ -4,16 +4,14 @@ object Form12: TForm12
   BorderStyle = bsDialog
   Caption = 'Quest files manager'
   ClientHeight = 235
-  ClientWidth = 422
+  ClientWidth = 417
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
-  PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 10

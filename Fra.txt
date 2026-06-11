@@ -1,4 +1,4 @@
-Quête
+Fichier
 Propriété
 Manuscrit
 Outils
@@ -6,8 +6,8 @@ Nouveau
 Épisode 1
 Épisode 2
 Épisode 4
-Ouvrir
-Enregistrer
+Ouvrir...
+Enregistrer...
 Language
 Quité
 Titre
@@ -15,16 +15,16 @@ Information
 Description
 Configuration
 Voire le manuscrit
-Exporter
-Importer
+Exporter...
+Importer...
 Gestionaire de fichier quête
 Verification de compatibilité
 Liste d'objets (quête BB seulement)
 Visualisation 3D
 Configuration de la 3D
-À propos...
+À propos
 Verifié les mise à jours...
-Aide!!
+Aide
 Carte :
 Zone :
 Exporter les donées de la zone
@@ -61,8 +61,8 @@ Modèle de groupe inconnu (
 Une erreur c'est produite lors de la lecture des données de la quête.
 Une erreur c'est produite lors de la lecture des données du manuscrit.
 Une erreur c'est produite lors de la mise en text du manuscrit.
- (Format DreamCast ASCII)
- (Format PC Unicode)
+ (Format Dreamcast ASCII)
+ (Format Unicode)
  - Épisode 1
  - Épisode 2
  - Épisode 4
@@ -162,7 +162,7 @@ Coller
 Effacer
 Modifier le PNJ
 Changer l'image
-Enregistere l'image
+Enregistrer l'image
 Modifier les données physique d'ennemi
 Modifier les données de résistance d'ennemi
 Modifier les données d'offences d'ennemi
@@ -193,7 +193,7 @@ Langue :
 Numero de quête :
 Titre de la quête
 Titre :
-Section id
+Section ID
 PNJ: Aucun
 PNJ
 Peau
@@ -202,7 +202,7 @@ Non utiliser
 Visage
 Cheveux
 Habits
-Section id
+Section ID
 Création de PNJ
 Nom de commande invalide
 Le numéro de libellé doit être entre 0 et 65535
@@ -268,7 +268,7 @@ Table de configuration
 À propos
 PSO Quest Editor par Schthack
 Suporte pso DC, PC, GC, BB
-Credit:<cr><cr>Codeur:<cr>Schthack<cr><cr>Premier fichier ASM:<cr>Myria<cr>Clara<cr><cr>Mise à jours ASM:<cr>Lee 			(plus de 50% total)<cr>Aleron Ives<cr>Gatten<cr>Schthack<cr><cr>Format des fichiers quête:<cr>Schthack<cr>Lee			(Donnée chalenge)<cr><cr>Format des cartes 3D:<cr>Schthack<cr><cr>Format des modeles 3D:<cr>Kryslin<cr><cr>Recherche des modeles:<cr>Lee<cr>Schthack<cr>Firefox<cr><cr>Un merci bien special à:<cr>AleronIves<cr>Lee<cr>Firefox276<cr>Pour leur suggestions et pour<cr>avoire été de parfait sujet de teste<cr>
+Credit:<cr><cr>Codeur:<cr>Schthack<cr><cr>Premier fichier ASM:<cr>Myria<cr>Clara<cr><cr>Mise à jours ASM:<cr>Lee 			(plus de 50% total)<cr>Aleron Ives<cr>Gatten<cr>Schthack<cr><cr>Format des fichiers quête:<cr>Schthack<cr>Lee			(Donnée chalenge)<cr><cr>Format des cartes 3D:<cr>Schthack<cr><cr>Format des modeles 3D:<cr>Kryslin<cr><cr>Recherche des modeles:<cr>Lee<cr>Schthack<cr>Firefox<cr><cr>Un merci bien special à:<cr>AleronIves<cr>Lee<cr>Firefox276<cr>Pour leur suggestions et pour<cr>avoire été de parfait sujet de teste<cr><cr>Mise à jours 1.0c-2.0c:<cr>Alisaryn<cr>
 Gestionaire de la liste d'article
 Configuration 3D
 Taille de la fenaitre:
@@ -291,7 +291,214 @@ Impossible de receuillir les informations de mise à jours.
 Impossible de télécharger le fichier.
 <cr>Gardé QEdit a jours<cr>pour avoire les dernières<cr>fonctionalité et<cr>correctifs.<cr>
 Mêtre à jour
-Exporter le texte pour une traduction
-Importer le texte d'une traduction
+Exporter le texte pour une traduction...
+Importer le texte d'une traduction...
 Filtre de zone
 Filtré pour:
+Ajouter des apparitions aléatoires
+Définir la rotation
+Axe automatique
+Définir le thème...
+Définir le thème
+Éditeur de texte
+Niveau
+Trier
+Monstre
+Objets
+par pièce
+par vague
+par groupe
+par type
+Exporter les donnés...
+Importer les donnés...
+Voir les évènements
+Aperçu des événements
+Monstre aléatoire
+Ajouter une pièce
+Modifier la pièce
+Supprimer la pièce
+Ajouter
+Supprimer
+Ajouter une ligne
+Supprimer la ligne
+Nombre de monstres et boites
+Détails des monstres et boites
+Cette quête est tellement épic qu'elle n'a pas besoin d'ennemis ou de boites!
+ Précédent
+ Suivant
+Espace: Pause/Jouer
+Esc: Quiter l'aperçu
+Supprimer la pièce
+ et tout son contenue?
+Vague d'ennemis
+Groupe d'objet
+Nouveau
+Monstre...
+Objet...
+Copier le dernier monstre
+Copier le dernier objet
+Glisser pour déplacer
+Options
+Option de placement
+Options d'accrochage
+Valeurs par défaut
+Décalage X:
+Décalage Y:
+Décalage Z:
+Défaut de section:
+Défaut X:
+Défaut Y:
+Défaut Z:
+Option de placement
+Options d'accrochage
+Alignement d'accrochage
+Garder la distance
+Garder la rotation
+Garder la position Y
+Limite d'ancrage (unité):
+Tolérance d'accrochage (units):
+Éditeur de script format texte
+Éditer le texte
+Format
+Voir
+Ouvrir le fichier...
+Enregistrer sous...
+Quiter
+Ajouter un commantaire STR
+Remplacer...
+Configurer rechercher et remplacer
+Mot entier et registre seulement
+Respecter la case
+Moteur
+Étendue
+Expression régulière
+Caractère générique
+Réinitialiser...
+La configuration de recherche et remplacement va être réinitialiser, continuer?
+Aller a l'étiquette...
+Aller à la ligne...
+Aller a l'étiquette
+Aller à la ligne
+Changer la police...
+Changer la couleur du texte
+Changer la couleur du texte...
+Changer la couleur d'arrière-plan...
+Étiquette...
+Instruction...
+Registre...
+Valeur...
+Texte (STR)...
+Texte (Argument)...
+Changee le thème
+Réinitialiser le formatage...
+Les options de police et de couleur seront réinitialisées à leurs valeurs par défaut. Continuer ?
+Les options de police et de couleur des notes seront réinitialisées à leurs valeurs par défaut. Continuer ?
+Activer/désactiver les notes
+Liste d'instructions
+Utilisations typiques du registre
+Fonction commune
+Ajouter ou modifier une donnée
+PNJ
+Image
+Ennemi
+Décimale
+Symbol Chat
+Vecteur
+Modifier
+Physique
+Résistance
+Attaque
+Mouvement
+Ajouter une étiquette
+Ajouter un régistre
+Inserrer les arguments leti/fleti
+Définir le format des arguments
+Hex
+Décimale
+Cacher les NOP
+Changer d'éditeur
+Remplacer le texte
+Remplacer:
+Par:
+Dans la sélection seulement
+Notes
+[Cliquez pour placer]
+(Modificateurs)
+Modificateurs de placement
+Désactiver le placement automatique de l'axe Y
+Désactiver le placement automatique de la section
+Définir à la position par défaut
+Définir à la position de sélection du décalage
+Aligner à l'ancrage
+Annuler le placement
+[Cliquez pour placer - Esc: annuler]
+Erreur de chargement des données.
+Numéro de l'épisode invalide.
+Erreur
+Le nouveau thème sera actif au prochain démarrage. Redémarrer maintenant?
+Changer le format d'affichage va supprimer tout les changements non sauvegarder. Continuer?
+Changer l'affichege des instructions NOP va supprimer tout les changements non sauvegarder. Continuer?
+Avertissement de compilation à la ligne 
+Erreur de compilation à la ligne 
+La valeur décimale ne peut être "NAN".
+La taille d'écrant sera actif au prochain démarrage. Redémarrer maintenant?
+Impossible de générer la liste ASM au format JSON
+Impossible de générer la liste des registres au format JSON
+Étiquette non trouvé.
+Liste de vecteurs
+Durée
+Distance
+Courbe de Bézier
+Visage
+Sons
+Coins
+Parties
+Le tableau de fonctions contient trop d'entrées à la ligne 
+Le tableau de fonctions manque d'entrées à la ligne
+Niveau 
+ pièce 
+ à plus de 32 entrées définies
+Poid invalide à la ligne #
+Configuration invalide à la ligne #
+ au niveau 
+Charger les données de l'énemi
+Type de monstre
+Auto
+Cacher les données
+Afficher les données
+Ajouter un Symbol Chat
+Modifier un Symbol Chat
+Modifier les vecteurs
+Données de type texte déclarées sans étiquette
+Données de type texte déclarées dans une section de code ou hexadécimal
+Données de type hexadécimal déclarées dans une section de code ou texte
+Étiquette dupliqué: 
+Endianness GC
+Chargement du script
+Enregistrement du script
+Normale
+Réinitialiser le formatage des notes...
+Désactiver l'indicateur d'emplacement
+En pause
+Charger
+Vitesse de déplacement: 
+Section automatique : Activée, 
+Section automatique : Désactivée, 
+Auto-Y: Activée
+Auto-Y: Désactivée
+Flèche gauche = Événement précédent,  Flèche droit = Événement suivant,  Espace = Pause/Reprise,  ESC = Quiter
+Q = Avancer, A = Reculer, D = Changer le format des données, F = Activer/désactiver l'effet de brouillard, L/R = Rotation automatique
+Défiler = Changer la vitesse de déplacement, E = Activer/désactiver le réglage automatique de la section, C = Activer/désactiver le réglage automatique de l'axe Y
+Éditer: Glisser + CTRL = Move, + SHIFT = Haut/bas, + click droit = Pivover, CTRL + S = Aligner
+ESC = Quiter, CTRL + X = Afficher/masquer la fenêtre principale (Cliquez en dehors de la fenêtre pour revenir à la 3D)
+Rond
+Triangle
+Carré
+Hexa
+Partie
+Tableau :
+Mode plein écran
+Suivre la sélection
+Ajouter des références
+Monstre n°
+ ne fait pas partie d'un événement de carte à l'étage 

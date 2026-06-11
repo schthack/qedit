@@ -1,8 +1,8 @@
 object Form1: TForm1
   Left = 195
   Top = 115
-  Caption = 'Quest Editor V 2.0c Public'
-  ClientHeight = 481
+  Caption = 'Quest Editor v2.0c Public'
+  ClientHeight = 506
   ClientWidth = 723
   Color = clBtnFace
   Constraints.MinHeight = 540
@@ -14,10 +14,13 @@ object Form1: TForm1
   Font.Style = []
   KeyPreview = True
   Menu = MainMenu1
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnKeyPress = FormKeyPress
   OnKeyUp = FormKeyUp
+  OnMouseDown = FormMouseDown
   OnMouseUp = FormMouseUp
   OnMouseWheelDown = FormMouseWheelDown
   OnMouseWheelUp = FormMouseWheelUp
@@ -25,7 +28,7 @@ object Form1: TForm1
   OnShow = FormShow
   DesignSize = (
     723
-    481)
+    506)
   TextHeight = 13
   object Label3: TLabel
     Left = 468
@@ -74,9 +77,10 @@ object Form1: TForm1
   end
   object lblStatus: TLabel
     Left = 308
-    Top = 464
+    Top = 489
     Width = 70
     Height = 13
+    Anchors = [akBottom]
     Caption = '[Click to place]'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -85,13 +89,15 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     Visible = False
+    ExplicitTop = 464
   end
   object lblModifiers: TLabel
     Left = 384
-    Top = 464
+    Top = 489
     Width = 48
     Height = 13
     Cursor = crHandPoint
+    Anchors = [akBottom]
     Caption = '(Modifiers)'
     Color = clBtnFace
     Font.Charset = DEFAULT_CHARSET
@@ -103,12 +109,25 @@ object Form1: TForm1
     ParentFont = False
     Visible = False
     OnClick = lblModifiersClick
+    ExplicitTop = 464
+  end
+  object lblPreview: TLabel
+    Left = 236
+    Top = 489
+    Width = 302
+    Height = 13
+    Anchors = [akBottom]
+    Caption = 
+      #8592' Previous  |  '#8594' Next  |  Space: Pause/Play  |  Esc: Exit previe' +
+      'w'
+    Visible = False
+    ExplicitTop = 464
   end
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
     Width = 183
-    Height = 481
+    Height = 506
     Align = alLeft
     Caption = ' Map : '
     TabOrder = 0
@@ -192,13 +211,22 @@ object Form1: TForm1
     end
     object Button12: TButton
       Left = 8
-      Top = 360
+      Top = 388
       Width = 165
       Height = 25
       Caption = 'Random Monster data'
       Enabled = False
-      TabOrder = 4
+      TabOrder = 5
       OnClick = Button12Click
+    end
+    object Button14: TButton
+      Left = 8
+      Top = 360
+      Width = 165
+      Height = 25
+      Caption = 'Add random spawns'
+      TabOrder = 4
+      OnClick = Button14Click
     end
   end
   object ListBox2: TListBox
@@ -209,6 +237,7 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     ItemHeight = 13
+    PopupMenu = popupObjects
     TabOrder = 1
     OnClick = ListBox2Click
     OnDblClick = ListBox1DblClick
@@ -221,13 +250,18 @@ object Form1: TForm1
     Anchors = [akLeft, akTop, akRight]
     BevelOuter = bvSpace
     Color = clWhite
-    TabOrder = 10
+    DoubleBuffered = True
+    ParentBackground = False
+    ParentDoubleBuffered = False
+    TabOrder = 11
     object Image1: TImage
       Left = 1
       Top = 1
       Width = 529
       Height = 47
       Align = alClient
+      Transparent = True
+      OnClick = Image1Click
       ExplicitWidth = 523
     end
   end
@@ -235,22 +269,25 @@ object Form1: TForm1
     Left = 190
     Top = 244
     Width = 397
-    Height = 215
+    Height = 240
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvLowered
-    TabOrder = 11
-    object Image2: TImage
+    ParentBackground = False
+    TabOrder = 12
+    object Image2: TPaintBox
       Left = 1
       Top = 1
       Width = 395
-      Height = 213
+      Height = 238
       Align = alClient
       PopupMenu = PopupMenu1
       OnClick = Image2Click
       OnMouseDown = Image2MouseDown
       OnMouseMove = Image2MouseMove
       OnMouseUp = Image2MouseUp
-      ExplicitTop = 3
+      OnPaint = Image2Paint
+      ExplicitLeft = 2
+      ExplicitHeight = 213
     end
   end
   object Button1: TButton
@@ -284,7 +321,7 @@ object Form1: TForm1
     Caption = 'Delete'
     Enabled = False
     TabOrder = 6
-    OnClick = Button3Click
+    OnClick = Delete1Click
   end
   object Button4: TButton
     Left = 591
@@ -344,14 +381,14 @@ object Form1: TForm1
     Width = 129
     Height = 17
     Caption = 'Show room ID'
-    TabOrder = 12
+    TabOrder = 13
     OnClick = CheckBox1Click
   end
   object Button11: TButton
-    Left = 593
-    Top = 436
-    Width = 127
-    Height = 23
+    Left = 591
+    Top = 440
+    Width = 129
+    Height = 22
     Anchors = [akRight, akBottom]
     Caption = 'Undo'
     Enabled = False
@@ -367,7 +404,7 @@ object Form1: TForm1
     Style = csOwnerDrawFixed
     Anchors = [akTop, akRight]
     ItemIndex = 0
-    TabOrder = 13
+    TabOrder = 14
     Text = 'Auto'
     OnChange = ComboBox1Change
     Items.Strings = (
@@ -381,9 +418,92 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     ItemHeight = 13
-    TabOrder = 14
+    PopupMenu = popupMonsters
+    TabOrder = 15
     OnClick = ListBox1Click
     OnDblClick = ListBox1DblClick
+  end
+  object PageControl1: TPageControl
+    Left = 190
+    Top = 8
+    Width = 531
+    Height = 160
+    ActivePage = TabSheet1
+    TabOrder = 16
+    object TabSheet1: TTabSheet
+      Caption = 'Monsters'
+      object DBGrid1: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 523
+        Height = 132
+        Align = alClient
+        DataSource = DataSource1
+        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        PopupMenu = popupGrid
+        ReadOnly = True
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+        OnCellClick = DBGrid1CellClick
+        OnDrawColumnCell = DBGrid1DrawColumnCell
+        OnDblClick = DBGrid1DblClick
+        OnExit = DBGrid1Exit
+        OnKeyDown = DBGrid1KeyDown
+        OnKeyUp = DBGrid1KeyUp
+        OnMouseDown = DBGrid1MouseDown
+        OnMouseEnter = DBGrid1MouseEnter
+        OnMouseLeave = DBGrid1MouseLeave
+        OnMouseWheel = DBGrid1MouseWheel
+        OnTitleClick = DBGrid1TitleClick
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'Objects'
+      ImageIndex = 1
+      object DBGrid2: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 523
+        Height = 132
+        Align = alClient
+        DataSource = DataSource2
+        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        PopupMenu = popupGrid
+        ReadOnly = True
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+        OnCellClick = DBGrid2CellClick
+        OnDrawColumnCell = DBGrid2DrawColumnCell
+        OnDblClick = DBGrid2DblClick
+        OnExit = DBGrid2Exit
+        OnKeyDown = DBGrid2KeyDown
+        OnKeyUp = DBGrid2KeyUp
+        OnMouseDown = DBGrid2MouseDown
+        OnMouseEnter = DBGrid2MouseEnter
+        OnMouseLeave = DBGrid2MouseLeave
+        OnMouseWheel = DBGrid2MouseWheel
+        OnTitleClick = DBGrid2TitleClick
+      end
+    end
+  end
+  object btnRedo: TButton
+    Left = 591
+    Top = 464
+    Width = 129
+    Height = 22
+    Anchors = [akRight, akBottom]
+    Caption = 'Redo'
+    Enabled = False
+    TabOrder = 10
+    OnClick = btnRedoClick
   end
   object MainMenu1: TMainMenu
     Images = ImageList1
@@ -423,19 +543,39 @@ object Form1: TForm1
       object N1: TMenuItem
         Caption = '-'
       end
+      object Settheme1: TMenuItem
+        Caption = 'Set theme...'
+        OnClick = Button15Click
+      end
+      object N3: TMenuItem
+        Caption = '-'
+      end
       object Language1: TMenuItem
         Caption = 'Language'
         object English1: TMenuItem
           Caption = 'English'
+          RadioItem = True
           OnClick = English1Click
-        end
-        object French1: TMenuItem
-          Caption = 'Fran'#231'ais'
-          OnClick = French1Click
         end
         object spanish1: TMenuItem
           Caption = 'Espa'#241'ol'
+          RadioItem = True
           OnClick = spanish1Click
+        end
+        object French1: TMenuItem
+          Caption = 'Fran'#231'ais'
+          RadioItem = True
+          OnClick = French1Click
+        end
+        object Japanese1: TMenuItem
+          Caption = 'Japanese'
+          RadioItem = True
+          OnClick = Japanese1Click
+        end
+        object Russian1: TMenuItem
+          Caption = 'Russian'
+          RadioItem = True
+          OnClick = Russian1Click
         end
       end
       object N6: TMenuItem
@@ -514,6 +654,41 @@ object Form1: TForm1
     end
     object Floor1: TMenuItem
       Caption = 'Floor'
+      object View1: TMenuItem
+        Caption = 'Data view'
+        object Lists1: TMenuItem
+          Caption = 'List'
+          RadioItem = True
+          OnClick = Lists1Click
+        end
+        object Grids1: TMenuItem
+          Caption = 'Grid'
+          RadioItem = True
+          OnClick = Grids1Click
+        end
+      end
+      object N17: TMenuItem
+        Caption = '-'
+      end
+      object Gridmode1: TMenuItem
+        Caption = 'Grid mode'
+        object Celledit1: TMenuItem
+          Caption = 'Cell edit'
+          RadioItem = True
+          OnClick = Celledit1Click
+        end
+        object Rowselection1: TMenuItem
+          Caption = 'Row selection'
+          RadioItem = True
+          OnClick = Rowselection1Click
+        end
+      end
+      object Switchgridtab1: TMenuItem
+        Caption = 'Switch grid'
+        ShortCut = 8201
+        Visible = False
+        OnClick = Switchgridtab1Click
+      end
       object Sort1: TMenuItem
         Caption = 'Sort'
         object Monster1: TMenuItem
@@ -565,6 +740,14 @@ object Form1: TForm1
         Caption = 'Events...'
         OnClick = Button10Click
       end
+      object Previewevents1: TMenuItem
+        Caption = 'Preview events'
+        ShortCut = 115
+        OnClick = Previewevents1Click
+      end
+      object N13: TMenuItem
+        Caption = '-'
+      end
       object Randommonsters1: TMenuItem
         Caption = 'Random monsters...'
         OnClick = Button12Click
@@ -598,6 +781,7 @@ object Form1: TForm1
       object N3DView1: TMenuItem
         Caption = '3D View'
         ImageIndex = 12
+        ShortCut = 116
         OnClick = N3DView1Click
       end
       object N3DSetup1: TMenuItem
@@ -628,7 +812,7 @@ object Form1: TForm1
       end
     end
     object Hotkeys1: TMenuItem
-      Caption = '[Hotkeys]'
+      Caption = '[Global Hotkeys]'
       Visible = False
       object Newmonster1: TMenuItem
         Caption = 'New monster'
@@ -670,6 +854,16 @@ object Form1: TForm1
         ShortCut = 16474
         OnClick = Undo1Click
       end
+      object Redo1: TMenuItem
+        Caption = 'Redo'
+        ShortCut = 16473
+        OnClick = Redo1Click
+      end
+      object Redo2: TMenuItem
+        Caption = 'Redo 2'
+        ShortCut = 24666
+        OnClick = Redo2Click
+      end
       object Options1: TMenuItem
         Caption = 'Placement Options'
         ShortCut = 113
@@ -694,6 +888,25 @@ object Form1: TForm1
         Caption = 'Switch Script Editor'
         ShortCut = 32856
         OnClick = SwitchScriptEditor1Click
+      end
+      object Showbitmapoverlays1: TMenuItem
+        Caption = 'Show bitmap overlays'
+        OnClick = Showbitmapoverlays1Click
+      end
+      object InvertYrotation2: TMenuItem
+        Caption = 'Invert Y rotation'
+        ShortCut = 32854
+        OnClick = InvertYrotation2Click
+      end
+      object MirrorZposition2: TMenuItem
+        Caption = 'Mirror Z position'
+        ShortCut = 32858
+        OnClick = MirrorZposition2Click
+      end
+      object LookAt2: TMenuItem
+        Caption = 'Look At'
+        ShortCut = 32833
+        OnClick = LookAt2Click
       end
     end
   end
@@ -1664,7 +1877,7 @@ object Form1: TForm1
       Caption = 'Enemy wave'
     end
     object Itemsgroupe1: TMenuItem
-      Caption = 'Item group'
+      Caption = 'Object group'
     end
     object N10: TMenuItem
       Caption = '-'
@@ -1672,12 +1885,12 @@ object Form1: TForm1
     object smNew: TMenuItem
       Caption = 'New'
       object smNewMonster: TMenuItem
-        Caption = 'Monster'
+        Caption = 'Monster...'
         ShortCut = 16462
         OnClick = smNewMonsterClick
       end
       object smNewItem: TMenuItem
-        Caption = 'Item'
+        Caption = 'Object...'
         ShortCut = 32846
         OnClick = smNewItemClick
       end
@@ -1688,7 +1901,7 @@ object Form1: TForm1
         OnClick = Copylastmonster1Click
       end
       object Copylastitem1: TMenuItem
-        Caption = 'Copy last item'
+        Caption = 'Copy last object'
         Enabled = False
         ShortCut = 32835
         OnClick = Copylastitem1Click
@@ -1706,6 +1919,36 @@ object Form1: TForm1
       ShortCut = 32837
       OnClick = smEditClick
     end
+    object Transform1: TMenuItem
+      Caption = 'Transform'
+      Enabled = False
+      object InvertYrotation1: TMenuItem
+        Caption = 'Invert Y rotation'
+        ShortCut = 32854
+        OnClick = InvertYrotation1Click
+      end
+      object N16: TMenuItem
+        Caption = '-'
+      end
+      object MirrorXposition1: TMenuItem
+        Caption = 'Mirror X position'
+        ShortCut = 32856
+        OnClick = MirrorXposition1Click
+      end
+      object MirrorZposition1: TMenuItem
+        Caption = 'Mirror Z position'
+        ShortCut = 32858
+        OnClick = MirrorZposition1Click
+      end
+      object N18: TMenuItem
+        Caption = '-'
+      end
+      object LookAt1: TMenuItem
+        Caption = 'Look at selection'
+        ShortCut = 32833
+        OnClick = LookAt1Click
+      end
+    end
     object smMove: TMenuItem
       Caption = 'Move'
       Enabled = False
@@ -1718,15 +1961,68 @@ object Form1: TForm1
       ShortCut = 16474
       OnClick = smUndoClick
     end
+    object smRedo: TMenuItem
+      Caption = 'Redo'
+      Enabled = False
+      ShortCut = 16473
+      OnClick = smRedoClick
+    end
     object N11: TMenuItem
       Caption = '-'
     end
-    object smDrag: TMenuItem
-      Caption = 'Drag to move'
-      OnClick = smDragClick
-    end
     object Options2: TMenuItem
       Caption = 'Options'
+      object smDrag: TMenuItem
+        Caption = 'Drag to move'
+        OnClick = smDragClick
+      end
+      object showbmp: TMenuItem
+        Caption = 'Show icons'
+        OnClick = showbmpClick
+      end
+      object N15: TMenuItem
+        Caption = '-'
+      end
+      object Markerbrightness1: TMenuItem
+        Caption = 'Map marker brightness'
+        object Default1: TMenuItem
+          Caption = 'Default'
+          Checked = True
+          RadioItem = True
+          OnClick = Default1Click
+        end
+        object High1: TMenuItem
+          Caption = 'High'
+          RadioItem = True
+          OnClick = High1Click
+        end
+        object Veryhigh1: TMenuItem
+          Caption = 'Very high'
+          RadioItem = True
+          OnClick = Veryhigh1Click
+        end
+      end
+      object Outlinewidth1: TMenuItem
+        Caption = 'Orientation line width'
+        object Width1: TMenuItem
+          Caption = 'Default (1 px)'
+          RadioItem = True
+          OnClick = Width1Click
+        end
+        object Width2: TMenuItem
+          Caption = '2 px'
+          RadioItem = True
+          OnClick = Width2Click
+        end
+        object Width3: TMenuItem
+          Caption = '3 px'
+          RadioItem = True
+          OnClick = Width3Click
+        end
+      end
+      object N14: TMenuItem
+        Caption = '-'
+      end
       object smPlacement: TMenuItem
         Caption = 'Placement options'
         ShortCut = 113
@@ -1752,7 +2048,7 @@ object Form1: TForm1
   object Timer1: TTimer
     Interval = 60000
     OnTimer = Timer1Timer
-    Left = 570
+    Left = 650
     Top = 8
   end
   object SaveDialog3: TSaveDialog
@@ -1766,7 +2062,7 @@ object Form1: TForm1
     Top = 40
   end
   object ActionList1: TActionList
-    Left = 608
+    Left = 566
     Top = 8
     object Action1: TAction
       Caption = 'undo'
@@ -1785,20 +2081,299 @@ object Form1: TForm1
     end
   end
   object PopupMenu4: TPopupMenu
-    Left = 418
+    Left = 426
     Top = 11
     object Smallfont1: TMenuItem
       Caption = '100%'
       Checked = True
+      RadioItem = True
       OnClick = Smallfont1Click
     end
     object Mediumfont1: TMenuItem
       Caption = '125%'
+      RadioItem = True
       OnClick = Mediumfont1Click
     end
     object Largefont1: TMenuItem
       Caption = '150%'
+      RadioItem = True
       OnClick = Largefont1Click
+    end
+  end
+  object tmPreview: TTimer
+    Interval = 2000
+    OnTimer = tmPreviewTimer
+    Left = 616
+    Top = 8
+  end
+  object ClientDataSet1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    AfterScroll = ClientDataSet1AfterScroll
+    Left = 273
+    Top = 88
+    object ClientDataSet1Field: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = '#'
+    end
+    object ClientDataSet1Name: TStringField
+      DisplayWidth = 20
+      FieldName = 'Name'
+      Size = 255
+    end
+    object ClientDataSet1Skin: TWordField
+      Alignment = taLeftJustify
+      FieldName = 'Skin'
+      OnSetText = ClientDataSet1SkinSetText
+    end
+    object ClientDataSet1Section: TWordField
+      Alignment = taLeftJustify
+      FieldName = 'Section'
+      OnSetText = ClientDataSet1SectionSetText
+    end
+    object ClientDataSet1Wave: TWordField
+      Alignment = taLeftJustify
+      FieldName = 'Wave'
+      OnSetText = ClientDataSet1WaveSetText
+    end
+    object ClientDataSet1PositionX: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Pos X'
+      OnSetText = ClientDataSet1PositionXSetText
+      DisplayFormat = '0.0000'
+    end
+    object ClientDataSet1PositionY: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Pos Y'
+      OnSetText = ClientDataSet1PositionYSetText
+      DisplayFormat = '0.0000'
+    end
+    object ClientDataSet1PositionZ: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Pos Z'
+      OnSetText = ClientDataSet1PositionZSetText
+      DisplayFormat = '0.0000'
+    end
+    object ClientDataSet1RotationY: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'Rot Y'
+      OnGetText = ClientDataSet1RotationYGetText
+      OnSetText = ClientDataSet1RotationYSetText
+    end
+    object ClientDataSet1Param1: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'Param 1'
+      OnSetText = ClientDataSet1Param1SetText
+    end
+    object ClientDataSet1Param2: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Param 2'
+      OnSetText = ClientDataSet1Param2SetText
+      DisplayFormat = '0.####'
+    end
+    object ClientDataSet1Param3: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Param 3'
+      OnSetText = ClientDataSet1Param3SetText
+      DisplayFormat = '0.####'
+    end
+    object ClientDataSet1Param4: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Param 4'
+      OnSetText = ClientDataSet1Param4SetText
+      DisplayFormat = '0.####'
+    end
+    object ClientDataSet1Param5: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Param 5'
+      OnSetText = ClientDataSet1Param5SetText
+      DisplayFormat = '0.####'
+    end
+    object ClientDataSet1Param6: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Param 6'
+      OnSetText = ClientDataSet1Param6SetText
+      DisplayFormat = '0.####'
+    end
+    object ClientDataSet1Param7: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'Param 7'
+      OnSetText = ClientDataSet1Param7SetText
+    end
+    object ClientDataSet1ChildCount: TWordField
+      Alignment = taLeftJustify
+      FieldName = 'Child Count'
+      OnSetText = ClientDataSet1ChildCountSetText
+    end
+  end
+  object ClientDataSet2: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    AfterScroll = ClientDataSet2AfterScroll
+    Left = 369
+    Top = 88
+    object ClientDataSet2Field: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = '#'
+    end
+    object ClientDataSet2Name: TStringField
+      DisplayWidth = 20
+      FieldName = 'Name'
+      Size = 255
+    end
+    object ClientDataSet2Skin: TWordField
+      Alignment = taLeftJustify
+      FieldName = 'Skin'
+      OnSetText = ClientDataSet2SkinSetText
+    end
+    object ClientDataSet2Section: TWordField
+      Alignment = taLeftJustify
+      FieldName = 'Section'
+      OnSetText = ClientDataSet2SectionSetText
+    end
+    object ClientDataSet2Group: TWordField
+      Alignment = taLeftJustify
+      FieldName = 'Group'
+      OnSetText = ClientDataSet2GroupSetText
+    end
+    object ClientDataSet2PosX: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Pos X'
+      OnSetText = ClientDataSet2PosXSetText
+      DisplayFormat = '0.0000'
+    end
+    object ClientDataSet2PosY: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Pos Y'
+      OnSetText = ClientDataSet2PosYSetText
+      DisplayFormat = '0.0000'
+    end
+    object ClientDataSet2PosZ: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Pos Z'
+      OnSetText = ClientDataSet2PosZSetText
+      DisplayFormat = '0.0000'
+    end
+    object ClientDataSet2RotX: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'Rot X'
+      OnGetText = ClientDataSet2RotXGetText
+      OnSetText = ClientDataSet2RotXSetText
+    end
+    object ClientDataSet2RotY: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'Rot Y'
+      OnGetText = ClientDataSet2RotYGetText
+      OnSetText = ClientDataSet2RotYSetText
+    end
+    object ClientDataSet2RotZ: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'Rot Z'
+      OnGetText = ClientDataSet2RotZGetText
+      OnSetText = ClientDataSet2RotZSetText
+    end
+    object ClientDataSet2Param1: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Param 1'
+      OnSetText = ClientDataSet2Param1SetText
+      DisplayFormat = '0.####'
+    end
+    object ClientDataSet2Param2: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Param 2'
+      OnSetText = ClientDataSet2Param2SetText
+      DisplayFormat = '0.####'
+    end
+    object ClientDataSet2Param3: TSingleField
+      Alignment = taLeftJustify
+      FieldName = 'Param 3'
+      OnSetText = ClientDataSet2Param3SetText
+      DisplayFormat = '0.####'
+    end
+    object ClientDataSet2Param4: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'Param 4'
+      OnSetText = ClientDataSet2Param4SetText
+    end
+    object ClientDataSet2Param5: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'Param 5'
+      OnSetText = ClientDataSet2Param5SetText
+    end
+    object ClientDataSet2Param6: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'Param 6'
+      OnSetText = ClientDataSet2Param6SetText
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = ClientDataSet1
+    Left = 513
+    Top = 88
+  end
+  object DataSource2: TDataSource
+    DataSet = ClientDataSet2
+    Left = 601
+    Top = 88
+  end
+  object popupMonsters: TPopupMenu
+    Left = 454
+    Top = 12
+    object Sort2: TMenuItem
+      Caption = 'Sort'
+      object byRoom3: TMenuItem
+        Caption = 'by Room'
+        OnClick = byRoom3Click
+      end
+      object byWave2: TMenuItem
+        Caption = 'by Wave'
+        OnClick = byWave2Click
+      end
+      object byType3: TMenuItem
+        Caption = 'by Type'
+        OnClick = byType3Click
+      end
+    end
+  end
+  object popupObjects: TPopupMenu
+    Left = 486
+    Top = 12
+    object Sort3: TMenuItem
+      Caption = 'Sort'
+      object byRoom4: TMenuItem
+        Caption = 'by Room'
+        OnClick = byRoom4Click
+      end
+      object byGroup2: TMenuItem
+        Caption = 'by Group'
+        OnClick = byGroup2Click
+      end
+      object byType4: TMenuItem
+        Caption = 'by Type'
+        OnClick = byType4Click
+      end
+    end
+  end
+  object popupGrid: TPopupMenu
+    Left = 515
+    Top = 12
+    object Gridmode2: TMenuItem
+      Caption = 'Grid mode'
+      object Edit2: TMenuItem
+        Caption = 'Edit'
+        RadioItem = True
+        OnClick = Edit2Click
+      end
+      object Selection1: TMenuItem
+        Caption = 'Selection'
+        RadioItem = True
+        OnClick = Selection1Click
+      end
+    end
+    object Switchtab1: TMenuItem
+      Caption = 'Switch tab'
+      ShortCut = 8201
+      OnClick = Switchtab1Click
     end
   end
 end

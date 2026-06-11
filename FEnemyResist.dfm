@@ -52,7 +52,7 @@ object Form24: TForm24
     Top = 150
     Width = 75
     Height = 25
-    Caption = 'Ok'
+    Caption = 'OK'
     TabOrder = 3
     OnClick = Button3Click
   end

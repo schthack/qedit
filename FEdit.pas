@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Grids, ValEdit, StdCtrls, ComCtrls, ExtCtrls, registry, main;
+  Dialogs, Grids, ValEdit, StdCtrls, ComCtrls, ExtCtrls, registry, main,
+  Vcl.Styles, Vcl.Themes;
 
 type
   TForm7 = class(TForm)
@@ -173,7 +174,7 @@ begin
         StringGrid1.RowCount:=y;
         Form7.TrackBar1.Position:=-round(EMonsterData.Pos_z * 10);
         DrawRotation(-(EMonsterData.Direction+rev[EMonsterData.Map_Section]));
-        t:=GetMonsterParam(EMonsterData.Skin);   
+        t:=GetMonsterParam(EMonsterData);
         for x:=0 to t.Count-1 do begin
             if (t.Strings[x] <> '') and (t.Strings[x] <> '-') then begin
                 StringGrid1.RowCount:=y+1;
@@ -213,7 +214,10 @@ Procedure DrawRotation(Rot:word);
 var rt:word;
     px2,px3,py2,py3:single;
 begin
-    form7.Image2.Canvas.Brush.Color:=clwhite;
+    if darkmode then
+      form7.Image2.Canvas.Brush.Color:=TStyleManager.ActiveStyle.GetSystemColor(clBtnFace)
+    else
+      form7.Image2.Canvas.Brush.Color:=clwhite;
     form7.Image2.Canvas.FillRect(form7.Image2.Canvas.ClipRect);
 
     form7.Image2.Canvas.Brush.Color:=$008000;
@@ -258,13 +262,13 @@ begin
   showdata := not showdata;
   if showdata then
   begin
-    btnToggleData.Caption := 'Hide data';
+    btnToggleData.Caption := GetLanguageString(467);
     StringGrid1.Cells[1,11]:=floattostrf(EObjData.unknow8,ffFixed,10,4);
     StringGrid1.Cells[1,13]:=floattostrf(EObjData.unknow10,ffFixed,10,4);
   end
   else
   begin
-    btnToggleData.Caption := 'Show data';
+    btnToggleData.Caption := GetLanguageString(468);
     StringGrid1.Cells[1,11]:=floattostrf(EObjData.unknow8 + warpx,ffFixed,10,4);
     StringGrid1.Cells[1,13]:=floattostrf(EObjData.unknow10 + warpz,ffFixed,10,4);
   end;
@@ -282,7 +286,10 @@ begin
 end;
 
 procedure TForm7.Button1Click(Sender: TObject);
+var
+  scrollpos1, scrollpos2: TGridScrollPos;
 begin
+    form1.SetUndow;
     isedited:=true;
     if stype = 1 then begin
         {Floor[sfloor].Monster[selected].Skin:=strtoint64(Form7.StringGrid1.Cells[1,0]);
@@ -344,9 +351,16 @@ begin
             //form1.listbox1.Items.Strings[selected]:=GenerateMonsterName(Floor[sfloor].Monster[selected],selected,2);
          end;
          form1.ListBox2.Items.Strings[selected]:='#'+inttostr(selected)+' - '+GetObjName(Floor[sfloor].Obj[selected].skin);
-
     end;
     Form1.DrawMap;
+    if showgrid then
+    begin
+      scrollpos1 := form1.GetDBGridScrollPos(form1.DBGrid1);
+      scrollpos2 := form1.GetDBGridScrollPos(form1.DBGrid2);
+      Form1.LoadFloorGrids;
+      form1.SetDBGridScrollPos(form1.DBGrid1, scrollpos1);
+      form1.SetDBGridScrollPos(form1.DBGrid2, scrollpos2);
+    end;
     close;
 end;
 
@@ -388,7 +402,7 @@ begin
     if stype = 1 then begin
         //
         y:=0;
-        t:=GetMonsterParam(EMonsterData.Skin);
+        t:=GetMonsterParam(EMonsterData);
         for x:=0 to t.Count-1 do begin
             if (t.Strings[x] <> '') and (t.Strings[x] <> '-') then begin
                 if x = 10 then begin
@@ -428,7 +442,7 @@ begin
     if stype = 1 then begin
         //
         y:=0;
-        t:=GetMonsterParam(EMonsterData.Skin);
+        t:=GetMonsterParam(EMonsterData);
         for x:=0 to t.Count-1 do begin
             if (t.Strings[x] <> '') and (t.Strings[x] <> '-') then begin
                 //StringGrid1.RowCount:=y+1;
@@ -595,8 +609,8 @@ var i,diff,diffmin,closest,sx,sy,rt,xx,yy:integer;
     rtvalues: Array of integer;
 begin
     // Static values for precise rotation
-    rtvalues := [0, 4096, 8192, 12288, 16384, 20480, 24576, 28672,
-                32768, 36864, 40960, 45056, 49152, 53248, 57344, 65536];
+    rtvalues := [0, 4096, 8192, 12288, 16384, 20480, 24576, 28672, 32768,
+                36864, 40960, 45056, 49152, 53248, 57344, 61440, 65536];
     sx:=x-52;
     sy:=y-48;
     if (sx<>0) and (sy<>0) then begin
@@ -654,7 +668,7 @@ begin
     if stype = 1 then begin
         EMonsterData.Direction:=(rt-rev[EMonsterData.Map_Section]) and $ffff;
         yy:=0;
-        t:=GetMonsterParam(EMonsterData.Skin);
+        t:=GetMonsterParam(EMonsterData);
         for xx:=0 to t.Count-1 do begin
             if (t.Strings[xx] <> '') and (t.Strings[xx] <> '-') then begin
                 if xx = 13 then Form7.StringGrid1.Cells[1,yy]:=inttostr(EMonsterData.Direction);
@@ -682,7 +696,7 @@ begin
 end;
 
 procedure TForm7.chkAutoAxisMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-  var
+var
   Reg: TRegistry;
 begin
   Reg := TRegistry.Create;
@@ -754,7 +768,7 @@ begin
     if stype = 1 then begin
         EMonsterData.Pos_z:=z;
         y:=0;
-        t:=GetMonsterParam(EMonsterData.Skin);
+        t:=GetMonsterParam(EMonsterData);
         for x:=0 to t.Count-1 do begin
             if (t.Strings[x] <> '') and (t.Strings[x] <> '-') then begin
                 if x = 10 then begin

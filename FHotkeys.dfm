@@ -3,18 +3,18 @@ object fmHotkeys: TfmHotkeys
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Placement Modifiers'
-  ClientHeight = 203
-  ClientWidth = 282
+  ClientHeight = 211
+  ClientWidth = 274
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
+  Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
-  Font.Height = -12
-  Font.Name = 'Segoe UI'
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
   Font.Style = []
   Position = poOwnerFormCenter
-  TextHeight = 15
+  TextHeight = 13
   object Label1: TLabel
-    Left = 8
+    Left = 16
     Top = 8
     Width = 38
     Height = 16
@@ -27,7 +27,7 @@ object fmHotkeys: TfmHotkeys
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 8
+    Left = 16
     Top = 30
     Width = 33
     Height = 16
@@ -40,7 +40,7 @@ object fmHotkeys: TfmHotkeys
     ParentFont = False
   end
   object Label3: TLabel
-    Left = 8
+    Left = 16
     Top = 52
     Width = 45
     Height = 16
@@ -53,7 +53,7 @@ object fmHotkeys: TfmHotkeys
     ParentFont = False
   end
   object Label4: TLabel
-    Left = 8
+    Left = 16
     Top = 74
     Width = 26
     Height = 16
@@ -66,7 +66,7 @@ object fmHotkeys: TfmHotkeys
     ParentFont = False
   end
   object Label5: TLabel
-    Left = 8
+    Left = 16
     Top = 96
     Width = 24
     Height = 16
@@ -79,7 +79,7 @@ object fmHotkeys: TfmHotkeys
     ParentFont = False
   end
   object Label6: TLabel
-    Left = 8
+    Left = 16
     Top = 118
     Width = 25
     Height = 16
@@ -92,49 +92,49 @@ object fmHotkeys: TfmHotkeys
     ParentFont = False
   end
   object Label7: TLabel
-    Left = 75
-    Top = 9
-    Width = 28
-    Height = 15
+    Left = 83
+    Top = 11
+    Width = 24
+    Height = 13
     Caption = 'Copy'
   end
   object Label8: TLabel
-    Left = 75
-    Top = 119
-    Width = 55
-    Height = 15
+    Left = 83
+    Top = 121
+    Width = 50
+    Height = 13
     Caption = 'Snap align'
   end
   object Label9: TLabel
-    Left = 75
-    Top = 97
-    Width = 158
-    Height = 15
+    Left = 83
+    Top = 99
+    Width = 141
+    Height = 13
     Caption = 'Set at offset selection position'
   end
   object Label10: TLabel
-    Left = 75
-    Top = 75
-    Width = 115
-    Height = 15
+    Left = 83
+    Top = 77
+    Width = 102
+    Height = 13
     Caption = 'Set at default position'
   end
   object Label11: TLabel
-    Left = 75
-    Top = 31
-    Width = 164
-    Height = 15
+    Left = 83
+    Top = 33
+    Width = 146
+    Height = 13
     Caption = 'Disable automatic Y placement'
   end
   object Label12: TLabel
-    Left = 75
-    Top = 53
-    Width = 195
-    Height = 15
+    Left = 83
+    Top = 55
+    Width = 173
+    Height = 13
     Caption = 'Disable automatic section placement'
   end
   object Label13: TLabel
-    Left = 8
+    Left = 16
     Top = 140
     Width = 41
     Height = 16
@@ -147,15 +147,15 @@ object fmHotkeys: TfmHotkeys
     ParentFont = False
   end
   object Label14: TLabel
-    Left = 75
-    Top = 142
-    Width = 95
-    Height = 15
+    Left = 83
+    Top = 143
+    Width = 85
+    Height = 13
     Caption = 'Cancel placement'
   end
   object btnClose: TButton
-    Left = 95
-    Top = 169
+    Left = 106
+    Top = 171
     Width = 75
     Height = 25
     Caption = 'Close'

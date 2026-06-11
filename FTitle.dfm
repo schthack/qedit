@@ -39,4 +39,15 @@ object Form2: TForm2
     MaxLength = 32
     TabOrder = 0
   end
+  object btnClose: TButton
+    Left = 1000
+    Top = 1000
+    Width = 75
+    Height = 25
+    Cancel = True
+    Caption = 'Close'
+    TabOrder = 2
+    TabStop = False
+    OnClick = btnCloseClick
+  end
 end

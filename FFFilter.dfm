@@ -4,7 +4,7 @@ object Form30: TForm30
   BorderStyle = bsDialog
   Caption = 'Floor filter'
   ClientHeight = 105
-  ClientWidth = 181
+  ClientWidth = 187
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

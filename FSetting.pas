@@ -14,6 +14,7 @@ type
     SpinEdit1: TSpinEdit;
     Button1: TButton;
     procedure Button1Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -35,6 +36,12 @@ begin
     Language:=ComboBox1.ItemIndex;
     isedited:=true;
     close;
+end;
+
+procedure TForm6.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
 end;
 
 end.

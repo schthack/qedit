@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, Vcl.Grids;
+  Dialogs, StdCtrls, ShellApi, ExtCtrls, Vcl.Grids;
 
 type
   TForm10 = class(TForm)
@@ -20,6 +20,8 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
+    procedure ComboBox1KeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -36,8 +38,13 @@ uses D3DEngin, Unit1, main;
 {$R *.dfm}
 
 procedure TForm10.Button1Click(Sender: TObject);
-var f:single;
+var
+  f: single;
+  idx: integer;
 begin
+    idx := form1.PartialSearch(ComboBox1.items, ComboBox1.Text);
+    ComboBox1.ItemIndex := idx;
+    ComboBox1.Text := ComboBox1.Items[ComboBox1.Items.IndexOf(ComboBox1.Text)];
     if ComboBox1.ItemIndex > -1 then begin
         if UnicodeStringGrid1.Visible then begin
             f:=strtofloat(UnicodeStringGrid1.Cells[1,0]);
@@ -68,11 +75,13 @@ begin
 end;
 
 procedure TForm10.ComboBox1Change(Sender: TObject);
-var x,y:integer;
+var x,y,idx:integer;
     t:single;
 begin
+    idx := form1.PartialSearch(ComboBox1.items, ComboBox1.Text);
     for x:=0 to preseti-1 do
-        if ObjTemplate[x].name = form10.ComboBox1.Text then break;
+        if lowercase(ObjTemplate[x].name) = lowercase(ComboBox1.Items[idx])
+        then break;
     UnicodeStringGrid1.Visible:=false;
     UnicodeStringGrid2.Visible:=false;
     for y:=0 to 11 do
@@ -91,6 +100,21 @@ begin
     t:=objitm.GetLargessVertex;
     objscreen.LookAt(0,t/1.4 ,-(t*2),0,t/2,0);
     end;
+end;
+
+
+procedure TForm10.ComboBox1KeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  s: string;
+begin
+  if (key = VK_F1) and (ComboBox1.Items.Count > 0) and (ComboBox1.ItemIndex > -1)
+  then
+  begin
+    s := ComboBox1.Items[ComboBox1.Items.IndexOf(ComboBox1.Text)];
+    s := StringReplace(s, ' ', '_', [rfReplaceAll]);
+    shellexecute(0,'open',pchar('http://qedit.info/index.php?title='+s),'','',0);
+  end;
 end;
 
 end.

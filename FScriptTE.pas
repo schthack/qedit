@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, ShellApi, System.Generics.Collections, System.StrUtils,
   System.Generics.Defaults, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, TextEditor, TextEditor.Types, Registry,
-  Vcl.ExtCtrls, main, Vcl.ComCtrls, Vcl.StdCtrls;
+  Vcl.ExtCtrls, main, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Themes, Vcl.Styles, Winapi.UxTheme,
+  Winapi.DwmApi;
 
 type
     TfmScriptTE = class(TForm)
@@ -134,6 +135,14 @@ type
     NotesBackground1: TMenuItem;
     NotesText1: TMenuItem;
     N6: TMenuItem;
+    Redo1: TMenuItem;
+    Annotations1: TMenuItem;
+    Addannotation1: TMenuItem;
+    N12: TMenuItem;
+    Defineterm1: TMenuItem;
+    Annotation1: TMenuItem;
+    Minimap1: TMenuItem;
+    N13: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TextEditMouseDown(Sender: TObject; Button: TMouseButton;
@@ -206,11 +215,24 @@ type
     procedure NotesText1Click(Sender: TObject);
     procedure NotesBackground1Click(Sender: TObject);
     procedure NotesReset1Click(Sender: TObject);
+    procedure txtNotesKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormActivate(Sender: TObject);
+    procedure Redo1Click(Sender: TObject);
+    procedure PopupMenu1Popup(Sender: TObject);
+    procedure TextEditPaint(const ASender: TObject; const ACanvas: TCanvas);
+    procedure Annotations1Click(Sender: TObject);
+    procedure Addannotation1Click(Sender: TObject);
+    procedure Defineterm1Click(Sender: TObject);
+    procedure Annotation1Click(Sender: TObject);
+    procedure BuildNoteLookup;
+    procedure TextEditAfterLinePaint(const ASender: TObject;
+      const ACanvas: TCanvas; const ARect: TRect; const ALineNumber: Integer;
+      const AIsMinimapLine: Boolean);
+    procedure Minimap1Click(Sender: TObject);
 
   private
     { Private declarations }
     FNoteLookup: TDictionary<string, string>;
-    procedure BuildNoteLookup;
   public
     { Public declarations }
   end;
@@ -222,6 +244,7 @@ procedure SetTextColor(colortype: string);
 function IsWordInString(aString: PWideChar; aSearchString: string; aSearchOptions: TStringSearchOptions): Boolean;
 procedure UncheckThemes;
 procedure FormatCurrentLine;
+procedure ApplyDarkScrollBars(AEditor: TTextEditor);
 
 var
   fmScriptTE: TfmScriptTE;
@@ -236,6 +259,7 @@ var
   nextline: integer = 0;
   nextlabel: integer = 0;
   opcodelist: array [0 .. 1000] of TAsmFnc;
+  lastmouseword: string;
 
 implementation
 
@@ -267,6 +291,7 @@ begin
       FNoteLookup.AddOrSetValue(UpperCase(left), right);
     end;
   end;
+  TextEdit.Invalidate;
 end;
 
 procedure UncheckThemes;
@@ -317,7 +342,7 @@ begin
   // Remove empty lines
   fmScriptTE.TextEdit.DeleteEmptyLines;
 
-  form14.Caption := 'Adding References';
+  form14.Caption := GetLanguageString(502);
   form14.Label1.Hide;
   form14.Show;
   form14.ProgressBar1.max := fmScriptTE.TextEdit.Lines.Count - 1;
@@ -404,10 +429,33 @@ begin
     end;
   end;
   form14.Hide;
-  form14.Caption := '3D Processing';
+  form14.Caption := GetLanguageString(260);
   form14.ProgressBar1.Position := 1;
   form14.Label1.Show;
   TextEdited := false;
+end;
+
+procedure ApplyDarkScrollbars(AEditor: TTextEditor);
+var
+  DarkMode: BOOL;
+begin
+  if (AEditor = nil) or not AEditor.HandleAllocated then
+    Exit;
+
+  // Apply dark windows scrollbar theme if it exists
+  try
+    SetWindowTheme(AEditor.Handle, 'DarkMode_Explorer', nil);
+
+    DarkMode := True;
+    DwmSetWindowAttribute(
+      AEditor.Handle,
+      20,
+      @DarkMode,
+      SizeOf(DarkMode)
+    );
+  except
+    // Catch any exceptions
+  end;
 end;
 
 procedure SetTextZoom(zoomvalue: integer);
@@ -529,7 +577,9 @@ begin
       else if colortype = 'TESTRColor' then
         colordialog1.Color := TextEdit.Colors.EditorCommentForeground
       else if colortype = 'TEStringColor' then
-        colordialog1.Color := TextEdit.Colors.EditorStringForeground;
+        colordialog1.Color := TextEdit.Colors.EditorStringForeground
+      else if colortype = 'TEAnnoColor' then
+        colordialog1.Color := TextEdit.Colors.EditorDirectiveForeground;
 
       if colordialog1.Execute then begin
           UncheckThemes;
@@ -547,7 +597,9 @@ begin
           else if colortype = 'TESTRColor' then
             TextEdit.Colors.EditorCommentForeground:=colordialog1.Color
           else if colortype = 'TEStringColor' then
-            TextEdit.Colors.EditorStringForeground:=colordialog1.Color;
+            TextEdit.Colors.EditorStringForeground:=colordialog1.Color
+          else if colortype = 'TEAnnoColor' then
+            TextEdit.Colors.EditorDirectiveForeground:=colordialog1.Color;
 
           Reg := TRegistry.Create;
           try
@@ -563,6 +615,7 @@ begin
               Reg.WriteInteger('TEValueColor',TextEdit.Colors.EditorNumberForeground);
               Reg.WriteInteger('TESTRColor',TextEdit.Colors.EditorCommentForeground);
               Reg.WriteInteger('TEStringColor',TextEdit.Colors.EditorStringForeground);
+              Reg.WriteInteger('TEAnnoColor',TextEdit.Colors.EditorDirectiveForeground);
               Reg.WriteBool('ThemeModified',true);
               Reg.CloseKey;
           end;
@@ -620,8 +673,8 @@ begin
 
   selection := TMenuItem(Sender);
   themename := StringReplace(selection.Caption, '&', '', [rfReplaceAll]);
-  TextEdit.Highlighter.LoadFromFile('Text editor\Themes\' + themename + '.json');
-  TextEdit.Highlighter.Colors.LoadFromFile('Text editor\Themes\' + themename + '.json');
+  TextEdit.Highlighter.LoadFromFile(path + 'Text editor\Themes\' + themename + '.json');
+  TextEdit.Highlighter.Colors.LoadFromFile(path + 'Text editor\Themes\' + themename + '.json');
   tmenuitem(sender).Checked := true;
   Reg := TRegistry.Create;
   try
@@ -697,6 +750,7 @@ begin
             Reg.WriteInteger('TEValueColor',TextEdit.Colors.EditorNumberForeground);
             Reg.WriteInteger('TESTRColor',TextEdit.Colors.EditorCommentForeground);
             Reg.WriteInteger('TEStringColor',TextEdit.Colors.EditorStringForeground);
+            Reg.WriteInteger('TEAnnoColor',TextEdit.Colors.EditorDirectiveForeground);
             Reg.WriteBool('ThemeModified',true);
             Reg.CloseKey;
             end;
@@ -728,6 +782,35 @@ end;
 procedure TfmScriptTE.Decimal1Click(Sender: TObject);
 begin
   form4.Decimal1Click(nil);
+end;
+
+procedure TfmScriptTE.Defineterm1Click(Sender: TObject);
+var
+  NewLineIndex, idx: Integer;
+begin
+  if not NotesPanel.Visible then
+    Notes1Click(nil);
+
+  for idx := 0 to txtNotes.Lines.Count - 1 do
+  begin
+    if TrimLeft(UpperCase(txtNotes.Lines[idx])).StartsWith(UpperCase(lastmouseword))
+    and (pos(':=', txtNotes.Lines[idx]) > 0) then
+    begin
+      NewLineIndex := idx;
+      break;
+    end;
+  end;
+
+  if idx >= txtNotes.Lines.Count then
+    NewLineIndex := txtNotes.Lines.Add(lastmouseword + ' := ');
+
+  txtNotes.SetFocus;
+
+  // Position cursor at end of the newly added line
+  txtNotes.CaretPos := Point(Length(txtNotes.Lines[NewLineIndex]), NewLineIndex);
+
+  // Scroll to the caret position
+  txtNotes.Perform(EM_SCROLLCARET, 0, 0);
 end;
 
 procedure TfmScriptTE.Delete1Click(Sender: TObject);
@@ -788,6 +871,11 @@ begin
   SetSearchEngine(3);
 end;
 
+procedure TfmScriptTE.FormActivate(Sender: TObject);
+begin
+  form1.Switchgridtab1.Enabled := false;
+end;
+
 procedure TfmScriptTE.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   i,lastcaret: integer;
@@ -804,7 +892,7 @@ begin
     fmScriptTE.Hide;
     UpdateTextRefs();
     form4.listbox1.Clear;
-    form14.Caption := 'Saving Script';
+    form14.Caption := GetLanguageString(478);
     form14.Label1.Hide;
     form14.Show;
     form14.ProgressBar1.max := TextEdit.Lines.Count - 1;
@@ -819,7 +907,7 @@ begin
       end;
     end;
     form14.Hide;
-    form14.Caption := '3D Processing';
+    form14.Caption := GetLanguageString(260);
     form14.ProgressBar1.Position := 1;
     form14.Label1.Show;
   end;
@@ -847,10 +935,17 @@ begin
     Reg.RootKey := HKEY_CURRENT_USER;
     if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
     begin
-      Reg.WriteInteger('TEHeight', Height);
-      Reg.WriteInteger('TEWidth', Width);
+      if WindowState = wsMaximized then
+        Reg.WriteInteger('TEState', Ord(wsMaximized))
+      else if WindowState = wsNormal then
+      begin
+        Reg.WriteInteger('TEState', Ord(wsNormal));
+        Reg.WriteInteger('TEHeight', Height);
+        Reg.WriteInteger('TEWidth', Width);
+      end;
       Reg.WriteInteger('NotesWidth', NotesPanel.Width);
       Reg.WriteBool('NotesVisible', Notes1.Checked);
+      Reg.WriteBool('MinimapVisible', Minimap1.Checked);
       Reg.CloseKey;
     end;
   finally
@@ -864,6 +959,10 @@ var
   JSONOpcodeList, JSONRegisterList: String;
   JSONStrings: TStringList;
 begin
+    if hideanno then
+      TextEdit.Scroll.SetOption(TTextEditorScrollOption.soPastEndOfLine,false)
+    else
+      TextEdit.Scroll.SetOption(TTextEditorScrollOption.soPastEndOfLine,true);
     if not AddArgs1.Enabled then
       AddArgs1.Checked := false;
     textEdited := false;
@@ -892,7 +991,7 @@ begin
         end;
       end;
       JSONOpcodeList := JSONOpcodeList + '"' + 'Unknow_Opcode' + '"';
-      except MessageDlg('Could not generate JSON asm list', mtInformation, [mbOk], 0);
+      except MessageDlg(GetLanguageString(445), mtInformation, [mbOk], 0);
     end;
 
     // JSON list for registers
@@ -903,7 +1002,7 @@ begin
       if i < 255 then
         JSONRegisterList := JSONRegisterList + ',' + sLineBreak;
       end;
-      except MessageDlg('Could not generate JSON register list', mtInformation, [mbOk], 0);
+      except MessageDlg(GetLanguageString(446), mtInformation, [mbOk], 0);
     end;
 
     JSONStrings := TStringList.Create;
@@ -1007,7 +1106,7 @@ begin
 
     Form4.Hide;
     TextEdit.Lines.Clear;
-    form14.Caption := 'Loading Script';
+    form14.Caption := GetLanguageString(477);
     form14.Label1.Hide;
     form14.Show;
     form14.ProgressBar1.max := Form4.ListBox1.items.count - 1;
@@ -1021,9 +1120,11 @@ begin
       TextEdit.GoToLineAndSetPosition(scriptline, length(TextEdit.Lines[scriptline])+1);
     TextEdit.TopLine := scriptindex + 1;
     form14.Hide;
-    form14.Caption := '3D Processing';
+    form14.Caption := GetLanguageString(260);
     form14.ProgressBar1.Position := 1;
     form14.Label1.Show;
+    if darkmode and TextEdit.HandleAllocated then
+      ApplyDarkScrollBars(TextEdit);
 end;
 
 procedure TfmScriptTE.Functions1Click(Sender: TObject);
@@ -1033,19 +1134,48 @@ end;
 
 procedure TfmScriptTE.GoToLabel1Click(Sender: TObject);
 begin
-  fmGoTo.Caption := 'Go To Label';
+  fmGoTo.Caption := GetLanguageString(380);
   fmGoto.ShowModal;
 end;
 
 procedure TfmScriptTE.GotoLine1Click(Sender: TObject);
 begin
-  fmGoTo.Caption := 'Go To Line';
+  fmGoTo.Caption := GetLanguageString(381);
   fmGoTo.ShowModal;
 end;
 
 procedure TfmScriptTE.Hex1Click(Sender: TObject);
 begin
   form4.Hex1Click(nil);
+end;
+
+procedure TfmScriptTE.Annotation1Click(Sender: TObject);
+begin
+  SetTextColor('TEAnnoColor');
+end;
+
+procedure TfmScriptTE.Annotations1Click(Sender: TObject);
+var
+  Reg: TRegistry;
+begin
+  Annotations1.Checked := not Annotations1.Checked;
+  hideanno := not hideanno;
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+  if Reg.OpenKey('\Software\Microsoft\schthack\qedit', true) then
+  begin
+    Reg.WriteBool('HideAnnotations', Annotations1.Checked);
+    Reg.CloseKey;
+  end;
+  finally
+    Reg.Free;
+  end;
+  if hideanno then
+    TextEdit.Scroll.SetOption(TTextEditorScrollOption.soPastEndOfLine,false)
+  else
+    TextEdit.Scroll.SetOption(TTextEditorScrollOption.soPastEndOfLine,true);
+  TextEdit.Invalidate;
 end;
 
 procedure TfmScriptTE.HideNOPs1Click(Sender: TObject);
@@ -1074,6 +1204,12 @@ begin
   finally
     Reg.Free;
   end;
+end;
+
+procedure TfmScriptTE.Minimap1Click(Sender: TObject);
+begin
+  Minimap1.Checked := not Minimap1.Checked;
+  TextEdit.Minimap.Visible := not TextEdit.Minimap.Visible;
 end;
 
 procedure TfmScriptTE.Newlabel1Click(Sender: TObject);
@@ -1228,7 +1364,7 @@ var
   choice: integer;
   Reg: TRegistry;
 begin
-    choice := MessageDlg('Font and color options will be reset back to their defaults, continue?',
+    choice := MessageDlg(GetLanguageString(395),
       mtConfirmation, [mbYes, mbNo], 0);
 
     if choice = mrYes then
@@ -1301,6 +1437,48 @@ begin
   TextEdit.PasteFromClipboard;
 end;
 
+procedure TfmScriptTE.PopupMenu1Popup(Sender: TObject);
+var
+  temp, s: string;
+  idx: integer;
+begin
+   if TextEdit.SelectedText = '' then
+   begin
+    fmScriptTE.Cut1.Enabled := false;
+    fmScriptTE.Copy1.Enabled := false;
+    fmScriptTE.Delete1.Enabled := false;
+   end
+   else
+   begin
+    fmScriptTE.Cut1.Enabled := true;
+    fmScriptTE.Copy1.Enabled := true;
+    fmScriptTE.Delete1.Enabled := true;
+   end;
+   if TextEdit.CanUndo then
+    fmScriptTE.Undo1.Enabled := true
+   else fmScriptTE.Undo1.Enabled := false;
+  if TextEdit.CanRedo then
+    fmScriptTE.Redo1.Enabled := true
+  else fmScriptTE.Redo1.Enabled := false;
+  if TextEdit.CanPaste then
+    fmScriptTE.Paste1.Enabled := true
+  else fmScriptTE.Paste1.Enabled := false;
+  idx := fmScriptTE.TextEdit.TextPosition.Line;
+  s := UpperCase(Trim(copy(fmScriptTE.TextEdit.Lines[idx], 9, fmScriptTE.TextEdit.Lines[idx].Length)));
+  if Assigned(FNoteLookup) and FNoteLookUp.TryGetValue(s, temp) then
+    fmScriptTE.Addannotation1.Caption := GetLanguageString(150) + GetLanguageString(531)
+  else fmScriptTE.Addannotation1.Caption := GetLanguageString(151) + GetLanguageString(531);
+  temp := '';
+  if TextEdit.WordAtMouse(false) <> '' then
+  begin
+    lastmouseword := TextEdit.WordAtMouse(false);
+    fmScriptTE.Defineterm1.Visible := true;
+    fmScriptTE.Defineterm1.Caption := GetLanguageString(533) + ' '''
+    + lastmouseword + '''...';
+  end
+  else fmScriptTE.Defineterm1.Visible := false;
+end;
+
 procedure TfmScriptTE.Opcodes1Click(Sender: TObject);
 begin
   SetTextColor('TEOpcodeColor');
@@ -1309,6 +1487,13 @@ end;
 procedure TfmScriptTE.Opcodes2Click(Sender: TObject);
 begin
   ShellExecute(0, 'open', 'https://qedit.info/index.php?title=OPCodes', '', '', 0);
+end;
+
+procedure TfmScriptTE.Redo1Click(Sender: TObject);
+begin
+  TextEdit.DoRedo;
+  editline := -1;
+  linechanged := false;
 end;
 
 procedure TfmScriptTE.Registers1Click(Sender: TObject);
@@ -1341,7 +1526,7 @@ var
   choice: integer;
   Reg: TRegistry;
 begin
-    choice := MessageDlg('Search and replace settings will be reset back to their defaults, continue?',
+    choice := MessageDlg(GetLanguageString(377),
       mtConfirmation, [mbYes, mbNo], 0);
 
     if choice = mrYes then
@@ -1382,7 +1567,7 @@ var
   choice, lastcaret, lastline: integer;
   Reg: TRegistry;
 begin
-    choice := MessageDlg('Font and color options will be reset back to their defaults, continue?',
+    choice := MessageDlg(GetLanguageString(394),
       mtConfirmation, [mbYes, mbNo], 0);
 
     if choice = mrYes then
@@ -1406,7 +1591,7 @@ begin
       TextEdit.Colors.EditorStringForeground:=clBlue;
 
       // Reset theme
-      if DirectoryExists('Text editor\themes') then
+      if DirectoryExists(path + 'Text editor\themes') then
         ChangeTheme(Default1);
 
       // Reset zoom
@@ -1426,6 +1611,7 @@ begin
           Reg.WriteInteger('TEValueColor',clBlue);
           Reg.WriteInteger('TESTRColor',clGreen);
           Reg.WriteInteger('TEStringColor',clBlue);
+          Reg.WriteInteger('TEAnnoColor',clTeal);
           Reg.WriteBool('ThemeModified',false);
           Reg.CloseKey;
       end;
@@ -1455,6 +1641,38 @@ end;
 procedure TfmScriptTE.Switcheditor1Click(Sender: TObject);
 begin
   form1.SwitchScriptEditor1Click(nil);
+end;
+
+procedure TfmScriptTE.Addannotation1Click(Sender: TObject);
+var
+  NewLineIndex, idx: Integer;
+  s: string;
+begin
+  if not NotesPanel.Visible then
+    Notes1Click(nil);
+
+  idx := TextEdit.TextPosition.Line;
+  s := Trim(copy(TextEdit.Lines[idx], 9, TextEdit.Lines[idx].Length));
+  for idx := 0 to txtNotes.Lines.Count - 1 do
+  begin
+    if TrimLeft(UpperCase(txtNotes.Lines[idx])).StartsWith(UpperCase(s))
+    and (pos(':=', txtNotes.Lines[idx]) > 0) then
+    begin
+      NewLineIndex := idx;
+      break;
+    end;
+  end;
+
+  if idx >= txtNotes.Lines.Count then
+    NewLineIndex := txtNotes.Lines.Add(s + ' := ');
+
+  txtNotes.SetFocus;
+
+  // Position cursor at end of the newly added line
+  txtNotes.CaretPos := Point(Length(txtNotes.Lines[NewLineIndex]), NewLineIndex);
+
+  // Scroll to the caret position
+  txtNotes.Perform(EM_SCROLLCARET, 0, 0);
 end;
 
 procedure TfmScriptTE.AddArgs1Click(Sender: TObject);
@@ -1557,6 +1775,15 @@ begin
 
   // Re-add references
   move(temp[0], datablock[0], sizeof(datablock));
+end;
+
+procedure TfmScriptTE.TextEditAfterLinePaint(const ASender: TObject;
+  const ACanvas: TCanvas; const ARect: TRect; const ALineNumber: Integer;
+  const AIsMinimapLine: Boolean);
+begin
+  // Set the bookmark icon position directly after the label number
+  TextEdit.LeftMargin.Bookmarks.LeftMargin := (TextEdit.CharWidth * 6)
+    + TextEdit.Margins.Left;
 end;
 
 procedure TfmScriptTE.TextEditCaretChanged(const ASender: TObject; const X2, Y2,
@@ -2158,10 +2385,250 @@ begin
     Application.ActivateHint(TextEdit.ClientToScreen(Point(X, Y)));
 end;
 
+procedure TfmScriptTE.TextEditPaint(const ASender: TObject;
+  const ACanvas: TCanvas);
+var
+  i, j, k, g, d, x, lab, opcodepos, RegNum, foundpos, stringpos, areawidth: Integer;
+  RegMatches: TList<Integer>;
+  RegPositions: TList<Integer>;
+  zoom: Double;
+  LineText, Annotation, LabelStr, temp, opcodestr, fullargs, SearchStr, s, o: string;
+  YPos, XPos: Integer;
+  FirstVisibleLine, LastVisibleLine: Integer;
+  argarray: TArray <String>;
+  argstrings: TStringList;
+begin
+  // Calculate zoom
+  zoom := TextEdit.ZoomPercentage / 100;
+
+  // Get the range of visible lines
+  FirstVisibleLine := TextEdit.TopLine;
+  LastVisibleLine := FirstVisibleLine + TextEdit.VisibleLineCount;
+
+  // Prepare canvas for annotation text
+  TextEdit.Canvas.Font.Name := TextEdit.Fonts.Text.Name;
+  TextEdit.Canvas.Font.Size := round(TextEdit.Fonts.Text.Size * zoom);
+  TextEdit.Canvas.Font.Style := [fsItalic];
+  TextEdit.Canvas.Brush.Style := bsClear;
+
+  // Draw annotations for each visible line
+  argstrings := TStringList.Create;
+  RegMatches := TList<Integer>.Create;
+  RegPositions := TList<Integer>.Create;
+  try
+  for i := FirstVisibleLine to LastVisibleLine do
+  begin
+    // Clear/initialize values
+    argstrings.Clear;
+    RegMatches.Clear;
+    RegPositions.Clear;
+    Annotation := '';
+    labelstr := '';
+    temp := '';
+    LineText := TextEdit.Lines[i-1];
+
+    // Look for a label
+    j := pos(':',LineText);
+      if (j <= 6) and (j <> 0) then
+        LabelStr := copy(LineText, 1, j-1);
+    if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(Labelstr, temp);
+    if temp <> '' then
+    Annotation :=  '[@' + temp + ']';
+
+    // Get opcode if it exists
+    opcodestr := '';
+    temp := '';
+    for j := 0 to Length(opcodelist) - 1 do
+    begin
+      if (opcodelist[j].name <> '') and (LineText.Contains(opcodelist[j].name)) then
+      begin
+        opcodestr := opcodelist[j].name;
+        opcodepos := pos(opcodelist[j].name, LineText);
+        break;
+      end
+      else if LineText.Contains('Unknow_Opcode') then
+      begin
+        opcodestr := 'Unknow_Opcode';
+        opcodepos := pos('Unknow_Opcode', LineText);
+        break;
+      end;
+    end;
+
+    // Check arguments
+    if opcodestr <> '' then
+    begin
+      fullargs := copy(LineText, opcodepos +
+      length(opcodestr),length(LineText));
+
+      stringpos := pos('''', fullargs);
+      if (stringpos > 0) and (opcodestr <> 'STR:') then
+        delete(fullargs, stringpos, length(fullargs) - stringpos);
+      if (opcodestr <> 'STR:') and (opcodestr <> 'HEX:') and (opcodestr <> 'Unknow_Opcode') then
+      begin
+            argarray := SplitString(fullargs, ',');
+            for var arg in argarray do
+              argstrings.add(trim(arg));
+      end;
+      if argstrings.Count = 0 then
+      begin
+        if opcodestr = 'STR:' then
+          argstrings.add(fullargs)
+        else argstrings.add(Trim(fullargs));
+      end;
+    end;
+    for k := 0 to argstrings.count - 1 do
+    begin
+      temp := '';
+      if (argstrings.Strings[k] <> '') and (opcodestr <> '')
+      and (opcodestr <> 'Unknow_Opcode') and (opcodestr <> 'STR:') and (opcodestr <> 'HEX:')
+      then
+      begin
+        s := argstrings.Strings[k];
+        if ((opcodelist[j].arg[k] = T_REG)
+        or (opcodelist[j].arg[k] = T_BREG)
+        or (opcodelist[j].arg[k] = T_DREG)
+        or (opcodelist[j].arg[k] = T_RREG)
+        or (opcodelist[j].arg[k] = T_FUNC)
+        or (opcodelist[j].arg[k] = T_DATA)
+        or (opcodelist[j].arg[k] = T_STRDATA)
+        or (opcodelist[j].arg[k] = T_FUNC2)
+        or ((opcodelist[j].arg[k] = T_DWORD)
+        and (opcodelist[j].order = T_ARGS)))
+        then
+        begin
+          if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(UpperCase(s), temp);
+          if (temp <> '') and not Annotation.Contains('(' + UpperCase(s) + ' = ' + temp + ')') then
+          begin
+            if Annotation <> '' then
+              Annotation := Annotation + ' ';
+            Annotation := Annotation + '(' + UpperCase(s) + ' = ' + temp + ')';
+          end;
+        end
+        else if ((opcodelist[j].arg[k] = T_SWITCH) or (opcodelist[j].arg[k] = T_SWITCH2B)) then
+        begin
+         g := 0;
+         d := 0;
+         lab := 0;
+         trystrtoint(copy(s,1,pos(':',s)-1),g);
+         o:=copy(s,pos(':',s)+1,length(s)-pos(':',s));
+         s:=inttostr(g);
+         while g > 0 do begin
+              d:=pos(':',o);
+              if d = 0 then begin
+                  if g = 1 then d:=length(o)+1;
+              end;
+              trystrtoint(copy(o,1,d-1),lab);
+              o:=copy(o,d+1,length(o)-d);
+              dec(g);
+              temp := '';
+              if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(inttostr(lab), temp);
+              if (temp <> '') and not Annotation.Contains('(' + inttostr(lab) + ' = ' + temp + ')') then
+              begin
+                if Annotation <> '' then
+                  Annotation := Annotation + ' ';
+                Annotation := Annotation + '(' + inttostr(lab) + ' = ' + temp + ')';
+              end;
+           end;
+        end
+        else if (opcodelist[j].arg[k] = T_STR) then
+        begin
+          // Look for registers
+          for x := 0 to 255 do
+          begin
+            SearchStr := 'r' + IntToStr(x);
+            FoundPos := Pos('<' + SearchStr + '>', LineText);
+            if (FoundPos > 0) and IsWordInString(PChar(LineText), SearchStr, [soDown, soWholeWord, soMatchCase]) then
+            begin
+              // Insert in sorted order by position
+              g := 0;
+              while (g < RegPositions.Count) and (RegPositions[g] < FoundPos) do
+                Inc(g);
+              RegPositions.Insert(g, FoundPos);
+              RegMatches.Insert(g, x);
+            end;
+          end;
+          for RegNum in RegMatches do
+          begin
+            temp := '';
+            if Assigned(FNoteLookup) then
+              FNoteLookUp.TryGetValue('R' + IntToStr(RegNum), temp);
+            if (temp <> '') and not Annotation.Contains('(R' + IntToStr(RegNum) + '=' + temp + ')') then
+            begin
+              if Annotation <> '' then
+                Annotation := Annotation + ' ';
+              Annotation := Annotation + '(R' + IntToStr(RegNum) + ' = ' + temp + ')';
+            end;
+          end;
+        end;
+      end;
+    end;
+
+    // Hide auto-annotations if enabled
+    if hideanno then
+      Annotation := '';
+
+    // Overwrite with syntax annotation if found
+    temp := '';
+    s := UpperCase(Trim(copy(TextEdit.Lines[i-1], 9, TextEdit.Lines[i-1].Length)));
+    if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue(s, temp);
+    if temp <> '' then Annotation := '// ' + temp;
+
+    // Overwrite with line annotation if found
+    temp := '';
+    if Assigned(FNoteLookup) then FNoteLookUp.TryGetValue('L'+inttostr(i-1), temp);
+    if temp <> '' then Annotation := '// ' + temp;
+
+    if Annotation <> '' then
+    begin
+      // Calculate vertical position
+      YPos := (i - FirstVisibleLine) * TextEdit.LineHeight;
+
+      // Set the color
+      if Annotation.StartsWith('//') then
+          TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorCommentForeground
+      else
+        TextEdit.Canvas.Font.Color := TextEdit.Colors.EditorDirectiveForeground;
+
+      // Calculate horizontal position
+      if (Length(LineText) > 0) and (LineText[Length(LineText)] <> ' ') then
+        Annotation := ' ' + Annotation;
+      XPos := TextEdit.Canvas.TextWidth(LineText) - TextEdit.HorizontalScrollPosition;
+
+      if Minimap1.Checked then
+      begin
+        areawidth := TextEdit.ClientWidth - TextEdit.Minimap.GetWidth - XPos;
+
+        if TextEdit.Canvas.TextWidth(Annotation) > areawidth then
+        begin
+          // Truncate annotation to fit
+          while (Length(Annotation) > 1) and (TextEdit.Canvas.TextWidth(Annotation + '...') > areawidth) do
+            Delete(Annotation, Length(Annotation), 1);
+          Annotation := Annotation + '...';
+        end;
+      end;
+
+      // Draw the annotation
+      TextEdit.Canvas.TextOut(XPos, YPos, Annotation);
+    end;
+  end;
+  finally
+    argstrings.Free;
+    RegMatches.Free;
+    RegPositions.Free;
+  end;
+end;
+
 procedure TfmScriptTE.txtNotesChange(Sender: TObject);
 begin
   isedited := true;
   BuildNoteLookup;
+end;
+
+procedure TfmScriptTE.txtNotesKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_F1 then
+    shellexecute(0,'open',pchar('http://qedit.info/index.php?title=Notes_Panel'),'','',0);
 end;
 
 procedure TfmScriptTE.Undo1Click(Sender: TObject);

@@ -15,7 +15,7 @@ const
 
   MonsterPosZ: array [1 .. 111] of integer = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 20, 20, 0, 20, 0, 0, 0, 0, 0, 0, 20, 20, 25, 0, 0, 0, 30, 0, 10, 0, 0, 0, 0, 0, 0, 0, 20, 25, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
   MapFloorId: array [0 .. 45] of integer = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 0, 1, 2, 3, 4,
@@ -302,6 +302,7 @@ function MakeUni(s: ansistring): ansistring;
 function GetDisplayValue(value: dword; size: byte): ansistring;
 function HexToSignedInt(const hexstring: string; numbits: integer): integer;
 function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
+function IsNPC(m: TMonster): Boolean;
 
 implementation
 
@@ -1210,7 +1211,7 @@ begin
   if fmScriptTE.Visible then
   begin
     fmScriptTE.TextEdit.Lines.Clear;
-    form14.Caption := 'Loading Script';
+    form14.Caption := GetLanguageString(477);
     form14.Label1.Hide;
     form14.Show;
     form14.ProgressBar1.max := Form4.ListBox1.items.count - 1;
@@ -1221,7 +1222,7 @@ begin
       fmScriptTE.TextEdit.Lines.Add(Form4.ListBox1.items[i]);
     end;
     form14.Hide;
-    form14.Caption := '3D Processing';
+    form14.Caption := GetLanguageString(260);
     form14.ProgressBar1.Position := 1;
     form14.Label1.Show;
     fmScriptTE.TextEdit.MoveCaretToBeginning;
@@ -1274,7 +1275,7 @@ begin
         kkk := strtoint(copy(s, 1, y - 1));
         if asmref[kkk] <> $FFFFFFFF then
         begin
-          raise exception.Create('Duplicated label: ' + inttostr(kkk));
+          raise exception.Create(GetLanguageString(475) + inttostr(kkk));
         end;
         asmref[kkk] := p;
         if kkk <> -1 then
@@ -1293,8 +1294,8 @@ begin
       begin
         if kkk = -1 then
         begin
-          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
-          'String data declared without a label', mtInformation, [mbOk], 0);
+          MessageDlg(GetLanguageString(441) + inttostr(x) + #13#10 +
+          GetLanguageString(472), mtInformation, [mbOk], 0);
           form4.Show;
           form4.ListBox1.ItemIndex := x;
         end;
@@ -1302,8 +1303,8 @@ begin
           if datablock[i] = lastsection then break;
         if (datablockT[i] <> T_STRDATA) and (lastsection <> -1) then
         begin
-          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
-          'String data declared in a code or Hex section', mtInformation, [mbOk], 0);
+          MessageDlg(GetLanguageString(441) + inttostr(x) + #13#10 +
+          GetLanguageString(473), mtInformation, [mbOk], 0);
           form4.Show;
           form4.ListBox1.ItemIndex := x;
         end;
@@ -1350,8 +1351,8 @@ begin
           if datablock[i] = lastsection then break;
         if (datablockT[i] <> T_DATA) and (lastsection <> -1) then
         begin
-          MessageDlg('Build warning at line ' + inttostr(x) + #13#10 +
-          'Hex data declared in a code or String section', mtInformation, [mbOk], 0);
+          MessageDlg(GetLanguageString(441) + inttostr(x) + #13#10 +
+          GetLanguageString(474), mtInformation, [mbOk], 0);
           form4.Show;
           form4.ListBox1.ItemIndex := x;
         end;
@@ -1886,7 +1887,7 @@ begin
     except
       on E: exception do
       begin
-        MessageDlg('Build error at line ' + inttostr(x) + #13#10 + E.Message, mtInformation, [mbOk], 0);
+        MessageDlg(GetLanguageString(442) + inttostr(x) + #13#10 + E.Message, mtInformation, [mbOk], 0);
         form4.Show;
         form4.ListBox1.ItemIndex := x;
         if not directoryexists(path + 'error backup') then
@@ -2000,14 +2001,11 @@ begin
   end;
 end;
 
-function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
+function CheckMonsterType(m: TMonster): integer;
 var
-  re, i: integer;
-  px, py: single;
-  isnpc: boolean;
+  re: integer;
 begin
   re := 0; // default none
-  isnpc := false;
   // ep1 monster
   if (m.Skin = 68) then
     re := 9; // booma
@@ -2019,10 +2017,8 @@ begin
     re := 11; // gigobooma
   if (m.Skin = 67) then
     re := 7; // savage woolf
-  if (m.Skin = 67) and (round(m.Unknow10) = 1) then
+  if (m.Skin = 67) and (round(m.Unknow10) >= 1) then
     re := 8; // barbarous wolf
-  if (m.Skin = 67) and (m.Movement_flag = 1) then
-    re := 8; // Ives way D;
   if m.Skin = 65 then
     re := 5; // rappy
   if (m.Skin = 65) and (m.Movement_flag = 1) then
@@ -2186,6 +2182,8 @@ begin
     re := 69;
     if (m.Movement_flag = 1) then
       re := 70;
+    if (m.unknow3 = 17) then
+      re := 84; // Epsilon
   end;
   if (m.Skin = 216) then
     re := 61;
@@ -2268,7 +2266,28 @@ begin
     if (m.Skin = 65) and (m.Movement_flag = 1) then
       re := 105; // AL rappy
   end;
+  result := re;
+end;
 
+function IsNPC(m: TMonster): Boolean;
+var
+  re: integer;
+begin
+  re := CheckMonsterType(m);
+  if (m.Skin < 64) or ((m.Skin >= $D0) and (m.Skin < 257) and (re = 0)) then
+    result := true
+  else
+    result := false;
+end;
+
+function GenerateMonsterName(m: TMonster; x, fl: integer): ansistring;
+var
+  re, i: integer;
+  px, py: single;
+  isnpc: boolean;
+begin
+  re := CheckMonsterType(m);
+  isnpc := false;
   if x >= MyMonstZCount then
   begin
     setlength(MyMonstZ, x + 1);
@@ -2400,6 +2419,8 @@ begin
       Mymonst[x].SetCoordinate(px + midpz[floor[sfloor].Monster[x].map_section].x,
         m.Pos_z + miz[floor[sfloor].Monster[x].map_section] + MonsterPosZ[re],
         0 - py - midpz[floor[sfloor].Monster[x].map_section].y);
+      if re = 72 then
+        Mymonst[x].SetProportion(0.5, 0.5, 0.5);
       Mymonst[x].Visible := true;
       // Mymonst[x].SetRotation(((($8000-(m.Direction+rev[Floor[sfloor].Monster[x].map_section])) and $ffff) / 182.04444)
       if m.Skin = 223 then

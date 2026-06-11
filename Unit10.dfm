@@ -24,11 +24,11 @@ object Form10: TForm10
     Left = 194
     Top = 36
     Width = 177
-    Height = 22
-    Style = csOwnerDrawFixed
+    Height = 21
     Sorted = True
     TabOrder = 0
     OnChange = ComboBox1Change
+    OnKeyUp = ComboBox1KeyUp
   end
   object Button1: TButton
     Left = 294

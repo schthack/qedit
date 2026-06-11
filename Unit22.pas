@@ -613,6 +613,7 @@ begin
         ComboBox1Change(self);
         ComboBox3Change(self);
     end;
+    ComboBox3.Text := ComboBox3.Items[ComboBox3.Items.IndexOf(ComboBox3.Text)];
     attacktables := GetAttackTables(ComboBox3.Text);
     if attacktables.Count > 1 then
     begin
@@ -660,7 +661,7 @@ var
   attacktables: TStringList;
 begin
   cbAttack.Clear;
-  attacktables := GetAttackTables(ComboBox3.Text);
+  attacktables := GetAttackTables(ComboBox3.Items[ComboBox3.Items.IndexOf(ComboBox3.Text)]);
   if attacktables.Count > 0 then
   begin
     for i := 0 to attacktables.Count - 1 do
@@ -693,51 +694,55 @@ end;
 procedure TForm22.Button2Click(Sender: TObject);
 var z,idx:integer;
 begin
-    // Find specific attack index
-    idx := GetAttackIndex(combobox3.Text, cbAttack.Text);
-    if (idx <> -1) and (lblAttack.Visible) then
+    ComboBox3.Text := ComboBox3.Items[ComboBox3.Items.IndexOf(ComboBox3.Text)];
+    if ComboBox3.ItemIndex > -1 then
     begin
-      move(DBs3[combobox1.Itemindex,combobox2.Itemindex,idx], SelDBAtt,sizeof(SelDBAtt));
-      modalresult:=1;
-      exit;
-    end;
+      // Find specific attack index
+      idx := GetAttackIndex(combobox3.Text, cbAttack.Text);
+      if (idx <> -1) and (lblAttack.Visible) then
+      begin
+        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,idx], SelDBAtt,sizeof(SelDBAtt));
+        modalresult:=1;
+        exit;
+      end;
 
-    for z:=0 to 60 do begin
-        if z <= 58 then
-        begin
-          if (combobox1.ItemIndex < 4)
-          and (Ep1Name[z] = combobox3.Text) then break;
-        end;
-        if (combobox1.ItemIndex >= 4)
-        and (combobox1.ItemIndex < 6)
-        and (Ep2Name[z] = combobox3.Text) then break;
-        if z <= 35 then
-        begin
-          if (combobox1.ItemIndex >= 6)
-          and (Ep4Name[z] = combobox3.Text) then break;
-        end;
+      for z:=0 to 60 do begin
+          if z <= 58 then
+          begin
+            if (combobox1.ItemIndex < 4)
+            and (Ep1Name[z] = combobox3.Text) then break;
+          end;
+          if (combobox1.ItemIndex >= 4)
+          and (combobox1.ItemIndex < 6)
+          and (Ep2Name[z] = combobox3.Text) then break;
+          if z <= 35 then
+          begin
+            if (combobox1.ItemIndex >= 6)
+            and (Ep4Name[z] = combobox3.Text) then break;
+          end;
+      end;
+      if combobox1.ItemIndex < 4 then begin
+          move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep1PhysID[z]],SelDBSTAT,36);
+          move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep1ResistID[z]], SelDBRes,sizeof(SelDBRes));
+          move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep1AttackID[z]], SelDBAtt,sizeof(SelDBAtt));
+          move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep1MovementID[z]], SelDBMov,sizeof(SelDBMov));
+      end else if (combobox1.ItemIndex >= 4)
+      and (combobox1.ItemIndex < 6) then
+      begin
+          move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep2PhysID[z]],SelDBSTAT,36);
+          move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep2ResistID[z]], SelDBRes,sizeof(SelDBRes));
+          move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep2AttackID[z]], SelDBAtt,sizeof(SelDBAtt));
+          move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep2MovementID[z]], SelDBMov,sizeof(SelDBMov));
+      end
+      else
+      begin
+          move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep4PhysID[z]],SelDBSTAT,36);
+          move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep4ResistID[z]], SelDBRes,sizeof(SelDBRes));
+          move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep4AttackID[z]], SelDBAtt,sizeof(SelDBAtt));
+          move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep4MovementID[z]], SelDBMov,sizeof(SelDBMov));
+      end;
+      modalresult:=1;
     end;
-    if combobox1.ItemIndex < 4 then begin
-        move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep1PhysID[z]],SelDBSTAT,36);
-        move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep1ResistID[z]], SelDBRes,sizeof(SelDBRes));
-        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep1AttackID[z]], SelDBAtt,sizeof(SelDBAtt));
-        move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep1MovementID[z]], SelDBMov,sizeof(SelDBMov));
-    end else if (combobox1.ItemIndex >= 4)
-    and (combobox1.ItemIndex < 6) then
-    begin
-        move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep2PhysID[z]],SelDBSTAT,36);
-        move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep2ResistID[z]], SelDBRes,sizeof(SelDBRes));
-        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep2AttackID[z]], SelDBAtt,sizeof(SelDBAtt));
-        move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep2MovementID[z]], SelDBMov,sizeof(SelDBMov));
-    end
-    else
-    begin
-        move(DBSTAT[combobox1.Itemindex,combobox2.Itemindex,Ep4PhysID[z]],SelDBSTAT,36);
-        move(DBs2[combobox1.Itemindex,combobox2.Itemindex,Ep4ResistID[z]], SelDBRes,sizeof(SelDBRes));
-        move(DBs3[combobox1.Itemindex,combobox2.Itemindex,Ep4AttackID[z]], SelDBAtt,sizeof(SelDBAtt));
-        move(DBs4[combobox1.Itemindex,combobox2.Itemindex,Ep4MovementID[z]], SelDBMov,sizeof(SelDBMov));
-    end;
-    modalresult:=1;
 end;
 
 end.
